@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Andy Mayer <am803u@att.com>
+Code-Review+1: Morgan Richomme <morgan.richomme@orange.com>
+Code-Review+1: Ludovic Robert <ludovic.robert@orange.com>
+Submitted-by: Andy Mayer <am803u@att.com>
+Submitted-at: Mon, 26 Mar 2018 23:15:26 +0000
+Reviewed-on: https://gerrit.onap.org/r/38151
+Project: externalapi/nbi
+Branch: refs/heads/master
