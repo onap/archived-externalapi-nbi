@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_49d38738",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2018-03-27T06:29:29Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "78cf65e624cba155ba0cbed49b0fbcd601b00ca4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_09dd7f42",
+        "filename": "src/main/java/org/onap/nbi/apis/status/model/ApplicationStatus.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2018-03-27T06:29:29Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "78cf65e624cba155ba0cbed49b0fbcd601b00ca4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_89f0afca",
+        "filename": "src/main/java/org/onap/nbi/commons/BeanUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2018-03-27T06:29:29Z",
+      "side": 1,
+      "message": "it corresponds to Orange ID, right? use of LF id would be probably more appropriate",
+      "revId": "78cf65e624cba155ba0cbed49b0fbcd601b00ca4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_09b49ff0",
+        "filename": "src/main/java/org/onap/nbi/commons/ReservedKeys.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2018-03-27T06:29:29Z",
+      "side": 1,
+      "message": "same remarks on use of LF ID rather than internal Orange ID",
+      "revId": "78cf65e624cba155ba0cbed49b0fbcd601b00ca4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_29b95be9",
+        "filename": "src/main/java/org/onap/nbi/commons/ResourceManagement.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2018-03-27T06:29:29Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "78cf65e624cba155ba0cbed49b0fbcd601b00ca4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c9cd5788",
+        "filename": "src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2018-03-27T06:29:29Z",
+      "side": 1,
+      "message": "by default I would suggest to put WARN or INFO but not DEBUG",
+      "revId": "78cf65e624cba155ba0cbed49b0fbcd601b00ca4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
