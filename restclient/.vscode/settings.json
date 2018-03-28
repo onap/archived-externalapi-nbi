@@ -1,0 +1,12 @@
+{
+    // CHARLES WEB DEBUGGING PROXY
+    //"http.proxy": "http://localhost:8888/",
+    "http.proxyStrictSSL" :false,
+    // REST CLIENT
+    "rest-client.fontSize":12,
+    "rest-client.environmentVariables": {
+        "ONAP external api nbi local": {
+            "serviceOrder.url": "http://localhost:8080/nbi/api/v1"
+        }
+    }
+}

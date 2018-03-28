@@ -1,13 +1,11 @@
-package org.onap.nbi.apis.resources;
+package org.onap.nbi.apis.assertions;
 
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -20,7 +18,8 @@ public class ServiceCatalogAssertions {
         assertThat(service.get("id")).isEqualTo("1e3feeb0-8e36-46c6-862c-236d9c626439");
         assertThat(service.get("name")).isEqualTo("vFW");
         assertThat(service.get("invariantUUID")).isEqualTo("b58a118e-eeb9-4f6e-bdca-e292f84d17df");
-        assertThat(service.get("toscaModelURL")).isEqualTo("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/toscaModel");
+        assertThat(service.get("toscaModelURL"))
+                .isEqualTo("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/toscaModel");
         assertThat(service.get("distributionStatus")).isEqualTo("DISTRIBUTED");
         assertThat(service.get("version")).isEqualTo("2.0");
         assertThat(service.get("lifecycleStatus")).isEqualTo("CERTIFIED");
@@ -47,7 +46,8 @@ public class ServiceCatalogAssertions {
             if (serviceSPecCharacteristicMap.get("name").toString().equals("cpus")) {
                 assertThat(serviceSPecCharacteristicMap.get("valueType")).isEqualTo("integer");
                 assertThat(serviceSPecCharacteristicMap.get("@type")).isEqualTo("ONAPserviceCharacteristic");
-                ArrayList serviceSpecCharacteristicValues = (ArrayList) serviceSPecCharacteristicMap.get("serviceSpecCharacteristicValue");
+                ArrayList serviceSpecCharacteristicValues =
+                        (ArrayList) serviceSPecCharacteristicMap.get("serviceSpecCharacteristicValue");
                 for (Object serviceSpecCharacteristicValue : serviceSpecCharacteristicValues) {
                     LinkedHashMap serviceSpecCharacteristicValueMap = (LinkedHashMap) serviceSpecCharacteristicValue;
                     if (serviceSpecCharacteristicValueMap.get("value").toString().equals("2")) {
@@ -70,7 +70,8 @@ public class ServiceCatalogAssertions {
         assertThat(service.get("id")).isEqualTo("1e3feeb0-8e36-46c6-862c-236d9c626439");
         assertThat(service.get("name")).isEqualTo("vFW");
         assertThat(service.get("invariantUUID")).isEqualTo("b58a118e-eeb9-4f6e-bdca-e292f84d17df");
-        assertThat(service.get("toscaModelURL")).isEqualTo("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439toto/toscaModel");
+        assertThat(service.get("toscaModelURL"))
+                .isEqualTo("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439toto/toscaModel");
         assertThat(service.get("distributionStatus")).isEqualTo("DISTRIBUTED");
         assertThat(service.get("version")).isEqualTo("2.0");
         assertThat(service.get("lifecycleStatus")).isEqualTo("CERTIFIED");
@@ -92,7 +93,6 @@ public class ServiceCatalogAssertions {
 
         assertThat(service.get("serviceSpecCharacteristic")).isNull();
     }
-
 
 
 

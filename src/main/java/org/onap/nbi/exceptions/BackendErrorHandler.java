@@ -3,7 +3,6 @@ package org.onap.nbi.exceptions;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
-
 import java.io.IOException;
 
 public class BackendErrorHandler implements ResponseErrorHandler {
