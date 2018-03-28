@@ -1,0 +1,244 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/sdc/v1/catalog/services/"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": [{
+                "uuid": "446afaf6-79b5-420e-aff8-7551b00bb510",
+                "invariantUUID": "7e4781e8-6c6e-41c5-b889-6a321d5f2490",
+                "name": "FreeRadius-service",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/446afaf6-79b5-420e-aff8-7551b00bb510/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "35911438-4621-439b-a23d-3e07680c724b",
+                "invariantUUID": "ca2f0af5-95e4-4058-b037-5c0de0f80bfa",
+                "name": "vIMS",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/35911438-4621-439b-a23d-3e07680c724b/toscaModel",
+                "category": "E2E Service",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "8cdc744a-9327-47cc-a9de-67d8d46b816f",
+                "invariantUUID": "d2b9c343-c41a-4f85-ae36-c53cd4b7abcc",
+                "name": "vIMSservice3",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/8cdc744a-9327-47cc-a9de-67d8d46b816f/toscaModel",
+                "category": "VoIP Call Control",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "fcea1d5b-c8de-4355-8fda-64e0d84494e6",
+                "invariantUUID": "b58a118e-eeb9-4f6e-bdca-e292f84d17df",
+                "name": "vFW-service-2VF-based",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/fcea1d5b-c8de-4355-8fda-64e0d84494e6/toscaModel",
+                "category": "Network Service",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "9d356a71-ac7a-40f0-b2b2-b302c8b4ef63",
+                "invariantUUID": "4526a034-e4fc-4ea3-87d0-8b8fca4a93b1",
+                "name": "serviceFRDBS",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/9d356a71-ac7a-40f0-b2b2-b302c8b4ef63/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "b821e80a-40a5-4fab-ac5d-3d49a54c4db3",
+                "invariantUUID": "9765d74e-c8f2-4982-bc90-548c854cbde6",
+                "name": "EricDebeau",
+                "version": "0.1",
+                "toscaModelURL": "/sdc/v1/catalog/services/b821e80a-40a5-4fab-ac5d-3d49a54c4db3/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+                "lastUpdaterUserId": "cs0008",
+                "distributionStatus": "DISTRIBUTION_NOT_APPROVED"
+            },
+            {
+                "uuid": "cc3ec088-227c-49e2-b4c3-237214b88c84",
+                "invariantUUID": "e1685613-136b-4990-a590-d0651a640a68",
+                "name": "vMRFaaS4",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/cc3ec088-227c-49e2-b4c3-237214b88c84/toscaModel",
+                "category": "Network Service",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "10be4044-8217-4397-8b62-85c58688d4ba",
+                "invariantUUID": "a62a335f-a6e3-40dd-8b60-de8410301240",
+                "name": "OPL_FWtest1_service",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/10be4044-8217-4397-8b62-85c58688d4ba/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "3dd3923d-1681-4f5b-99bb-f695ab147004",
+                "invariantUUID": "026e8046-4d3a-41d9-b4c2-6793186fd83d",
+                "name": "vFW",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/3dd3923d-1681-4f5b-99bb-f695ab147004/toscaModel",
+                "category": "Network Service",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "d15de0e3-d8fe-4cc3-a0b1-809ea95cbac8",
+                "invariantUUID": "6046d5f5-b39e-4306-a47e-0762c88d8b93",
+                "name": "1f298e99-082b-4a7f-a579",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/d15de0e3-d8fe-4cc3-a0b1-809ea95cbac8/toscaModel",
+                "category": "Network L1-3",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "f5ab9333-692f-42bc-b5dc-3ed753aa0d14",
+                "invariantUUID": "83a9f465-24d2-4dd3-98b8-328481cf9340",
+                "name": "c55011b0-f26c-43dd-9a62",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/f5ab9333-692f-42bc-b5dc-3ed753aa0d14/toscaModel",
+                "category": "Network L1-3",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "33826edf-fddd-4891-b726-8f16ea0e020c",
+                "invariantUUID": "0475334e-e141-42b3-b3ee-4df049c3cd53",
+                "name": "ccfc0cb4-bdff-4ae2-aa0e",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/33826edf-fddd-4891-b726-8f16ea0e020c/toscaModel",
+                "category": "Network L1-3",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "340bf137-8c6c-4d5b-b185-19364dfc74ed",
+                "invariantUUID": "7e4781e8-6c6e-41c5-b889-6a321d5f2490",
+                "name": "FreeRadius-service",
+                "version": "2.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/340bf137-8c6c-4d5b-b185-19364dfc74ed/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "d0cac11e-332f-47e8-86d8-cb0b82655bb9",
+                "invariantUUID": "ca2f0af5-95e4-4058-b037-5c0de0f80bfa",
+                "name": "vIMS",
+                "version": "2.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/d0cac11e-332f-47e8-86d8-cb0b82655bb9/toscaModel",
+                "category": "E2E Service",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "e245a0a2-34fc-46c7-912c-bd39305275c1",
+                "invariantUUID": "29db0b2c-a877-45e8-8175-4ac526d87eee",
+                "name": "vMRFaaS",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/e245a0a2-34fc-46c7-912c-bd39305275c1/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "b9e06990-99e2-480f-96ac-c6e50c83f2bb",
+                "invariantUUID": "008943ad-73be-4d57-9105-962c4cb16a71",
+                "name": "vMRFaas2",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/b9e06990-99e2-480f-96ac-c6e50c83f2bb/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "98d95267-5e0f-4531-abf8-f14b90031dc5",
+                "invariantUUID": "709d157b-52fb-4250-976e-7133dff5c347",
+                "name": "NewFreeRadius-service",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/98d95267-5e0f-4531-abf8-f14b90031dc5/toscaModel",
+                "category": "Network L4+",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "d8d2429b-0863-462c-adc7-cd38d77331ed",
+                "invariantUUID": "e1685613-136b-4990-a590-d0651a640a68",
+                "name": "vMRFaaS4",
+                "version": "1.1",
+                "toscaModelURL": "/sdc/v1/catalog/services/d8d2429b-0863-462c-adc7-cd38d77331ed/toscaModel",
+                "category": "Network Service",
+                "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+                "lastUpdaterUserId": "cs0008",
+                "distributionStatus": "DISTRIBUTION_NOT_APPROVED"
+            },
+            {
+                "uuid": "9cfc73ad-795d-42ad-8a4f-54e6b3f33ef9",
+                "invariantUUID": "79f0574e-caf8-4bac-8189-909b2127e9e9",
+                "name": "vMRFaaS3",
+                "version": "1.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/9cfc73ad-795d-42ad-8a4f-54e6b3f33ef9/toscaModel",
+                "category": "Network Service",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "af1ac9db-9d8b-4ca0-964c-58755826b59a",
+                "invariantUUID": "d2b9c343-c41a-4f85-ae36-c53cd4b7abcc",
+                "name": "vIMSservice3",
+                "version": "2.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/af1ac9db-9d8b-4ca0-964c-58755826b59a/toscaModel",
+                "category": "VoIP Call Control",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            },
+            {
+                "uuid": "1e3feeb0-8e36-46c6-862c-236d9c626439",
+                "invariantUUID": "b58a118e-eeb9-4f6e-bdca-e292f84d17df",
+                "name": "vFW-service-2VF-based",
+                "version": "2.0",
+                "toscaModelURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/toscaModel",
+                "category": "Network Service",
+                "lifecycleState": "CERTIFIED",
+                "lastUpdaterUserId": "jm0007",
+                "distributionStatus": "DISTRIBUTED"
+            }
+        ],
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

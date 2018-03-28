@@ -1,0 +1,28 @@
+[
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "uuid": "[&1].id",
+        "description": "[&1].description",
+        "name": "[&1].name",
+        "invariantUUID": "[&1].invariantUUID",
+        "category": "[&1].category",
+        "distributionStatus": "[&1].distributionStatus",
+        "version": "[&1].version",
+        "lifecycleState": "[&1].lifecycleStatus",
+        "lastUpdaterUserId": "[&1].relatedParty.id"
+      }
+    }
+  },
+  {
+    "operation": "default",
+    "spec": {
+      "*": {
+        "relatedParty": {
+            "role": "lastUpdater"
+        }
+      }
+    }
+  }
+]
