@@ -6,12 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Error", propOrder = {
-        "code",
-        "message",
-        "description",
-        "infoURL"
-})
+@XmlType(name = "Error", propOrder = {"code", "message", "description", "infoURL"})
 public class ApiError {
     @XmlElement(required = true)
     protected String code;
@@ -22,8 +17,7 @@ public class ApiError {
     @XmlElement(required = true)
     protected String infoURL;
 
-    public ApiError() {
-    }
+    public ApiError() {}
 
     public ApiError(String code, String message, String description, String infoURL) {
         this.code = code;

@@ -1,0 +1,18 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/ecomp/mso/infra/serviceInstance/v4"
+    },
+    "response": {
+        "status": 201,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "jsonBody": {
+            "requestReference": {
+                "instanceId": "instanceId",
+                "requestId": "requestId"
+            }
+        }
+    }
+}

@@ -1,0 +1,60 @@
+
+## SDC Get catalog service list
+
+GET {{sdc.url}}/sdc/v1/catalog/services HTTP/1.1
+Accept: application/json
+Authorization: {{sdc.token}}
+USER_ID: {{sdc.userId}}
+X-TransactionId: {{sdc.transactionId}}
+X-FromAppId: {{sdc.appId}}
+x-ecomp-instanceid: {{sdc.instanceId}}
+
+### SDC Get Vendor Software Products
+
+GET {{sdc.url}}/onboarding-api/v1.0/vendor-software-products HTTP/1.1
+Accept: application/json
+Authorization: {{sdc.token}}
+USER_ID: {{sdc.userId}}
+X-TransactionId: {{sdc.transactionId}}
+X-FromAppId: {{sdc.appId}}
+x-ecomp-instanceid: {{sdc.instanceId}}
+
+### SO Query orchestrationRequests
+
+GET {{so.url}} HTTP/1.1
+Accept: application/json
+Authorization: {{so.token}}
+X-TransactionId: {{so.transactionId}}
+X-FromAppId: {{so.appId}}
+
+### AAI Get all Customer Accounts
+
+GET {{aai.url}}/business/customers HTTP/1.1
+Accept: application/json
+Authorization: {{aai.token}}
+X-TransactionId: {{aai.transactionId}}
+X-FromAppId: {{aai.appId}}
+
+### AAI vnfs
+
+GET {{aai.url}}/network/generic-vnfs HTTP/1.1
+Accept: application/json
+Authorization: {{aai.token}}
+X-TransactionId: {{aai.transactionId}}
+X-FromAppId: {{aai.appId}}
+
+## AAI Services list
+
+GET {{aai.url}}/service-design-and-creation/services HTTP/1.1
+Accept: application/json
+Authorization: {{aai.token}}
+X-TransactionId: {{aai.transactionId}}
+X-FromAppId: {{aai.appId}}
+
+## AAI Serivce Instance for service vMRFaaS3
+
+GET {{aai.url}}/business/customers/customer/Sina/service-subscriptions/service-subscription/vIMS/service-instances/ HTTP/1.1
+Accept: application/json
+Authorization: {{aai.token}}
+X-TransactionId: {{aai.transactionId}}
+X-FromAppId: {{aai.appId}}
