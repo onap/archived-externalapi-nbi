@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/v11/business/customers/customer/6490/service-subscriptions"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+        "service-subscription": [
+          {
+            "service-type": "vFW-service-2VF-based",
+            "resource-version": "1519809287769"
+          },
+          {
+            "service-type": "vFW",
+            "resource-version": "1519660513613"
+          }
+        ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

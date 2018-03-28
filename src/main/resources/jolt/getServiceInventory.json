@@ -1,0 +1,44 @@
+[
+  {
+    "operation": "shift",
+     "spec": {
+      "service-instance-id": "id",
+      "service-instance-name": "name",
+       "model-version-id" : "serviceSpecification.id",
+       "model-invariant-id": "serviceSpecification.invariantUUID",
+       "vnfs" : {
+         "*": {
+           "vnf-id": "supportingResource[&1].id",
+           "related-link": "supportingResource[&1].href",
+           "vnf-name": "supportingResource[&1].name",
+           "prov-status": "supportingResource[&1].status",
+           "model-invariant-id": "supportingResource[&1].modelInvariantId",
+           "model-version-id": "supportingResource[&1].modelVersionId",
+           "model-customisation-id": "supportingResource[&1].status"
+
+         }
+       }
+     }
+  },
+  {
+    "operation": "default",
+    "spec": {
+      "type": "service-instance",
+      "hasStarted": "yes",
+      "@type": "serviceONAP",
+      "serviceSpecification" : {
+        "@type" :"ONAPservice"
+      },
+      "supportingResource[]" : {
+        "*": {
+          "@referredType": "ONAP resource"
+        }
+
+      },
+      "relatedParty" : {
+        "role" :"ONAPcustomer"
+      }
+
+    }
+  }
+]

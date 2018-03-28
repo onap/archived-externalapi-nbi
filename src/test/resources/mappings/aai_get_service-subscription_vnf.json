@@ -1,0 +1,58 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/v11/network/generic-vnfs/generic-vnf/cb80fbb6-9aa7-4ac5-9541-e14f45de533e"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "vnf-id": "cb80fbb6-9aa7-4ac5-9541-e14f45de533e",
+      "vnf-name": "NewFreeRadius-VNF-instance-01",
+      "vnf-type": "NewFreeRadius-service/New-FreeRadius 0",
+      "service-id": "709d157b-52fb-4250-976e-7133dff5c347",
+      "prov-status": "PREPROV",
+      "orchestration-status": "Created",
+      "in-maint": false,
+      "is-closed-loop-disabled": false,
+      "resource-version": "1516871905399",
+      "model-invariant-id": "f5993703-977f-4346-a1c9-c1884f8cfd8d",
+      "model-version-id": "902438f7-1e4c-492d-b7cc-8650e13b8aeb",
+      "model-customization-id": "a2def5c8-ab15-482b-a2cd-2af0b987300f",
+      "nf-type": "",
+      "nf-function": "",
+      "nf-role": "",
+      "nf-naming-code": "",
+      "relationship-list": {
+        "relationship": [
+          {
+            "related-to": "service-instance",
+            "related-link": "/aai/v11/business/customers/customer/Sina/service-subscriptions/service-subscription/NewFreeRadius-service/service-instances/service-instance/e4688e5f-61a0-4f8b-ae02-a2fbde623bcb",
+            "relationship-data": [
+              {
+                "relationship-key": "customer.global-customer-id",
+                "relationship-value": "Sina"
+              },
+              {
+                "relationship-key": "service-subscription.service-type",
+                "relationship-value": "NewFreeRadius-service"
+              },
+              {
+                "relationship-key": "service-instance.service-instance-id",
+                "relationship-value": "e4688e5f-61a0-4f8b-ae02-a2fbde623bcb"
+              }
+            ],
+            "related-to-property": [
+              {
+                "property-key": "service-instance.service-instance-name",
+                "property-value": "NewFreeRadius-service-instance-01"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
