@@ -1,0 +1,43 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/v11/business/customers/customer/6490/service-subscriptions/service-subscription/vFW-service-2VF-based/service-instances/"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "service-instance": [
+        {
+          "service-instance-id": "vfw-service-id",
+          "service-instance-name": "vfw-service-name",
+          "model-invariant-id": "vfw-service-invariant-id",
+          "model-version-id": "9vfw-service-modek-version-id",
+          "resource-version": "1518508381261",
+          "relationship-list": {
+            "relationship": [
+              {
+                "related-to": "generic-vnf",
+                "related-link": "/aai/v11/network/generic-vnfs/generic-vnf/cb80fbb6-9aa7-4ac5-9541-e14f45de533e",
+                "relationship-data": [
+                  {
+                    "relationship-key": "generic-vnf.vnf-id",
+                    "relationship-value": "cb80fbb6-9aa7-4ac5-9541-e14f45de533e"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "generic-vnf.vnf-name",
+                    "property-value": "NewFreeRadius-VNF-instance-01"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

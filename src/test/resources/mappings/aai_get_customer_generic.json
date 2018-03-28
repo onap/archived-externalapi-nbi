@@ -1,0 +1,18 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/aai/v11/business/customers/customer/generic"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "global-customer-id": "generic",
+            "subscriber-name": "generic",
+            "subscriber-type": "BSS",
+            "resource-version": "1518595364087"
+        },
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

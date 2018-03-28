@@ -1,0 +1,24 @@
+[
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "service-instance-id": "[&1].id",
+        "service-instance-name": "[&1].name",
+        "service-type": "[&1].serviceSpecification.name",
+        "model-version-id": "[&1].serviceSpecification.id"
+      }
+    }
+  },
+  {
+    "operation": "default",
+    "spec": {
+      "*": {
+        "relatedParty": {
+
+            "role": "ONAPcustomer"
+          }
+        }
+    }
+  }
+]

@@ -1,0 +1,167 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/aai/v11/cloud-infrastructure/cloud-regions/cloud-region/CloudOwner/RegionOne/tenants"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+
+    "tenant": [
+        {
+            "tenant-id": "31047205ce114b60833b23e400d6a535",
+            "tenant-name": "onap-vnfs",
+            "resource-version": "1516022902124",
+            "relationship-list": {
+                "relationship": [
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/OPL-User/service-subscriptions/service-subscription/OPL_FWtest1_service_type",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "OPL-User"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "OPL_FWtest1_service_type"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/Sina/service-subscriptions/service-subscription/NewFreeRadius-service",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "Sina"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "NewFreeRadius-service"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/Sina/service-subscriptions/service-subscription/vMRFaaS3",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "Sina"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "vMRFaaS3"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/Sina/service-subscriptions/service-subscription/FreeRadius-service",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "Sina"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "FreeRadius-service"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/6401/service-subscriptions/service-subscription/vFW-service-model",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "6401"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "vFW-service-model"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/Sina/service-subscriptions/service-subscription/vFW-service-model",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "Sina"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "vFW-service-model"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/6404/service-subscriptions/service-subscription/vFW-service-model",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "6404"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "vFW-service-model"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/6405/service-subscriptions/service-subscription/vFW-service-model",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "6405"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "vFW-service-model"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/6406/service-subscriptions/service-subscription/vFW-service-model",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "6406"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "vFW-service-model"
+                            }
+                        ]
+                    },
+                    {
+                        "related-to": "service-subscription",
+                        "related-link": "/aai/v11/business/customers/customer/Sina/service-subscriptions/service-subscription/serviceFRDBS",
+                        "relationship-data": [
+                            {
+                                "relationship-key": "customer.global-customer-id",
+                                "relationship-value": "Sina"
+                            },
+                            {
+                                "relationship-key": "service-subscription.service-type",
+                                "relationship-value": "serviceFRDBS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+
+        },
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

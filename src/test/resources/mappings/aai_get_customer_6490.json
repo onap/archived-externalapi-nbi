@@ -1,0 +1,18 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/aai/v11/business/customers/customer/6490"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "global-customer-id": "6490",
+            "subscriber-name": "Jean Pontus",
+            "subscriber-type": "BSS",
+            "resource-version": "1518595364087"
+        },
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

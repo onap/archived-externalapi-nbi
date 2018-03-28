@@ -1,0 +1,55 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/v11/business/customers/customer/6490/service-subscriptions/service-subscription/vFW/service-instances/service-instance/e4688e5f-61a0-4f8b-ae02-a2fbde623bcb"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+        "service-instance-id": "e4688e5f-61a0-4f8b-ae02-a2fbde623bcb",
+        "service-instance-name": "NewFreeRadius-service-instance-01",
+        "model-invariant-id": "709d157b-52fb-4250-976e-7133dff5c347",
+        "model-version-id": "98d95267-5e0f-4531-abf8-f14b90031dc5",
+        "resource-version": "1518508381261",
+        "relationship-list": {
+          "relationship": [
+            {
+              "related-to": "generic-vnf",
+              "related-link": "/aai/v11/network/generic-vnfs/generic-vnf/cb80fbb6-9aa7-4ac5-9541-e14f45de533e",
+              "relationship-data": [
+                {
+                  "relationship-key": "generic-vnf.vnf-id",
+                  "relationship-value": "cb80fbb6-9aa7-4ac5-9541-e14f45de533e"
+                }
+              ],
+              "related-to-property": [
+                {
+                  "property-key": "generic-vnf.vnf-name",
+                  "property-value": "NewFreeRadius-VNF-instance-01"
+                }
+              ]
+            },
+            {
+              "related-to": "generic-vnf",
+              "related-link": "/aai/v11/network/generic-vnfs/generic-vnf/cb80fbb6-9aa7-4ac5-9541-e14f45de533e",
+              "relationship-data": [
+                {
+                  "relationship-key": "generic-vnf.vnf-id",
+                  "relationship-value": "cb80fbb6-9aa7-4ac5-9541-e14f45de533e"
+                }
+              ],
+              "related-to-property": [
+                {
+                  "property-key": "generic-vnf.vnf-name",
+                  "property-value": "NewFreeRadius-VNF-instance-01"
+                }
+              ]
+            }
+          ]
+        }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

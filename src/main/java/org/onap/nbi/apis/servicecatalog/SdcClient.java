@@ -50,8 +50,8 @@ public class SdcClient {
 
 
     public LinkedHashMap callGet(String id) {
-        StringBuilder callURL = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL).append(id)
-                .append(OnapComponentsUrlPaths.SDC_GET_PATH);
+        StringBuilder callURL = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL)
+                .append(id).append(OnapComponentsUrlPaths.SDC_GET_PATH);
 
         ResponseEntity<Object> response = callSdc(callURL.toString());
         return (LinkedHashMap) response.getBody();
@@ -134,7 +134,6 @@ public class SdcClient {
 
         } catch (BackendFunctionalException e) {
             LOGGER.error(HTTP_CALL_SDC_ON + callURL.toString() + " error " + e);
-
             return null;
         }
     }

@@ -1,0 +1,12 @@
+{
+    "request": {
+        "method": "PUT",
+        "url": "/aai/v11/business/customers/customer/new"
+    },
+    "response": {
+        "status": 201,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
