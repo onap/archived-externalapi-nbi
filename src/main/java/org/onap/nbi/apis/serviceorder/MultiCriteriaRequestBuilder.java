@@ -1,0 +1,107 @@
+package org.onap.nbi.apis.serviceorder;
+
+import org.onap.nbi.apis.serviceorder.model.StateType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+@Service
+public class MultiCriteriaRequestBuilder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceOrderResource.class);
+
+
+    public Query buildRequest(MultiValueMap<String, String> params) {
+        Query query = new Query();
+
+        List<String> externalIds = params.get("externalId");
+        if (!CollectionUtils.isEmpty(externalIds)) {
+            String externalId = externalIds.get(0);
+            LOGGER.debug("add criterion externalId {0}",externalId);
+            query.addCriteria(Criteria.where("externalId").is(externalId));
+
+        }
+        List<String> states = params.get("state");
+        if (!CollectionUtils.isEmpty(states)) {
+            String state = states.get(0);
+            LOGGER.debug("add criterion state {0}",state);
+            query.addCriteria(Criteria.where("state").is(StateType.fromValue(state)));
+
+        }
+        List<String> descriptions = params.get("description");
+        if (!CollectionUtils.isEmpty(descriptions)) {
+            String description = descriptions.get(0);
+            LOGGER.debug("add criterion description {0}",description);
+            query.addCriteria(Criteria.where("description").is(description));
+
+        }
+
+        handleDate(params, query);
+
+        handleOffsetAndLimit(params, query);
+
+        return query;
+    }
+
+    private void handleDate(MultiValueMap<String, String> params, Query query) {
+        List<String> orderDateLts = params.get("orderDate.lt");
+        List<String> orderDateGts = params.get("orderDate.gt");
+        if (!CollectionUtils.isEmpty(orderDateLts) || !CollectionUtils.isEmpty(orderDateGts)) {
+            Criteria orderDateCriteria = Criteria.where("orderDate");
+
+            if (!CollectionUtils.isEmpty(orderDateLts)) {
+                String orderDateLt = orderDateLts.get(0);
+                LOGGER.debug("add criterion orderDate.lt {0}",orderDateLt);
+                orderDateCriteria.lt(convertDate(orderDateLt));
+            }
+            if (!CollectionUtils.isEmpty(orderDateGts)) {
+                String orderDateGt = orderDateGts.get(0);
+                LOGGER.debug("add criterion orderDate.gt {0}",orderDateGt);
+                orderDateCriteria.gt(convertDate(orderDateGt));
+            }
+            query.addCriteria(orderDateCriteria);
+        }
+    }
+
+    private void handleOffsetAndLimit(MultiValueMap<String, String> params, Query query) {
+        List<String> offsets = params.get("offset");
+        List<String> limits = params.get("limit");
+        if (!CollectionUtils.isEmpty(offsets) && !CollectionUtils.isEmpty(limits)) {
+            String offsetString = offsets.get(0);
+            String limitString = limits.get(0);
+            int offset = Integer.parseInt(offsetString);
+            int limit = Integer.parseInt(limitString);
+            final Pageable pageableRequest = new PageRequest(offset, limit);
+            query.with(pageableRequest);
+        } else if (!CollectionUtils.isEmpty(limits)) {
+            String limitString = limits.get(0);
+            int limit = Integer.parseInt(limitString);
+            final Pageable pageableRequest = new PageRequest(0, limit);
+            query.with(pageableRequest);
+        }
+    }
+
+    private Date convertDate(String dateString) {
+        String dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+        try {
+            return formatter.parse(dateString);
+        } catch (ParseException e) {
+            LOGGER.error("unable to convert date " + dateString + ", the pattern is " + dateFormat + " ; " + e);
+        }
+        return null;
+
+    }
+
+}

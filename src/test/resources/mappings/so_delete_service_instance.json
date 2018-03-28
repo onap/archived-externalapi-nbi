@@ -1,0 +1,18 @@
+{
+    "request": {
+        "method": "DELETE",
+        "url": "/ecomp/mso/infra/serviceInstances/e4688e5f-61a0-4f8b-ae02-a2fbde623bcb"
+    },
+    "response": {
+        "status": 201,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "jsonBody": {
+            "requestReference": {
+                "instanceId": "instanceId",
+                "requestId": "requestId"
+            }
+        }
+    }
+}

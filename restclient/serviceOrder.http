@@ -1,0 +1,29 @@
+### Create REJECTED
+POST  {{serviceOrder.url}}/serviceOrder
+    ?fields=id,state,description,relatedParty.id,toto
+Accept: application/json
+Content-Type: application/json
+
+< ./json/serviceOrder_create_in_rejected.json
+
+### Create COMPLETED
+POST  {{serviceOrder.url}}/serviceOrder
+    ?fields=id,state,description,relatedParty.id,toto
+Accept: application/json
+Content-Type: application/json
+
+< ./json/serviceOrder_create_in_completed.json
+
+### List
+GET  {{serviceOrder.url}}/serviceOrder/
+Accept: application/json
+
+### List with fields
+GET  {{serviceOrder.url}}/serviceOrder
+    ?fields=id,state,description,relatedParty.id
+Accept: application/json
+
+### List COMPLETED
+GET  {{serviceOrder.url}}/serviceOrder
+    ?state=COMPLETED
+Accept: application/json

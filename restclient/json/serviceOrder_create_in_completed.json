@@ -1,0 +1,43 @@
+{
+    "externalId": "LudONAP001",
+    "priority": "1",
+    "description": "Ludo first ONAP Order",
+    "category": "Consumer",
+    "requestedStartDate": "2018-02-28T13:33:37.299Z",
+    "requestedCompletionDate": "2018-02-28T13:33:37.299Z",
+    "relatedParty": [
+        {
+            "id": "6490",
+            "role": "ONAPcustomer",
+            "name": "Jean Pontus",
+            "@referredType": "individual"
+        }
+    ],
+    "orderItem": [
+        {
+            "id": "A",
+            "action": "add",
+            "service": {
+                "serviceState": "active",
+                "serviceSpecification": {
+                    "id": "1e3feeb0-8e36-46c6-862c-236d9c626439"
+                }
+            }
+        },
+        {
+            "id": "B",
+            "action": "add",
+            "service": {
+                "serviceState": "active",
+                "serviceSpecification": {
+                    "id": "1e3feeb0-8e36-46c6-862c-236d9c626439"
+                }
+            },
+            "orderItemRelationship": [
+                {
+                    "id": "A"
+                }
+            ]
+        }
+    ]
+}

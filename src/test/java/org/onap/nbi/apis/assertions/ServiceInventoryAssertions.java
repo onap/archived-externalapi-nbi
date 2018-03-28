@@ -1,4 +1,4 @@
-package org.onap.nbi.apis.resources;
+package org.onap.nbi.apis.assertions;
 
 
 import org.springframework.http.HttpStatus;

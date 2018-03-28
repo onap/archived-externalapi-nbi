@@ -1,0 +1,20 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/ecomp/mso/infra/orchestrationRequests/v4/requestId"
+    },
+    "response": {
+        "status": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "jsonBody": {
+            "request": {
+                "requestStatus": {
+                    "requestState": "COMPLETE",
+                    "percentProgress": 100
+                }
+            }
+        }
+    }
+}
