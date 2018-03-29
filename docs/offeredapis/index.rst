@@ -191,7 +191,7 @@ With the current version of APIs used from SO and AAI we need to manage a ‘cus
 Developer Guide
 ***************
 
-Technical information about NBI (dependancies, configuration, running & testing) could be found here: `DevDoc <NBI_R1_Developer_Guide.rst>`_
+Technical information about NBI (dependancies, configuration, running & testing) could be found here: `DevDoc <../architecture/NBI_R1_Developer_Guide.rst>`_
 
 
 
