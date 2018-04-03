@@ -1,0 +1,11 @@
+Code-Review+1: romain gimbert <romain.gimbert@orange.com>
+Code-Review+1: Nicolas LAPLAUD <nicolas.laplaud@orange.com>
+Code-Review+1: Ludovic Robert <ludovic.robert@orange.com>
+Code-Review+2: Andy Mayer <am803u@att.com>
+Code-Review+1: Raluca Sirbu <rs2184@att.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Submitted-by: Andy Mayer <am803u@att.com>
+Submitted-at: Tue, 03 Apr 2018 22:42:19 +0000
+Reviewed-on: https://gerrit.onap.org/r/39707
+Project: externalapi/nbi
+Branch: refs/heads/master
