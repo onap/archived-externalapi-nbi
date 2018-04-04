@@ -27,8 +27,8 @@ This project use various framework which are managed with Maven dependency manag
 ***************
 Configuration
 ***************
-A configuration file, *src/main/resources/application.properties* list all the component interface that can be configured depending on the environment were the app is deployed. 
-By default, the application runs with an embedded MySQL H2 Database and a MongoDB local instance.
+A configuration file, *src/main/resources/application-localhost.properties* list all the component interface that can be configured depending on the environment were the app is deployed.
+By default, the application runs with an embedded both MongoDB and MariaDB local instance.
 This file also list configurations of all the REST interface maid from NBI to other ONAP component such as SDC, AA&I and SO.
 
 ***************
@@ -45,7 +45,7 @@ Running and testing the application
 
 **Locally**
 
-Ensure that you have a MongoDB instance running and configured in *application.properties* file.
+Ensure that you have a MongoDB and MariaDB instance running and properly configured in *application.properties* file.
 Run *Application.java* class in your favorite IDE
 
 Or through a terminal, ensure that your maven installation is works and run *mvn spring-boot:run* command to start the appication.
@@ -57,6 +57,8 @@ in progress ...
 
 
 **Testing**
-
+When the app is running, you can access the API at http://yourhostname:8080/nbi/api/v1/ and fill the url with the name of the resources you asking for (/serviceSpecification, /service, /serviceOrder or /status)
 You can run a test by using `VisualStudio RestClient plugin <https://github.com/Huachao/vscode-restclient>`_
 See the *restclient* package at root level to find *.vscode/settings.json* configuration file and */json/* package with samples requests that can be run.
+You can also trigger these endpoints with any RESTful client or automation framework.
+

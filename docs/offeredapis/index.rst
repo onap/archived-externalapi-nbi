@@ -10,7 +10,9 @@ nbi - northbound interface - External API for ONAP
 Introduction
 ***************
 
-NBI stands for NorthBound Interface. It brings to ONAP a set of API that can be used by external systems as BSS for example. These API are based on **TMF API**. 
+NBI stands for NorthBound Interface. It brings to ONAP a set of API that can be used by external systems as BSS for example.
+These API are based on **TMF API**.
+
 
 ***************
 Global NBI architecture for Beijing release
@@ -29,18 +31,18 @@ APIs are described with a  state version with “v” following the API Name, e.
 The schema associated with a REST API must have its version number aligned with that of the REST API.
 
 The version number has major, minor and revision numbers. E.g. v1.0.0
-The version number (without the revision number) is held in the URI.   
+The version number (without the revision number) is held in the URI.
 
 The major version number is incremented for an incompatible change.
 The minor version number is incremented for a compatible change.
 For minor modifications of the API, version numbering must not be updated, provided the following  backward compatibility rules are respected:
 
-- New elements in a data type must be optional (minOccurs=0) 
-- Changes in the cardinality of an attribute in a data type must be from mandatory to optional or from lower to greater 
-- New attributes defined in an element must be optional (absence of use=”required”). 
-- If new enumerated values are included, the former ones and its meaning must be kept. 
-- If new operations are added, the existing operations must be kept 
-- New parameters added to existing operations must be optional and existing parameters 
+- New elements in a data type must be optional (minOccurs=0)
+- Changes in the cardinality of an attribute in a data type must be from mandatory to optional or from lower to greater
+- New attributes defined in an element must be optional (absence of use=”required”).
+- If new enumerated values are included, the former ones and its meaning must be kept.
+- If new operations are added, the existing operations must be kept
+- New parameters added to existing operations must be optional and existing parameters
 must be kept
 
 For major modifications of the API, not backward compatible and forcing client implementations to be changed, the version number must be updated.
@@ -49,26 +51,26 @@ For major modifications of the API, not backward compatible and forcing client i
 API Table
 ***************
 
-.. |pdf-icon| image:: images/pdf.png 
+.. |pdf-icon| image:: images/pdf.png
               :width: 40px
-              
-.. |swagger-icon| image:: images/swagger.png 
-                  :width: 40px
-           
-                  
-.. |swaggerUI-icon| image:: images/swaggerUI.png 
-                    :width: 40px
-                  
-.. |html-icon| image:: images/html.png 
-               :width: 40px
-             
-.. |plantuml-icon| image:: images/uml.jpg 
-                  :width: 40px
-                  
-.. |postman-icon| image:: images/postman.png 
+
+.. |swagger-icon| image:: images/swagger.png
                   :width: 40px
 
-.. csv-table:: 
+
+.. |swaggerUI-icon| image:: images/swaggerUI.png
+                    :width: 40px
+
+.. |html-icon| image:: images/html.png
+               :width: 40px
+
+.. |plantuml-icon| image:: images/uml.jpg
+                  :width: 40px
+
+.. |postman-icon| image:: images/postman.png
+                  :width: 40px
+
+.. csv-table::
    :header: "API", "|swagger-icon|", "|html-icon|", "|plantuml-icon|", "|swagger-icon|", "|postman-icon|", "|pdf-icon|"
    :widths: 10,5,5,5,5,5,5
 
@@ -77,7 +79,7 @@ API Table
    "serviceInventory", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "`link <http://editor2.swagger.io/#/?import=http://onap.readthedocs.io/en/latest/_downloads/serviceInventory_1_0_0.json>`_", "coming", "coming"
    "serviceOrder", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "`link <http://editor2.swagger.io/#/?import=http://onap.readthedocs.io/en/latest/_downloads/serviceInventory_1_0_0.json>`_", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
 
-   
+
 ***************
 API Description
 ***************
@@ -168,7 +170,7 @@ It is possible to use POST operation to create new serviceOrder in nbi and trigg
 •	offset and limit are used for pagination purpose
 
 
- 
+
 ServiceOrder will manage only ‘add’ and ‘delete’ operation (no change).
 
 prerequisites & assumptions :
@@ -182,20 +184,15 @@ With the current version of APIs used from SO and AAI we need to manage a ‘cus
 
 •	Additionally nbi will create in AAI the service-type if it did not exists for the customer
 
-•	Integration is done at service-level: nbi will trigger only SO request at serviceInstance level -->  ONAP prerequisite: SO must be able to find a BPMN to process service fulfillment (integrate vnf, vnf activation in SDNC, VF module  
+•	Integration is done at service-level: nbi will trigger only SO request at serviceInstance level -->  ONAP prerequisite: SO must be able to find a BPMN to process service fulfillment (integrate vnf, vnf activation in SDNC, VF module
 
 •	State management: States are only managed by ServiceOrder component and could not be updated from north side via API. Accordingly to service order item fulfillment progress, order item state are updated. Order state is automatically updated based on item state.
 
-   
+
 ***************
 Developer Guide
 ***************
 
 Technical information about NBI (dependancies, configuration, running & testing) could be found here: `DevDoc <../architecture/NBI_R1_Developer_Guide.rst>`_
-
-
-
-
-
 
 
