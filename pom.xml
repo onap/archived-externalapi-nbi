@@ -21,9 +21,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<nexusproxy>https://nexus.onap.org</nexusproxy>
-		<snapshotNexusPath>/content/repositories/snapshots/</snapshotNexusPath>
-		<releaseNexusPath>/content/repositories/releases/</releaseNexusPath>
-		<stagingNexusPath>/content/repositories/staging/</stagingNexusPath>
+		<snapshotNexusPath>content/repositories/snapshots/</snapshotNexusPath>
+		<releaseNexusPath>content/repositories/releases/</releaseNexusPath>
+		<stagingNexusPath>content/repositories/staging/</stagingNexusPath>
 		<java.version>1.8</java.version>
 	</properties>
 
