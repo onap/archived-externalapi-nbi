@@ -29,11 +29,24 @@
 	<name>nbi-rest-services</name>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.10.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<groupId>org.onap.oparent</groupId>
+		<artifactId>oparent</artifactId>
+		<version>1.1.0</version>
+		<relativePath />
 	</parent>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>1.5.10.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,6 +56,13 @@
 		<releaseNexusPath>content/repositories/releases/</releaseNexusPath>
 		<stagingNexusPath>content/repositories/staging/</stagingNexusPath>
 		<java.version>1.8</java.version>
+		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
+		<docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
+		<!--docker -->
+		<docker.tag>${project.version}-${timestamp}</docker.tag>
+		<docker.latest.tag>${project.version}-latest</docker.latest.tag>
 	</properties>
 
 	<repositories>
@@ -55,12 +75,12 @@
 		<repository>
 			<id>ecomp-snapshots</id>
 			<name>Snapshot Repository</name>
-			<url>${nexusproxy}/${snapshotNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>ecomp-staging</id>
 			<name>Staging Repository</name>
-			<url>${nexusproxy}/${stagingNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/staging/</url>
 		</repository>
 	</repositories>
 
@@ -133,6 +153,11 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>1.1.7</version>
+		</dependency>
 
 		<!-- swagger -->
 
@@ -172,7 +197,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- test h2 -->
+		<!-- test h2  -->
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -183,7 +208,6 @@
 		<dependency>
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-			<version>${embedded-mongo.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -275,6 +299,58 @@
 							<goal>check</goal>
 						</goals>
 						<phase>process-sources</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.19.1</version>
+				<configuration>
+					<verbose>true</verbose>
+					<apiVersion>1.23</apiVersion>
+					<pullRegistry>${docker.pull.registry}</pullRegistry>
+					<pushRegistry>${docker.push.registry}</pushRegistry>
+					<images>
+						<image>
+							<name>nbi</name>
+							<alias>nbi</alias>
+							<build>
+								<cleanup>true</cleanup>
+								<tags>
+									<tag>${docker.tag}</tag>
+									<tag>${docker.latest.tag}</tag>
+								</tags>
+								<dockerFileDir>${project.basedir}</dockerFileDir>
+							</build>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>clean-images</id>
+						<phase>pre-clean</phase>
+						<goals>
+							<goal>remove</goal>
+						</goals>
+						<configuration>
+							<removeAll>true</removeAll>
+							<image>nbi</image>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-images</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>push-images</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>push</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
