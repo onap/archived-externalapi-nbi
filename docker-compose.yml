@@ -1,0 +1,30 @@
+version: "3.0"
+services:
+  mongo:
+    image: mongo
+    volumes:
+      - /var/lib/mongo
+    ports:
+    - 27017:27017
+    command: --smallfiles
+
+  mariadb:
+    image: mariadb
+    restart: always
+    volumes:
+      - /var/lib/mariadb
+    environment:
+      MYSQL_DATABASE: nbi
+      MYSQL_ROOT_PASSWORD: toto
+# APP  ***************************************************************************************
+  nbi:
+    build: .
+    image: nbi
+    ports:
+    - 8080:8080
+    depends_on:
+    - mariadb
+    - mongo
+volumes:
+  mariadb:
+  mongo:
