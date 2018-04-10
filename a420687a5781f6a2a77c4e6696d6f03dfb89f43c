@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_24aa9d19",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 3211
+      },
+      "writtenOn": "2018-04-10T07:29:43Z",
+      "side": 1,
+      "message": "avoid to declare onap repos: they are inherited from parent pom",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 15
+      },
+      "revId": "a420687a5781f6a2a77c4e6696d6f03dfb89f43c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c47099de",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 3211
+      },
+      "writtenOn": "2018-04-10T07:29:43Z",
+      "side": 1,
+      "message": "this plugin must be declared in a Profile called \"docker\" in order to match your jjb mvn-profile config",
+      "range": {
+        "startLine": 306,
+        "startChar": 0,
+        "endLine": 308,
+        "endChar": 29
+      },
+      "revId": "a420687a5781f6a2a77c4e6696d6f03dfb89f43c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8459315d",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 3211
+      },
+      "writtenOn": "2018-04-10T07:29:43Z",
+      "side": 1,
+      "message": "the image name should be something like onap/externalapi/nbi",
+      "range": {
+        "startLine": 316,
+        "startChar": 7,
+        "endLine": 316,
+        "endChar": 23
+      },
+      "revId": "a420687a5781f6a2a77c4e6696d6f03dfb89f43c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_24585d55",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 3211
+      },
+      "writtenOn": "2018-04-10T07:29:43Z",
+      "side": 1,
+      "message": "the image name should be something like onap/externalapi/nbi",
+      "range": {
+        "startLine": 338,
+        "startChar": 0,
+        "endLine": 338,
+        "endChar": 25
+      },
+      "revId": "a420687a5781f6a2a77c4e6696d6f03dfb89f43c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
