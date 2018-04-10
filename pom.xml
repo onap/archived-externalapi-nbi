@@ -35,6 +35,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -43,6 +44,13 @@
 		<releaseNexusPath>content/repositories/releases/</releaseNexusPath>
 		<stagingNexusPath>content/repositories/staging/</stagingNexusPath>
 		<java.version>1.8</java.version>
+		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
+		<docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
+		<!--docker -->
+		<docker.tag>${project.version}-${timestamp}</docker.tag>
+		<docker.latest.tag>${project.version}-latest</docker.latest.tag>
 	</properties>
 
 	<repositories>
@@ -55,27 +63,14 @@
 		<repository>
 			<id>ecomp-snapshots</id>
 			<name>Snapshot Repository</name>
-			<url>${nexusproxy}/${snapshotNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>ecomp-staging</id>
 			<name>Staging Repository</name>
-			<url>${nexusproxy}/${stagingNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/staging/</url>
 		</repository>
 	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>ecomp-releases</id>
-			<name>Release Repository</name>
-			<url>${nexusproxy}/${releaseNexusPath}</url>
-		</repository>
-		<snapshotRepository>
-			<id>ecomp-snapshots</id>
-			<name>Snapshot Repository</name>
-			<url>${nexusproxy}/${snapshotNexusPath}</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<licenses>
 		<license>
@@ -133,6 +128,11 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>1.1.7</version>
+		</dependency>
 
 		<!-- swagger -->
 
@@ -172,7 +172,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- test h2 -->
+		<!-- test h2  -->
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -280,4 +280,69 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
+
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.19.1</version>
+						<configuration>
+							<verbose>true</verbose>
+							<apiVersion>1.23</apiVersion>
+							<pullRegistry>${docker.pull.registry}</pullRegistry>
+							<pushRegistry>${docker.push.registry}</pushRegistry>
+							<images>
+								<image>
+									<name>onap/externalapi/nbi</name>
+									<alias>onap/externalapi/nbi</alias>
+									<build>
+										<cleanup>true</cleanup>
+										<tags>
+											<tag>${docker.tag}</tag>
+											<tag>${docker.latest.tag}</tag>
+										</tags>
+										<dockerFileDir>${project.basedir}</dockerFileDir>
+									</build>
+								</image>
+							</images>
+						</configuration>
+						<executions>
+							<execution>
+								<id>clean-images</id>
+								<phase>pre-clean</phase>
+								<goals>
+									<goal>remove</goal>
+								</goals>
+								<configuration>
+									<removeAll>true</removeAll>
+									<image>nbi</image>
+								</configuration>
+							</execution>
+							<execution>
+								<id>generate-images</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push-images</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
