@@ -274,12 +274,15 @@
 				<configuration>
 					<header>LICENSE.TXT</header>
 					<includes>
-						<include>src/main/java/**</include>
-						<include>src/test/java/**</include>
+						<include>restclient/**</include>
+						<include>src/**</include>
 						<include>pom.xml</include>
 					</includes>
 					<skipExistingHeaders>true</skipExistingHeaders>
 					<skip>false</skip>
+					<mapping>
+						<http>SCRIPT_STYLE</http>
+					</mapping>
 				</configuration>
 				<executions>
 					<execution>
