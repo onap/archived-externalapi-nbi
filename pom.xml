@@ -313,7 +313,7 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
-						<version>0.19.1</version>
+						<version>0.25.0</version>
 						<configuration>
 							<verbose>true</verbose>
 							<apiVersion>1.23</apiVersion>
@@ -330,6 +330,9 @@
 											<tag>${docker.latest.tag}</tag>
 										</tags>
 										<dockerFileDir>${project.basedir}</dockerFileDir>
+										<args>
+											<PKG_FILENAME>${project.build.finalName}.${project.packaging}</PKG_FILENAME>
+										</args>
 									</build>
 								</image>
 							</images>
@@ -342,8 +345,7 @@
 									<goal>remove</goal>
 								</goals>
 								<configuration>
-									<removeAll>true</removeAll>
-									<image>nbi</image>
+									<removeMode>all</removeMode>
 								</configuration>
 							</execution>
 							<execution>
