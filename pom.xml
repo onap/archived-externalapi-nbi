@@ -35,7 +35,6 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -51,6 +50,15 @@
 		<!--docker -->
 		<docker.tag>${project.version}-${timestamp}</docker.tag>
 		<docker.latest.tag>${project.version}-latest</docker.latest.tag>
+		<!--sonar -->
+	     <sonar.language>java</sonar.language>
+	     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+	     <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
+	     <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
+	     <sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath>
+	     <sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
+	     <sonar.projectVersion>${project.version}</sonar.projectVersion>
+		<sonar.coverage.exclusions>**/model/**/*</sonar.coverage.exclusions>
 	</properties>
 
 	<repositories>
@@ -191,7 +199,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- test h2  -->
+		<!-- test h2 -->
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -297,6 +305,77 @@
 							<goal>check</goal>
 						</goals>
 						<phase>process-sources</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.2</version>
+			</plugin>
+			<plugin>
+			     <groupId>org.jacoco</groupId>
+			     <artifactId>jacoco-maven-plugin</artifactId>
+			     <version>0.7.7.201606060606</version>
+			     <configuration>
+			          <dumpOnExit>true</dumpOnExit>
+			          <includes>
+			                <include>org.onap.nbi.*</include>
+			          </includes>
+			          <excludes>
+			                <exclude>**/model/**/*</exclude>
+			          </excludes>			          
+			     </configuration>
+			     <executions>
+			          <execution>
+			                <id>pre-unit-test</id>
+			                <goals>
+			                     <goal>prepare-agent</goal>
+			                </goals>
+			                <configuration>
+			                     <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+			                     <!-- <append>true</append> -->
+			                </configuration>
+			          </execution>
+			          <execution>
+			                <id>pre-integration-test</id>
+			                <phase>pre-integration-test</phase>
+			                <goals>
+			                     <goal>prepare-agent</goal>
+			                </goals>
+			                <configuration>
+			                     <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+			                     <!-- <append>true</append> -->
+			                </configuration>
+			          </execution>
+			          <execution>
+			                <goals>
+			                     <goal>merge</goal>
+			                </goals>
+			                <phase>post-integration-test</phase>
+			                <configuration>
+			                     <fileSets>
+			                           <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
+			                               <directory>${project.build.directory}/coverage-reports</directory>
+			                               <includes>
+			                                     <include>*.exec</include>
+			                               </includes>
+			                          </fileSet>
+			                     </fileSets>
+			                     <destFile>${project.build.directory}/jacoco-dev.exec</destFile>
+			                </configuration>
+			           </execution>
+			     </executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
