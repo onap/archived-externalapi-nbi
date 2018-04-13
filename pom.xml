@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-
-        Copyright (c) 2017 Orange.  All rights reserved.
+        Copyright (c) 2018 Orange
 
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.
@@ -312,7 +311,7 @@
 			<plugin>
 			     <groupId>org.jacoco</groupId>
 			     <artifactId>jacoco-maven-plugin</artifactId>
-			     <version>0.7.7.201606060606</version>
+			     <version>0.8.1</version>
 			     <configuration>
 			          <dumpOnExit>true</dumpOnExit>
 			          <includes>
