@@ -1,17 +1,15 @@
 /**
- *     Copyright (c) 2018 Orange
+ * Copyright (c) 2018 Orange
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
@@ -77,8 +75,10 @@ public class SOTaskProcessor {
 
     /**
      * Run the ServiceOrchestrator processing for a serviceOrderItem which with any sub relations
+     *
+     * @throws InterruptedException
      */
-    public void processOrderItem(ExecutionTask executionTask) {
+    public void processOrderItem(ExecutionTask executionTask) throws InterruptedException {
 
 
         ServiceOrderInfoJson serviceOrderInfoJson = executionTask.getServiceOrderInfoJson();
@@ -95,21 +95,31 @@ public class SOTaskProcessor {
             serviceOrderInfo =
                     JsonEntityConverter.convertJsonToServiceOrderInfo(serviceOrderInfoJson.getServiceOrderInfoJson());
         } catch (IOException e) {
-            LOGGER.error("Unable to read ServiceOrderInfo Json for serviceOrderId " + serviceOrder.getId() + ", "
-                    + e.getMessage());
+            LOGGER.warn("Unable to read ServiceOrderInfo Json for serviceOrderId " + serviceOrder.getId(), e);
         }
 
-        if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+        if (serviceOrderItem != null && StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
 
-            ResponseEntity<CreateServiceInstanceResponse> response = postSORequest(serviceOrderItem, serviceOrderInfo);
+            ResponseEntity<CreateServiceInstanceResponse> response = null;
+            try {
+                response = postSORequest(serviceOrderItem, serviceOrderInfo);
+            } catch (NullPointerException e) {
+                LOGGER.warn("Enable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
+                response = null;
+            }
 
-            updateServiceOrderItem(response.getBody(), serviceOrderItem);
-
-            if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
-                    || response.getBody().getRequestReference() == null) {
+            if (response == null) {
+                LOGGER.warn("response=null for serviceOrderItem.id=" + serviceOrderItem.getId());
                 serviceOrderItem.setState(StateType.FAILED);
             } else {
-                serviceOrderItem.setState(StateType.INPROGRESS);
+                updateServiceOrderItem(response.getBody(), serviceOrderItem);
+
+                if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
+                        || response.getBody().getRequestReference() == null) {
+                    serviceOrderItem.setState(StateType.FAILED);
+                } else {
+                    serviceOrderItem.setState(StateType.INPROGRESS);
+                }
             }
         }
 
@@ -196,8 +206,10 @@ public class SOTaskProcessor {
 
     /**
      * * @param orderItem
+     *
+     * @throws InterruptedException
      */
-    private void pollSoRequestStatus(ServiceOrderItem orderItem) {
+    private void pollSoRequestStatus(ServiceOrderItem orderItem) throws InterruptedException {
         boolean stopPolling = false;
         String requestId = orderItem.getRequestId();
         GetRequestStatusResponse response = null;
@@ -209,11 +221,7 @@ public class SOTaskProcessor {
                 if (response.getRequest().getRequestStatus().getPercentProgress() != 100) {
                     nbRetries++;
                     orderItem.setState(StateType.INPROGRESS);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(1000);
                 } else if (RequestState.COMPLETE != response.getRequest().getRequestStatus().getRequestState()) {
                     orderItem.setState(StateType.FAILED);
                     stopPolling = true;
@@ -272,8 +280,8 @@ public class SOTaskProcessor {
     }
 
     /**
-     * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics
-     * from SDC
+     * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics from
+     * SDC
      *
      * @param characteristics
      * @return
@@ -294,8 +302,7 @@ public class SOTaskProcessor {
 
 
     /**
-     * Update ServiceOrderItem with SO response by using serviceOrderRepository with the
-     * serviceOrderId
+     * Update ServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
      *
      * @param createServiceInstanceResponse
      * @param orderItem

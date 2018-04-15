@@ -1,17 +1,15 @@
 /**
- *     Copyright (c) 2018 Orange
+ * Copyright (c) 2018 Orange
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.nbi.apis.servicecatalog;
 
@@ -69,16 +67,18 @@ public class ToscaInfosProcessor {
 
             serviceCatalogResponse.put("serviceSpecCharacteristic", serviceSpecCharacteristic);
         }
-        LinkedHashMap node_templates = (LinkedHashMap) toscaInfosTopologyTemplate.get("node_templates");
+        LinkedHashMap nodeTemplate = (LinkedHashMap) toscaInfosTopologyTemplate.get("node_templates");
 
         List<LinkedHashMap> resourceSpecifications =
                 (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
         for (LinkedHashMap resourceSpecification : resourceSpecifications) {
             String id = (String) resourceSpecification.get("id");
             LOGGER.debug("get tosca infos for service id: " + id);
-            LinkedHashMap toscaInfosFromResourceId = getToscaInfosFromResourceUUID(node_templates, id);
-            resourceSpecification.put("modelCustomizationId", toscaInfosFromResourceId.get("customizationUUID"));
-            resourceSpecification.put("modelCustomizationName", toscaInfosFromResourceId.get("name"));
+            LinkedHashMap toscaInfosFromResourceId = getToscaInfosFromResourceUUID(nodeTemplate, id);
+            if (toscaInfosFromResourceId != null) {
+                resourceSpecification.put("modelCustomizationId", toscaInfosFromResourceId.get("customizationUUID"));
+                resourceSpecification.put("modelCustomizationName", toscaInfosFromResourceId.get("name"));
+            }
 
         }
     }
@@ -89,10 +89,10 @@ public class ToscaInfosProcessor {
             LOGGER.debug("get tosca infos for serviceSpecCharacteristicValues of type map or string : " + parameter);
             Object aDefault = parameter.get("default");
             if (parameter.get("entry_schema") != null) {
-                ArrayList entry_schema = (ArrayList) parameter.get("entry_schema");
-                if (CollectionUtils.isNotEmpty(entry_schema)) {
+                ArrayList entrySchema = (ArrayList) parameter.get("entry_schema");
+                if (CollectionUtils.isNotEmpty(entrySchema)) {
                     buildCharacteristicValuesFormShema(parameterType, serviceSpecCharacteristicValues, aDefault,
-                            entry_schema);
+                            entrySchema);
                 }
             }
         }
@@ -138,13 +138,16 @@ public class ToscaInfosProcessor {
 
 
     public LinkedHashMap getToscaInfos(LinkedHashMap sdcResponse) {
+
+        LinkedHashMap topologyTemplate = null;
+
         String toscaModelUrl = (String) sdcResponse.get("toscaModelURL");
         String serviceId = (String) sdcResponse.get("uuid");
         File toscaFile = sdcClient.callGetWithAttachment(toscaModelUrl);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String tempFolderName = serviceId + timestamp;
         File folderTemp = null;
-        LinkedHashMap topology_template = null;
+
         try {
             unZipArchive(toscaFile.getName(), tempFolderName);
             folderTemp = new File(tempFolderName);
@@ -160,43 +163,44 @@ public class ToscaInfosProcessor {
             if (toscaFileHashMap.get("topology_template") == null) {
                 throw new NullPointerException("no topology_template node in tosca file");
             }
-            topology_template = (LinkedHashMap) toscaFileHashMap.get("topology_template");
+            topologyTemplate = (LinkedHashMap) toscaFileHashMap.get("topology_template");
 
         } catch (NullPointerException e) {
-            LOGGER.error("unable to parse tosca file for id : " + serviceId + ", " + e.getMessage());
+            LOGGER.warn("unable to parse tosca file for id : " + serviceId, e);
             return null;
+
         } finally {
+
             try {
                 LOGGER.debug("deleting temp folder for tosca files : " + folderTemp.getName());
                 FileUtils.deleteDirectory(folderTemp);
                 LOGGER.debug("deleting tosca archive : " + toscaFile.getName());
                 FileUtils.forceDelete(toscaFile);
-                return topology_template;
-            } catch (IOException e) {
-                LOGGER.error("unable to delete temp directory tosca file for id : " + serviceId);
-                return null;
+                return topologyTemplate;
 
+            } catch (IOException e) {
+                LOGGER.error("unable to delete temp directory tosca file for id : " + serviceId, e);
+                return null;
             }
         }
+
     }
 
 
     private LinkedHashMap parseToscaFile(String fileName) {
 
         File toscaFile = new File(fileName);
-        if (toscaFile == null) {
+        if (!toscaFile.exists()) {
             throw new TechnicalException("unable to find  file : " + fileName);
         }
         try {
             return (LinkedHashMap) mapper.readValue(toscaFile, Object.class);
         } catch (IOException e) {
-            LOGGER.error("unable to parse tosca file : " + fileName);
-            LOGGER.error(e.getMessage());
+            LOGGER.warn("unable to parse tosca file : " + fileName, e);
             throw new TechnicalException("Unable to parse tosca file : " + fileName);
 
         } catch (NullPointerException e) {
-            LOGGER.error("unable to find tosca file : " + fileName);
-            LOGGER.error(e.getMessage());
+            LOGGER.warn("unable to find tosca file : " + fileName, e);
             throw new TechnicalException("unable to find tosca file : " + fileName);
         }
     }
@@ -255,7 +259,7 @@ public class ToscaInfosProcessor {
             LOGGER.debug("Done");
 
         } catch (IOException ex) {
-            LOGGER.error("Error while unzipping ToscaModel archive from ONAP : " + ex.getMessage());
+            LOGGER.error("Error while unzipping ToscaModel archive from ONAP", ex);
             throw new TechnicalException("Error while unzipping ToscaModel archive from ONAP");
         }
     }
