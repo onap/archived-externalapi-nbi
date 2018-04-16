@@ -1,4 +1,4 @@
-version: "3.0"
+version: "2.0"
 services:
   mongo:
     image: mongo:3
@@ -17,10 +17,7 @@ services:
       MYSQL_ROOT_PASSWORD: $SPRING_DATASOURCE_PASSWORD
 # APP  ***************************************************************************************
   nbi:
-    build:
-      context: .
-      args:
-        SERVER_PORT: $SERVER_PORT
+    image: nexus3.onap.org:10001/onap/externalapi/nbi:latest
     ports:
     - $SERVER_PORT:$SERVER_PORT
     environment:
