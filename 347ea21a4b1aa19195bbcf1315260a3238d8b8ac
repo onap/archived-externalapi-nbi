@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_75f6fa5e",
+        "filename": "docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 2319
+      },
+      "writtenOn": "2018-04-16T13:56:33Z",
+      "side": 1,
+      "message": "should use MYSQL_USER, MYSQL_PASSWORD variable",
+      "revId": "347ea21a4b1aa19195bbcf1315260a3238d8b8ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_159776ed",
+        "filename": "docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2319
+      },
+      "writtenOn": "2018-04-16T13:56:33Z",
+      "side": 1,
+      "message": "port is fixed in nbi, so it should be $SERVER_PORT:8080 as server_port inside nbi image is fixed",
+      "revId": "347ea21a4b1aa19195bbcf1315260a3238d8b8ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b587a2b4",
+        "filename": "docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2319
+      },
+      "writtenOn": "2018-04-16T13:56:33Z",
+      "side": 1,
+      "message": "should have SPRING_DATASOURCE_USERNAME, and SPRING_DATASOURCE_PASSWORD variable (matching the one set on mariadb)",
+      "revId": "347ea21a4b1aa19195bbcf1315260a3238d8b8ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_35f5d256",
+        "filename": "src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2319
+      },
+      "writtenOn": "2018-04-16T13:56:33Z",
+      "side": 1,
+      "message": "port should 8080",
+      "revId": "347ea21a4b1aa19195bbcf1315260a3238d8b8ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f5ea0a73",
+        "filename": "src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2319
+      },
+      "writtenOn": "2018-04-16T13:56:33Z",
+      "side": 1,
+      "message": "port should be 8443",
+      "revId": "347ea21a4b1aa19195bbcf1315260a3238d8b8ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_95038641",
+        "filename": "src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2319
+      },
+      "writtenOn": "2018-04-16T13:56:33Z",
+      "side": 1,
+      "message": "port should be 8080",
+      "revId": "347ea21a4b1aa19195bbcf1315260a3238d8b8ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
