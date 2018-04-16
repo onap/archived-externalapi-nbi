@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f037784b",
+        "filename": "docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 2319
+      },
+      "writtenOn": "2018-04-16T16:20:02Z",
+      "side": 1,
+      "message": "it can\u0027t work as default mysql root password on the nbi side is toto\n\nusing ROOT user is BAD anyway (see my previous comments)",
+      "revId": "027fa8c78d5b32b8c188279d9d57a706671512cf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
