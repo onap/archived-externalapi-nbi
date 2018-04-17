@@ -27,9 +27,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: toto
       SPRING_DATASOURCE_USERNAME: rene
       SPRING_DATA_MONGODB_HOST: mongo
-      SPRING_SDC_HOST: ${SDC_IP}
-      SPRING_AAI_HOST: ${AAI_IP}
-      SPRING_SO_HOST: ${SO_IP}
+      SDC_HOST: http://${SDC_IP}:8080
+      AAI_HOST: https://${AAI_IP}:8443
+      SO_HOST: http://${SO_IP}:8080
+    restart: on-failure
     depends_on:
     - mariadb
     - mongo
