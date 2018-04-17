@@ -27,6 +27,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: toto
       SPRING_DATASOURCE_USERNAME: rene
       SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_SDC_HOST: ${SDC_IP}
+      SPRING_AAI_HOST: ${AAI_IP}
+      SPRING_SO_HOST: ${SO_IP}
     depends_on:
     - mariadb
     - mongo
