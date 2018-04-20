@@ -56,7 +56,7 @@
           "201": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/CreateServiceOrder"
+              "$ref": "#/definitions/ServiceOrder"
             }
 
           },

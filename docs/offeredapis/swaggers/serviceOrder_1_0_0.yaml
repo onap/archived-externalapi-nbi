@@ -1,7 +1,3 @@
-# This work is licensed under a Creative Commons Attribution 4.0 International License.
-# http://creativecommons.org/licenses/by/4.0
-# Copyright 2018 Orange
-
 swagger: "2.0"
 info:
   description: "serviceOrder API designed for ONAP Beijing Release.\nThis API is build\
@@ -63,7 +59,7 @@ paths:
         201:
           description: "Success"
           schema:
-            $ref: "#/definitions/CreateServiceOrder"
+            $ref: "#/definitions/ServiceOrder"
         400:
           description: "Bad Request\n\nList of supported error codes:\n- 20: Invalid\
             \ URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing\

@@ -10,9 +10,7 @@ nbi - northbound interface - External API for ONAP
 Introduction
 ***************
 
-NBI stands for NorthBound Interface. It brings to ONAP a set of API that can be used by external systems as BSS for example.
-These API are based on **TMF API**.
-
+NBI stands for NorthBound Interface. It brings to ONAP a set of API that can be used by external systems as BSS for example. These API are based on **TMF API**.
 
 ***************
 Global NBI architecture for Beijing release
@@ -75,9 +73,9 @@ API Table
    :widths: 10,5,5,5,5,5,5
 
    " ", "json file", "html doc", "plantUML doc", "Swagger Editor", "Postman Collection", "pdf doc"
-   "serviceCatalog", ":download:`link <swaggers/serviceCatalog_1_0_0.json>`", ":download:`link <serviceCatalog/documentation.html>`", ":download:`link <serviceCatalog/apiServiceCatalog.plantuml>`", "`link <http://editor2.swagger.io/#/?import=http://onap.readthedocs.io/en/latest/_downloads/serviceCatalog_1_0_0.json>`_", "coming", "coming"
-   "serviceInventory", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "`link <http://editor2.swagger.io/#/?import=http://onap.readthedocs.io/en/latest/_downloads/serviceInventory_1_0_0.json>`_", "coming", "coming"
-   "serviceOrder", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "`link <http://editor2.swagger.io/#/?import=http://onap.readthedocs.io/en/latest/_downloads/serviceInventory_1_0_0.json>`_", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
+   "serviceCatalog", ":download:`link <swaggers/serviceCatalog_1_0_0.json>`", ":download:`link <serviceCatalog/documentation.html>`", ":download:`link <serviceCatalog/apiServiceCatalog.plantuml>`", "`link <http://editor2.swagger.io/?url=http://onap.readthedocs.io/en/latest/_downloads/serviceCatalog_1_0_0.json>`_", "coming", "coming"
+   "serviceInventory", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "`link <http://editor2.swagger.io/?url=http://onap.readthedocs.io/en/latest/_downloads/serviceInventory_1_0_0.json>`_", "coming", "coming"
+   "serviceOrder", ":download:`link <swaggers/serviceOrder_1_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "`link <http://editor2.swagger.io/?url=http://onap.readthedocs.io/en/latest/_downloads/serviceOrder_1_0_0.json>`_", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
 
 
 ***************
@@ -193,5 +191,7 @@ With the current version of APIs used from SO and AAI we need to manage a ‘cus
 Developer Guide
 ***************
 
-Technical information about NBI (dependancies, configuration, running & testing) could be found here: :doc:`DevDoc <../architecture/NBI_R1_Developer_Guide>`
+Technical information about NBI (dependancies, configuration, running & testing) could be found here: :doc:`NBI_R1_Developer_Guide <../architecture/NBI_R1_Developer_Guide>`
+
+API Flow illustration (with example messages) is described in this document: :download:`nbicallflow.pdf <pdf/nbicallflow.pdf>`
 
