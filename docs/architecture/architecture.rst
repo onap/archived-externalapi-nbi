@@ -28,7 +28,7 @@ Following illustration provides a global view about nbi architecture,integration
 Developer Guide
 ***************
 
-Technical information about NBI (dependancies, configuration, running & testing) could be found here: :doc:`NBI_R1_Developer_Guide <../NBI_R1_Developer_Guide>`
+Technical information about NBI (dependancies, configuration, running & testing) could be found here: :doc:`NBI_R1_Developer_Guide <NBI_R1_Developer_Guide>`
 
-API Flow illustration (with example messages) is described in this document: :download:`nbicallflow.pdf <pdf/nbicallflow.pdf>`
+API Flow illustration (with example messages) is described in this document: :download:`nbicallflow.pdf <../offeredapis/pdf/nbicallflow.pdf>`
 
