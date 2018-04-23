@@ -15,7 +15,7 @@
  */
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
-public class RequestReference {
+public class RequestReferences {
 
     private String instanceId;
 
@@ -39,6 +39,6 @@ public class RequestReference {
 
     @Override
     public String toString() {
-        return "RequestReference{" + "instanceId='" + instanceId + '\'' + ", requestId='" + requestId + '\'' + '}';
+        return "RequestReferences{" + "instanceId='" + instanceId + '\'' + ", requestId='" + requestId + '\'' + '}';
     }
 }
