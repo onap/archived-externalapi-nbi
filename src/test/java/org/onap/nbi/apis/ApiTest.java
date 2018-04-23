@@ -180,6 +180,19 @@ public class ApiTest {
 
     }
 
+    @Test
+    public void testServiceResourceGetInventoryWithoutRelationShipList() throws Exception {
+
+        String serviceName = "vFW";
+        String serviceId = "e4688e5f-61a0-4f8b-ae02-a2fbde623bcbWithoutList";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("serviceSpecification.name", serviceName);
+        params.add("relatedParty.id", "6490");
+        ResponseEntity<Object> resource = serviceInventoryResource.getServiceInventory(serviceId, params);
+        ServiceInventoryAssertions.assertServiceInventoryGetWithoutList(resource);
+
+    }
+
 
     @Test
     public void testServiceResourceGetInventoryWithServiceSpecId() throws Exception {
