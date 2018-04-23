@@ -257,6 +257,7 @@ public class SOTaskProcessor {
         modelInfo.setModelType("service");
         modelInfo.setModelInvariantId((String) sdcInfos.get("invariantUUID"));
         modelInfo.setModelNameVersionId(orderItem.getService().getServiceSpecification().getId());
+        modelInfo.setModelVersionId(orderItem.getService().getServiceSpecification().getId());
         modelInfo.setModelName((String) sdcInfos.get("name"));
         modelInfo.setModelVersion((String) sdcInfos.get("version"));
         requestDetails.setModelInfo(modelInfo);
