@@ -54,6 +54,28 @@ public class ServiceInventoryAssertions {
     }
 
 
+    public static void assertServiceInventoryGetWithoutList(ResponseEntity<Object> resource) {
+        assertThat(resource.getStatusCode()).isEqualTo(HttpStatus.OK);
+        LinkedHashMap service = (LinkedHashMap) resource.getBody();
+        assertThat(service.get("id")).isEqualTo("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
+        assertThat(service.get("name")).isEqualTo("NewFreeRadius-service-instance-01");
+        assertThat(service.get("hasStarted")).isEqualTo("yes");
+        assertThat(service.get("type")).isEqualTo("service-instance");
+        assertThat(service.get("@type")).isEqualTo("serviceONAP");
+        LinkedHashMap relatedParty = (LinkedHashMap) service.get("relatedParty");
+        assertThat(relatedParty.get("role")).isEqualTo("ONAPcustomer");
+        assertThat(relatedParty.get("id")).isEqualTo("6490");
+        LinkedHashMap serviceSpecification = (LinkedHashMap) service.get("serviceSpecification");
+        assertThat(serviceSpecification.get("id")).isEqualTo("98d95267-5e0f-4531-abf8-f14b90031dc5");
+        assertThat(serviceSpecification.get("invariantUUID")).isEqualTo("709d157b-52fb-4250-976e-7133dff5c347");
+        assertThat(serviceSpecification.get("@type")).isEqualTo("ONAPservice");
+
+        assertThat(((ArrayList) service.get("supportingResource")).size()).isEqualTo(0);
+
+    }
+
+
+
     public static void assertServiceInventoryFind(ResponseEntity<Object> resource) {
         assertThat(resource.getStatusCode()).isEqualTo(HttpStatus.OK);
         ArrayList body = (ArrayList) resource.getBody();
