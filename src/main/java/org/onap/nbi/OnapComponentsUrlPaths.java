@@ -42,7 +42,7 @@ public final class OnapComponentsUrlPaths {
             "/aai/v11/business/customers/customer/$customerId/service-subscriptions/service-subscription/$serviceSpecName/service-instances/";
 
     // MSO
-    public static final String MSO_CREATE_SERVICE_INSTANCE_PATH = "/ecomp/mso/infra/serviceInstance/v4";
+    public static final String MSO_CREATE_SERVICE_INSTANCE_PATH = "/ecomp/mso/infra/serviceInstances/v4";
     public static final String MSO_GET_REQUEST_STATUS_PATH = "/ecomp/mso/infra/orchestrationRequests/v4/";
-    public static final String MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/";
+    public static final String MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/v4/";
 }
