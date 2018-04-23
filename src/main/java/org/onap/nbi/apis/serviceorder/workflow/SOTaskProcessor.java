@@ -254,6 +254,7 @@ public class SOTaskProcessor {
         requestInfo.setInstanceName(orderItem.getService().getName());
         requestInfo.setSource("VID");
         requestInfo.setSuppressRollback(false);
+        requestInfo.setRequestorId("NBI");
         requestDetails.setRequestInfo(requestInfo);
 
         RequestParameters requestParameters = new RequestParameters();

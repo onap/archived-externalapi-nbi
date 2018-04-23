@@ -25,6 +25,8 @@ public class RequestInfo {
 
     private boolean suppressRollback;
 
+    private String requestorId;
+
     public String getInstanceName() {
         return instanceName;
     }
@@ -57,9 +59,22 @@ public class RequestInfo {
         this.suppressRollback = suppressRollback;
     }
 
+    public String getRequestorId() {
+        return requestorId;
+    }
+
+    public void setRequestorId(String requestorId) {
+        this.requestorId = requestorId;
+    }
+
     @Override
     public String toString() {
-        return "RequestInfo{" + "instanceName='" + instanceName + '\'' + ", productFamilyId='" + productFamilyId + '\''
-                + ", source='" + source + '\'' + ", suppressRollback=" + suppressRollback + '}';
+        return "RequestInfo{" +
+            "instanceName='" + instanceName + '\'' +
+            ", productFamilyId='" + productFamilyId + '\'' +
+            ", source='" + source + '\'' +
+            ", suppressRollback=" + suppressRollback +
+            ", requestorId='" + requestorId + '\'' +
+            '}';
     }
 }
