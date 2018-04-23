@@ -8,8 +8,8 @@ ONAP ExternalAPI / NBI
 .. toctree::
    :maxdepth: 1
 
-   architecture/NBI_R1_Developer_Guide.rst
-   offeredapis/NBI_R1_interface.rst
+   architecture/architecture.rst
+   offeredapis/offeredapis.rst
    consumedapis/consumedapis.rst
    delivery/delivery.rst
    logging/logging.rst
