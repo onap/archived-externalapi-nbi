@@ -276,6 +276,24 @@ public class ApiTest {
 
     }
 
+
+    @Test
+    public void testCheckServiceOrderWithoutRelatedParty() throws Exception {
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        testServiceOrder.setRelatedParty(null);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+
+
+    }
+
     @Test
     public void testCheckServiceOrderWithUnKnonwCustomer() throws Exception {
 
