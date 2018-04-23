@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "url": "/ecomp/mso/infra/serviceInstance/v4"
+        "url": "/ecomp/mso/infra/serviceInstances/v4"
     },
     "response": {
         "status": 201,
