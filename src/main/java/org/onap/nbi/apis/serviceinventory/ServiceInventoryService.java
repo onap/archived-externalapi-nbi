@@ -102,16 +102,19 @@ public class ServiceInventoryService {
 
         List<LinkedHashMap> vnfs = new ArrayList<>();
         LinkedHashMap relationShip = (LinkedHashMap) serviceResponse.get("relationship-list");
-        List<LinkedHashMap> relationsList = (List<LinkedHashMap>) relationShip.get("relationship");
-        for (LinkedHashMap relation : relationsList) {
-            String relatedLink = (String) relation.get("related-link");
-            LinkedHashMap vnf = aaiClient.getVNF(relatedLink);
-            if (vnf != null) {
-                vnfs.add(vnf);
+        if(relationShip!=null) {
+            List<LinkedHashMap> relationsList = (List<LinkedHashMap>) relationShip.get("relationship");
+            if(relationsList!=null) {
+                for (LinkedHashMap relation : relationsList) {
+                    String relatedLink = (String) relation.get("related-link");
+                    LinkedHashMap vnf = aaiClient.getVNF(relatedLink);
+                    if (vnf != null) {
+                        vnfs.add(vnf);
+                    }
+                }
+                serviceResponse.put("vnfs", vnfs);
             }
         }
-        serviceResponse.put("vnfs", vnfs);
-
     }
 
 
