@@ -18,17 +18,13 @@ package org.onap.nbi.apis.serviceorder;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.GetRequestStatusResponse;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestDetails;
+import org.onap.nbi.apis.serviceorder.model.consumer.MSOPayload;
 import org.onap.nbi.exceptions.BackendFunctionalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -57,15 +53,15 @@ public class SoClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(SoClient.class);
 
 
-    public ResponseEntity<CreateServiceInstanceResponse> callCreateServiceInstance(RequestDetails requestDetails) {
+    public ResponseEntity<CreateServiceInstanceResponse> callCreateServiceInstance(MSOPayload msoPayload) {
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Calling SO CreateServiceInstance with requestDetails : " + requestDetails.toString());
+            LOGGER.debug("Calling SO CreateServiceInstance with msoPayload : " + msoPayload.toString());
         }
 
         String url = soHostname + OnapComponentsUrlPaths.MSO_CREATE_SERVICE_INSTANCE_PATH;
 
-        HttpEntity<RequestDetails> requestDetailEntity = new HttpEntity<>(requestDetails, buildRequestHeader());
+        HttpEntity<MSOPayload> requestDetailEntity = new HttpEntity<>(msoPayload, buildRequestHeader());
 
         try {
             ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.POST,
@@ -80,16 +76,16 @@ public class SoClient {
         }
     }
 
-    public ResponseEntity<CreateServiceInstanceResponse> callDeleteServiceInstance(RequestDetails requestDetails,
+    public ResponseEntity<CreateServiceInstanceResponse> callDeleteServiceInstance(MSOPayload msoPayload,
             String serviceId) {
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Calling SO DeleteServiceInstance with requestDetails : " + requestDetails.toString());
+            LOGGER.debug("Calling SO DeleteServiceInstance with msoPayload : " + msoPayload.toString());
         }
 
         String url = soHostname + OnapComponentsUrlPaths.MSO_DELETE_REQUEST_STATUS_PATH + serviceId;
 
-        HttpEntity<RequestDetails> requestDetailEntity = new HttpEntity<>(requestDetails, buildRequestHeader());
+        HttpEntity<MSOPayload> requestDetailEntity = new HttpEntity<>(msoPayload, buildRequestHeader());
 
         try {
             ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.DELETE,
