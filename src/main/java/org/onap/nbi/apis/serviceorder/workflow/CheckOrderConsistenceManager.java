@@ -1,17 +1,17 @@
 /**
- *     Copyright (c) 2018 Orange
- *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ * Copyright (c) 2018 Orange
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import java.util.LinkedHashMap;
 
 @Service
@@ -64,7 +65,7 @@ public class CheckOrderConsistenceManager {
                     isAllItemsInAdd = false;
                     if (isCustomerFromServiceOrderPresentInInventory(serviceOrderInfo)
                             && existServiceInInventory(serviceOrderItem, serviceOrderItemInfo,
-                                    serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
+                            serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
                         serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
                     } else {
                         isServiceOrderRejected = true;
@@ -108,9 +109,11 @@ public class CheckOrderConsistenceManager {
 
 
     private RelatedParty getCustomerFromServiceOrder(ServiceOrder serviceOrder) {
-        for (RelatedParty relatedParty : serviceOrder.getRelatedParty()) {
-            if ("ONAPcustomer".equalsIgnoreCase(relatedParty.getRole())) {
-                return relatedParty;
+        if (serviceOrder.getRelatedParty() != null) {
+            for (RelatedParty relatedParty : serviceOrder.getRelatedParty()) {
+                if ("ONAPcustomer".equalsIgnoreCase(relatedParty.getRole())) {
+                    return relatedParty;
+                }
             }
         }
         return null;
@@ -128,7 +131,7 @@ public class CheckOrderConsistenceManager {
     }
 
     private boolean existServiceInInventory(ServiceOrderItem serviceOrderItem,
-            ServiceOrderItemInfo serviceOrderItemInfo, String globalSubscriberId) {
+                                            ServiceOrderItemInfo serviceOrderItemInfo, String globalSubscriberId) {
         if (!StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
             String serviceName = (String) serviceOrderItemInfo.getCatalogResponse().get("name");
             boolean serviceExistInInventory = serviceOrderConsumerService.doesServiceExistInServiceInventory(
@@ -145,7 +148,7 @@ public class CheckOrderConsistenceManager {
     }
 
     private void handleServiceFromCatalog(ServiceOrderItem serviceOrderItem,
-            ServiceOrderItemInfo serviceOrderItemInfo) {
+                                          ServiceOrderItemInfo serviceOrderItemInfo) {
         ResponseEntity<Object> response = serviceOrderConsumerService
                 .getServiceCatalog(serviceOrderItem.getService().getServiceSpecification().getId());
         if (response != null && (response.getStatusCode().equals(HttpStatus.OK)
@@ -154,7 +157,6 @@ public class CheckOrderConsistenceManager {
             serviceOrderItemInfo.setCatalogResponse(body);
         }
     }
-
 
 
 }
