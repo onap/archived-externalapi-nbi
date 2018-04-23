@@ -6,9 +6,13 @@
 Logging
 =======
 
+NBI application is using MongoDB and MariaDB databases.
+
 
 Where to Access Information
 ---------------------------
+
+mongodb and Mariadb are accessible inside there respective docker container
 
 
 Error / Warning Messages
