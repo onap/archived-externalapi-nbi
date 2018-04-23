@@ -13,27 +13,12 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
 import org.onap.nbi.apis.serviceorder.SoClient;
 import org.onap.nbi.apis.serviceorder.model.ServiceCharacteristic;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
-import org.onap.nbi.apis.serviceorder.model.consumer.CloudConfiguration;
-import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
-import org.onap.nbi.apis.serviceorder.model.consumer.GetRequestStatusResponse;
-import org.onap.nbi.apis.serviceorder.model.consumer.ModelInfo;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestDetails;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestInfo;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestParameters;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestState;
-import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
-import org.onap.nbi.apis.serviceorder.model.consumer.UserParams;
+import org.onap.nbi.apis.serviceorder.model.consumer.*;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfoJson;
@@ -48,6 +33,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class SOTaskProcessor {
@@ -147,14 +135,15 @@ public class SOTaskProcessor {
         RequestDetails requestDetails = buildSoRequest(serviceOrderItem,
                 serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()).getCatalogResponse(),
                 serviceOrderInfo.getSubscriberInfo());
+        MSOPayload msoPayload = new MSOPayload(requestDetails);
         ResponseEntity<CreateServiceInstanceResponse> response = null;
 
         switch (serviceOrderItem.getAction()) {
             case ADD:
-                response = soClient.callCreateServiceInstance(requestDetails);
+                response = soClient.callCreateServiceInstance(msoPayload);
                 break;
             case DELETE:
-                response = soClient.callDeleteServiceInstance(requestDetails, serviceOrderItem.getService().getId());
+                response = soClient.callDeleteServiceInstance(msoPayload, serviceOrderItem.getService().getId());
                 break;
             default:
                 break;
