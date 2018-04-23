@@ -115,7 +115,7 @@ public class SOTaskProcessor {
                 updateServiceOrderItem(response.getBody(), serviceOrderItem);
 
                 if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
-                        || response.getBody().getRequestReference() == null) {
+                        || response.getBody().getRequestReferences() == null) {
                     serviceOrderItem.setState(StateType.FAILED);
                 } else {
                     serviceOrderItem.setState(StateType.INPROGRESS);
@@ -311,8 +311,8 @@ public class SOTaskProcessor {
             ServiceOrderItem orderItem) {
 
         if (createServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
-            orderItem.getService().setId(createServiceInstanceResponse.getRequestReference().getInstanceId());
-            orderItem.setRequestId(createServiceInstanceResponse.getRequestReference().getRequestId());
+            orderItem.getService().setId(createServiceInstanceResponse.getRequestReferences().getInstanceId());
+            orderItem.setRequestId(createServiceInstanceResponse.getRequestReferences().getRequestId());
         }
     }
 

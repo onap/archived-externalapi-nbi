@@ -17,13 +17,13 @@ package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class CreateServiceInstanceResponse {
 
-    public RequestReference getRequestReference() {
-        return requestReference;
+    public RequestReferences getRequestReferences() {
+        return requestReferences;
     }
 
-    public void setRequestReference(RequestReference requestReference) {
-        this.requestReference = requestReference;
+    public void setRequestReferences(RequestReferences requestReferences) {
+        this.requestReferences = requestReferences;
     }
 
-    private RequestReference requestReference;
+    private RequestReferences requestReferences;
 }
