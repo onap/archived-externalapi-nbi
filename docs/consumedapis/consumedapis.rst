@@ -9,11 +9,11 @@ Consumed APIs
 
 NBI application is interacting with 3 ONAP APIs
 
-***************
+*******
 SDC API
-***************
+*******
 
-this API is used to provide Service Catalog information
+This API is used to provide Service Catalog information
 Information are retrieved in SDC (and in Tosca "service template" file) - Only GET operation is provided - this API DID NOT UPDATE SDC
 
     SDC_ROOT_URL = "/sdc/v1/catalog/services/"
@@ -23,11 +23,11 @@ Information are retrieved in SDC (and in Tosca "service template" file) - Only G
     SDC_TOSCA_PATH = "/toscaModel"
 
 
-***************
+*******
 AAI API
-***************
+*******
 
-this API is used to provide Service Inventory information
+This API is used to provide Service Inventory information
 This API retrieves service(s) in the AAI inventory. Only following attributes will be retrieve in service inventory: id, name and type (no state or startDate available )
 
     AAI_GET_TENANTS_PATH = "/aai/v11/cloud-infrastructure/cloud-regions/cloud-region/$onap.cloudOwner/$onap.lcpCloudRegionId/tenants"
@@ -44,11 +44,11 @@ This API retrieves service(s) in the AAI inventory. Only following attributes wi
 
 
 
-***************
+******
 SO API
-***************
+******
 
-this API is used to perform Service Order and thus instantiate a service
+This API is used to perform Service Order and thus instantiate a service
 
 
     MSO_CREATE_SERVICE_INSTANCE_PATH = "/ecomp/mso/infra/serviceInstance/v4"

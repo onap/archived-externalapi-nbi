@@ -6,8 +6,9 @@
 Delivery
 ========
 
+********************************
 NBI Dockers Containers Structure
-================================
+********************************
 
 Below is a diagram of the ExternalAPI/NBI project docker containers and the connections between them.
 
