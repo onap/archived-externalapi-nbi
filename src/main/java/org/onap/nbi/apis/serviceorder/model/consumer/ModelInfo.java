@@ -21,6 +21,8 @@ public class ModelInfo {
 
     private String modelInvariantId;
 
+    private String modelVersionId;
+
     private String modelNameVersionId;
 
     private String modelName;
@@ -87,11 +89,25 @@ public class ModelInfo {
         this.modelCustomizationId = modelCustomizationId;
     }
 
+    public String getModelVersionId() {
+        return modelVersionId;
+    }
+
+    public void setModelVersionId(String modelVersionId) {
+        this.modelVersionId = modelVersionId;
+    }
+
     @Override
     public String toString() {
-        return "ModelInfo{" + "modelType='" + modelType + '\'' + ", modelInvariantId='" + modelInvariantId + '\''
-                + ", modelNameVersionId='" + modelNameVersionId + '\'' + ", modelName='" + modelName + '\''
-                + ", modelVersion='" + modelVersion + '\'' + ", modelCustomizationName='" + modelCustomizationName
-                + '\'' + ", modelCustomizationId='" + modelCustomizationId + '\'' + '}';
+        return "ModelInfo{" +
+            "modelType='" + modelType + '\'' +
+            ", modelInvariantId='" + modelInvariantId + '\'' +
+            ", modelVersionId='" + modelVersionId + '\'' +
+            ", modelNameVersionId='" + modelNameVersionId + '\'' +
+            ", modelName='" + modelName + '\'' +
+            ", modelVersion='" + modelVersion + '\'' +
+            ", modelCustomizationName='" + modelCustomizationName + '\'' +
+            ", modelCustomizationId='" + modelCustomizationId + '\'' +
+            '}';
     }
 }
