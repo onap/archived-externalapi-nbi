@@ -1,15 +1,14 @@
 /**
  * Copyright (c) 2018 Orange
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.onap.nbi.apis.servicecatalog;
 
@@ -44,7 +43,7 @@ public class ToscaInfosProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ToscaInfosProcessor.class);
 
     public void buildResponseWithToscaInfos(LinkedHashMap toscaInfosTopologyTemplate,
-            LinkedHashMap serviceCatalogResponse) {
+        LinkedHashMap serviceCatalogResponse) {
         if (toscaInfosTopologyTemplate.get("inputs") != null) {
             ArrayList serviceSpecCharacteristic = new ArrayList();
             LinkedHashMap toscaInfos = (LinkedHashMap) toscaInfosTopologyTemplate.get("inputs");
@@ -60,7 +59,7 @@ public class ToscaInfosProcessor {
                 mapParameter.put("required", inputParameter.get("required"));
                 mapParameter.put("status", inputParameter.get("status"));
                 List<LinkedHashMap> serviceSpecCharacteristicValues =
-                        buildServiceSpecCharacteristicsValues(inputParameter, parameterType);
+                    buildServiceSpecCharacteristicsValues(inputParameter, parameterType);
                 mapParameter.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValues);
                 serviceSpecCharacteristic.add(mapParameter);
             }
@@ -70,7 +69,7 @@ public class ToscaInfosProcessor {
         LinkedHashMap nodeTemplate = (LinkedHashMap) toscaInfosTopologyTemplate.get("node_templates");
 
         List<LinkedHashMap> resourceSpecifications =
-                (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
+            (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
         for (LinkedHashMap resourceSpecification : resourceSpecifications) {
             String id = (String) resourceSpecification.get("id");
             LOGGER.debug("get tosca infos for service id: " + id);
@@ -92,7 +91,7 @@ public class ToscaInfosProcessor {
                 ArrayList entrySchema = (ArrayList) parameter.get("entry_schema");
                 if (CollectionUtils.isNotEmpty(entrySchema)) {
                     buildCharacteristicValuesFormShema(parameterType, serviceSpecCharacteristicValues, aDefault,
-                            entrySchema);
+                        entrySchema);
                 }
             }
         }
@@ -100,7 +99,7 @@ public class ToscaInfosProcessor {
     }
 
     private void buildCharacteristicValuesFormShema(String parameterType,
-            List<LinkedHashMap> serviceSpecCharacteristicValues, Object aDefault, ArrayList entry_schema) {
+        List<LinkedHashMap> serviceSpecCharacteristicValues, Object aDefault, ArrayList entry_schema) {
         LinkedHashMap constraints = (LinkedHashMap) entry_schema.get(0);
         if (constraints != null) {
             ArrayList constraintsList = (ArrayList) constraints.get("constraints");
@@ -112,7 +111,7 @@ public class ToscaInfosProcessor {
                         String stringValue = value.toString();
                         LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
                         serviceSpecCharacteristicValue.put("isDefault",
-                                aDefault != null && aDefault.toString().equals(stringValue));
+                            aDefault != null && aDefault.toString().equals(stringValue));
                         serviceSpecCharacteristicValue.put("value", stringValue);
                         serviceSpecCharacteristicValue.put("valueType", parameterType);
                         serviceSpecCharacteristicValues.add(serviceSpecCharacteristicValue);
@@ -124,15 +123,18 @@ public class ToscaInfosProcessor {
 
 
     private LinkedHashMap getToscaInfosFromResourceUUID(LinkedHashMap node_templates, String name) {
-        for (Object nodeTemplateObject : node_templates.values()) {
-            LinkedHashMap nodeTemplate = (LinkedHashMap) nodeTemplateObject;
-            LinkedHashMap metadata = (LinkedHashMap) nodeTemplate.get("metadata");
-            String metadataUUID = (String) metadata.get("UUID");
-            String metadataType = (String) metadata.get("type");
-            if ("VF".equalsIgnoreCase(metadataType) && name.equalsIgnoreCase(metadataUUID)) {
-                return metadata;
+        if (node_templates != null) {
+            for (Object nodeTemplateObject : node_templates.values()) {
+                LinkedHashMap nodeTemplate = (LinkedHashMap) nodeTemplateObject;
+                LinkedHashMap metadata = (LinkedHashMap) nodeTemplate.get("metadata");
+                String metadataUUID = (String) metadata.get("UUID");
+                String metadataType = (String) metadata.get("type");
+                if ("VF".equalsIgnoreCase(metadataType) && name.equalsIgnoreCase(metadataUUID)) {
+                    return metadata;
+                }
             }
         }
+
         return null;
     }
 
@@ -165,11 +167,11 @@ public class ToscaInfosProcessor {
             }
             topologyTemplate = (LinkedHashMap) toscaFileHashMap.get("topology_template");
 
-        } catch (NullPointerException e) {
+        }  catch (NullPointerException e) {
             LOGGER.warn("unable to parse tosca file for id : " + serviceId, e);
             return null;
 
-        } finally {
+        }finally {
 
             try {
                 LOGGER.debug("deleting temp folder for tosca files : " + folderTemp.getName());
