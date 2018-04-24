@@ -48,7 +48,7 @@ public class ToscaInfosProcessor {
         if (toscaInfosTopologyTemplate.get("inputs") != null) {
             ArrayList serviceSpecCharacteristic = new ArrayList();
             LinkedHashMap toscaInfos = (LinkedHashMap) toscaInfosTopologyTemplate.get("inputs");
-            for (Object key : toscaInfos.keySet()) {
+            for (Object key : toscaInfos.entrySet()) {
                 String keyString = (String) key;
                 LinkedHashMap inputParameter = (LinkedHashMap) toscaInfos.get(key);
                 LinkedHashMap mapParameter = new LinkedHashMap();
@@ -73,7 +73,7 @@ public class ToscaInfosProcessor {
                 (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
         for (LinkedHashMap resourceSpecification : resourceSpecifications) {
             String id = (String) resourceSpecification.get("id");
-            LOGGER.debug("get tosca infos for service id: " + id);
+            LOGGER.debug("get tosca infos for service id: {0}", id);
             LinkedHashMap toscaInfosFromResourceId = getToscaInfosFromResourceUUID(nodeTemplate, id);
             if (toscaInfosFromResourceId != null) {
                 resourceSpecification.put("modelCustomizationId", toscaInfosFromResourceId.get("customizationUUID"));
@@ -86,7 +86,7 @@ public class ToscaInfosProcessor {
     private List<LinkedHashMap> buildServiceSpecCharacteristicsValues(LinkedHashMap parameter, String parameterType) {
         List<LinkedHashMap> serviceSpecCharacteristicValues = new ArrayList<>();
         if (!"map".equalsIgnoreCase(parameterType) && !"list".equalsIgnoreCase(parameterType)) {
-            LOGGER.debug("get tosca infos for serviceSpecCharacteristicValues of type map or string : " + parameter);
+            LOGGER.debug("get tosca infos for serviceSpecCharacteristicValues of type map or string : {0}", parameter);
             Object aDefault = parameter.get("default");
             if (parameter.get("entry_schema") != null) {
                 ArrayList entrySchema = (ArrayList) parameter.get("entry_schema");
@@ -154,38 +154,47 @@ public class ToscaInfosProcessor {
             LOGGER.debug("temp folder for tosca files : " + folderTemp.getName());
 
             LinkedHashMap toscaMetaFileHashMap = parseToscaFile(tempFolderName + "/TOSCA-Metadata/TOSCA.meta");
-            if (toscaMetaFileHashMap.get("Entry-Definitions") == null) {
-                throw new NullPointerException("no Entry-Definitions node in TOSCA.meta");
-            }
-            String toscaFilePath = (String) toscaMetaFileHashMap.get("Entry-Definitions");
-            LinkedHashMap toscaFileHashMap = parseToscaFile(tempFolderName + "/" + toscaFilePath);
-
-            if (toscaFileHashMap.get("topology_template") == null) {
-                throw new NullPointerException("no topology_template node in tosca file");
-            }
-            topologyTemplate = (LinkedHashMap) toscaFileHashMap.get("topology_template");
-
-        } catch (NullPointerException e) {
-            LOGGER.warn("unable to parse tosca file for id : " + serviceId, e);
-            return null;
-
-        } finally {
-
-            try {
-                LOGGER.debug("deleting temp folder for tosca files : " + folderTemp.getName());
-                FileUtils.deleteDirectory(folderTemp);
-                LOGGER.debug("deleting tosca archive : " + toscaFile.getName());
-                FileUtils.forceDelete(toscaFile);
-                return topologyTemplate;
-
-            } catch (IOException e) {
-                LOGGER.error("unable to delete temp directory tosca file for id : " + serviceId, e);
-                return null;
-            }
+            topologyTemplate = getToscaTopologyTemplateNode(tempFolderName, toscaMetaFileHashMap);
+            return topologyTemplate;
+        } catch (TechnicalException e) {
+            LOGGER.error("unable to parse tosca file for id : " + serviceId, e);
+            return  topologyTemplate;
+        }
+        finally {
+            deleteTempFiles(serviceId, toscaFile, folderTemp);
         }
 
     }
 
+    private LinkedHashMap getToscaTopologyTemplateNode(String tempFolderName,LinkedHashMap toscaMetaFileHashMap) {
+        LinkedHashMap topologyTemplate = null;
+        if (toscaMetaFileHashMap.get("Entry-Definitions") != null) {
+            String toscaFilePath = (String) toscaMetaFileHashMap.get("Entry-Definitions");
+            LinkedHashMap toscaFileHashMap = parseToscaFile(tempFolderName + "/" + toscaFilePath);
+            if (toscaFileHashMap.get("topology_template") != null) {
+                topologyTemplate = (LinkedHashMap) toscaFileHashMap.get("topology_template");
+            } else {
+                LOGGER.error("no Entry-Definitions node in TOSCA.meta");
+            }
+        } else {
+            LOGGER.error("no topology_template node in tosca file");
+        }
+        return topologyTemplate;
+    }
+
+
+    private void deleteTempFiles(String serviceId, File toscaFile, File folderTemp) {
+        try {
+            if(folderTemp!=null){
+                LOGGER.debug("deleting temp folder for tosca files : " + folderTemp.getName());
+                FileUtils.deleteDirectory(folderTemp);
+            }
+            LOGGER.debug("deleting tosca archive : " + toscaFile.getName());
+            FileUtils.forceDelete(toscaFile);
+        } catch (IOException e) {
+            LOGGER.error("unable to delete temp directory tosca file for id : " + serviceId, e);
+        }
+    }
 
     private LinkedHashMap parseToscaFile(String fileName) {
 
