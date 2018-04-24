@@ -61,11 +61,9 @@ public class SoClient {
 
         String url = soHostname + OnapComponentsUrlPaths.MSO_CREATE_SERVICE_INSTANCE_PATH;
 
-        HttpEntity<MSOPayload> requestDetailEntity = new HttpEntity<>(msoPayload, buildRequestHeader());
-
         try {
             ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.POST,
-                    new HttpEntity<>(requestDetailEntity, buildRequestHeader()), CreateServiceInstanceResponse.class);
+                    new HttpEntity<>(msoPayload, buildRequestHeader()), CreateServiceInstanceResponse.class);
 
             logResponsePost(url, response);
             return response;
@@ -85,11 +83,9 @@ public class SoClient {
 
         String url = soHostname + OnapComponentsUrlPaths.MSO_DELETE_REQUEST_STATUS_PATH + serviceId;
 
-        HttpEntity<MSOPayload> requestDetailEntity = new HttpEntity<>(msoPayload, buildRequestHeader());
-
         try {
             ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.DELETE,
-                    new HttpEntity<>(requestDetailEntity, buildRequestHeader()), CreateServiceInstanceResponse.class);
+                    new HttpEntity<>(msoPayload, buildRequestHeader()), CreateServiceInstanceResponse.class);
 
             logResponsePost(url, response);
             return response;
