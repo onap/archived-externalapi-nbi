@@ -77,7 +77,6 @@ public class ToscaInfosProcessor {
             LinkedHashMap toscaInfosFromResourceId = getToscaInfosFromResourceUUID(nodeTemplate, id);
             if (toscaInfosFromResourceId != null) {
                 resourceSpecification.put("modelCustomizationId", toscaInfosFromResourceId.get("customizationUUID"));
-                resourceSpecification.put("modelCustomizationName", toscaInfosFromResourceId.get("name"));
             }
 
         }

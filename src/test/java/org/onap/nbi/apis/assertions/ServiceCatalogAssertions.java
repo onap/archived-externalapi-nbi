@@ -37,6 +37,7 @@ public class ServiceCatalogAssertions {
                 .isEqualTo("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/toscaModel");
         assertThat(service.get("distributionStatus")).isEqualTo("DISTRIBUTED");
         assertThat(service.get("version")).isEqualTo("2.0");
+        assertThat(service.get("modelCustomizationName")).isEqualTo("vFW-vSINK 0");
         assertThat(service.get("lifecycleStatus")).isEqualTo("CERTIFIED");
         assertThat(service.get("@type")).isEqualTo("ONAPservice");
         assertThat(((ArrayList) service.get("attachment")).size()).isEqualTo(5);

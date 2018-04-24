@@ -8,6 +8,7 @@
       "invariantUUID": "invariantUUID",
       "toscaModelURL": "toscaModelURL",
       "toscaResourceName": "toscaResourceName",
+      "resourceInstanceName" : "modelCustomizationName",
       "category ": "category",
       "subcategory": "subcategory",
       "distributionStatus": "distributionStatus",
