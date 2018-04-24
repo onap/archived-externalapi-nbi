@@ -32,7 +32,7 @@ public class RequestParameters {
     }
 
     public void setSubscriptionServiceType(String subscriptionServiceType) {
-        subscriptionServiceType = subscriptionServiceType;
+        this.subscriptionServiceType = subscriptionServiceType;
     }
 
     public List<UserParams> getUserParams() {
