@@ -1,0 +1,96 @@
+#
+#     Copyright (c) 2018 Orange
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+#
+
+tosca_definitions_version: tosca_simple_yaml_1_1
+metadata:
+  invariantUUID: c4b53838-852e-465b-9912-d386228e8784
+  UUID: 5349c430-8bf7-4033-be37-ef33d0f9823e
+  name: test network
+  description: '12345'
+  type: Service
+  category: Network L1-3
+  serviceType: ''
+  serviceRole: ''
+  serviceEcompNaming: true
+  ecompGeneratedNaming: true
+  namingPolicy: ''
+imports:
+- nodes:
+    file: nodes.yml
+- datatypes:
+    file: data.yml
+- capabilities:
+    file: capabilities.yml
+- relationships:
+    file: relationships.yml
+- groups:
+    file: groups.yml
+- policies:
+    file: policies.yml
+- service-test network-interface:
+    file: service-TestNetwork-template-interface.yml
+- resource-Generic NeutronNet:
+    file: resource-GenericNeutronnet-template.yml
+topology_template:
+  node_templates:
+    Generic NeutronNet 0:
+      type: org.openecomp.resource.vl.GenericNeutronNet
+      metadata:
+        invariantUUID: 185ad0e3-0031-4d34-9ac2-d6ad30f7f34d
+        UUID: e2b12ac6-cbb6-4517-9c58-b846d1f68caf
+        customizationUUID: 27f40057-902a-4cbf-870e-0db55f97283e
+        version: '1.0'
+        name: Generic NeutronNet
+        description: Generic NeutronNet
+        type: VL
+        category: Generic
+        subcategory: Network Elements
+        resourceVendor: ATT (Tosca)
+        resourceVendorRelease: 1.0.0.wd03
+        resourceVendorModelNumber: ''
+      properties:
+        network_role: TestNetwork.test
+        network_assignments:
+          is_external_network: false
+          ipv4_subnet_default_assignment:
+            min_subnets_count: 1
+          ecomp_generated_network_assignment: false
+          ipv6_subnet_default_assignment:
+            min_subnets_count: 1
+        exVL_naming:
+          ecomp_generated_naming: true
+        network_flows:
+          is_network_policy: false
+          is_bound_to_vpn: false
+        network_ecomp_naming:
+          ecomp_generated_naming: true
+        network_type: NEUTRON
+        network_technology: NEUTRON
+        network_homing:
+          ecomp_selected_instance_node_target: false
+  substitution_mappings:
+    node_type: org.openecomp.service.TestNetwork
+    capabilities:
+      genericneutronnet0.feature:
+      - genericneutronnet0
+      - feature
+      genericneutronnet0.virtual_linkable:
+      - genericneutronnet0
+      - virtual_linkable
+    requirements:
+      genericneutronnet0.dependency:
+      - genericneutronnet0
+      - dependency
