@@ -78,13 +78,14 @@ public class ToscaInfosProcessor {
         List<LinkedHashMap> resourceSpecifications =
                 (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
         for (LinkedHashMap resourceSpecification : resourceSpecifications) {
-            String id = (String) resourceSpecification.get("id");
-            LOGGER.debug("get tosca infos for service id: {0}", id);
-            LinkedHashMap toscaInfosFromResourceId = getToscaInfosFromResourceUUID(nodeTemplate, id);
-            if (toscaInfosFromResourceId != null) {
-                resourceSpecification.put("modelCustomizationId", toscaInfosFromResourceId.get("customizationUUID"));
+            if(resourceSpecification.get("id")!=null){
+                String id = (String) resourceSpecification.get("id");
+                LOGGER.debug("get tosca infos for service id: {0}", id);
+                LinkedHashMap toscaInfosFromResourceId = getToscaInfosFromResourceUUID(nodeTemplate, id);
+                if (toscaInfosFromResourceId != null && toscaInfosFromResourceId.get("customizationUUID")!=null) {
+                    resourceSpecification.put("modelCustomizationId", toscaInfosFromResourceId.get("customizationUUID"));
+                }
             }
-
         }
     }
 
@@ -133,10 +134,12 @@ public class ToscaInfosProcessor {
             for (Object nodeTemplateObject : node_templates.values()) {
                 LinkedHashMap nodeTemplate = (LinkedHashMap) nodeTemplateObject;
                 LinkedHashMap metadata = (LinkedHashMap) nodeTemplate.get("metadata");
-                String metadataUUID = (String) metadata.get("UUID");
-                String metadataType = (String) metadata.get("type");
-                if ("VF".equalsIgnoreCase(metadataType) && name.equalsIgnoreCase(metadataUUID)) {
-                    return metadata;
+                if(metadata.get("UUID")!=null && metadata.get("type")!=null) {
+                    String metadataUUID = (String) metadata.get("UUID");
+                    String metadataType = (String) metadata.get("type");
+                    if ("VF".equalsIgnoreCase(metadataType) && name!=null &&  name.equalsIgnoreCase(metadataUUID)) {
+                        return metadata;
+                    }
                 }
             }
         }
@@ -149,7 +152,7 @@ public class ToscaInfosProcessor {
         LinkedHashMap topologyTemplate = null;
 
         String toscaModelUrl = (String) sdcResponse.get("toscaModelURL");
-        String serviceId = (String) sdcResponse.get("uuid");
+        String serviceId = (String) sdcResponse.get("id");
         File toscaFile = sdcClient.callGetWithAttachment(toscaModelUrl);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String tempFolderName = serviceId + timestamp;
