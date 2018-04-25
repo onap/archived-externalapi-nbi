@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "url": "/sdc/v1/catalog/services/"
+        "url": "/sdc/v1/catalog/services"
     },
     "response": {
         "status": 200,

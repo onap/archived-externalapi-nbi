@@ -16,6 +16,7 @@ package org.onap.nbi.apis.servicecatalog;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,37 +64,42 @@ public class SdcClient {
 
 
     public LinkedHashMap callGet(String id) {
-        StringBuilder callURL = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL)
-                .append(id).append(OnapComponentsUrlPaths.SDC_GET_PATH);
+        StringBuilder urlBuilder = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL)
+                .append("/").append(id).append(OnapComponentsUrlPaths.SDC_GET_PATH);
 
-        ResponseEntity<Object> response = callSdc(callURL.toString());
+        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(urlBuilder.toString());
+
+        ResponseEntity<Object> response = callSdc(callURI.build().encode().toUri());
         return (LinkedHashMap) response.getBody();
 
     }
 
     public List<LinkedHashMap> callFind(MultiValueMap<String, String> parametersMap) {
 
-        UriComponentsBuilder callURL = UriComponentsBuilder.fromHttpUrl(sdcHost + OnapComponentsUrlPaths.SDC_ROOT_URL);
+        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(sdcHost + OnapComponentsUrlPaths.SDC_ROOT_URL);
         if (parametersMap != null) {
             Map<String, String> stringStringMap = parametersMap.toSingleValueMap();
             for (String key : stringStringMap.keySet()) {
                 if (!key.equals("fields")) {
-                    callURL.queryParam(key, stringStringMap.get(key));
+                    callURI.queryParam(key, stringStringMap.get(key));
                 }
             }
         }
 
-        ResponseEntity<Object> response = callSdc(callURL.build().encode().toUri().toString());
+        ResponseEntity<Object> response = callSdc(callURI.build().encode().toUri());
         return (List<LinkedHashMap>) response.getBody();
 
     }
 
 
     public File callGetWithAttachment(String toscaModelUrl) {
-        StringBuilder callURL = new StringBuilder().append(sdcHost).append(toscaModelUrl);
+        StringBuilder urlBuilder = new StringBuilder().append(sdcHost).append(toscaModelUrl);
+
+        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(urlBuilder.toString());
+
 
         String fileName = System.currentTimeMillis() + "tosca.csar";
-        ResponseEntity<byte[]> response = callSdcWithAttachment(callURL.toString());
+        ResponseEntity<byte[]> response = callSdcWithAttachment(callURI.build().encode().toUri());
         File toscaFile = new File(fileName);
         try {
             FileOutputStream toscaFileStream = new FileOutputStream(toscaFile);
@@ -118,40 +124,40 @@ public class SdcClient {
     }
 
 
-    private ResponseEntity<Object> callSdc(String callURL) {
+    private ResponseEntity<Object> callSdc(URI callURI) {
         ResponseEntity<Object> response =
-                restTemplate.exchange(callURL, HttpMethod.GET, buildRequestHeader(), Object.class);
+                restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), Object.class);
         LOGGER.debug("response body : " + response.getBody().toString());
         LOGGER.info("response status : " + response.getStatusCodeValue());
-        loggDebugIfResponseKo(callURL, response);
+        loggDebugIfResponseKo(callURI.toString(), response);
         return response;
     }
 
-    private void loggDebugIfResponseKo(String callURL, ResponseEntity<Object> response) {
-        if (!response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn(HTTP_CALL_SDC_ON + callURL + " returns " + response.getStatusCodeValue() + ", "
-                    + response.getBody().toString());
-        }
-    }
 
-    private ResponseEntity<byte[]> callSdcWithAttachment(String callURL) {
+    private ResponseEntity<byte[]> callSdcWithAttachment(URI callURI) {
         try {
             ResponseEntity<byte[]> response =
-                    restTemplate.exchange(callURL.toString(), HttpMethod.GET, buildRequestHeader(), byte[].class);
+                    restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), byte[].class);
             LOGGER.info("response status : " + response.getStatusCodeValue());
             if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn(HTTP_CALL_SDC_ON + callURL.toString() + " returns " + response.getStatusCodeValue() + ", "
+                LOGGER.warn(HTTP_CALL_SDC_ON + callURI.toString() + " returns " + response.getStatusCodeValue() + ", "
                         + response.getBody().toString());
             }
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(HTTP_CALL_SDC_ON + callURL.toString() + " error " + e);
+            LOGGER.error(HTTP_CALL_SDC_ON + callURI.toString() + " error " + e);
             return null;
         }
     }
 
 
+    private void loggDebugIfResponseKo(String callURI, ResponseEntity<Object> response) {
+        if (!response.getStatusCode().equals(HttpStatus.OK)) {
+            LOGGER.warn(HTTP_CALL_SDC_ON + callURI + " returns " + response.getStatusCodeValue() + ", "
+                + response.getBody().toString());
+        }
+    }
 }
 
 

@@ -24,7 +24,7 @@ public final class OnapComponentsUrlPaths {
     private OnapComponentsUrlPaths() {}
 
     // SDC
-    public static final String SDC_ROOT_URL = "/sdc/v1/catalog/services/";
+    public static final String SDC_ROOT_URL = "/sdc/v1/catalog/services";
     public static final String SDC_GET_PATH = "/metadata";
     public static final String SDC_TOSCA_PATH = "/toscaModel";
 
