@@ -1,0 +1,1890 @@
+#
+#     Copyright (c) 2018 Orange
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+#
+
+tosca_definitions_version: tosca_simple_yaml_1_1
+metadata:
+  invariantUUID: b58a118e-eeb9-4f6e-bdca-e292f84d17df
+  UUID: 1e3feeb0-8e36-46c6-862c-236d9c626439
+  name: vFW-service-2VF-based
+  description: vFW service based on 2 VF from 2 VSP
+  type: Service
+  category: Network Service
+  serviceType: ''
+  serviceRole: ''
+  serviceEcompNaming: true
+  ecompGeneratedNaming: true
+  namingPolicy: ''
+imports:
+- nodes:
+    file: nodes.yml
+- datatypes:
+    file: data.yml
+- capabilities:
+    file: capabilities.yml
+- relationships:
+    file: relationships.yml
+- groups:
+    file: groups.yml
+- policies:
+    file: policies.yml
+- service-vFW-service-2VF-based-interface:
+    file: service-VfwService2vfBased-template-interface.yml
+- resource-vFW-vSINK:
+    file: resource-VfwVsink-template.yml
+- resource-vFW-vSINK-interface:
+    file: resource-VfwVsink-template-interface.yml
+- resource-vPkG:
+    file: resource-Vpkg-template.yml
+- resource-vPkG-interface:
+    file: resource-Vpkg-template-interface.yml
+topology_template:
+  inputs:
+    fortigate_image_url:
+      type: string
+      required: false
+      default: 
+    flavor:
+      type: string
+      default: '2z'
+    external_network_name:
+      type: string
+      default: 'GATEWAY_NET'
+      status: inactive
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      default: 2
+      entry_schema:
+      - constraints:
+          - valid_values: [ 1, 2, 4, 8 ]
+  node_templates:
+    vPkG 0:
+      type: org.openecomp.resource.vf.Vpkg
+      metadata:
+        invariantUUID: 8d8a20c0-746c-4d5e-a1a2-fa49fa5786ad
+        UUID: 31961e27-2a2c-4beb-87c9-bfe0067088f5
+        customizationUUID: 067f5672-51ec-48a6-8ffd-0a7874672666
+        version: '2.0'
+        name: vPkG
+        description: vPacketGenerator
+        type: VF
+        category: Application L4+
+        subcategory: Firewall
+        resourceVendor: Generic
+        resourceVendorRelease: '1.0'
+        resourceVendorModelNumber: ''
+      properties:
+        vf_module_id: vTrafficPNG
+        repo_url_blob: https://nexus.onap.org/content/sites/raw
+        unprotected_private_subnet_id: zdfw1fwl01_unprotected_sub
+        public_net_id: 715a1ca1-cbc6-4d00-84bb-0f8667a748ce
+        vfw_private_ip_0: 192.168.10.100
+        onap_private_subnet_id: 51a5a838-7318-464d-858a-974bef8d49e3
+        onap_private_net_cidr: 10.4.2.0/24
+        image_name: ubuntu-14.04-daily
+        flavor_name: onap.medium
+        vnf_id: vPNG_Firewall_demo_app
+        vpg_name_0: zdfw1fwl01pgn01
+        vpg_private_ip_1: 10.4.2.200
+        vsn_private_ip_0: 192.168.20.250
+        vpg_private_ip_0: 192.168.10.200
+        protected_private_net_cidr: 192.168.20.0/24
+        unprotected_private_net_cidr: 192.168.10.0/24
+        nf_naming:
+          ecomp_generated_naming: true
+        onap_private_net_id: 715a1ca1-cbc6-4d00-84bb-0f8667a748ce
+        unprotected_private_net_id: zdfw1fwl01_unprotected
+        availability_zone_max_count: 1
+        demo_artifacts_version: 1.2.0
+        key_name: onap_key_LnHa
+        repo_url_artifacts: https://nexus.onap.org/content/groups/staging
+        install_script_version: 1.2.0-SNAPSHOT
+        cloud_env: openstack
+      capabilities:
+        network.incoming.bytes.rate_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.read.bytes_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes.rate_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.allocation_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        endpoint_vpg:
+          properties:
+            secure: true
+        cpu_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.read.bytes.rate_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes.rate_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.bytes.rate_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.iops_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.usage_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.usage_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.read.bytes_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.bytes_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.write.requests_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.capacity_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.latency_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.requests.rate_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.packets.rate_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets.rate_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.allocation_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.ephemeral.size_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.write.requests.rate_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.write.bytes.rate_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.iops_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outpoing.packets_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        instance_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.capacity_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.read.requests_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        cpu_util_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        memory.usage_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.read.requests.rate_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.read.requests_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets.rate_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        cpu.delta_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes.rate_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.write.bytes_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.packets.rate_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        scalable_vpg:
+          properties:
+            max_instances: 1
+            min_instances: 1
+        vcpus_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.root.size_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.requests_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        memory_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outpoing.packets_vpg_vpg_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.read.bytes.rate_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        memory.resident_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.latency_vpg:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets_vpg_vpg_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+    vFW-vSINK 0:
+      type: org.openecomp.resource.vf.VfwVsink
+      metadata:
+        invariantUUID: 18b90934-aa82-456f-938e-e74a07a426f3
+        UUID: 89a6b4c5-3973-4c19-b651-fae3713ca8d5
+        customizationUUID: f7ae574e-fd5f-41e7-9b21-75e001561c96
+        version: '2.0'
+        name: vFW-vSINK
+        description: vFW and vSink in one VSP
+        type: VF
+        category: Application L4+
+        subcategory: Firewall
+        resourceVendor: Generic
+        resourceVendorRelease: '1.0'
+        resourceVendorModelNumber: ''
+      properties:
+        vf_module_id: vFirewallCL
+        repo_url_blob: https://nexus.onap.org/content/sites/raw
+        vfw_private_ip_1: 192.168.20.100
+        unprotected_private_subnet_id: zdfw1fwl01_unprotected_sub
+        public_net_id: 715a1ca1-cbc6-4d00-84bb-0f8667a748ce
+        vfw_private_ip_0: 192.168.10.100
+        onap_private_subnet_id: 51a5a838-7318-464d-858a-974bef8d49e3
+        vfw_private_ip_2: 10.4.2.201
+        vfw_name_0: zdfw1fwl01fwl01
+        onap_private_net_cidr: 10.4.2.0/24
+        image_name: ubuntu-14.04-daily
+        flavor_name: onap.medium
+        dcae_collector_ip: 10.4.2.38
+        vnf_id: vFirewall_demo_app
+        dcae_collector_port: '8080'
+        protected_private_subnet_id: zdfw1fwl01_protected_sub
+        vsn_private_ip_0: 192.168.20.250
+        vsn_private_ip_1: 10.4.2.202
+        vpg_private_ip_0: 192.168.10.200
+        protected_private_net_cidr: 192.168.20.0/24
+        unprotected_private_net_cidr: 192.168.10.0/24
+        nf_naming:
+          ecomp_generated_naming: true
+        vsn_name_0: zdfw1fwl01snk01
+        onap_private_net_id: 715a1ca1-cbc6-4d00-84bb-0f8667a748ce
+        unprotected_private_net_id: zdfw1fwl01_unprotected
+        availability_zone_max_count: 1
+        demo_artifacts_version: 1.2.0
+        key_name: onap_key_LnHa
+        repo_url_artifacts: https://nexus.onap.org/content/groups/staging
+        install_script_version: 1.2.0-SNAPSHOT
+        protected_private_net_id: zdfw1fwl01_protected
+        cloud_env: openstack
+      capabilities:
+        network.outgoing.bytes_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        end_point:
+          properties:
+            protocol: tcp
+            initiator: source
+            network_name: PRIVATE
+            secure: false
+        disk.device.write.bytes_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        memory.usage_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        scalable_vsn:
+          properties:
+            max_instances: 1
+            min_instances: 1
+        network.incoming.packets_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes.rate_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.read.requests_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.allocation_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        instance_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.latency_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        memory.resident_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outpoing.packets_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets.rate_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.incoming.bytes.rate_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.incoming.bytes_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.write.bytes.rate_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.write.requests.rate_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes.rate_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets.rate_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.packets.rate_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.incoming.packets_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.bytes.rate_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.usage_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.usage_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.ephemeral.size_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outpoing.packets_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.read.bytes_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.write.bytes_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.latency_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.bytes_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        memory_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.write.requests_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.allocation_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.read.requests_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        vcpus_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.requests.rate_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.read.bytes_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.read.bytes.rate_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outpoing.packets_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        endpoint_vfw:
+          properties:
+            secure: true
+        disk.device.read.requests.rate_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.capacity_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.packets.rate_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.packets.rate_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.root.size_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.packets.rate_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.read.bytes.rate_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.bytes_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.write.requests_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.incoming.packets.rate_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.capacity_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outpoing.packets_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        cpu_util_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        cpu_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.iops_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.incoming.bytes.rate_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        memory.usage_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.write.bytes_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.usage_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.bytes.rate_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes.rate_vsn_vsn_private_1_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        memory.resident_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.latency_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.write.requests.rate_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.ephemeral.size_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.read.bytes_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.bytes.rate_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        instance_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.allocation_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.iops_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets.rate_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        scalable_vfw:
+          properties:
+            max_instances: 1
+            min_instances: 1
+        disk.device.read.bytes.rate_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.usage_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.write.bytes.rate_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        cpu.delta_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.bytes.rate_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        cpu.delta_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.capacity_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.read.bytes_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.read.requests_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.read.requests.rate_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.write.bytes_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.write.requests_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.allocation_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        vcpus_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.iops_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outpoing.packets_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.read.bytes.rate_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets.rate_vfw_vfw_private_1_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.bytes.rate_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.write.requests_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        memory_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.root.size_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.packets.rate_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.incoming.packets_vfw_vfw_private_2_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.write.requests.rate_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        disk.device.capacity_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.read.requests_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        disk.device.latency_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        endpoint_vsn:
+          properties:
+            secure: true
+        disk.iops_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        network.outgoing.bytes.rate_vsn_vsn_private_0_port:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+        network.outgoing.bytes.rate_vfw_vfw_private_0_port:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        cpu_util_vfw:
+          properties:
+            unit: packet
+            description: Number of incoming packets
+            type: Cumulative
+            category: network
+        cpu_vsn:
+          properties:
+            unit: request
+            description: Number of write requests
+            type: Cumulative
+            category: compute
+  groups:
+    vpkg0..Vpkg..base_vpkg..module-0:
+      type: org.openecomp.groups.VfModule
+      metadata:
+        vfModuleModelName: Vpkg..base_vpkg..module-0
+        vfModuleModelInvariantUUID: 2b625799-0359-418e-8003-d92adcdb595c
+        vfModuleModelUUID: 4a82f066-ae9d-4b13-961a-1cf04550887d
+        vfModuleModelVersion: '2'
+        vfModuleModelCustomizationUUID: fc2f14df-ac8c-4631-bc59-440f3d823229
+      properties:
+        min_vf_module_instances: 1
+        vf_module_label: base_vpkg
+        max_vf_module_instances: 1
+        vfc_list:
+        vf_module_type: Base
+        vf_module_description:
+        initial_count: 1
+        volume_group: false
+        availability_zone_count:
+    vfwvsink0..VfwVsink..base_vfw..module-0:
+      type: org.openecomp.groups.VfModule
+      metadata:
+        vfModuleModelName: VfwVsink..base_vfw..module-0
+        vfModuleModelInvariantUUID: 1408337c-b197-4c3f-9fe4-f63a74a38fbf
+        vfModuleModelUUID: 16771d83-0c95-4dbe-a8be-1364f9c568ae
+        vfModuleModelVersion: '2'
+        vfModuleModelCustomizationUUID: 2ff6be2e-e80b-474c-9e72-6d7f897d0ba0
+      properties:
+        min_vf_module_instances: 1
+        vf_module_label: base_vfw
+        max_vf_module_instances: 1
+        vfc_list:
+        vf_module_type: Base
+        vf_module_description:
+        initial_count: 1
+        volume_group: false
+        availability_zone_count:
+  substitution_mappings:
+    node_type: org.openecomp.service.VfwService2vfBased
+    capabilities:
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.incoming.bytes.rate_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.incoming.bytes.rate_vfw_vfw_private_0_port
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.incoming.bytes.rate_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.incoming.bytes.rate_vpg_vpg_private_0_port
+      vfwvsink0.vfw.abstract_vfw.disk.device.write.bytes.rate_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.write.bytes.rate_vfw
+      vpkg0.vpg.abstract_vpg.host_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.host_vpg
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.outgoing.bytes_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.outgoing.bytes_vpg_vpg_private_0_port
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.outgoing.bytes.rate_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.outgoing.bytes.rate_vpg_vpg_private_1_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.attachment_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.attachment_vfw_vfw_private_1_port
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.incoming.packets.rate_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.incoming.packets.rate_vsn_vsn_private_0_port
+      vfwvsink0.vfw.abstract_vfw.disk.read.bytes.rate_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.read.bytes.rate_vfw
+      vfwvsink0.vfw.abstract_vfw.disk.iops_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.iops_vfw
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.feature_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.feature_vpg_vpg_private_1_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.incoming.packets.rate_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.incoming.packets.rate_vfw_vfw_private_1_port
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.binding_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.binding_vsn_vsn_private_0_port
+      vpkg0.vpg.abstract_vpg.disk.device.read.requests.rate_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.read.requests.rate_vpg
+      vfwvsink0.vsn.abstract_vsn.memory.resident_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.memory.resident_vsn
+      vpkg0.vpg.abstract_vpg.disk.write.requests.rate_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.write.requests.rate_vpg
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.outgoing.bytes.rate_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.outgoing.bytes.rate_vfw_vfw_private_1_port
+      vfwvsink0.vsn.abstract_vsn.disk.write.bytes.rate_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.write.bytes.rate_vsn
+      vfwvsink0.vfw.abstract_vfw.instance_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.instance_vfw
+      vfwvsink0.vfw.abstract_vfw.disk.write.requests.rate_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.write.requests.rate_vfw
+      vfwvsink0.vfw.abstract_vfw.binding_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.binding_vfw
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.incoming.packets_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.incoming.packets_vfw_vfw_private_0_port
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.incoming.bytes_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.incoming.bytes_vpg_vpg_private_0_port
+      vfwvsink0.unprotected_private_network.feature:
+      - vfwvsink0
+      - unprotected_private_network.feature
+      vpkg0.vpg.abstract_vpg.disk.read.bytes.rate_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.read.bytes.rate_vpg
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.binding_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.binding_vpg_vpg_private_1_port
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.incoming.packets_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.incoming.packets_vsn_vsn_private_1_port
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.outgoing.packets.rate_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.outgoing.packets.rate_vpg_vpg_private_1_port
+      vfwvsink0.vfw.abstract_vfw.disk.device.read.requests_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.read.requests_vfw
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.outgoing.bytes_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.outgoing.bytes_vfw_vfw_private_1_port
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.outgoing.bytes_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.outgoing.bytes_vsn_vsn_private_1_port
+      vfwvsink0.vsn.abstract_vsn.cpu_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.cpu_vsn
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.attachment_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.attachment_vsn_vsn_private_1_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.binding_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.binding_vfw_vfw_private_2_port
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.outgoing.bytes.rate_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.outgoing.bytes.rate_vsn_vsn_private_0_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.feature_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.feature_vfw_vfw_private_1_port
+      vfwvsink0.vfw.abstract_vfw.disk.usage_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.usage_vfw
+      vpkg0.vpg.abstract_vpg.vcpus_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.vcpus_vpg
+      vfwvsink0.vfw.abstract_vfw.disk.device.allocation_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.allocation_vfw
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.attachment_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.attachment_vsn_vsn_private_0_port
+      vfwvsink0.vsn.abstract_vsn.memory_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.memory_vsn
+      vfwvsink0.vfw.abstract_vfw.os_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.os_vfw
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.feature_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.feature_vsn_vsn_private_0_port
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.outpoing.packets_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.outpoing.packets_vpg_vpg_private_1_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.binding_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.binding_vfw_vfw_private_1_port
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.incoming.packets.rate_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.incoming.packets.rate_vsn_vsn_private_1_port
+      vfwvsink0.vfw.abstract_vfw.disk.device.write.requests_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.write.requests_vfw
+      vpkg0.vpg.abstract_vpg.cpu_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.cpu_vpg
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.outgoing.packets.rate_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.outgoing.packets.rate_vsn_vsn_private_1_port
+      vfwvsink0.vsn.abstract_vsn.disk.device.write.bytes_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.write.bytes_vsn
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.feature_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.feature_vfw_vfw_private_2_port
+      vfwvsink0.vsn.abstract_vsn.host_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.host_vsn
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.attachment_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.attachment_vpg_vpg_private_1_port
+      vfwvsink0.vfw.abstract_vfw.disk.device.write.bytes_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.write.bytes_vfw
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.outgoing.bytes.rate_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.outgoing.bytes.rate_vfw_vfw_private_0_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.incoming.packets.rate_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.incoming.packets.rate_vfw_vfw_private_2_port
+      vfwvsink0.vfw.abstract_vfw.memory.resident_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.memory.resident_vfw
+      vfwvsink0.vsn.abstract_vsn.vcpus_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.vcpus_vsn
+      vfwvsink0.vfw.abstract_vfw.disk.read.requests_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.read.requests_vfw
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.incoming.packets_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.incoming.packets_vpg_vpg_private_1_port
+      vfwvsink0.unprotected_private_network.link:
+      - vfwvsink0
+      - unprotected_private_network.link
+      vpkg0.vpg.abstract_vpg.disk.device.latency_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.latency_vpg
+      vfwvsink0.vfw.abstract_vfw.disk.write.requests_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.write.requests_vfw
+      vfwvsink0.vsn.abstract_vsn.disk.capacity_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.capacity_vsn
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.outgoing.packets.rate_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.outgoing.packets.rate_vfw_vfw_private_2_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.incoming.packets_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.incoming.packets_vfw_vfw_private_2_port
+      vfwvsink0.vsn.abstract_vsn.scalable_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.scalable_vsn
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.incoming.bytes_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.incoming.bytes_vsn_vsn_private_1_port
+      vfwvsink0.vfw.abstract_vfw.disk.write.bytes_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.write.bytes_vfw
+      vfwvsink0.vfw.abstract_vfw.disk.device.read.bytes.rate_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.read.bytes.rate_vfw
+      vpkg0.vpg.abstract_vpg.disk.write.bytes_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.write.bytes_vpg
+      vpkg0.vpg.abstract_vpg.disk.device.write.bytes.rate_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.write.bytes.rate_vpg
+      vpkg0.vpg.abstract_vpg.memory.usage_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.memory.usage_vpg
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.outpoing.packets_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.outpoing.packets_vsn_vsn_private_1_port
+      vfwvsink0.vsn.abstract_vsn.memory.usage_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.memory.usage_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.device.read.bytes.rate_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.read.bytes.rate_vsn
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.incoming.bytes_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.incoming.bytes_vsn_vsn_private_0_port
+      vfwvsink0.vfw.abstract_vfw.disk.ephemeral.size_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.ephemeral.size_vfw
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.attachment_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.attachment_vfw_vfw_private_0_port
+      vfwvsink0.vsn.abstract_vsn.binding_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.binding_vsn
+      vfwvsink0.vfw.abstract_vfw.cpu.delta_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.cpu.delta_vfw
+      vfwvsink0.vsn.abstract_vsn.disk.read.bytes.rate_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.read.bytes.rate_vsn
+      vfwvsink0.vfw.abstract_vfw.disk.latency_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.latency_vfw
+      vfwvsink0.vsn.abstract_vsn.disk.device.latency_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.latency_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.latency_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.latency_vsn
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.outgoing.packets.rate_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.outgoing.packets.rate_vpg_vpg_private_0_port
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.incoming.packets.rate_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.incoming.packets.rate_vpg_vpg_private_1_port
+      vfwvsink0.vsn.abstract_vsn.instance_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.instance_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.device.allocation_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.allocation_vsn
+      vpkg0.vpg.abstract_vpg.disk.allocation_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.allocation_vpg
+      vfwvsink0.vsn.abstract_vsn.disk.read.bytes_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.read.bytes_vsn
+      vpkg0.vpg.abstract_vpg.disk.device.write.requests_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.write.requests_vpg
+      vpkg0.vpg.abstract_vpg.disk.device.write.requests.rate_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.write.requests.rate_vpg
+      vpkg0.vpg.abstract_vpg.disk.device.read.bytes_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.read.bytes_vpg
+      vpkg0.vpg.abstract_vpg.disk.device.read.requests_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.read.requests_vpg
+      vfwvsink0.vsn.abstract_vsn.cpu_util_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.cpu_util_vsn
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.incoming.packets_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.incoming.packets_vpg_vpg_private_0_port
+      vpkg0.vpg.abstract_vpg.disk.device.read.bytes.rate_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.read.bytes.rate_vpg
+      vfwvsink0.vfw.abstract_vfw.disk.read.bytes_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.read.bytes_vfw
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.outgoing.packets.rate_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.outgoing.packets.rate_vsn_vsn_private_0_port
+      vpkg0.vpg.abstract_vpg.disk.read.requests_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.read.requests_vpg
+      vpkg0.vpg.abstract_vpg.disk.root.size_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.root.size_vpg
+      vfwvsink0.vfw.abstract_vfw.disk.device.write.requests.rate_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.write.requests.rate_vfw
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.outgoing.bytes_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.outgoing.bytes_vfw_vfw_private_0_port
+      vfwvsink0.vfw.abstract_vfw.cpu_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.cpu_vfw
+      vpkg0.vpg.abstract_vpg.cpu_util_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.cpu_util_vpg
+      vfwvsink0.vfw.abstract_vfw.disk.write.bytes.rate_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.write.bytes.rate_vfw
+      vfwvsink0.vsn.abstract_vsn.disk.ephemeral.size_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.ephemeral.size_vsn
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.outgoing.bytes_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.outgoing.bytes_vsn_vsn_private_0_port
+      vfwvsink0.vsn.abstract_vsn.disk.root.size_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.root.size_vsn
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.binding_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.binding_vfw_vfw_private_0_port
+      vpkg0.vpg.abstract_vpg.scalable_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.scalable_vpg
+      vpkg0.vpg.abstract_vpg.disk.usage_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.usage_vpg
+      vfwvsink0.unprotected_private_network.end_point:
+      - vfwvsink0
+      - unprotected_private_network.end_point
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.incoming.bytes.rate_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.incoming.bytes.rate_vsn_vsn_private_1_port
+      vfwvsink0.vfw.abstract_vfw.vcpus_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.vcpus_vfw
+      vfwvsink0.vfw.abstract_vfw.disk.device.read.requests.rate_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.read.requests.rate_vfw
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.outpoing.packets_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.outpoing.packets_vsn_vsn_private_0_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.attachment_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.attachment_vfw_vfw_private_2_port
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.binding_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.binding_vpg_vpg_private_0_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.outgoing.packets.rate_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.outgoing.packets.rate_vfw_vfw_private_1_port
+      vpkg0.vpg.abstract_vpg.disk.write.bytes.rate_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.write.bytes.rate_vpg
+      vfwvsink0.protected_private_network.feature:
+      - vfwvsink0
+      - protected_private_network.feature
+      vpkg0.vpg.abstract_vpg.disk.capacity_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.capacity_vpg
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.outgoing.bytes_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.outgoing.bytes_vpg_vpg_private_1_port
+      vfwvsink0.protected_private_network.attachment:
+      - vfwvsink0
+      - protected_private_network.attachment
+      vfwvsink0.vfw.abstract_vfw.disk.device.read.bytes_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.read.bytes_vfw
+      vfwvsink0.vfw.abstract_vfw.disk.capacity_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.capacity_vfw
+      vfwvsink0.vsn.abstract_vsn.disk.write.bytes_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.write.bytes_vsn
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.feature_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.feature_vfw_vfw_private_0_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.outgoing.bytes.rate_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.outgoing.bytes.rate_vfw_vfw_private_2_port
+      vfwvsink0.vfw.abstract_vfw.memory.usage_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.memory.usage_vfw
+      vfwvsink0.vfw.abstract_vfw.disk.root.size_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.root.size_vfw
+      vfwvsink0.vsn.abstract_vsn.feature_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.feature_vsn
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.incoming.bytes.rate_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.incoming.bytes.rate_vfw_vfw_private_2_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.incoming.bytes.rate_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.incoming.bytes.rate_vfw_vfw_private_1_port
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.feature_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.feature_vsn_vsn_private_1_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.incoming.packets_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.incoming.packets_vfw_vfw_private_1_port
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.incoming.packets.rate_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.incoming.packets.rate_vpg_vpg_private_0_port
+      vfwvsink0.vfw.abstract_vfw.disk.device.iops_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.iops_vfw
+      vpkg0.vpg.abstract_vpg.disk.device.iops_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.iops_vpg
+      vpkg0.vpg.abstract_vpg.endpoint_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.endpoint_vpg
+      vfwvsink0.vsn.abstract_vsn.disk.device.write.requests_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.write.requests_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.read.requests_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.read.requests_vsn
+      vfwvsink0.vsn.abstract_vsn.endpoint_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.endpoint_vsn
+      vfwvsink0.vfw.abstract_vfw.cpu_util_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.cpu_util_vfw
+      vpkg0.vpg.abstract_vpg.os_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.os_vpg
+      vfwvsink0.vsn.abstract_vsn.disk.device.usage_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.usage_vsn
+      vfwvsink0.unprotected_private_network.attachment:
+      - vfwvsink0
+      - unprotected_private_network.attachment
+      vpkg0.vpg.abstract_vpg.disk.device.usage_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.usage_vpg
+      vfwvsink0.vfw.abstract_vfw.memory_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.memory_vfw
+      vpkg0.vpg.abstract_vpg.disk.latency_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.latency_vpg
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.outgoing.bytes_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.outgoing.bytes_vfw_vfw_private_2_port
+      vfwvsink0.vsn.abstract_vsn.disk.device.read.requests_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.read.requests_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.write.requests.rate_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.write.requests.rate_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.device.capacity_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.capacity_vsn
+      vpkg0.vpg.abstract_vpg.disk.ephemeral.size_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.ephemeral.size_vpg
+      vpkg0.vpg.abstract_vpg.disk.iops_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.iops_vpg
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.incoming.bytes_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.incoming.bytes_vpg_vpg_private_1_port
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.network.incoming.bytes.rate_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.network.incoming.bytes.rate_vpg_vpg_private_1_port
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.incoming.packets_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.incoming.packets_vsn_vsn_private_0_port
+      vpkg0.vpg.abstract_vpg.feature_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.feature_vpg
+      vpkg0.vpg.abstract_vpg.instance_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.instance_vpg
+      vfwvsink0.protected_private_network.end_point:
+      - vfwvsink0
+      - protected_private_network.end_point
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.network.incoming.bytes.rate_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.network.incoming.bytes.rate_vsn_vsn_private_0_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.outpoing.packets_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.outpoing.packets_vfw_vfw_private_2_port
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.feature_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.feature_vpg_vpg_private_0_port
+      vfwvsink0.vfw.abstract_vfw.host_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.host_vfw
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.binding_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.binding_vsn_vsn_private_1_port
+      vpkg0.vpg.abstract_vpg.disk.device.capacity_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.capacity_vpg
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.network.outgoing.bytes.rate_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.network.outgoing.bytes.rate_vsn_vsn_private_1_port
+      vfwvsink0.vsn.abstract_vsn.disk.device.write.requests.rate_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.write.requests.rate_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.device.write.bytes.rate_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.write.bytes.rate_vsn
+      vpkg0.vpg.abstract_vpg.disk.write.requests_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.write.requests_vpg
+      vfwvsink0.vsn.abstract_vsn.disk.allocation_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.allocation_vsn
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.incoming.bytes_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.incoming.bytes_vfw_vfw_private_1_port
+      vpkg0.vpg.abstract_vpg.cpu.delta_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.cpu.delta_vpg
+      vfwvsink0.vfw.abstract_vfw.disk.device.latency_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.latency_vfw
+      vfwvsink0.vsn.abstract_vsn.disk.device.read.requests.rate_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.read.requests.rate_vsn
+      vpkg0.vpg.abstract_vpg.memory_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.memory_vpg
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.incoming.packets.rate_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.incoming.packets.rate_vfw_vfw_private_0_port
+      vfwvsink0.vsn.abstract_vsn.disk.device.iops_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.iops_vsn
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.outpoing.packets_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.outpoing.packets_vpg_vpg_private_0_port
+      vfwvsink0.vsn.abstract_vsn.disk.usage_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.usage_vsn
+      vfwvsink0.vfw.abstract_vfw.disk.device.capacity_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.capacity_vfw
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.network.outgoing.bytes.rate_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.network.outgoing.bytes.rate_vpg_vpg_private_0_port
+      vpkg0.vpg.abstract_vpg.disk.device.write.bytes_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.write.bytes_vpg
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.outpoing.packets_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.outpoing.packets_vfw_vfw_private_0_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.network.incoming.bytes_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.network.incoming.bytes_vfw_vfw_private_2_port
+      vfwvsink0.vfw.abstract_vfw.feature_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.feature_vfw
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.outgoing.packets.rate_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.outgoing.packets.rate_vfw_vfw_private_0_port
+      vfwvsink0.vsn.abstract_vsn.os_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.os_vsn
+      vfwvsink0.vfw.abstract_vfw.disk.device.usage_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.device.usage_vfw
+      vfwvsink0.vsn.abstract_vsn.disk.iops_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.iops_vsn
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.network.incoming.bytes_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.network.incoming.bytes_vfw_vfw_private_0_port
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.attachment_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.attachment_vpg_vpg_private_0_port
+      vpkg0.vpg.abstract_vpg.memory.resident_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.memory.resident_vpg
+      vfwvsink0.vfw.abstract_vfw.scalable_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.scalable_vfw
+      vfwvsink0.vsn.abstract_vsn.cpu.delta_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.cpu.delta_vsn
+      vpkg0.vpg.abstract_vpg.disk.device.allocation_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.device.allocation_vpg
+      vfwvsink0.protected_private_network.link:
+      - vfwvsink0
+      - protected_private_network.link
+      vfwvsink0.vfw.abstract_vfw.disk.allocation_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.disk.allocation_vfw
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.network.outpoing.packets_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.network.outpoing.packets_vfw_vfw_private_1_port
+      vpkg0.vpg.abstract_vpg.binding_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.binding_vpg
+      vpkg0.vpg.abstract_vpg.disk.read.bytes_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.disk.read.bytes_vpg
+      vfwvsink0.vsn.abstract_vsn.disk.device.read.bytes_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.device.read.bytes_vsn
+      vfwvsink0.vsn.abstract_vsn.disk.write.requests_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.disk.write.requests_vsn
+      vfwvsink0.vfw.abstract_vfw.endpoint_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.endpoint_vfw
+    requirements:
+      vfwvsink0.vfw.abstract_vfw.local_storage_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.local_storage_vfw
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.dependency_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.dependency_vfw_vfw_private_1_port
+      vpkg0.vpg.abstract_vpg.local_storage_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.local_storage_vpg
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.dependency_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.dependency_vpg_vpg_private_1_port
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.dependency_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.dependency_vsn_vsn_private_1_port
+      vfwvsink0.vsn_vsn_private_1_port.abstract_vsn.link_vsn_vsn_private_1_port:
+      - vfwvsink0
+      - vsn_vsn_private_1_port.abstract_vsn.link_vsn_vsn_private_1_port
+      vpkg0.vpg_vpg_private_1_port.abstract_vpg.link_vpg_vpg_private_1_port:
+      - vpkg0
+      - vpg_vpg_private_1_port.abstract_vpg.link_vpg_vpg_private_1_port
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.link_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.link_vfw_vfw_private_0_port
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.link_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.link_vsn_vsn_private_0_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.link_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.link_vfw_vfw_private_2_port
+      vfwvsink0.vfw.abstract_vfw.dependency_vfw:
+      - vfwvsink0
+      - vfw.abstract_vfw.dependency_vfw
+      vfwvsink0.vsn.abstract_vsn.local_storage_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.local_storage_vsn
+      vfwvsink0.unprotected_private_network.dependency:
+      - vfwvsink0
+      - unprotected_private_network.dependency
+      vfwvsink0.vfw_vfw_private_0_port.abstract_vfw.dependency_vfw_vfw_private_0_port:
+      - vfwvsink0
+      - vfw_vfw_private_0_port.abstract_vfw.dependency_vfw_vfw_private_0_port
+      vfwvsink0.vsn.abstract_vsn.dependency_vsn:
+      - vfwvsink0
+      - vsn.abstract_vsn.dependency_vsn
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.dependency_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.dependency_vpg_vpg_private_0_port
+      vfwvsink0.vsn_vsn_private_0_port.abstract_vsn.dependency_vsn_vsn_private_0_port:
+      - vfwvsink0
+      - vsn_vsn_private_0_port.abstract_vsn.dependency_vsn_vsn_private_0_port
+      vfwvsink0.vfw_vfw_private_2_port.abstract_vfw.dependency_vfw_vfw_private_2_port:
+      - vfwvsink0
+      - vfw_vfw_private_2_port.abstract_vfw.dependency_vfw_vfw_private_2_port
+      vfwvsink0.vfw_vfw_private_1_port.abstract_vfw.link_vfw_vfw_private_1_port:
+      - vfwvsink0
+      - vfw_vfw_private_1_port.abstract_vfw.link_vfw_vfw_private_1_port
+      vpkg0.vpg_vpg_private_0_port.abstract_vpg.link_vpg_vpg_private_0_port:
+      - vpkg0
+      - vpg_vpg_private_0_port.abstract_vpg.link_vpg_vpg_private_0_port
+      vpkg0.vpg.abstract_vpg.dependency_vpg:
+      - vpkg0
+      - vpg.abstract_vpg.dependency_vpg
+      vfwvsink0.protected_private_network.dependency:
+      - vfwvsink0
+      - protected_private_network.dependency

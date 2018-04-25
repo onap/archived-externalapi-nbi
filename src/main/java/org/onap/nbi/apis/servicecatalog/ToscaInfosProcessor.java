@@ -21,6 +21,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.collections.CollectionUtils;
@@ -48,9 +51,12 @@ public class ToscaInfosProcessor {
         if (toscaInfosTopologyTemplate.get("inputs") != null) {
             ArrayList serviceSpecCharacteristic = new ArrayList();
             LinkedHashMap toscaInfos = (LinkedHashMap) toscaInfosTopologyTemplate.get("inputs");
-            for (Object key : toscaInfos.entrySet()) {
-                String keyString = (String) key;
-                LinkedHashMap inputParameter = (LinkedHashMap) toscaInfos.get(key);
+            Set<Entry<String, LinkedHashMap>> stringLinkedHashMapEntry = (Set<Entry<String, LinkedHashMap>>) toscaInfos
+                .entrySet();
+
+            for (Map.Entry<String,LinkedHashMap> key :stringLinkedHashMapEntry) {
+                String keyString = key.getKey();
+                LinkedHashMap inputParameter = key.getValue();
                 LinkedHashMap mapParameter = new LinkedHashMap();
                 String parameterType = (String) inputParameter.get("type");
                 mapParameter.put("name", keyString);
@@ -60,7 +66,7 @@ public class ToscaInfosProcessor {
                 mapParameter.put("required", inputParameter.get("required"));
                 mapParameter.put("status", inputParameter.get("status"));
                 List<LinkedHashMap> serviceSpecCharacteristicValues =
-                        buildServiceSpecCharacteristicsValues(inputParameter, parameterType);
+                    buildServiceSpecCharacteristicsValues(inputParameter, parameterType);
                 mapParameter.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValues);
                 serviceSpecCharacteristic.add(mapParameter);
             }
