@@ -154,15 +154,18 @@ public class ServiceInventoryService {
 
         LinkedHashMap serviceInstancesInAaiForCustomer =
                 aaiClient.getServiceInstancesInAaiForCustomer(customerId, serviceType);
-        List<LinkedHashMap> serviceInstancesForServiceType =
+
+        if(!CollectionUtils.isEmpty(serviceInstancesInAaiForCustomer)) {
+            List<LinkedHashMap> serviceInstancesForServiceType =
                 (List<LinkedHashMap>) serviceInstancesInAaiForCustomer.get("service-instance");
 
-        if(!CollectionUtils.isEmpty(serviceInstancesForServiceType)){
-            // add service type for jolt
-            for (LinkedHashMap serviceInstanceForServiceType : serviceInstancesForServiceType) {
-                serviceInstanceForServiceType.put("service-type", serviceType);
+            if(!CollectionUtils.isEmpty(serviceInstancesForServiceType)){
+                // add service type for jolt
+                for (LinkedHashMap serviceInstanceForServiceType : serviceInstancesForServiceType) {
+                    serviceInstanceForServiceType.put("service-type", serviceType);
+                }
+                serviceInstances.addAll(serviceInstancesForServiceType);
             }
-            serviceInstances.addAll(serviceInstancesForServiceType);
         }
 
 
