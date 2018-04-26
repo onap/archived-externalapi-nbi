@@ -13,7 +13,19 @@
           },
           {
             "service-type": "vFW",
-            "resource-version": "1519660513613"
+            "resource-version": "1519660513613",
+            "service-instances": {
+              "service-instance": [
+                {
+                  "service-instance-id": "39ff3f9d-f210-4566-9d19-fa37edf1697d",
+                  "service-instance-name": "vPCRF",
+                  "model-invariant-id": "a09e799f-58eb-4c00-bfcc-4fa371a557e3",
+                  "model-version-id": "4c393977-09ea-42c2-bcd9-f50302ebba48",
+                  "resource-version": "1524672125232"
+                }
+              ]
+            }
+
           }
         ]
     },

@@ -17,6 +17,9 @@ package org.onap.nbi.apis.serviceinventory;
 
 import java.util.LinkedHashMap;
 import org.onap.nbi.OnapComponentsUrlPaths;
+import org.onap.nbi.exceptions.BackendFunctionalException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +42,7 @@ public class AaiClient extends BaseClient {
 
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String X_FROM_APP_ID = "X-FromAppId";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AaiClient.class);
 
     private HttpHeaders buildRequestHeaderForAAI() {
 
@@ -91,7 +95,12 @@ public class AaiClient extends BaseClient {
         String callUrlFormated = callURL.toString().replace(CUSTOMER_ID, customerId);
         callUrlFormated = callUrlFormated.replace("$serviceSpecName", serviceType);
 
-        ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
-        return (LinkedHashMap) response.getBody();
+        try{
+            ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
+            return (LinkedHashMap) response.getBody();
+        } catch (BackendFunctionalException e) {
+            LOGGER.error("error on calling {0} , {1}" , callUrlFormated, e);
+            return null;
+        }
     }
 }

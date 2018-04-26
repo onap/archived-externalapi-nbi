@@ -24,6 +24,7 @@ import org.onap.nbi.exceptions.BackendFunctionalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
@@ -156,11 +157,14 @@ public class ServiceInventoryService {
         List<LinkedHashMap> serviceInstancesForServiceType =
                 (List<LinkedHashMap>) serviceInstancesInAaiForCustomer.get("service-instance");
 
-        // add service type for jolt
-        for (LinkedHashMap serviceInstanceForServiceType : serviceInstancesForServiceType) {
-            serviceInstanceForServiceType.put("service-type", serviceType);
+        if(!CollectionUtils.isEmpty(serviceInstancesForServiceType)){
+            // add service type for jolt
+            for (LinkedHashMap serviceInstanceForServiceType : serviceInstancesForServiceType) {
+                serviceInstanceForServiceType.put("service-type", serviceType);
+            }
+            serviceInstances.addAll(serviceInstancesForServiceType);
         }
-        serviceInstances.addAll(serviceInstancesForServiceType);
+
 
     }
 
