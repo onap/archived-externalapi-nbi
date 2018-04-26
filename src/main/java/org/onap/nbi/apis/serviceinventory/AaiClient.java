@@ -84,9 +84,13 @@ public class AaiClient extends BaseClient {
         StringBuilder callURL =
                 new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH);
         String callUrlFormated = callURL.toString().replace(CUSTOMER_ID, customerId);
-
-        ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
-        return (LinkedHashMap) response.getBody();
+        try{
+            ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
+            return (LinkedHashMap) response.getBody();
+        } catch (BackendFunctionalException e) {
+            LOGGER.error("error on calling {0} , {1}" , callUrlFormated, e);
+            return null;
+        }
     }
 
     public LinkedHashMap getServiceInstancesInAaiForCustomer(String customerId, String serviceType) {
