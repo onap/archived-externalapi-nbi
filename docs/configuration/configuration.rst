@@ -64,9 +64,9 @@ Default values
     spring.jpa.hibernate.ddl-auto=update
     spring.jpa.hibernate.naming-strategy=org.hibernate.cfg.ImprovedNamingStrategy
 
-**************
+***************
 Changing values
-**************
+***************
 
 To adapt application parameters to your context, you need to set up some environment attributes. For example :
 

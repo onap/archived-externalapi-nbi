@@ -5,24 +5,24 @@
 
 Offered APIs
 ============
-***************
+************
 Introduction
-***************
+************
 
 NBI stands for NorthBound Interface. It brings to ONAP a set of API that can be used by external systems as BSS for example. These API are based on **TMF API**.
 
-***************
+*******************************************
 Global NBI architecture for Beijing release
-***************
+*******************************************
 
 Following illustration provides a global view about nbi architecture,integration with other ONAP components and API resource/operation provided.
 
 .. image:: images/ONAP_External_ID_Beijing.jpg
    :width: 800px
 
-***************
+***********
 API Version
-***************
+***********
 
 APIs are described with a  state version with “v” following the API Name, e.g.:  nbi/api/v1/productOrder.
 The schema associated with a REST API must have its version number aligned with that of the REST API.
@@ -44,9 +44,9 @@ must be kept
 
 For major modifications of the API, not backward compatible and forcing client implementations to be changed, the version number must be updated.
 
-***************
+*********
 API Table
-***************
+*********
 
 .. |pdf-icon| image:: images/pdf.png
               :width: 40px
@@ -72,9 +72,9 @@ API Table
    :widths: 10,5,5,5,5,5,5
 
    " ", "json file", "html doc", "plantUML doc", "Swagger Editor", "Postman Collection", "pdf doc"
-   "serviceCatalog", ":download:`link <swaggers/serviceCatalog_1_0_0.json>`", ":download:`link <serviceCatalog/documentation.html>`", ":download:`link <serviceCatalog/apiServiceCatalog.plantuml>`", "`link <http://editor2.swagger.io/?url=http://onap.readthedocs.io/en/latest/_downloads/serviceCatalog_1_0_0.json>`_", "coming", "coming"
-   "serviceInventory", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "`link <http://editor2.swagger.io/?url=http://onap.readthedocs.io/en/latest/_downloads/serviceInventory_1_0_0.json>`_", "coming", "coming"
-   "serviceOrder", ":download:`link <swaggers/serviceOrder_1_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "`link <http://editor2.swagger.io/?url=http://onap.readthedocs.io/en/latest/_downloads/serviceOrder_1_0_0.json>`_", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
+   "serviceCatalog", ":download:`link <swaggers/serviceCatalog_1_0_0.json>`", ":download:`link <serviceCatalog/documentation.html>`", ":download:`link <serviceCatalog/apiServiceCatalog.plantuml>`", "coming", "coming", "coming"
+   "serviceInventory", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "coming", "coming", "coming"
+   "serviceOrder", ":download:`link <swaggers/serviceOrder_1_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "coming", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
 
 
 ***************
@@ -186,9 +186,9 @@ With the current version of APIs used from SO and AAI we need to manage a ‘cus
 •	State management: States are only managed by ServiceOrder component and could not be updated from north side via API. Accordingly to service order item fulfillment progress, order item state are updated. Order state is automatically updated based on item state.
 
 
-***************
+********
 API flow
-***************
+********
 
 API Flow illustration (with example messages) is described in this document: :download:`nbicallflow.pdf <pdf/nbicallflow.pdf>`
 

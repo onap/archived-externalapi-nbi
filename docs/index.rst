@@ -3,7 +3,7 @@
 .. Copyright 2018 Orange
 
 ONAP ExternalAPI / NBI
-========================================
+======================
 
 .. toctree::
    :maxdepth: 1

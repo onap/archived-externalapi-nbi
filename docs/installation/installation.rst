@@ -38,7 +38,7 @@ Steps
 -----
 
 **Testing**
-When the app is running, you can access the API at http://yourhostname:8080/nbi/api/v1/ and fill the url with the name of the resources you asking for (/serviceSpecification, /service, /serviceOrder or /status)
+When the app is running, you can access the API at :samp:`http://yourhostname:8080/nbi/api/v1/` and fill the url with the name of the resources you asking for (/serviceSpecification, /service, /serviceOrder or /status)
 You can run a test by using `VisualStudio RestClient plugin <https://github.com/Huachao/vscode-restclient>`_
 See the *restclient* package at root level to find *.vscode/settings.json* configuration file and */json/* package with samples requests that can be run.
 You can also trigger these endpoints with any RESTful client or automation framework.
