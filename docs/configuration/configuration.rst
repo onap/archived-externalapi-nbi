@@ -70,6 +70,7 @@ Changing values
 
 To adapt application parameters to your context, you need to set up some environment attributes. For example :
 
+::
 
       SPRING_DATASOURCE_PASSWORD: your own value here
       SPRING_DATASOURCE_USERNAME: your own value here
