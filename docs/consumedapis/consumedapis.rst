@@ -16,6 +16,8 @@ SDC API
 This API is used to provide Service Catalog information
 Information are retrieved in SDC (and in Tosca "service template" file) - Only GET operation is provided - this API DID NOT UPDATE SDC
 
+::
+
     SDC_ROOT_URL = "/sdc/v1/catalog/services/"
 
     SDC_GET_PATH = "/metadata"
@@ -29,6 +31,8 @@ AAI API
 
 This API is used to provide Service Inventory information
 This API retrieves service(s) in the AAI inventory. Only following attributes will be retrieve in service inventory: id, name and type (no state or startDate available )
+
+::
 
     AAI_GET_TENANTS_PATH = "/aai/v11/cloud-infrastructure/cloud-regions/cloud-region/$onap.cloudOwner/$onap.lcpCloudRegionId/tenants"
 
@@ -50,6 +54,8 @@ SO API
 
 This API is used to perform Service Order and thus instantiate a service
 
+
+::
 
     MSO_CREATE_SERVICE_INSTANCE_PATH = "/ecomp/mso/infra/serviceInstance/v4"
 
