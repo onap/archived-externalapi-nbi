@@ -15,8 +15,10 @@
  */
 package org.onap.nbi.apis.servicecatalog;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import org.apache.commons.collections.CollectionUtils;
 import org.onap.nbi.apis.servicecatalog.jolt.FindServiceSpecJsonTransformer;
 import org.onap.nbi.apis.servicecatalog.jolt.GetServiceSpecJsonTransformer;
 import org.slf4j.Logger;
@@ -59,8 +61,11 @@ public class ServiceSpecificationService {
 
     public List<LinkedHashMap> find(MultiValueMap<String, String> parametersMap) {
         List<LinkedHashMap> sdcResponse = sdcClient.callFind(parametersMap);
-        List<LinkedHashMap> serviceCatalogResponse =
-                (List<LinkedHashMap>) findServiceSpecJsonTransformer.transform(sdcResponse);
+        List<LinkedHashMap> serviceCatalogResponse = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(sdcResponse)){
+            serviceCatalogResponse =
+                findServiceSpecJsonTransformer.transform(sdcResponse);
+        }
         return serviceCatalogResponse;
     }
 }
