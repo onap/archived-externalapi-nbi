@@ -15,10 +15,6 @@
  */
 package org.onap.nbi.apis.serviceorder;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.exceptions.BackendFunctionalException;
@@ -26,14 +22,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MultiClient {
@@ -162,7 +160,7 @@ public class MultiClient {
         Map<String, String> param = new HashMap<>();
         param.put("service-type", serviceName);
         String callURL = aaiHost + OnapComponentsUrlPaths.AAI_PUT_SERVICE_FOR_CUSTOMER_PATH + serviceName;
-        String callUrlFormated = callURL.toString().replace("$customerId", globalSubscriberId);
+        String callUrlFormated = callURL.replace("$customerId", globalSubscriberId);
         ResponseEntity<Object> response =  putRequest(param, callUrlFormated, buildRequestHeaderForAAI());
         if (response != null && response.getStatusCode().equals(HttpStatus.CREATED)) {
             return true;
@@ -198,11 +196,11 @@ public class MultiClient {
                     builder.queryParam(paramName, param.get(paramName));
                 }
             }
-            String uriBuilder = builder.build().encode().toUriString();
+            URI uri = builder.build().encode().toUri();
 
 
             ResponseEntity<Object> response =
-                    restTemplate.exchange(uriBuilder, HttpMethod.GET, new HttpEntity<>(httpHeaders), Object.class);
+                    restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(httpHeaders), Object.class);
             LOGGER.debug("response body : " + response.getBody().toString());
             LOGGER.info("response status : " + response.getStatusCodeValue());
             if (!response.getStatusCode().equals(HttpStatus.OK)) {
