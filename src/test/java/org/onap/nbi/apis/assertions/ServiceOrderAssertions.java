@@ -31,10 +31,8 @@ import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
-import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfoJson;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderItemInfo;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderInfoRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.utils.JsonEntityConverter;
 
@@ -164,8 +162,8 @@ public class ServiceOrderAssertions {
 
 
     public static ExecutionTask setUpBddForExecutionTaskSucess(ServiceOrderRepository serviceOrderRepository,
-            ServiceOrderInfoRepository serviceOrderInfoRepository, ExecutionTaskRepository executionTaskRepository,
-            ActionType actionType) {
+        ExecutionTaskRepository executionTaskRepository,
+        ActionType actionType) {
         ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
 
         for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
@@ -182,7 +180,7 @@ public class ServiceOrderAssertions {
         sdcResponse.put("version", "v1");
 
         ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
-
+        serviceOrderInfo.setServiceOrderId("test");
         SubscriberInfo subscriberInfo = new SubscriberInfo();
         subscriberInfo.setGlobalSubscriberId("6490");
         subscriberInfo.setSubscriberName("edgar");
@@ -199,19 +197,17 @@ public class ServiceOrderAssertions {
         serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
 
         String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
-        ServiceOrderInfoJson serviceOrderInfoJson = new ServiceOrderInfoJson("test", json);
-        serviceOrderInfoRepository.save(serviceOrderInfoJson);
 
         ExecutionTask executionTaskA = new ExecutionTask();
         executionTaskA.setNbRetries(3);
         executionTaskA.setOrderItemId("A");
-        executionTaskA.setServiceOrderInfoJson(serviceOrderInfoJson);
+        executionTaskA.setServiceOrderInfoJson(json);
         executionTaskA = executionTaskRepository.save(executionTaskA);
         ExecutionTask executionTaskB = new ExecutionTask();
         executionTaskB.setNbRetries(3);
         executionTaskB.setOrderItemId("B");
         executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
-        executionTaskB.setServiceOrderInfoJson(serviceOrderInfoJson);
+        executionTaskB.setServiceOrderInfoJson(json);
         executionTaskRepository.save(executionTaskB);
         return executionTaskA;
     }
