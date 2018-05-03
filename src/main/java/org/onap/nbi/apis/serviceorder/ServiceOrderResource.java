@@ -22,7 +22,6 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderInfoRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.workflow.CheckOrderConsistenceManager;
 import org.onap.nbi.apis.serviceorder.workflow.CreateAAICustomerManager;
@@ -72,9 +71,6 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
 
     @Autowired
     SOTaskManager serviceOrchestratorManager;
-
-    @Autowired
-    ServiceOrderInfoRepository serviceOrderInfoRepository;
 
     @Autowired
     MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;

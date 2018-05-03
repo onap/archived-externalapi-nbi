@@ -1,15 +1,14 @@
 /**
  * Copyright (c) 2018 Orange
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
@@ -22,9 +21,7 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
-import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfoJson;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderInfoRepository;
 import org.onap.nbi.apis.serviceorder.utils.JsonEntityConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +38,6 @@ public class SOTaskManager {
     private ExecutionTaskRepository executionTaskRepository;
 
     @Autowired
-    private ServiceOrderInfoRepository serviceOrderInfoRepository;
-
-    @Autowired
     private SOTaskProcessor soTaskProcessor;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SOTaskManager.class);
@@ -53,7 +47,7 @@ public class SOTaskManager {
      * @param serviceOrderInfoJson
      */
     private void registerOrderItemExecutionPlan(List<ServiceOrderItem> orderItems,
-            ServiceOrderInfoJson serviceOrderInfoJson) {
+        String serviceOrderInfoJson) {
         List<ExecutionTask> executionTasksSaved = new ArrayList<>();
         Map<String, Long> internalIdOrderItemsMap = new HashMap<>();
         if (orderItems != null) {
@@ -76,7 +70,7 @@ public class SOTaskManager {
             for (ExecutionTask executionTask : executionTasksSaved) {
                 for (String key : internalIdOrderItemsMap.keySet()) {
                     String replace = executionTask.getReliedTasks().replace(key,
-                            String.valueOf(internalIdOrderItemsMap.get(key)));
+                        String.valueOf(internalIdOrderItemsMap.get(key)));
                     executionTask.setReliedTasks(replace);
                 }
                 executionTaskRepository.save(executionTask);
@@ -90,9 +84,7 @@ public class SOTaskManager {
      * @param serviceOrderInfo
      */
     public void registerServiceOrder(ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
-        String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
-        ServiceOrderInfoJson serviceOrderInfoJson = new ServiceOrderInfoJson(serviceOrder.getId(), json);
-        serviceOrderInfoRepository.save(serviceOrderInfoJson);
+        String serviceOrderInfoJson = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
         registerOrderItemExecutionPlan(serviceOrder.getOrderItem(), serviceOrderInfoJson);
     }
 

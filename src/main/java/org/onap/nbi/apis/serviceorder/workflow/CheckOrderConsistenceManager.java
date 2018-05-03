@@ -1,20 +1,14 @@
 /**
- * Copyright (c) 2018 Orange
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (c) 2018 Orange <p> Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at <p>
+ * http://www.apache.org/licenses/LICENSE-2.0 <p> Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
+import java.util.LinkedHashMap;
 import org.onap.nbi.apis.serviceorder.MultiClient;
 import org.onap.nbi.apis.serviceorder.model.RelatedParty;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
@@ -29,8 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.LinkedHashMap;
-
 @Service
 public class CheckOrderConsistenceManager {
 
@@ -38,8 +30,10 @@ public class CheckOrderConsistenceManager {
     @Autowired
     private MultiClient serviceOrderConsumerService;
 
+
     public ServiceOrderInfo checkServiceOrder(ServiceOrder serviceOrder) {
         ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+        serviceOrderInfo.setServiceOrderId(serviceOrder.getId());
         manageCustomer(serviceOrder, serviceOrderInfo);
         int nbItemsCompleted = 0;
         boolean isServiceOrderRejected = false;
@@ -52,8 +46,8 @@ public class CheckOrderConsistenceManager {
             switch (serviceOrderItem.getAction()) {
                 case ADD:
                     if (existServiceInCatalog(serviceOrderItemInfo)
-                            && StringUtils.isEmpty(serviceOrderItem.getService().getId())
-                            && serviceOrderConsumerService.isTenantIdPresentInAAI()) {
+                        && StringUtils.isEmpty(serviceOrderItem.getService().getId())
+                        && serviceOrderConsumerService.isTenantIdPresentInAAI()) {
                         serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
                     } else {
                         isServiceOrderRejected = true;
@@ -64,8 +58,8 @@ public class CheckOrderConsistenceManager {
                 case DELETE:
                     isAllItemsInAdd = false;
                     if (isCustomerFromServiceOrderPresentInInventory(serviceOrderInfo)
-                            && existServiceInInventory(serviceOrderItem, serviceOrderItemInfo,
-                            serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
+                        && existServiceInInventory(serviceOrderItem, serviceOrderItemInfo,
+                        serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
                         serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
                     } else {
                         isServiceOrderRejected = true;
@@ -124,18 +118,18 @@ public class CheckOrderConsistenceManager {
         if (serviceOrderInfo.isUseServiceOrderCustomer()) {
 
             boolean customerPresentInAAI = serviceOrderConsumerService
-                    .isCustomerPresentInAAI(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
+                .isCustomerPresentInAAI(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
             return customerPresentInAAI;
         }
         return true;
     }
 
     private boolean existServiceInInventory(ServiceOrderItem serviceOrderItem,
-                                            ServiceOrderItemInfo serviceOrderItemInfo, String globalSubscriberId) {
+        ServiceOrderItemInfo serviceOrderItemInfo, String globalSubscriberId) {
         if (!StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
             String serviceName = (String) serviceOrderItemInfo.getCatalogResponse().get("name");
             boolean serviceExistInInventory = serviceOrderConsumerService.doesServiceExistInServiceInventory(
-                    serviceOrderItem.getService().getId(), serviceName, globalSubscriberId);
+                serviceOrderItem.getService().getId(), serviceName, globalSubscriberId);
             if (serviceExistInInventory) {
                 return true;
             }
@@ -148,11 +142,11 @@ public class CheckOrderConsistenceManager {
     }
 
     private void handleServiceFromCatalog(ServiceOrderItem serviceOrderItem,
-                                          ServiceOrderItemInfo serviceOrderItemInfo) {
+        ServiceOrderItemInfo serviceOrderItemInfo) {
         ResponseEntity<Object> response = serviceOrderConsumerService
-                .getServiceCatalog(serviceOrderItem.getService().getServiceSpecification().getId());
+            .getServiceCatalog(serviceOrderItem.getService().getServiceSpecification().getId());
         if (response != null && (response.getStatusCode().equals(HttpStatus.OK)
-                || response.getStatusCode().equals(HttpStatus.PARTIAL_CONTENT))) {
+            || response.getStatusCode().equals(HttpStatus.PARTIAL_CONTENT))) {
             LinkedHashMap body = (LinkedHashMap) response.getBody();
             serviceOrderItemInfo.setCatalogResponse(body);
         }

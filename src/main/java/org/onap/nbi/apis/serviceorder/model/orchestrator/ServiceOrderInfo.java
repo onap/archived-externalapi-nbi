@@ -28,6 +28,15 @@ public class ServiceOrderInfo {
     private boolean allItemsInAdd;
     private boolean allItemsCompleted;
     private boolean serviceOrderRejected;
+    private String serviceOrderId;
+
+    public String getServiceOrderId() {
+        return serviceOrderId;
+    }
+
+    public void setServiceOrderId(String serviceOrderId) {
+        this.serviceOrderId = serviceOrderId;
+    }
 
     public boolean isAllItemsInAdd() {
         return allItemsInAdd;

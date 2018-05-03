@@ -44,7 +44,6 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderInfoRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.workflow.SOTaskProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +81,6 @@ public class ApiTest {
     ServiceOrderRepository serviceOrderRepository;
 
     @Autowired
-    ServiceOrderInfoRepository serviceOrderInfoRepository;
-
-    @Autowired
     ExecutionTaskRepository executionTaskRepository;
 
     @Autowired
@@ -108,7 +104,6 @@ public class ApiTest {
     @After
     public void tearsDownUpPort() throws Exception {
         executionTaskRepository.deleteAll();
-        serviceOrderInfoRepository.deleteAll();
         serviceOrderRepository.deleteAll();
         wireMockServer.resetToDefaultMappings();
 
@@ -512,7 +507,7 @@ public class ApiTest {
     public void testExecutionTaskSuccess() throws Exception {
 
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-                serviceOrderInfoRepository, executionTaskRepository, ActionType.ADD);
+            executionTaskRepository, ActionType.ADD);
         ExecutionTask executionTaskB;
 
 
@@ -551,7 +546,7 @@ public class ApiTest {
     public void testExecutionTaskDeleteSuccess() throws Exception {
 
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-                serviceOrderInfoRepository, executionTaskRepository, ActionType.DELETE);
+            executionTaskRepository, ActionType.DELETE);
         ExecutionTask executionTaskB;
 
 
@@ -590,7 +585,7 @@ public class ApiTest {
     public void testExecutionTaskFailed() throws Exception {
 
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-                serviceOrderInfoRepository, executionTaskRepository, ActionType.ADD);
+            executionTaskRepository, ActionType.ADD);
 
         ListStubMappingsResult listStubMappingsResult = wireMockServer.listAllStubMappings();
         StubMapping mappingToDelete = null;
@@ -633,5 +628,39 @@ public class ApiTest {
 
 
     }
+
+
+
+
+    @Test
+    public void testExecutionTaskFailedNoSoResponse() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+             executionTaskRepository, ActionType.ADD);
+
+        ListStubMappingsResult listStubMappingsResult = wireMockServer.listAllStubMappings();
+        StubMapping mappingToDelete = null;
+        List<StubMapping> mappings = listStubMappingsResult.getMappings();
+        for (StubMapping mapping : mappings) {
+            if (mapping.getRequest().getUrl().equals("/ecomp/mso/infra/serviceInstances/v4")) {
+                mappingToDelete = mapping;
+            }
+        }
+        wireMockServer.removeStubMapping(mappingToDelete);
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        ExecutionTask executionTaskB = executionTaskRepository.findOne(Long.parseLong("2"));
+        assertThat(executionTaskB).isNull();
+
+
+    }
+
 
 }

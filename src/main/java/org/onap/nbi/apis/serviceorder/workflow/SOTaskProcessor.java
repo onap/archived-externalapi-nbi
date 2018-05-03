@@ -1,15 +1,14 @@
 /**
  * Copyright (c) 2018 Orange
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
@@ -21,10 +20,10 @@ import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.consumer.*;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
-import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfoJson;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.utils.JsonEntityConverter;
+import org.onap.nbi.exceptions.TechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,49 +68,30 @@ public class SOTaskProcessor {
     public void processOrderItem(ExecutionTask executionTask) throws InterruptedException {
 
 
-        ServiceOrderInfoJson serviceOrderInfoJson = executionTask.getServiceOrderInfoJson();
-        ServiceOrder serviceOrder = serviceOrderRepository.findOne(serviceOrderInfoJson.getServiceOrderId());
-        ServiceOrderItem serviceOrderItem = null;
-        for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
-            if (item.getId().equals(executionTask.getOrderItemId())) {
-                serviceOrderItem = item;
-            }
-        }
+        ServiceOrderInfo serviceOrderInfo = getServiceOrderInfo(executionTask);
 
-        ServiceOrderInfo serviceOrderInfo = null;
-        try {
-            serviceOrderInfo =
-                    JsonEntityConverter.convertJsonToServiceOrderInfo(serviceOrderInfoJson.getServiceOrderInfoJson());
-        } catch (IOException e) {
-            LOGGER.warn("Unable to read ServiceOrderInfo Json for serviceOrderId " + serviceOrder.getId(), e);
-        }
+
+        ServiceOrder serviceOrder = serviceOrderRepository.findOne(serviceOrderInfo.getServiceOrderId());
+        ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
+
 
         if (serviceOrderItem != null && StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
 
-            ResponseEntity<CreateServiceInstanceResponse> response = null;
-            try {
-                response = postSORequest(serviceOrderItem, serviceOrderInfo);
-            } catch (NullPointerException e) {
-                LOGGER.warn("Enable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
-                response = null;
-            }
+            ResponseEntity<CreateServiceInstanceResponse> response = postServiceOrderItem(serviceOrderInfo,
+                serviceOrderItem);
 
             if (response == null) {
                 LOGGER.warn("response=null for serviceOrderItem.id=" + serviceOrderItem.getId());
                 serviceOrderItem.setState(StateType.FAILED);
             } else {
-                updateServiceOrderItem(response.getBody(), serviceOrderItem);
+                updateServiceOrderItem(response, serviceOrderItem);
 
-                if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
-                        || response.getBody().getRequestReferences() == null) {
-                    serviceOrderItem.setState(StateType.FAILED);
-                } else {
-                    serviceOrderItem.setState(StateType.INPROGRESS);
-                }
+
             }
         }
 
-        if (executionTask.getNbRetries() > 0) {
+        if (executionTask.getNbRetries() > 0 && StateType.FAILED != serviceOrderItem.getState()
+            ) {
             // TODO lancer en asynchrone
             pollSoRequestStatus(serviceOrderItem);
             if (serviceOrderItem.getState().equals(StateType.COMPLETED)) {
@@ -126,15 +106,49 @@ public class SOTaskProcessor {
             updateFailedTask(executionTask, serviceOrder);
         }
 
-
         updateServiceOrder(serviceOrder);
     }
 
+    private ResponseEntity<CreateServiceInstanceResponse> postServiceOrderItem(ServiceOrderInfo serviceOrderInfo,
+        ServiceOrderItem serviceOrderItem) {
+        ResponseEntity<CreateServiceInstanceResponse> response = null;
+        try {
+            response = postSORequest(serviceOrderItem, serviceOrderInfo);
+        } catch (NullPointerException e) {
+            LOGGER.warn("Enable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
+            response = null;
+        }
+        return response;
+    }
+
+    private ServiceOrderItem getServiceOrderItem(ExecutionTask executionTask, ServiceOrder serviceOrder) {
+        ServiceOrderItem serviceOrderItem = null;
+        for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
+            if (item.getId().equals(executionTask.getOrderItemId())) {
+                serviceOrderItem = item;
+            }
+        }
+        return serviceOrderItem;
+    }
+
+    private ServiceOrderInfo getServiceOrderInfo(ExecutionTask executionTask) {
+        String serviceOrderInfoJson = executionTask.getServiceOrderInfoJson();
+        ServiceOrderInfo serviceOrderInfo = null;
+        try {
+            serviceOrderInfo =
+                JsonEntityConverter.convertJsonToServiceOrderInfo(serviceOrderInfoJson);
+        } catch (IOException e) {
+            LOGGER.error("Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId(), e);
+            throw new TechnicalException("Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId());
+        }
+        return serviceOrderInfo;
+    }
+
     private ResponseEntity<CreateServiceInstanceResponse> postSORequest(ServiceOrderItem serviceOrderItem,
-            ServiceOrderInfo serviceOrderInfo) {
+        ServiceOrderInfo serviceOrderInfo) {
         RequestDetails requestDetails = buildSoRequest(serviceOrderItem,
-                serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()).getCatalogResponse(),
-                serviceOrderInfo.getSubscriberInfo());
+            serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()).getCatalogResponse(),
+            serviceOrderInfo.getSubscriberInfo());
         MSOPayload msoPayload = new MSOPayload(requestDetails);
         ResponseEntity<CreateServiceInstanceResponse> response = null;
 
@@ -155,7 +169,6 @@ public class SOTaskProcessor {
         boolean atLeastOneCompleted = false;
         boolean atLeastOneNotFinished = false;
         boolean atLeastOneFailed = false;
-
 
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
             switch (serviceOrderItem.getState()) {
@@ -237,7 +250,7 @@ public class SOTaskProcessor {
      * @return
      */
     private RequestDetails buildSoRequest(ServiceOrderItem orderItem, LinkedHashMap<String, Object> sdcInfos,
-            SubscriberInfo subscriberInfo) {
+        SubscriberInfo subscriberInfo) {
         RequestDetails requestDetails = new RequestDetails();
 
         requestDetails.setSubscriberInfo(subscriberInfo);
@@ -261,7 +274,7 @@ public class SOTaskProcessor {
         RequestParameters requestParameters = new RequestParameters();
         requestParameters.setSubscriptionServiceType((String) sdcInfos.get("name"));
         requestParameters.setUserParams(
-                retrieveUserParamsFromServiceCharacteristics(orderItem.getService().getServiceCharacteristic()));
+            retrieveUserParamsFromServiceCharacteristics(orderItem.getService().getServiceCharacteristic()));
         requestParameters.setaLaCarte(true);
         requestDetails.setRequestParameters(requestParameters);
 
@@ -283,7 +296,7 @@ public class SOTaskProcessor {
         if (!CollectionUtils.isEmpty(characteristics)) {
             for (ServiceCharacteristic characteristic : characteristics) {
                 UserParams userParam = new UserParams(characteristic.getName(),
-                        characteristic.getValue().getServiceCharacteristicValue());
+                    characteristic.getValue().getServiceCharacteristicValue());
                 userParams.add(userParam);
             }
         }
@@ -295,15 +308,23 @@ public class SOTaskProcessor {
     /**
      * Update ServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
      *
-     * @param createServiceInstanceResponse
+     * @param response
      * @param orderItem
      */
-    private void updateServiceOrderItem(CreateServiceInstanceResponse createServiceInstanceResponse,
-            ServiceOrderItem orderItem) {
+    private void updateServiceOrderItem(ResponseEntity<CreateServiceInstanceResponse> response,
+        ServiceOrderItem orderItem) {
 
+        CreateServiceInstanceResponse createServiceInstanceResponse=response.getBody();
         if (createServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
             orderItem.getService().setId(createServiceInstanceResponse.getRequestReferences().getInstanceId());
             orderItem.setRequestId(createServiceInstanceResponse.getRequestReferences().getRequestId());
+        }
+
+        if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
+            || response.getBody().getRequestReferences() == null) {
+            orderItem.setState(StateType.FAILED);
+        } else {
+            orderItem.setState(StateType.INPROGRESS);
         }
     }
 
@@ -315,6 +336,7 @@ public class SOTaskProcessor {
     private void updateSuccessTask(ExecutionTask executionTask) {
         executionTaskRepository.delete(executionTask.getInternalId());
         executionTaskRepository.updateReliedTaskAfterDelete(executionTask.getInternalId());
+
     }
 
     /**
@@ -326,7 +348,6 @@ public class SOTaskProcessor {
         for (ExecutionTask taskId : executionTasksToDelete) {
             executionTaskRepository.delete(taskId);
         }
-
         for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
             for (ExecutionTask taskToDelete : executionTasksToDelete) {
                 if (taskToDelete.getOrderItemId().equals(item.getId())) {
@@ -345,7 +366,7 @@ public class SOTaskProcessor {
         List<ExecutionTask> executionTasks = new ArrayList<>();
 
         List<ExecutionTask> tasksReliedToAnOrderItemId =
-                executionTaskRepository.findTasksReliedToAnOrderItemId(executionTask.getInternalId());
+            executionTaskRepository.findTasksReliedToAnOrderItemId(executionTask.getInternalId());
 
         if (CollectionUtils.isEmpty(tasksReliedToAnOrderItemId)) {
             return Arrays.asList(executionTask);
