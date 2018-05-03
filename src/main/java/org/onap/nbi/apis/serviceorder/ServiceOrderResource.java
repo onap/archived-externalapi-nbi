@@ -22,7 +22,6 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderInfoRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.workflow.CheckOrderConsistenceManager;
 import org.onap.nbi.apis.serviceorder.workflow.CreateAAICustomerManager;
@@ -74,9 +73,6 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
     SOTaskManager serviceOrchestratorManager;
 
     @Autowired
-    ServiceOrderInfoRepository serviceOrderInfoRepository;
-
-    @Autowired
     MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
 
 
@@ -104,8 +100,7 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
         headers.add("X-Total-Count", String.valueOf(totalCount));
         headers.add("X-Result-Count", String.valueOf(serviceOrders.size()));
 
-        ResponseEntity<Object> response = this.findResponse(serviceOrders, filter, headers);
-        return response;
+        return this.findResponse(serviceOrders, filter, headers);
 
     }
 
@@ -152,9 +147,14 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
                 changeServiceOrderState(serviceOrder, StateType.COMPLETED);
             } else {
                 serviceOrderRepository.save(serviceOrder);
-                createAAICustomer.createAAICustomer(serviceOrderInfo);
-                createAAIServiceType.createAAIServiceType(serviceOrder, serviceOrderInfo);
-                serviceOrchestratorManager.registerServiceOrder(serviceOrder, serviceOrderInfo);
+                createAAICustomer.createAAICustomer(serviceOrder,serviceOrderInfo);
+                if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {
+                    createAAIServiceType.createAAIServiceType(serviceOrder, serviceOrderInfo);
+                    if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {
+                        serviceOrchestratorManager.registerServiceOrder(serviceOrder, serviceOrderInfo);
+                    }
+                }
+
             }
         }
     }

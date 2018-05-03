@@ -44,7 +44,6 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderInfoRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.workflow.SOTaskProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +81,6 @@ public class ApiTest {
     ServiceOrderRepository serviceOrderRepository;
 
     @Autowired
-    ServiceOrderInfoRepository serviceOrderInfoRepository;
-
-    @Autowired
     ExecutionTaskRepository executionTaskRepository;
 
     @Autowired
@@ -108,7 +104,6 @@ public class ApiTest {
     @After
     public void tearsDownUpPort() throws Exception {
         executionTaskRepository.deleteAll();
-        serviceOrderInfoRepository.deleteAll();
         serviceOrderRepository.deleteAll();
         wireMockServer.resetToDefaultMappings();
 
@@ -123,6 +118,18 @@ public class ApiTest {
 
         }
         return null;
+    }
+
+    private void removeWireMockMapping(String s) {
+        ListStubMappingsResult listStubMappingsResult = wireMockServer.listAllStubMappings();
+        StubMapping mappingToDelete = null;
+        List<StubMapping> mappings = listStubMappingsResult.getMappings();
+        for (StubMapping mapping : mappings) {
+            if (mapping.getRequest().getUrl().equals(s)) {
+                mappingToDelete = mapping;
+            }
+        }
+        wireMockServer.removeStubMapping(mappingToDelete);
     }
 
     // serviceCatalog
@@ -308,7 +315,7 @@ public class ApiTest {
     }
 
     @Test
-    public void testCheckServiceOrderWithUnKnonwCustomer() throws Exception {
+    public void testCheckServiceOrderWithUnKnownCustomer() throws Exception {
 
         ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
         List<RelatedParty> customers = new ArrayList<>();
@@ -328,6 +335,57 @@ public class ApiTest {
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
 
     }
+
+
+    @Test
+    public void testCheckServiceOrderWithCustomerAAINotResponding() throws Exception {
+
+        removeWireMockMapping("/aai/v11/business/customers/customer/new");
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        List<RelatedParty> customers = new ArrayList<>();
+        RelatedParty customer = new RelatedParty();
+        customer.setId("new");
+        customer.setRole("ONAPcustomer");
+        customer.setName("romain");
+        customers.add(customer);
+        testServiceOrder.setRelatedParty(customers);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+
+    }
+
+
+    @Test
+    public void testCheckServiceOrderWithPutServiceAAINotResponding() throws Exception {
+
+        removeWireMockMapping("/aai/v11/business/customers/customer/new/service-subscriptions/service-subscription/vFW");
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        List<RelatedParty> customers = new ArrayList<>();
+        RelatedParty customer = new RelatedParty();
+        customer.setId("new");
+        customer.setRole("ONAPcustomer");
+        customer.setName("romain");
+        customers.add(customer);
+        testServiceOrder.setRelatedParty(customers);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+
+    }
+
 
     @Test
     public void testCheckServiceOrderDelete() throws Exception {
@@ -414,6 +472,30 @@ public class ApiTest {
                 assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
         }
     }
+
+
+    @Test
+    public void testCheckServiceOrderDeleteWithKoServiceSpecId() throws Exception {
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.DELETE);
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+          serviceOrderItem.getService().getServiceSpecification().setId("undefined");
+        }
+
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A"))
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.REJECTED);
+        }
+    }
+
 
 
 
@@ -512,7 +594,7 @@ public class ApiTest {
     public void testExecutionTaskSuccess() throws Exception {
 
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-                serviceOrderInfoRepository, executionTaskRepository, ActionType.ADD);
+            executionTaskRepository, ActionType.ADD);
         ExecutionTask executionTaskB;
 
 
@@ -551,7 +633,7 @@ public class ApiTest {
     public void testExecutionTaskDeleteSuccess() throws Exception {
 
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-                serviceOrderInfoRepository, executionTaskRepository, ActionType.DELETE);
+            executionTaskRepository, ActionType.DELETE);
         ExecutionTask executionTaskB;
 
 
@@ -590,17 +672,9 @@ public class ApiTest {
     public void testExecutionTaskFailed() throws Exception {
 
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-                serviceOrderInfoRepository, executionTaskRepository, ActionType.ADD);
+            executionTaskRepository, ActionType.ADD);
 
-        ListStubMappingsResult listStubMappingsResult = wireMockServer.listAllStubMappings();
-        StubMapping mappingToDelete = null;
-        List<StubMapping> mappings = listStubMappingsResult.getMappings();
-        for (StubMapping mapping : mappings) {
-            if (mapping.getRequest().getUrl().equals("/ecomp/mso/infra/orchestrationRequests/v4/requestId")) {
-                mappingToDelete = mapping;
-            }
-        }
-        wireMockServer.removeStubMapping(mappingToDelete);
+        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v4/requestId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -633,5 +707,31 @@ public class ApiTest {
 
 
     }
+
+
+
+
+    @Test
+    public void testExecutionTaskFailedNoSoResponse() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+             executionTaskRepository, ActionType.ADD);
+
+        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v4");
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        ExecutionTask executionTaskB = executionTaskRepository.findOne(Long.parseLong("2"));
+        assertThat(executionTaskB).isNull();
+
+
+    }
+
 
 }

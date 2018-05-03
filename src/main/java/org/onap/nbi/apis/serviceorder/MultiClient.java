@@ -130,7 +130,7 @@ public class MultiClient {
     }
 
 
-    public void putCustomer(SubscriberInfo subscriberInfo) {
+    public boolean putCustomer(SubscriberInfo subscriberInfo) {
         Map<String, String> param = new HashMap<>();
         param.put("global-customer-id", subscriberInfo.getGlobalSubscriberId());
         param.put("subscriber-name", subscriberInfo.getSubscriberName());
@@ -138,7 +138,11 @@ public class MultiClient {
         String callURL =
                 aaiHost + OnapComponentsUrlPaths.AAI_GET_CUSTOMER_PATH + subscriberInfo.getGlobalSubscriberId();
 
-        putRequest(param, callURL, buildRequestHeaderForAAI());
+        ResponseEntity<Object> response = putRequest(param, callURL, buildRequestHeaderForAAI());
+        if (response != null && response.getStatusCode().equals(HttpStatus.CREATED)) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -154,16 +158,20 @@ public class MultiClient {
         return null;
     }
 
-    public void putServiceType(String globalSubscriberId, String serviceName) {
+    public boolean putServiceType(String globalSubscriberId, String serviceName) {
         Map<String, String> param = new HashMap<>();
         param.put("service-type", serviceName);
         String callURL = aaiHost + OnapComponentsUrlPaths.AAI_PUT_SERVICE_FOR_CUSTOMER_PATH + serviceName;
         String callUrlFormated = callURL.toString().replace("$customerId", globalSubscriberId);
-        putRequest(param, callUrlFormated, buildRequestHeaderForAAI());
+        ResponseEntity<Object> response =  putRequest(param, callUrlFormated, buildRequestHeaderForAAI());
+        if (response != null && response.getStatusCode().equals(HttpStatus.CREATED)) {
+            return true;
+        }
+        return false;
     }
 
 
-    private void putRequest(Map<String, String> param, String callUrl, HttpHeaders httpHeaders) {
+    private  ResponseEntity<Object> putRequest(Map<String, String> param, String callUrl, HttpHeaders httpHeaders) {
         try {
             ResponseEntity<Object> response =
                     restTemplate.exchange(callUrl, HttpMethod.PUT, new HttpEntity<>(param, httpHeaders), Object.class);
@@ -172,8 +180,10 @@ public class MultiClient {
                 LOGGER.warn("HTTP call on " + callUrl + " returns " + response.getStatusCodeValue() + ", "
                         + response.getBody().toString());
             }
+            return response;
         } catch (BackendFunctionalException e) {
             LOGGER.error("error on calling " + callUrl + " ," + e);
+            return null;
         }
     }
 
@@ -196,7 +206,7 @@ public class MultiClient {
             LOGGER.debug("response body : " + response.getBody().toString());
             LOGGER.info("response status : " + response.getStatusCodeValue());
             if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
+                LOGGER.error("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
                         + response.getBody().toString());
             }
             return response;

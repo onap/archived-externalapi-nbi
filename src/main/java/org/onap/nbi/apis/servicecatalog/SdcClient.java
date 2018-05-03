@@ -140,7 +140,7 @@ public class SdcClient {
                     restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), byte[].class);
             LOGGER.info("response status : " + response.getStatusCodeValue());
             if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn(HTTP_CALL_SDC_ON + callURI.toString() + " returns " + response.getStatusCodeValue() + ", "
+                LOGGER.error(HTTP_CALL_SDC_ON + callURI.toString() + " returns " + response.getStatusCodeValue() + ", "
                         + response.getBody().toString());
             }
             return response;

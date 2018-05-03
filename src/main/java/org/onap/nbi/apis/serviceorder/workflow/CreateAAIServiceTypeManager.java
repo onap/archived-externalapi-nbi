@@ -1,26 +1,28 @@
 /**
- *     Copyright (c) 2018 Orange
+ * Copyright (c) 2018 Orange
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
+import java.util.Date;
 import org.onap.nbi.apis.serviceorder.MultiClient;
 import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
+import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderItemInfo;
+import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
@@ -32,20 +34,30 @@ public class CreateAAIServiceTypeManager {
     @Autowired
     private MultiClient serviceOrderConsumerService;
 
+    @Autowired
+    ServiceOrderRepository serviceOrderRepository;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAIServiceTypeManager.class);
 
     public void createAAIServiceType(ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
 
         LinkedHashMap servicesInAaiForCustomer = serviceOrderConsumerService
-                .getServicesInAaiForCustomer(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
+            .getServicesInAaiForCustomer(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
 
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
             if (ActionType.ADD == serviceOrderItem.getAction()) {
                 ServiceOrderItemInfo serviceOrderItemInfo =
-                        serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId());
+                    serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId());
                 String sdcServiceName = (String) serviceOrderItemInfo.getCatalogResponse().get("name");
                 if (!serviceNameExistsInAAI(servicesInAaiForCustomer, sdcServiceName)) {
-                    serviceOrderConsumerService.putServiceType(
-                            serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), sdcServiceName);
+                    boolean serviceCreated = serviceOrderConsumerService.putServiceType(
+                        serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), sdcServiceName);
+                    if (!serviceCreated) {
+                        serviceOrder.setState(StateType.REJECTED);
+                        serviceOrder.setCompletionDateTime(new Date());
+                        serviceOrderRepository.save(serviceOrder);
+                        LOGGER.error("serviceOrder {0} rejected : cannot create customer", serviceOrder.getId());
+                    }
                 }
             }
         }
@@ -56,7 +68,7 @@ public class CreateAAIServiceTypeManager {
 
         if (servicesInAaiForCustomer != null && servicesInAaiForCustomer.get("service-subscription") != null) {
             List<LinkedHashMap> servicesInAAI =
-                    (List<LinkedHashMap>) servicesInAaiForCustomer.get("service-subscription");
+                (List<LinkedHashMap>) servicesInAaiForCustomer.get("service-subscription");
             for (LinkedHashMap service : servicesInAAI) {
                 String serviceType = (String) service.get("service-type");
                 if (sdcServiceName.equalsIgnoreCase(serviceType)) {

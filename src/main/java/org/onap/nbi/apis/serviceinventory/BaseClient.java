@@ -39,7 +39,7 @@ public abstract class BaseClient {
         LOGGER.debug("response body : " + response.getBody().toString());
         LOGGER.info("response status : " + response.getStatusCodeValue());
         if (!response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
+            LOGGER.error("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
                     + response.getBody().toString());
         }
         return response;

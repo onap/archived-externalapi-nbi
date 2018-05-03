@@ -25,9 +25,18 @@ public class ServiceOrderInfo {
     private boolean useServiceOrderCustomer;
     private SubscriberInfo subscriberInfo;
     private Map<String, ServiceOrderItemInfo> serviceOrderItemInfos = new HashMap<>();
-    private boolean allItemsInAdd;
+    private boolean allItemsInAdd= true;
     private boolean allItemsCompleted;
-    private boolean serviceOrderRejected;
+    private boolean serviceOrderRejected= false;
+    private String serviceOrderId;
+
+    public String getServiceOrderId() {
+        return serviceOrderId;
+    }
+
+    public void setServiceOrderId(String serviceOrderId) {
+        this.serviceOrderId = serviceOrderId;
+    }
 
     public boolean isAllItemsInAdd() {
         return allItemsInAdd;
