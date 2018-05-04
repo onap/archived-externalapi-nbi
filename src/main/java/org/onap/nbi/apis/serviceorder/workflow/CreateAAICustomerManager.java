@@ -35,6 +35,8 @@ public class CreateAAICustomerManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAICustomerManager.class);
 
+
+
     public void createAAICustomer(ServiceOrder serviceOrder,
         ServiceOrderInfo serviceOrderInfo) {
 
@@ -47,7 +49,7 @@ public class CreateAAICustomerManager {
                 serviceOrder.setState(StateType.REJECTED);
                 serviceOrder.setCompletionDateTime(new Date());
                 serviceOrderRepository.save(serviceOrder);
-                LOGGER.error("serviceOrder {0} rejected : cannot create customer", serviceOrder.getId());
+                LOGGER.warn("serviceOrder {} rejected : cannot create customer", serviceOrder.getId());
             }
         }
     }

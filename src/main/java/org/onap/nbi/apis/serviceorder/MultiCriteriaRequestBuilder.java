@@ -42,21 +42,21 @@ public class MultiCriteriaRequestBuilder {
         List<String> externalIds = params.get("externalId");
         if (!CollectionUtils.isEmpty(externalIds)) {
             String externalId = externalIds.get(0);
-            LOGGER.debug("add criterion externalId {0}", externalId);
+            LOGGER.debug("add criterion externalId {}", externalId);
             query.addCriteria(Criteria.where("externalId").is(externalId));
 
         }
         List<String> states = params.get("state");
         if (!CollectionUtils.isEmpty(states)) {
             String state = states.get(0);
-            LOGGER.debug("add criterion state {0}", state);
+            LOGGER.debug("add criterion state {}", state);
             query.addCriteria(Criteria.where("state").is(StateType.fromValue(state)));
 
         }
         List<String> descriptions = params.get("description");
         if (!CollectionUtils.isEmpty(descriptions)) {
             String description = descriptions.get(0);
-            LOGGER.debug("add criterion description {0}", description);
+            LOGGER.debug("add criterion description {}", description);
             query.addCriteria(Criteria.where("description").is(description));
 
         }
@@ -76,12 +76,12 @@ public class MultiCriteriaRequestBuilder {
 
             if (!CollectionUtils.isEmpty(orderDateLts)) {
                 String orderDateLt = orderDateLts.get(0);
-                LOGGER.debug("add criterion orderDate.lt {0}", orderDateLt);
+                LOGGER.debug("add criterion orderDate.lt {}", orderDateLt);
                 orderDateCriteria.lt(convertDate(orderDateLt));
             }
             if (!CollectionUtils.isEmpty(orderDateGts)) {
                 String orderDateGt = orderDateGts.get(0);
-                LOGGER.debug("add criterion orderDate.gt {0}", orderDateGt);
+                LOGGER.debug("add criterion orderDate.gt {}", orderDateGt);
                 orderDateCriteria.gt(convertDate(orderDateGt));
             }
             query.addCriteria(orderDateCriteria);

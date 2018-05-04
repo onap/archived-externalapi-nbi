@@ -46,8 +46,8 @@ public class CheckOrderConsistenceManager {
             if (!existServiceInCatalog(serviceOrderItemInfo)) {
                 serviceOrderInfo.setIsServiceOrderRejected(true);
                 serviceOrderItem.setState(StateType.REJECTED);
-                LOGGER.error(
-                    "service order item {0} of service order {1} rejected cause no service catalog found for id {2}",
+                LOGGER.warn(
+                    "service order item {} of service order {} rejected cause no service catalog found for id {}",
                     serviceOrderItem.getId(), serviceOrder.getId(),
                     serviceOrderItem.getService().getServiceSpecification().getId());
             } else {
@@ -105,11 +105,11 @@ public class CheckOrderConsistenceManager {
         String serviceOrderId) {
         if (!StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
             LOGGER
-                .error("serviceOrderItem {0} for serviceorder {1} rejected cause service.id must be empty in add action",
+                .warn("serviceOrderItem {} for serviceorder {} rejected cause service.id must be empty in add action",
                     serviceOrderItem.getId(), serviceOrderId);
             return false;
         } else if (!serviceOrderConsumerService.isTenantIdPresentInAAI()) {
-            LOGGER.error("serviceOrderItem {0}  for serviceOrder {1} rejected cause tenantId not found in AAI",
+            LOGGER.warn("serviceOrderItem {}  for serviceOrder {} rejected cause tenantId not found in AAI",
                 serviceOrderItem.getId(), serviceOrderId);
             return false;
         }
@@ -121,19 +121,19 @@ public class CheckOrderConsistenceManager {
         ServiceOrderItemInfo serviceOrderItemInfo) {
 
         if (StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
-            LOGGER.error(
-                "serviceOrderItem {0} for serviceOrder {1} rejected cause service.id is mandatory in delete/change action",
+            LOGGER.warn(
+                "serviceOrderItem {} for serviceOrder {} rejected cause service.id is mandatory in delete/change action",
                 serviceOrderItem.getId(), serviceOrderInfo.getServiceOrderId());
             return false;
         } else if (!isCustomerFromServiceOrderPresentInInventory(serviceOrderInfo)) {
             LOGGER
-                .error("serviceOrderItem {0} for serviceOrder {1} rejected cause customer not found in inventory",
+                .warn("serviceOrderItem {} for serviceOrder {} rejected cause customer not found in inventory",
                     serviceOrderItem.getId(), serviceOrderInfo.getServiceOrderId());
             return false;
         } else if (!existServiceInInventory(serviceOrderItem, serviceOrderItemInfo,
             serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
             LOGGER
-                .error("serviceOrderItem {0} for serviceOrder {1} rejected cause service id {2} not found in inventory",
+                .warn("serviceOrderItem {} for serviceOrder {} rejected cause service id {} not found in inventory",
                     serviceOrderItem.getId(), serviceOrderInfo.getServiceOrderId(),
                     serviceOrderItem.getService().getId());
             return false;
@@ -198,7 +198,7 @@ public class CheckOrderConsistenceManager {
             LinkedHashMap body = (LinkedHashMap) response.getBody();
             serviceOrderItemInfo.setCatalogResponse(body);
         } else {
-            LOGGER.error("unable to retrieve catalog information for service {0}",
+            LOGGER.warn("unable to retrieve catalog information for service {}",
                 serviceOrderItem.getService().getServiceSpecification().getId());
         }
     }

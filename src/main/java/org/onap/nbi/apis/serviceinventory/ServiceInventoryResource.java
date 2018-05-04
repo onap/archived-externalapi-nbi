@@ -17,6 +17,7 @@ package org.onap.nbi.apis.serviceinventory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.onap.nbi.commons.JsonRepresentation;
 import org.onap.nbi.commons.ResourceManagement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class ServiceInventoryResource extends ResourceManagement {
     public ResponseEntity<Object> getServiceInventory(@PathVariable String serviceId,
             @RequestParam MultiValueMap<String, String> params) {
 
-        LinkedHashMap response = serviceInventoryService.get(serviceId, params);
+        Map response = serviceInventoryService.get(serviceId, params);
 
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.getResponse(response, filter);

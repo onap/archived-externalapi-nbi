@@ -67,15 +67,12 @@ public class SOTaskProcessor {
      */
     public void processOrderItem(ExecutionTask executionTask) throws InterruptedException {
 
-
         ServiceOrderInfo serviceOrderInfo = getServiceOrderInfo(executionTask);
-
 
         ServiceOrder serviceOrder = serviceOrderRepository.findOne(serviceOrderInfo.getServiceOrderId());
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
 
-
-        if (serviceOrderItem != null && StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+        if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
 
             ResponseEntity<CreateServiceInstanceResponse> response = postServiceOrderItem(serviceOrderInfo,
                 serviceOrderItem);
@@ -85,8 +82,6 @@ public class SOTaskProcessor {
                 serviceOrderItem.setState(StateType.FAILED);
             } else {
                 updateServiceOrderItem(response, serviceOrderItem);
-
-
             }
         }
 
@@ -115,20 +110,20 @@ public class SOTaskProcessor {
         try {
             response = postSORequest(serviceOrderItem, serviceOrderInfo);
         } catch (NullPointerException e) {
-            LOGGER.warn("Enable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
+            LOGGER.error("Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
             response = null;
         }
         return response;
     }
 
     private ServiceOrderItem getServiceOrderItem(ExecutionTask executionTask, ServiceOrder serviceOrder) {
-        ServiceOrderItem serviceOrderItem = null;
         for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
             if (item.getId().equals(executionTask.getOrderItemId())) {
-                serviceOrderItem = item;
+                return item;
             }
         }
-        return serviceOrderItem;
+        throw new TechnicalException(
+            "Unable to retrieve serviceOrderItem forexecutionTaskId " + executionTask.getInternalId());
     }
 
     private ServiceOrderInfo getServiceOrderInfo(ExecutionTask executionTask) {
@@ -138,8 +133,10 @@ public class SOTaskProcessor {
             serviceOrderInfo =
                 JsonEntityConverter.convertJsonToServiceOrderInfo(serviceOrderInfoJson);
         } catch (IOException e) {
-            LOGGER.error("Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId(), e);
-            throw new TechnicalException("Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId());
+            LOGGER
+                .error("Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId(), e);
+            throw new TechnicalException(
+                "Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId());
         }
         return serviceOrderInfo;
     }
@@ -208,8 +205,6 @@ public class SOTaskProcessor {
 
     /**
      * * @param orderItem
-     *
-     * @throws InterruptedException
      */
     private void pollSoRequestStatus(ServiceOrderItem orderItem) throws InterruptedException {
         boolean stopPolling = false;
@@ -249,7 +244,7 @@ public class SOTaskProcessor {
      * @param subscriberInfo
      * @return
      */
-    private RequestDetails buildSoRequest(ServiceOrderItem orderItem, LinkedHashMap<String, Object> sdcInfos,
+    private RequestDetails buildSoRequest(ServiceOrderItem orderItem, Map<String, Object> sdcInfos,
         SubscriberInfo subscriberInfo) {
         RequestDetails requestDetails = new RequestDetails();
 
@@ -284,11 +279,7 @@ public class SOTaskProcessor {
     }
 
     /**
-     * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics from
-     * SDC
-     *
-     * @param characteristics
-     * @return
+     * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics from SDC
      */
     private List<UserParams> retrieveUserParamsFromServiceCharacteristics(List<ServiceCharacteristic> characteristics) {
         List<UserParams> userParams = new ArrayList<UserParams>();
@@ -314,7 +305,7 @@ public class SOTaskProcessor {
     private void updateServiceOrderItem(ResponseEntity<CreateServiceInstanceResponse> response,
         ServiceOrderItem orderItem) {
 
-        CreateServiceInstanceResponse createServiceInstanceResponse=response.getBody();
+        CreateServiceInstanceResponse createServiceInstanceResponse = response.getBody();
         if (createServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
             orderItem.getService().setId(createServiceInstanceResponse.getRequestReferences().getInstanceId());
             orderItem.setRequestId(createServiceInstanceResponse.getRequestReferences().getRequestId());

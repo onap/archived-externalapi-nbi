@@ -144,7 +144,7 @@ public class MultiClient {
     }
 
 
-    public LinkedHashMap getServicesInAaiForCustomer(String customerId) {
+    public Map getServicesInAaiForCustomer(String customerId) {
         StringBuilder callURL =
                 new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH);
         String callUrlFormated = callURL.toString().replace("$customerId", customerId);
@@ -204,7 +204,7 @@ public class MultiClient {
             LOGGER.debug("response body : " + response.getBody().toString());
             LOGGER.info("response status : " + response.getStatusCodeValue());
             if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.error("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
+                LOGGER.warn("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
                         + response.getBody().toString());
             }
             return response;

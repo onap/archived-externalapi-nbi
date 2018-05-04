@@ -15,10 +15,13 @@ package org.onap.nbi.apis.serviceinventory;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.onap.nbi.apis.serviceinventory.jolt.FindServiceInventoryJsonTransformer;
 import org.onap.nbi.apis.serviceinventory.jolt.GetServiceInventoryJsonTransformer;
 import org.onap.nbi.exceptions.BackendFunctionalException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,7 +43,10 @@ public class ServiceInventoryService {
     @Autowired
     FindServiceInventoryJsonTransformer findServiceInventoryJsonTransformer;
 
-    public LinkedHashMap get(String serviceId, MultiValueMap<String, String> params) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceInventoryService.class);
+
+
+    public Map get(String serviceId, MultiValueMap<String, String> params) {
 
         String clientId = params.getFirst("relatedParty.id");
         String serviceSpecId = params.getFirst("serviceSpecification.id");
@@ -53,7 +59,7 @@ public class ServiceInventoryService {
 
         String customerId = getCustomerId(clientId);
         String serviceName = getServiceName(serviceSpecName, serviceSpecId);
-        LinkedHashMap serviceResponse = aaiClient.getCatalogService(customerId, serviceName, serviceId);
+        Map serviceResponse = aaiClient.getCatalogService(customerId, serviceName, serviceId);
 
         if (serviceResponse != null) {
             addVnfsToResponse(serviceResponse);
@@ -81,7 +87,7 @@ public class ServiceInventoryService {
     private String getServiceName(String serviceSpecificationName, String serviceSpecificationId) {
 
         if (StringUtils.isEmpty(serviceSpecificationName)) {
-            LinkedHashMap serviceSpecification = nbiClient.getServiceSpecification(serviceSpecificationId);
+            Map serviceSpecification = nbiClient.getServiceSpecification(serviceSpecificationId);
             return (String) serviceSpecification.get("name");
         } else {
             return serviceSpecificationName;
@@ -96,16 +102,16 @@ public class ServiceInventoryService {
 
     }
 
-    private void addVnfsToResponse(LinkedHashMap serviceResponse) {
+    private void addVnfsToResponse(Map serviceResponse) {
 
-        List<LinkedHashMap> vnfs = new ArrayList<>();
+        List<Map> vnfs = new ArrayList<>();
         LinkedHashMap relationShip = (LinkedHashMap) serviceResponse.get("relationship-list");
         if (relationShip != null) {
             List<LinkedHashMap> relationsList = (List<LinkedHashMap>) relationShip.get("relationship");
             if (relationsList != null) {
                 for (LinkedHashMap relation : relationsList) {
                     String relatedLink = (String) relation.get("related-link");
-                    LinkedHashMap vnf = aaiClient.getVNF(relatedLink);
+                    Map vnf = aaiClient.getVNF(relatedLink);
                     if (vnf != null) {
                         vnfs.add(vnf);
                     }
@@ -138,6 +144,8 @@ public class ServiceInventoryService {
                 LinkedHashMap party = (LinkedHashMap) serviceInventory.get("relatedParty");
                 party.put("id", customerId);
             }
+        }else {
+            LOGGER.warn("no service instance found for customer {} ",customerId);
         }
         return serviceInventoryResponse;
 
@@ -145,7 +153,7 @@ public class ServiceInventoryService {
     }
 
     private void handleFindWithNoServiceParam(String customerId, List<LinkedHashMap> serviceInstances) {
-        LinkedHashMap servicesInAaiForCustomer = aaiClient.getServicesInAaiForCustomer(customerId);
+        Map servicesInAaiForCustomer = aaiClient.getServicesInAaiForCustomer(customerId);
         if(servicesInAaiForCustomer!=null){
             List<LinkedHashMap> servicesInAAI =
                 (List<LinkedHashMap>) servicesInAaiForCustomer.get("service-subscription");
@@ -153,12 +161,14 @@ public class ServiceInventoryService {
                 String serviceType = (String) service.get("service-type");
                 buildServiceInstances(serviceInstances, customerId, serviceType);
             }
+        }else {
+            LOGGER.warn("no service instance found for customer {} ",customerId);
         }
     }
 
     private void buildServiceInstances(List<LinkedHashMap> serviceInstances, String customerId, String serviceType) {
 
-        LinkedHashMap serviceInstancesInAaiForCustomer =
+        Map serviceInstancesInAaiForCustomer =
             aaiClient.getServiceInstancesInAaiForCustomer(customerId, serviceType);
         if (serviceInstancesInAaiForCustomer != null) {
             List<LinkedHashMap> serviceInstancesForServiceType =
@@ -170,7 +180,11 @@ public class ServiceInventoryService {
                     serviceInstanceForServiceType.put("service-type", serviceType);
                 }
                 serviceInstances.addAll(serviceInstancesForServiceType);
+            } else {
+                LOGGER.warn("no service instance found for customer {} and service type {}",customerId,serviceType);
             }
+        } else {
+            LOGGER.warn("no service instance found for customer {} and service type {}",customerId,serviceType);
         }
 
 
