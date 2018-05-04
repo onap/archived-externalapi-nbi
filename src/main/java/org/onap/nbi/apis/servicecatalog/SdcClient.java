@@ -63,7 +63,7 @@ public class SdcClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(SdcClient.class);
 
 
-    public LinkedHashMap callGet(String id) {
+    public Map callGet(String id) {
         StringBuilder urlBuilder = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL)
                 .append("/").append(id).append(OnapComponentsUrlPaths.SDC_GET_PATH);
 
@@ -140,8 +140,7 @@ public class SdcClient {
                     restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), byte[].class);
             LOGGER.info("response status : " + response.getStatusCodeValue());
             if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.error(HTTP_CALL_SDC_ON + callURI.toString() + " returns " + response.getStatusCodeValue() + ", "
-                        + response.getBody().toString());
+                LOGGER.warn(HTTP_CALL_SDC_ON + callURI.toString() + " returns " + response.getStatusCodeValue() + ", ");
             }
             return response;
 

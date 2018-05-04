@@ -46,8 +46,8 @@ public class ToscaInfosProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ToscaInfosProcessor.class);
 
-    public void buildResponseWithToscaInfos(LinkedHashMap toscaInfosTopologyTemplate,
-            LinkedHashMap serviceCatalogResponse) {
+    public void buildResponseWithToscaInfos(Map toscaInfosTopologyTemplate,
+            Map serviceCatalogResponse) {
         if (toscaInfosTopologyTemplate.get("inputs") != null) {
             ArrayList serviceSpecCharacteristic = new ArrayList();
             LinkedHashMap toscaInfos = (LinkedHashMap) toscaInfosTopologyTemplate.get("inputs");
@@ -80,7 +80,7 @@ public class ToscaInfosProcessor {
         for (LinkedHashMap resourceSpecification : resourceSpecifications) {
             if(resourceSpecification.get("id")!=null){
                 String id = (String) resourceSpecification.get("id");
-                LOGGER.debug("get tosca infos for service id: {0}", id);
+                LOGGER.debug("get tosca infos for service id: {}", id);
                 LinkedHashMap toscaInfosFromResourceId = getToscaInfosFromResourceUUID(nodeTemplate, id);
                 if (toscaInfosFromResourceId != null && toscaInfosFromResourceId.get("customizationUUID")!=null) {
                     resourceSpecification.put("modelCustomizationId", toscaInfosFromResourceId.get("customizationUUID"));
@@ -92,7 +92,7 @@ public class ToscaInfosProcessor {
     private List<LinkedHashMap> buildServiceSpecCharacteristicsValues(LinkedHashMap parameter, String parameterType) {
         List<LinkedHashMap> serviceSpecCharacteristicValues = new ArrayList<>();
         if (!"map".equalsIgnoreCase(parameterType) && !"list".equalsIgnoreCase(parameterType)) {
-            LOGGER.debug("get tosca infos for serviceSpecCharacteristicValues of type map or string : {0}", parameter);
+            LOGGER.debug("get tosca infos for serviceSpecCharacteristicValues of type map or string : {}", parameter);
             Object aDefault = parameter.get("default");
             if (parameter.get("entry_schema") != null) {
                 ArrayList entrySchema = (ArrayList) parameter.get("entry_schema");
@@ -147,7 +147,7 @@ public class ToscaInfosProcessor {
     }
 
 
-    public LinkedHashMap getToscaInfos(LinkedHashMap sdcResponse) {
+    public Map getToscaInfos(Map sdcResponse) {
 
         LinkedHashMap topologyTemplate = null;
 

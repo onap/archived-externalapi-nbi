@@ -13,6 +13,7 @@
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import java.util.Date;
+import java.util.Map;
 import org.onap.nbi.apis.serviceorder.MultiClient;
 import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
@@ -41,7 +42,7 @@ public class CreateAAIServiceTypeManager {
 
     public void createAAIServiceType(ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
 
-        LinkedHashMap servicesInAaiForCustomer = serviceOrderConsumerService
+        Map servicesInAaiForCustomer = serviceOrderConsumerService
             .getServicesInAaiForCustomer(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
 
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
@@ -56,7 +57,9 @@ public class CreateAAIServiceTypeManager {
                         serviceOrder.setState(StateType.REJECTED);
                         serviceOrder.setCompletionDateTime(new Date());
                         serviceOrderRepository.save(serviceOrder);
-                        LOGGER.error("serviceOrder {0} rejected : cannot create customer", serviceOrder.getId());
+                        LOGGER.warn("serviceOrder {} rejected : cannot create service type {} for customer {}",
+                            serviceOrder.getId(), sdcServiceName,
+                            serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
                     }
                 }
             }
@@ -64,7 +67,7 @@ public class CreateAAIServiceTypeManager {
 
     }
 
-    private boolean serviceNameExistsInAAI(LinkedHashMap servicesInAaiForCustomer, String sdcServiceName) {
+    private boolean serviceNameExistsInAAI(Map servicesInAaiForCustomer, String sdcServiceName) {
 
         if (servicesInAaiForCustomer != null && servicesInAaiForCustomer.get("service-subscription") != null) {
             List<LinkedHashMap> servicesInAAI =
@@ -77,7 +80,6 @@ public class CreateAAIServiceTypeManager {
 
             }
         }
-
         return false;
 
     }

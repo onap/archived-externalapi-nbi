@@ -18,6 +18,7 @@ package org.onap.nbi.apis.servicecatalog;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.onap.nbi.apis.servicecatalog.jolt.FindServiceSpecJsonTransformer;
 import org.onap.nbi.apis.servicecatalog.jolt.GetServiceSpecJsonTransformer;
@@ -45,10 +46,10 @@ public class ServiceSpecificationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceSpecificationService.class);
 
 
-    public LinkedHashMap get(String serviceSpecId) {
-        LinkedHashMap sdcResponse = sdcClient.callGet(serviceSpecId);
+    public Map get(String serviceSpecId) {
+        Map sdcResponse = sdcClient.callGet(serviceSpecId);
         LinkedHashMap serviceCatalogResponse = (LinkedHashMap) getServiceSpecJsonTransformer.transform(sdcResponse);
-        LinkedHashMap toscaInfosTopologyTemplate = toscaInfosProcessor.getToscaInfos(serviceCatalogResponse);
+        Map toscaInfosTopologyTemplate = toscaInfosProcessor.getToscaInfos(serviceCatalogResponse);
         if (toscaInfosTopologyTemplate != null) {
             LOGGER.debug("tosca file found, retrieving informations");
             toscaInfosProcessor.buildResponseWithToscaInfos(toscaInfosTopologyTemplate, serviceCatalogResponse);

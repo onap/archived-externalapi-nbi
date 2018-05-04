@@ -64,6 +64,7 @@ public class SOTaskManager {
                 task.setServiceOrderInfoJson(serviceOrderInfoJson);
                 ExecutionTask savedTask = executionTaskRepository.save(task);
                 executionTasksSaved.add(savedTask);
+
                 internalIdOrderItemsMap.put(savedTask.getOrderItemId(), savedTask.getInternalId());
             }
             // then we replace all orderitem ids in reliedtasks field with internalid of the tasks
@@ -73,6 +74,8 @@ public class SOTaskManager {
                         String.valueOf(internalIdOrderItemsMap.get(key)));
                     executionTask.setReliedTasks(replace);
                 }
+                LOGGER.debug("saving task with id {} , orderItemId {} , reliedtasks ", executionTask.getInternalId(),
+                    executionTask.getOrderItemId(), executionTask.getReliedTasks());
                 executionTaskRepository.save(executionTask);
             }
         }

@@ -16,6 +16,7 @@
 package org.onap.nbi.apis.serviceinventory;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.exceptions.BackendFunctionalException;
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public class AaiClient extends BaseClient {
 
     }
 
-    public LinkedHashMap getCatalogService(String customerId, String serviceSpecName, String serviceId) {
+    public Map getCatalogService(String customerId, String serviceSpecName, String serviceId) {
 
         StringBuilder callURL =
                 new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_FOR_CUSTOMER_PATH);
@@ -71,7 +72,7 @@ public class AaiClient extends BaseClient {
     }
 
 
-    public LinkedHashMap getVNF(String relatedLink) {
+    public Map getVNF(String relatedLink) {
 
         StringBuilder callURL = new StringBuilder().append(aaiHost).append(relatedLink);
 
@@ -80,7 +81,7 @@ public class AaiClient extends BaseClient {
 
     }
 
-    public LinkedHashMap getServicesInAaiForCustomer(String customerId) {
+    public Map getServicesInAaiForCustomer(String customerId) {
         StringBuilder callURL =
                 new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH);
         String callUrlFormated = callURL.toString().replace(CUSTOMER_ID, customerId);
@@ -88,12 +89,12 @@ public class AaiClient extends BaseClient {
             ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
             return (LinkedHashMap) response.getBody();
         } catch (BackendFunctionalException e) {
-            LOGGER.error("error on calling {0} , {1}" , callUrlFormated, e);
+            LOGGER.error("error on calling {} , {}" , callUrlFormated, e);
             return null;
         }
     }
 
-    public LinkedHashMap getServiceInstancesInAaiForCustomer(String customerId, String serviceType) {
+    public Map getServiceInstancesInAaiForCustomer(String customerId, String serviceType) {
         StringBuilder callURL =
                 new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH);
         String callUrlFormated = callURL.toString().replace(CUSTOMER_ID, customerId);
@@ -103,7 +104,7 @@ public class AaiClient extends BaseClient {
             ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
             return (LinkedHashMap) response.getBody();
         } catch (BackendFunctionalException e) {
-            LOGGER.error("error on calling {0} , {1}" , callUrlFormated, e);
+            LOGGER.error("error on calling {} , {}" , callUrlFormated, e);
             return null;
         }
     }

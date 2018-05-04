@@ -16,13 +16,13 @@
 package org.onap.nbi.apis.serviceorder.model.orchestrator;
 
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ServiceOrderItemInfo {
 
     private String id;
 
-    private LinkedHashMap catalogResponse;
+    private Map catalogResponse;
 
     public String getId() {
         return id;
@@ -32,11 +32,11 @@ public class ServiceOrderItemInfo {
         this.id = id;
     }
 
-    public LinkedHashMap getCatalogResponse() {
+    public Map getCatalogResponse() {
         return catalogResponse;
     }
 
-    public void setCatalogResponse(LinkedHashMap catalogResponse) {
+    public void setCatalogResponse(Map catalogResponse) {
         this.catalogResponse = catalogResponse;
     }
 }
