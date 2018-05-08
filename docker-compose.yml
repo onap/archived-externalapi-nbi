@@ -19,7 +19,7 @@ services:
       MYSQL_USER: rene
 # APP  ***************************************************************************************
   nbi:
-    image: nexus3.onap.org:10001/onap/externalapi/nbi:latest
+    image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:latest
     ports:
     - 8080:8080
     environment:
