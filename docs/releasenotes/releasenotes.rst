@@ -29,12 +29,12 @@ Not applicable - This is an initial release
 
 For service catalog:
 
-- Find criterias are limited
+- Find criteria are limited
 
 For service inventory:
 
 - Customer information must be passed to get complete service representation.
-- Find criterias are limited.
+- Find criteria are limited.
 
 For service order:
 
@@ -49,7 +49,7 @@ Detail of limitations described in the readTheDoc documentation.
 **Security Issues**
 
 Security has not be addressed in this release:
-Authentification management and Data Access rights have not been implemented.
+Authentication management and Data Access rights have not been implemented.
 
 **Upgrade Notes**
 

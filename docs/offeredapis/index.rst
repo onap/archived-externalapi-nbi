@@ -25,7 +25,7 @@ Following illustration provides a global view about nbi architecture,integration
 API Version
 ***********
 
-APIs are described with a  state version with “v” following the API Name, e.g.:  nbi/api/v1/productOrder.
+APIs are described with a  state version with “v” following the API Name, e.g.:  'nbi/api/v1/productOrder'.
 The schema associated with a REST API must have its version number aligned with that of the REST API.
 
 The version number has major, minor and revision numbers. E.g. v1.0.0
@@ -91,16 +91,16 @@ API at a glance:
 Only high level information are provided - swagger is documented.
 
 Only serviceSpecification resource is provided.
-Information are retrieved in SDC (and in Tosca file) - Only GET operation is provided - this API DID NOT UPDATE SDC
+Information are retrieved in SDC (and in TOSCA file) - Only GET operation is provided - this API DID NOT UPDATE SDC
 
-Only characteristics at service level will be retrieved in ONAP Tosca file. For example if an ONAP service is composed of VNF and the VF module, the serviceSpecification resource will only feature characteristic describe in the ONAP service tosca model and not attributes in the tosca files for VNF or VF module.
+Only characteristics at service level will be retrieved in ONAP TOSCA file. For example if an ONAP service is composed of VNF and the VF module, the serviceSpecification resource will only feature characteristic describe in the ONAP service tosca model and not attributes in the tosca files for VNF or VF module.
 
 Only ‘basic’ service characteristics will be managed in this release. By ‘basic’ we mean string, boolean, integer parameter type and we do not manage ‘map’ or ‘list parameter type
 
 
 GET serviceSpecification(list)
 
-(example: GET /nbi/api/v1/serviceSpecification/?category=NetworkService&distributionStatus =DISTRIBUTED)
+(example: GET /nbi/api/v1/serviceSpecification/?category=NetworkService&distributionStatus=DISTRIBUTED)
 
 It is possible to retrieve a list of serviceSpecification (get by list).
 
@@ -158,7 +158,7 @@ From TMF641 serviceOrder
 API at a glance:
 Only high level information are provided - swagger is documented.
 
-It is possible to use POST operation to create new serviceOrder in nbi and triggers service provisioning. GET operation is also available to retrieve one service order by providing id or a list of service order. For this release, only a subset of criteria is available:
+It is possible to use POST operation to create new serviceOrder in NBI and triggers service provisioning. GET operation is also available to retrieve one service order by providing id or a list of service order. For this release, only a subset of criteria is available:
 
 •	externalId
 •	state

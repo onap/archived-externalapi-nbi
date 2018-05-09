@@ -1,4 +1,5 @@
-.. This work is licensed under a Creative Commons Attribution 4.0 International License.
+.. This work is licensed under
+.. a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright 2018 ORANGE
 
@@ -14,7 +15,8 @@ SDC API
 *******
 
 This API is used to provide Service Catalog information
-Information are retrieved in SDC (and in Tosca "service template" file) - Only GET operation is provided - this API DID NOT UPDATE SDC
+Information are retrieved in SDC (and in TOSCA "service template" file)
+- Only GET operation is provided - this API DID NOT UPDATE SDC
 
 ::
 
@@ -30,7 +32,9 @@ AAI API
 *******
 
 This API is used to provide Service Inventory information
-This API retrieves service(s) in the AAI inventory. Only following attributes will be retrieve in service inventory: id, name and type (no state or startDate available )
+This API retrieves service(s) in the AAI inventory. Only following attributes
+will be retrieve in service inventory: id, name and type
+(no state or startDate available )
 
 ::
 

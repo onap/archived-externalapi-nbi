@@ -1,4 +1,5 @@
-.. This work is licensed under a Creative Commons Attribution 4.0 International License.
+.. This work is licensed under
+.. a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright 2018 ORANGE
 
@@ -11,14 +12,17 @@ Introduction
 ************
 
 
-NBI stands for NorthBound Interface. It brings to ONAP a set of API that can be used by external systems as BSS for example. These API are based on **TMF API**.
+NBI stands for NorthBound Interface. It brings to ONAP a set of API that can be
+used by external systems as BSS for example.
+These API are based on **TMF API**.
 
 
 *******************************************
 Global NBI architecture for Beijing release
 *******************************************
 
-Following illustration provides a global view about nbi architecture,integration with other ONAP components and API resource/operation provided.
+Following illustration provides a global view about NBI architecture,
+integration with other ONAP components and API resource/operation provided.
 
 .. image:: images/ONAP_External_ID_Beijing.jpg
    :width: 800px
@@ -28,7 +32,10 @@ Following illustration provides a global view about nbi architecture,integration
 Developer Guide
 ***************
 
-Technical information about NBI (dependancies, configuration, running & testing) could be found here: :doc:`NBI_R1_Developer_Guide <NBI_R1_Developer_Guide>`
+Technical information about NBI
+(dependencies, configuration, running & testing)
+could be found here: :doc:`NBI_R1_Developer_Guide <NBI_R1_Developer_Guide>`
 
-API Flow illustration (with example messages) is described in this document: :download:`nbicallflow.pdf <../offeredapis/pdf/nbicallflow.pdf>`
+API Flow illustration (with example messages) is described in this document:
+:download:`nbicallflow.pdf <../offeredapis/pdf/nbicallflow.pdf>`
 

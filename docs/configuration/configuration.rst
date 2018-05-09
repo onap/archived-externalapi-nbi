@@ -1,4 +1,5 @@
-.. This work is licensed under a Creative Commons Attribution 4.0 International License.
+.. This work is licensed under
+.. a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright 2018 ORANGE
 
@@ -6,9 +7,13 @@
 Configuration
 =============
 
-A configuration file, *src/main/resources/application-localhost.properties* list all the component interface that can be configured depending on the environment were the app is deployed.
-By default, the application runs with an embedded both MongoDB and MariaDB local instance.
-This file also list configurations of all the REST interface maid from NBI to other ONAP component such as SDC, AA&I and SO.
+A configuration file, *src/main/resources/application-localhost.properties*
+list all the component interface that can be configured depending on the
+environment were the application is deployed.
+By default, the application runs with an embedded both MongoDB and MariaDB
+local instance.
+This file also list configurations of all the REST interface maid from NBI
+to other ONAP component such as SDC, AA&I and SO.
 
 
 **************
@@ -68,7 +73,8 @@ Default values
 Changing values
 ***************
 
-To adapt application parameters to your context, you need to set up some environment attributes. For example :
+To adapt application parameters to your context, you need to set up some
+environment attributes. For example :
 
 ::
 
