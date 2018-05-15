@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_600d7a8e",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "document",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2023f205",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "MongoDB",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e018aace",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "MariaDB",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8062063c",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "Docker-compose",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_006fd62b",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "tab to be removed",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_206a121a",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "tab to be removed",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c0748eff",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "tab to be removed",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e06f4a26",
+        "filename": "docs/installation/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-15T15:49:56Z",
+      "side": 1,
+      "message": "NBI",
+      "revId": "9a0668d5961723d5080b4ae2e43e4ed5ce5848f9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
