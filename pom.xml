@@ -297,7 +297,10 @@
 					<includes>
 						<include>restclient/**</include>
 						<include>src/**</include>
-						<include>pom.xml</include>
+						<include>./**/*.xml</include>
+						<include>./**/*.xml</include>
+						<include>./**/*.yml</include>
+						<include>./**/*.yaml</include>
 					</includes>
 					<skipExistingHeaders>true</skipExistingHeaders>
 					<skip>false</skip>
