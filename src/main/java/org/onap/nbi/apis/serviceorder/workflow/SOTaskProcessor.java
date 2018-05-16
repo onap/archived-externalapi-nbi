@@ -76,13 +76,7 @@ public class SOTaskProcessor {
 
             ResponseEntity<CreateServiceInstanceResponse> response = postServiceOrderItem(serviceOrderInfo,
                 serviceOrderItem);
-
-            if (response == null) {
-                LOGGER.warn("response=null for serviceOrderItem.id=" + serviceOrderItem.getId());
-                serviceOrderItem.setState(StateType.FAILED);
-            } else {
-                updateServiceOrderItem(response, serviceOrderItem);
-            }
+            updateServiceOrderItem(response, serviceOrderItem,serviceOrder);
         }
 
         if (executionTask.getNbRetries() > 0 && StateType.FAILED != serviceOrderItem.getState()
@@ -298,25 +292,32 @@ public class SOTaskProcessor {
 
     /**
      * Update ServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
-     *
-     * @param response
+     *  @param response
      * @param orderItem
+     * @param serviceOrder
      */
     private void updateServiceOrderItem(ResponseEntity<CreateServiceInstanceResponse> response,
-        ServiceOrderItem orderItem) {
+        ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
 
-        CreateServiceInstanceResponse createServiceInstanceResponse = response.getBody();
-        if (createServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
-            orderItem.getService().setId(createServiceInstanceResponse.getRequestReferences().getInstanceId());
-            orderItem.setRequestId(createServiceInstanceResponse.getRequestReferences().getRequestId());
-        }
-
-        if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
-            || response.getBody().getRequestReferences() == null) {
+        if (response == null) {
+            LOGGER.warn("response=null for serviceOrderItem.id=" + orderItem.getId());
             orderItem.setState(StateType.FAILED);
-        } else {
-            orderItem.setState(StateType.INPROGRESS);
         }
+        else {
+            CreateServiceInstanceResponse createServiceInstanceResponse = response.getBody();
+            if (createServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
+                orderItem.getService().setId(createServiceInstanceResponse.getRequestReferences().getInstanceId());
+                orderItem.setRequestId(createServiceInstanceResponse.getRequestReferences().getRequestId());
+            }
+
+            if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
+                || response.getBody().getRequestReferences() == null) {
+                orderItem.setState(StateType.FAILED);
+            } else {
+                orderItem.setState(StateType.INPROGRESS);
+            }
+        }
+        serviceOrderRepository.save(serviceOrder);
     }
 
     /**

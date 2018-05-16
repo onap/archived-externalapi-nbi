@@ -125,11 +125,15 @@ public class SoClient {
     }
 
     private void logResponseGet(String url, ResponseEntity<GetRequestStatusResponse> response) {
-        LOGGER.debug(RESPONSE_BODY + response.getBody().toString());
-        LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
-        if (!response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn("HTTP call on " + url + RETURNS + response.getStatusCodeValue() + ", "
+        if(response!=null){
+            LOGGER.debug(RESPONSE_BODY + response.getBody().toString());
+            LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
+            if (!response.getStatusCode().equals(HttpStatus.OK)) {
+                LOGGER.warn("HTTP call on " + url + RETURNS + response.getStatusCodeValue() + ", "
                     + response.getBody().toString());
+            }
+        } else {
+            LOGGER.info("no response calling url {}",url);
         }
     }
 

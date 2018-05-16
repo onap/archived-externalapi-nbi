@@ -622,8 +622,8 @@ public class ApiTest {
 
         }
 
-        executionTaskB = getExecutionTask("B");
-        assertThat(executionTaskB).isNull();
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
 
 
     }
@@ -661,8 +661,8 @@ public class ApiTest {
 
         }
 
-        executionTaskB = getExecutionTask("B");
-        assertThat(executionTaskB).isNull();
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
 
 
     }
@@ -702,8 +702,7 @@ public class ApiTest {
 
         }
 
-        ExecutionTask executionTaskB = executionTaskRepository.findOne(Long.parseLong("2"));
-        assertThat(executionTaskB).isNull();
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
 
     }
@@ -727,11 +726,30 @@ public class ApiTest {
                 assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
         }
 
-        ExecutionTask executionTaskB = executionTaskRepository.findOne(Long.parseLong("2"));
-        assertThat(executionTaskB).isNull();
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
 
 
     }
 
+    @Test
+    public void testExecutionTaskFailedNoSoAndStatusResponse() throws Exception {
 
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.ADD);
+
+        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v4");
+        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v4/requestId");
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
 }
