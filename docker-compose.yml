@@ -38,6 +38,8 @@ services:
     image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:latest
     ports:
     - 8080:8080
+    env_file:
+      - .env
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/nbi
       SPRING_DATASOURCE_PASSWORD: toto
