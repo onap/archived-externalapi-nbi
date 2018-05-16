@@ -257,6 +257,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- MSB SDK-->
+		<dependency>
+			<groupId>org.onap.msb.java-sdk</groupId>
+			<artifactId>msb-java-sdk</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
