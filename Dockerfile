@@ -33,7 +33,7 @@ RUN for cert in $(ls -d /certs/*); do \
     done
 
 ENV SERVER_PORT=${SERVER_PORT:-8080}
-ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -jar"
+ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 
 EXPOSE $SERVER_PORT
-ENTRYPOINT java $JAVA_OPTS -jar /app.jar
+ENTRYPOINT java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap $JAVA_OPTS -jar /app.jar
