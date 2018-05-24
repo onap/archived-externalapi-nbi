@@ -213,19 +213,25 @@ public class SOTaskProcessor {
                     nbRetries++;
                     orderItem.setState(StateType.INPROGRESS);
                     Thread.sleep(1000);
+                    LOGGER.debug("orderitem id {} still in progress from so",orderItem.getId());
                 } else if (RequestState.COMPLETE != response.getRequest().getRequestStatus().getRequestState()) {
                     orderItem.setState(StateType.FAILED);
                     stopPolling = true;
+                    LOGGER.debug("orderitem id {} failed, response from request status {}",orderItem.getId(),response.getRequest().getRequestStatus().getRequestState());
                 } else {
                     orderItem.setState(StateType.COMPLETED);
                     stopPolling = true;
+                    LOGGER.debug("orderitem id {} completed");
                 }
             } else {
                 orderItem.setState(StateType.INPROGRESS);
                 stopPolling = true;
+                LOGGER.debug("orderitem id {} still in progress from so",orderItem.getId());
             }
             if (nbRetries == 3) {
                 stopPolling = true;
+                LOGGER.debug("orderitem id {} stop polling from getrequeststatus, 3 retries done",orderItem.getId());
+
             }
         }
     }
@@ -310,9 +316,10 @@ public class SOTaskProcessor {
                 orderItem.setRequestId(createServiceInstanceResponse.getRequestReferences().getRequestId());
             }
 
-            if (response.getStatusCode() != HttpStatus.CREATED || response.getBody() == null
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null
                 || response.getBody().getRequestReferences() == null) {
                 orderItem.setState(StateType.FAILED);
+                LOGGER.warn("order item {} failed , status {} , response {}",orderItem.getId(),response.getStatusCode(),response.getBody());
             } else {
                 orderItem.setState(StateType.INPROGRESS);
             }
@@ -339,11 +346,14 @@ public class SOTaskProcessor {
         List<ExecutionTask> executionTasksToDelete = findExecutionTasksRecursively(executionTask);
         for (ExecutionTask taskId : executionTasksToDelete) {
             executionTaskRepository.delete(taskId);
+            LOGGER.warn("task {} with orderitem id {} deleted cause orderitem id {} failed ",taskId.getInternalId(),taskId.getOrderItemId(),executionTask.getOrderItemId());
         }
         for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
             for (ExecutionTask taskToDelete : executionTasksToDelete) {
                 if (taskToDelete.getOrderItemId().equals(item.getId())) {
                     item.setState(StateType.FAILED);
+                    LOGGER.warn("task {} with orderitem id {}  to failed cause orderitem id {} failed ",taskToDelete.getInternalId(),taskToDelete.getOrderItemId(),executionTask.getOrderItemId());
+
                 }
             }
         }
