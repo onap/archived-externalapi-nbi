@@ -15,6 +15,11 @@
  */
 package org.onap.nbi.apis.serviceorder;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.exceptions.BackendFunctionalException;
@@ -22,16 +27,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class MultiClient {
@@ -179,7 +183,7 @@ public class MultiClient {
                         + response.getBody().toString());
             }
             return response;
-        } catch (BackendFunctionalException e) {
+        } catch (BackendFunctionalException|ResourceAccessException e) {
             LOGGER.error("error on calling " + callUrl + " ," + e);
             return null;
         }
@@ -209,7 +213,7 @@ public class MultiClient {
             }
             return response;
 
-        } catch (BackendFunctionalException e) {
+        } catch (BackendFunctionalException|ResourceAccessException e) {
             LOGGER.error("error on calling " + callURL + " ," + e);
             return null;
         }
