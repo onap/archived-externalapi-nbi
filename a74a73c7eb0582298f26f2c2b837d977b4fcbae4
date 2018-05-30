@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_e47090de",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-30T20:53:56Z",
+      "side": 1,
+      "message": "tab to be removed",
+      "revId": "a74a73c7eb0582298f26f2c2b837d977b4fcbae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_84750cce",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-05-30T20:53:56Z",
+      "side": 1,
+      "message": "tab to be removed",
+      "revId": "a74a73c7eb0582298f26f2c2b837d977b4fcbae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
