@@ -9,7 +9,7 @@ Release Notes
 Version: 1.0.0
 --------------
 
-:Release Date: 2018-05-24
+:Release Date: 2018-06-07
 
 **New Features**
 
@@ -46,10 +46,17 @@ For service order:
 
 Detail of limitations described in the readTheDoc documentation.
 
-**Security Issues**
+**Security Notes**
 
-Security has not be addressed in this release:
+External API code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The External API open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=28382906>`_.
 Authentication management and Data Access rights have not been implemented.
+
+Quick Links:
+ 	- `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
+
+ 	- `Passing Badge information for External API <https://bestpractices.coreinfrastructure.org/en/projects/1771>`_
+
+ 	- `Project Vulnerability Review Table for External API <https://wiki.onap.org/pages/viewpage.action?pageId=28382906>`_
 
 **Upgrade Notes**
 
