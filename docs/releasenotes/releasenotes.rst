@@ -52,6 +52,7 @@ External API code has been formally scanned during build time using NexusIQ and 
 Authentication management and Data Access rights have not been implemented.
 
 Quick Links:
+
 - `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
 - `Passing Badge information for External API <https://bestpractices.coreinfrastructure.org/en/projects/1771>`_
 - `Project Vulnerability Review Table for External API <https://wiki.onap.org/pages/viewpage.action?pageId=28382906>`_
