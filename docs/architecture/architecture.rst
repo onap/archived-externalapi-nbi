@@ -34,7 +34,7 @@ Developer Guide
 
 Technical information about NBI
 (dependencies, configuration, running & testing)
-could be found here: :doc:`NBI_R1_Developer_Guide <NBI_R1_Developer_Guide>`
+could be found here: :doc:`NBI_Developer_Guide <NBI_Developer_Guide>`
 
 API Flow illustration (with example messages) is described in this document:
 :download:`nbicallflow.pdf <../offeredapis/pdf/nbicallflow.pdf>`
