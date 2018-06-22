@@ -12,29 +12,41 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import org.onap.nbi.apis.serviceorder.SoClient;
 import org.onap.nbi.apis.serviceorder.model.ServiceCharacteristic;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
-import org.onap.nbi.apis.serviceorder.model.consumer.*;
+import org.onap.nbi.apis.serviceorder.model.consumer.CloudConfiguration;
+import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
+import org.onap.nbi.apis.serviceorder.model.consumer.GetRequestStatusResponse;
+import org.onap.nbi.apis.serviceorder.model.consumer.MSOPayload;
+import org.onap.nbi.apis.serviceorder.model.consumer.ModelInfo;
+import org.onap.nbi.apis.serviceorder.model.consumer.RequestDetails;
+import org.onap.nbi.apis.serviceorder.model.consumer.RequestInfo;
+import org.onap.nbi.apis.serviceorder.model.consumer.RequestParameters;
+import org.onap.nbi.apis.serviceorder.model.consumer.RequestState;
+import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
+import org.onap.nbi.apis.serviceorder.model.consumer.UserParams;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
+import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.onap.nbi.apis.serviceorder.utils.JsonEntityConverter;
 import org.onap.nbi.exceptions.TechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import java.io.IOException;
-import java.util.*;
 
 @Service
 public class SOTaskProcessor {
@@ -48,8 +60,9 @@ public class SOTaskProcessor {
     @Value("${onap.tenantId}")
     private String tenantId;
 
+
     @Autowired
-    private ServiceOrderRepository serviceOrderRepository;
+    private ServiceOrderService serviceOrderService;
 
     @Autowired
     private ExecutionTaskRepository executionTaskRepository;
@@ -69,7 +82,7 @@ public class SOTaskProcessor {
 
         ServiceOrderInfo serviceOrderInfo = getServiceOrderInfo(executionTask);
 
-        ServiceOrder serviceOrder = serviceOrderRepository.findOne(serviceOrderInfo.getServiceOrderId());
+        ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderInfo.getServiceOrderId());
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
 
         if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
@@ -82,7 +95,7 @@ public class SOTaskProcessor {
         if (executionTask.getNbRetries() > 0 && StateType.FAILED != serviceOrderItem.getState()
             ) {
             // TODO lancer en asynchrone
-            pollSoRequestStatus(serviceOrderItem);
+            pollSoRequestStatus(serviceOrder,serviceOrderItem);
             if (serviceOrderItem.getState().equals(StateType.COMPLETED)) {
                 updateSuccessTask(executionTask);
             } else {
@@ -180,27 +193,28 @@ public class SOTaskProcessor {
         }
 
         if (atLeastOneNotFinished) {
-            serviceOrder.setState(StateType.INPROGRESS);
+            serviceOrderService.updateOrderState(serviceOrder,StateType.INPROGRESS);
         } else {
-            serviceOrder.setCompletionDateTime(new Date());
+            StateType finalState;
             if (atLeastOneFailed) {
                 if (!atLeastOneCompleted) {
-                    serviceOrder.setState(StateType.FAILED);
+                    finalState=StateType.FAILED;
                 } else {
-                    serviceOrder.setState(StateType.PARTIAL);
+                    finalState=StateType.PARTIAL;
                 }
             } else {
-                serviceOrder.setState(StateType.COMPLETED);
+                finalState=StateType.COMPLETED;
             }
+            serviceOrderService.updateOrderFinalState(serviceOrder,finalState);
         }
-        serviceOrderRepository.save(serviceOrder);
     }
 
 
     /**
      * * @param orderItem
      */
-    private void pollSoRequestStatus(ServiceOrderItem orderItem) throws InterruptedException {
+    private void pollSoRequestStatus(ServiceOrder serviceOrder,
+        ServiceOrderItem orderItem) throws InterruptedException {
         boolean stopPolling = false;
         String requestId = orderItem.getRequestId();
         GetRequestStatusResponse response = null;
@@ -211,20 +225,20 @@ public class SOTaskProcessor {
             if (response != null) {
                 if (response.getRequest().getRequestStatus().getPercentProgress() != 100) {
                     nbRetries++;
-                    orderItem.setState(StateType.INPROGRESS);
+                    serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.INPROGRESS);
                     Thread.sleep(1000);
                     LOGGER.debug("orderitem id {} still in progress from so",orderItem.getId());
                 } else if (RequestState.COMPLETE != response.getRequest().getRequestStatus().getRequestState()) {
-                    orderItem.setState(StateType.FAILED);
+                    serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.FAILED);
                     stopPolling = true;
                     LOGGER.debug("orderitem id {} failed, response from request status {}",orderItem.getId(),response.getRequest().getRequestStatus().getRequestState());
                 } else {
-                    orderItem.setState(StateType.COMPLETED);
+                    serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.COMPLETED);
                     stopPolling = true;
                     LOGGER.debug("orderitem id {} completed");
                 }
             } else {
-                orderItem.setState(StateType.INPROGRESS);
+                serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.INPROGRESS);
                 stopPolling = true;
                 LOGGER.debug("orderitem id {} still in progress from so",orderItem.getId());
             }
@@ -307,7 +321,7 @@ public class SOTaskProcessor {
 
         if (response == null) {
             LOGGER.warn("response=null for serviceOrderItem.id=" + orderItem.getId());
-            orderItem.setState(StateType.FAILED);
+            serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.FAILED);
         }
         else {
             CreateServiceInstanceResponse createServiceInstanceResponse = response.getBody();
@@ -318,13 +332,12 @@ public class SOTaskProcessor {
 
             if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null
                 || response.getBody().getRequestReferences() == null) {
-                orderItem.setState(StateType.FAILED);
+                serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.FAILED);
                 LOGGER.warn("order item {} failed , status {} , response {}",orderItem.getId(),response.getStatusCode(),response.getBody());
             } else {
-                orderItem.setState(StateType.INPROGRESS);
+                serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.INPROGRESS);
             }
         }
-        serviceOrderRepository.save(serviceOrder);
     }
 
     /**
@@ -351,7 +364,7 @@ public class SOTaskProcessor {
         for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
             for (ExecutionTask taskToDelete : executionTasksToDelete) {
                 if (taskToDelete.getOrderItemId().equals(item.getId())) {
-                    item.setState(StateType.FAILED);
+                    serviceOrderService.updateOrderItemState(serviceOrder,item,StateType.FAILED);
                     LOGGER.warn("task {} with orderitem id {}  to failed cause orderitem id {} failed ",taskToDelete.getInternalId(),taskToDelete.getOrderItemId(),executionTask.getOrderItemId());
 
                 }

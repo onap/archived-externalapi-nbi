@@ -17,6 +17,7 @@ import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderItemInfo;
+import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class CheckOrderConsistenceManager {
     @Autowired
     private MultiClient serviceOrderConsumerService;
 
+    @Autowired
+    private ServiceOrderService serviceOrderService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckOrderConsistenceManager.class);
 
     public ServiceOrderInfo checkServiceOrder(ServiceOrder serviceOrder) {
@@ -45,7 +49,7 @@ public class CheckOrderConsistenceManager {
             handleServiceFromCatalog(serviceOrderItem, serviceOrderItemInfo);
             if (!existServiceInCatalog(serviceOrderItemInfo)) {
                 serviceOrderInfo.setIsServiceOrderRejected(true);
-                serviceOrderItem.setState(StateType.REJECTED);
+                serviceOrderService.updateOrderItemState(serviceOrder,serviceOrderItem,StateType.REJECTED);
                 LOGGER.warn(
                     "service order item {} of service order {} rejected cause no service catalog found for id {}",
                     serviceOrderItem.getId(), serviceOrder.getId(),
@@ -53,15 +57,15 @@ public class CheckOrderConsistenceManager {
             } else {
                 switch (serviceOrderItem.getAction()) {
                     case ADD:
-                        handleServiceOrderItemInAdd(serviceOrderInfo, serviceOrderItem, serviceOrderItemInfo);
+                        handleServiceOrderItemInAdd(serviceOrderInfo,serviceOrder, serviceOrderItem, serviceOrderItemInfo);
                         break;
                     case MODIFY:
                     case DELETE:
-                        handleServiceOrderItemInChange(serviceOrderInfo, serviceOrderItem, serviceOrderItemInfo);
+                        handleServiceOrderItemInChange(serviceOrderInfo,serviceOrder, serviceOrderItem, serviceOrderItemInfo);
                         break;
                     case NOCHANGE:
                         serviceOrderInfo.setAllItemsInAdd(false);
-                        serviceOrderItem.setState(StateType.COMPLETED);
+                        serviceOrderService.updateOrderItemState(serviceOrder,serviceOrderItem,StateType.COMPLETED);
                         nbItemsCompleted++;
                         break;
                 }
@@ -79,7 +83,8 @@ public class CheckOrderConsistenceManager {
 
     }
 
-    private void handleServiceOrderItemInChange(ServiceOrderInfo serviceOrderInfo, ServiceOrderItem serviceOrderItem,
+    private void handleServiceOrderItemInChange(ServiceOrderInfo serviceOrderInfo,
+        ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
         ServiceOrderItemInfo serviceOrderItemInfo) {
         serviceOrderInfo.setAllItemsInAdd(false);
         if (shouldAcceptServiceOrderItemToChange(serviceOrderInfo, serviceOrderItem,
@@ -87,17 +92,18 @@ public class CheckOrderConsistenceManager {
             serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
         } else {
             serviceOrderInfo.setIsServiceOrderRejected(true);
-            serviceOrderItem.setState(StateType.REJECTED);
+            serviceOrderService.updateOrderItemState(serviceOrder,serviceOrderItem,StateType.REJECTED);
         }
     }
 
-    private void handleServiceOrderItemInAdd(ServiceOrderInfo serviceOrderInfo, ServiceOrderItem serviceOrderItem,
+    private void handleServiceOrderItemInAdd(ServiceOrderInfo serviceOrderInfo,
+        ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
         ServiceOrderItemInfo serviceOrderItemInfo) {
         if (shouldAcceptServiceOrderItemToAdd(serviceOrderItem, serviceOrderInfo.getServiceOrderId())) {
             serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
         } else {
             serviceOrderInfo.setIsServiceOrderRejected(true);
-            serviceOrderItem.setState(StateType.REJECTED);
+            serviceOrderService.updateOrderItemState(serviceOrder,serviceOrderItem,StateType.REJECTED);
         }
     }
 

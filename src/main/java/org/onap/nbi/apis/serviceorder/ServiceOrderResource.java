@@ -15,14 +15,12 @@
  */
 package org.onap.nbi.apis.serviceorder;
 
-import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
-import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
+import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.onap.nbi.apis.serviceorder.workflow.CheckOrderConsistenceManager;
 import org.onap.nbi.apis.serviceorder.workflow.CreateAAICustomerManager;
 import org.onap.nbi.apis.serviceorder.workflow.CreateAAIServiceTypeManager;
@@ -54,8 +52,10 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableScheduling
 public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
 
+
+
     @Autowired
-    ServiceOrderRepository serviceOrderRepository;
+    ServiceOrderService serviceOrderService;
 
     @Autowired
     CheckOrderConsistenceManager checkOrderConsistenceManager;
@@ -80,7 +80,7 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
     public ResponseEntity<Object> getServiceOrder(@PathVariable String serviceOrderId,
             @RequestParam MultiValueMap<String, String> params) {
 
-        ServiceOrder serviceOrder = serviceOrderRepository.findOne(serviceOrderId);
+        ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
         if (serviceOrder == null) {
             return ResponseEntity.notFound().build();
         }
@@ -95,7 +95,7 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
         Query query = multiCriteriaRequestBuilder.buildRequest(params);
         List<ServiceOrder> serviceOrders = mongoTemplate.find(query, ServiceOrder.class);
         JsonRepresentation filter = new JsonRepresentation(params);
-        long totalCount = serviceOrderRepository.count();
+        long totalCount = serviceOrderService.countServiceOrder();
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", String.valueOf(totalCount));
         headers.add("X-Result-Count", String.valueOf(serviceOrders.size()));
@@ -107,7 +107,7 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
     @DeleteMapping(value = "/{serviceOrderId}")
     public ResponseEntity<Object> deleteServiceOrder(@PathVariable String serviceOrderId) {
 
-        serviceOrderRepository.delete(serviceOrderId);
+        serviceOrderService.deleteServiceOrder(serviceOrderId);
 
         return this.deleteResponse();
 
@@ -122,15 +122,8 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
             throw new ValidationException(errors.getAllErrors());
         }
 
-        serviceOrder.setState(StateType.ACKNOWLEDGED);
-        serviceOrder.setOrderDate(new Date());
-        for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
-            serviceOrderItem.setState(StateType.ACKNOWLEDGED);
-        }
-
-        ServiceOrder serviceOrderSaved = serviceOrderRepository.save(serviceOrder);
-        serviceOrderSaved.setHref("serviceOrder/" + serviceOrderSaved.getId());
-        serviceOrderRepository.save(serviceOrderSaved);
+        ServiceOrder serviceOrderSaved =serviceOrderService.updateOrderAndItemStateToAcknowledged(serviceOrder);
+        serviceOrderService.updateOrderHref(serviceOrderSaved);
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.createResponse(serviceOrderSaved, filter);
 
@@ -138,15 +131,14 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
 
     @Scheduled(fixedDelay = 5000)
     public void scheduleCheckServiceOrders() {
-        List<ServiceOrder> acknowledgedOrders = serviceOrderRepository.findByState(StateType.ACKNOWLEDGED);
+        List<ServiceOrder> acknowledgedOrders = serviceOrderService.findServiceOrdersByState(StateType.ACKNOWLEDGED);
         for (ServiceOrder serviceOrder : acknowledgedOrders) {
             ServiceOrderInfo serviceOrderInfo = checkOrderConsistenceManager.checkServiceOrder(serviceOrder);
             if (serviceOrderInfo.isServiceOrderRejected()) {
-                changeServiceOrderState(serviceOrder, StateType.REJECTED);
+                serviceOrderService.updateOrderFinalState(serviceOrder, StateType.REJECTED);
             } else if (serviceOrderInfo.isAllItemsCompleted()) {
-                changeServiceOrderState(serviceOrder, StateType.COMPLETED);
+                serviceOrderService.updateOrderFinalState(serviceOrder, StateType.COMPLETED);
             } else {
-                serviceOrderRepository.save(serviceOrder);
                 createAAICustomer.createAAICustomer(serviceOrder,serviceOrderInfo);
                 if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {
                     createAAIServiceType.createAAIServiceType(serviceOrder, serviceOrderInfo);
@@ -157,17 +149,6 @@ public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
 
             }
         }
-    }
-
-    /**
-     *
-     * @param serviceOrder
-     * @param stateType
-     */
-    private void changeServiceOrderState(ServiceOrder serviceOrder, StateType stateType) {
-        serviceOrder.setState(stateType);
-        serviceOrder.setCompletionDateTime(new Date());
-        serviceOrderRepository.save(serviceOrder);
     }
 
 }

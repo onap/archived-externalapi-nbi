@@ -12,12 +12,11 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
-import java.util.Date;
 import org.onap.nbi.apis.serviceorder.MultiClient;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
+import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class CreateAAICustomerManager {
     private MultiClient serviceOrderConsumerService;
 
     @Autowired
-    ServiceOrderRepository serviceOrderRepository;
+    ServiceOrderService serviceOrderService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAICustomerManager.class);
 
@@ -46,9 +45,7 @@ public class CreateAAICustomerManager {
 
             boolean customerCreated = serviceOrderConsumerService.putCustomer(serviceOrderInfo.getSubscriberInfo());
             if (!customerCreated) {
-                serviceOrder.setState(StateType.REJECTED);
-                serviceOrder.setCompletionDateTime(new Date());
-                serviceOrderRepository.save(serviceOrder);
+                serviceOrderService.updateOrderFinalState(serviceOrder,StateType.REJECTED);
                 LOGGER.warn("serviceOrder {} rejected : cannot create customer", serviceOrder.getId());
             }
         }

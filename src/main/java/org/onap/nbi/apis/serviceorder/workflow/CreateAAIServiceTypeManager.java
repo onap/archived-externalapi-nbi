@@ -12,7 +12,8 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
-import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.onap.nbi.apis.serviceorder.MultiClient;
 import org.onap.nbi.apis.serviceorder.model.ActionType;
@@ -21,13 +22,11 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderItemInfo;
-import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
+import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 @Service
 public class CreateAAIServiceTypeManager {
@@ -36,7 +35,7 @@ public class CreateAAIServiceTypeManager {
     private MultiClient serviceOrderConsumerService;
 
     @Autowired
-    ServiceOrderRepository serviceOrderRepository;
+    ServiceOrderService serviceOrderService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAIServiceTypeManager.class);
 
@@ -54,9 +53,7 @@ public class CreateAAIServiceTypeManager {
                     boolean serviceCreated = serviceOrderConsumerService.putServiceType(
                         serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), sdcServiceName);
                     if (!serviceCreated) {
-                        serviceOrder.setState(StateType.REJECTED);
-                        serviceOrder.setCompletionDateTime(new Date());
-                        serviceOrderRepository.save(serviceOrder);
+                        serviceOrderService.updateOrderFinalState(serviceOrder,StateType.REJECTED);
                         LOGGER.warn("serviceOrder {} rejected : cannot create service type {} for customer {}",
                             serviceOrder.getId(), sdcServiceName,
                             serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
