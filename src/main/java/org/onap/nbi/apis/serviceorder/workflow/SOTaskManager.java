@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.onap.nbi.apis.serviceorder.model.OrderItemRelationship;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
@@ -69,13 +70,15 @@ public class SOTaskManager {
             }
             // then we replace all orderitem ids in reliedtasks field with internalid of the tasks
             for (ExecutionTask executionTask : executionTasksSaved) {
-                for (String key : internalIdOrderItemsMap.keySet()) {
-                    String replace = executionTask.getReliedTasks().replace(key,
-                        String.valueOf(internalIdOrderItemsMap.get(key)));
+                for (Entry<String, Long> entry : internalIdOrderItemsMap.entrySet()) {
+                    String replace = executionTask.getReliedTasks().replace(entry.getKey(),
+                        String.valueOf(entry.getValue()));
                     executionTask.setReliedTasks(replace);
                 }
-                LOGGER.debug("saving task with id {} , orderItemId {} , reliedtasks ", executionTask.getInternalId(),
-                    executionTask.getOrderItemId(), executionTask.getReliedTasks());
+                if(LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("saving task with id {} , orderItemId {} , reliedtasks {}", executionTask.getInternalId(),
+                        executionTask.getOrderItemId(), executionTask.getReliedTasks());
+                }
                 executionTaskRepository.save(executionTask);
             }
         }

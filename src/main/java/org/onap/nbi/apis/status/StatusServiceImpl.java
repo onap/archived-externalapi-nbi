@@ -25,14 +25,8 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public ApplicationStatus get(final String serviceName, final String serviceVersion) {
 
-        final boolean applicationIsUp = true;
+        return new ApplicationStatus(serviceName, (StatusType.OK), serviceVersion);
 
-
-        final ApplicationStatus applicationStatus =
-                new ApplicationStatus(serviceName, (applicationIsUp ? StatusType.OK : StatusType.KO), serviceVersion);
-
-
-        return applicationStatus;
     }
 
 

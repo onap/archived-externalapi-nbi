@@ -31,7 +31,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiError> backendExceptionHandler(final BackendFunctionalException exception) {
         ApiError apiError =
                 new ApiError(String.valueOf(exception.getHttpStatus().value()), exception.getMessage(), "", "");
-        return new ResponseEntity<ApiError>(apiError, exception.getHttpStatus());
+        return new ResponseEntity<>(apiError, exception.getHttpStatus());
     }
 
     @ExceptionHandler(TechnicalException.class)
@@ -39,21 +39,21 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiError> technicalExceptionHandler(final TechnicalException exception) {
         ApiError apiError =
                 new ApiError(String.valueOf(exception.getHttpStatus().value()), exception.getMessage(), "", "");
-        return new ResponseEntity<ApiError>(apiError, exception.getHttpStatus());
+        return new ResponseEntity<>(apiError, exception.getHttpStatus());
     }
 
     @ExceptionHandler(RestClientException.class)
     @ResponseBody
-    public ResponseEntity<ApiError> RestClientExceptionHandler(final RestClientException exception) {
+    public ResponseEntity<ApiError> restClientExceptionHandler(final RestClientException exception) {
         ApiError apiError = new ApiError("500", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 "Unable to " + "reach ONAP services", "");
-        return new ResponseEntity<ApiError>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ValidationException.class)
     @ResponseBody
-    public ResponseEntity<ApiError> ValidationExceptionHandler(final ValidationException exception) {
+    public ResponseEntity<ApiError> validationExceptionHandler(final ValidationException exception) {
         ApiError apiError = new ApiError("400", HttpStatus.BAD_REQUEST.getReasonPhrase(), exception.getMessages(), "");
-        return new ResponseEntity<ApiError>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

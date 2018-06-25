@@ -26,6 +26,9 @@ public class BeanUtils {
 
     private static final PropertyUtilsBean PUB = new PropertyUtilsBean();
 
+    private BeanUtils() {
+    }
+
     /**
      *
      * @param bean

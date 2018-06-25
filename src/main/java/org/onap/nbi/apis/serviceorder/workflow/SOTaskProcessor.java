@@ -296,7 +296,7 @@ public class SOTaskProcessor {
      * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics from SDC
      */
     private List<UserParams> retrieveUserParamsFromServiceCharacteristics(List<ServiceCharacteristic> characteristics) {
-        List<UserParams> userParams = new ArrayList<UserParams>();
+        List<UserParams> userParams = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(characteristics)) {
             for (ServiceCharacteristic characteristic : characteristics) {

@@ -24,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-public class ResourceManagement<T extends Resource> {
+public class ResourceManagement {
 
     /**
      * Build default 201 filtered response for resource

@@ -19,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.onap.nbi.commons.JsonRepresentation;
-import org.onap.nbi.commons.Resource;
 import org.onap.nbi.commons.ResourceManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -33,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/serviceSpecification")
-public class ServiceSpecificationResource extends ResourceManagement<Resource> {
+public class ServiceSpecificationResource extends ResourceManagement {
 
 
     @Autowired

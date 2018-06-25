@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ValidationException extends ApiException {
 
-    private String messages;
+    private final String messages;
 
     public ValidationException(List<ObjectError> listErrors) {
         super();

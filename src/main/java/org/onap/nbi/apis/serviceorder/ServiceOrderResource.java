@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/serviceOrder")
 @EnableScheduling
-public class ServiceOrderResource extends ResourceManagement<ServiceOrder> {
+public class ServiceOrderResource extends ResourceManagement {
 
 
 

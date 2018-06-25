@@ -37,7 +37,6 @@ import org.springframework.web.client.RestTemplate;
 public class SoClient {
 
     public static final String RESPONSE_STATUS = "response status : ";
-    public static final String RESPONSE_BODY = "response body : ";
     public static final String RETURNS = " returns ";
     public static final String ERROR_ON_CALLING = "error on calling ";
     @Autowired
@@ -104,11 +103,12 @@ public class SoClient {
 
     private void logResponsePost(String url, ResponseEntity<CreateServiceInstanceResponse> response) {
         LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
-        LOGGER.debug(RESPONSE_BODY + response.getBody().toString());
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("response body : {}", response.getBody().toString());
+        }
 
-        if (!response.getStatusCode().equals(HttpStatus.CREATED)) {
-            LOGGER.warn("HTTP call SO on " + url + RETURNS + response.getStatusCodeValue() + ", "
-                    + response.getBody().toString());
+        if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.CREATED)) {
+            LOGGER.warn("HTTP call SO on {} returns {} , {}",url ,response.getStatusCodeValue(), response.getBody().toString());
         }
     }
 
@@ -131,11 +131,12 @@ public class SoClient {
 
     private void logResponseGet(String url, ResponseEntity<GetRequestStatusResponse> response) {
         if(response!=null){
-            LOGGER.debug(RESPONSE_BODY + response.getBody().toString());
-            LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
-            if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn("HTTP call on " + url + RETURNS + response.getStatusCodeValue() + ", "
-                    + response.getBody().toString());
+            if(LOGGER.isDebugEnabled()){
+                LOGGER.debug("response body : {}", response.getBody().toString());
+            }
+            LOGGER.info("response status : {}", response.getStatusCodeValue());
+            if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
+                LOGGER.warn("HTTP call SO on {} returns {} , {}",url ,response.getStatusCodeValue(), response.getBody().toString());
             }
         } else {
             LOGGER.info("no response calling url {}",url);

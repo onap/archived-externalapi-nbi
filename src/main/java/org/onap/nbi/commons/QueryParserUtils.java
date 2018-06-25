@@ -66,10 +66,10 @@ public class QueryParserUtils {
 
         Set<Entry<String, List<String>>> entrySet = queryParameters.entrySet();
 
-        MultiValueMap<String, String> criterias = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> criterias = new LinkedMultiValueMap<>();
 
         entrySet.stream().forEach(entry -> {
-            final List<String> tempValues = new ArrayList<String>();
+            final List<String> tempValues = new ArrayList<>();
             entry.getValue().stream().forEach(value -> tempValues.addAll(Arrays.asList(value.split(","))));
             criterias.put(entry.getKey(), tempValues);
         });

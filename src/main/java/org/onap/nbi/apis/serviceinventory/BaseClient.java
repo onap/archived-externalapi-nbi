@@ -36,11 +36,12 @@ public abstract class BaseClient {
 
         ResponseEntity<Object> response = restTemplate.exchange(callURL, HttpMethod.GET,
                 new HttpEntity<>("parameters", httpHeaders), Object.class);
-        LOGGER.debug("response body : " + response.getBody().toString());
-        LOGGER.info("response status : " + response.getStatusCodeValue());
-        if (!response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
-                    + response.getBody().toString());
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("response body : {}",response.getBody().toString());
+        }
+        LOGGER.info("response status : {}", response.getStatusCodeValue());
+        if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
+            LOGGER.warn("HTTP call on {} returns {}, {}", callURL , response.getStatusCodeValue() ,response.getBody().toString());
         }
         return response;
     }

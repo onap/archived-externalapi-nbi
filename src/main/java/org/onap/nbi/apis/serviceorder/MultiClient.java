@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.exceptions.BackendFunctionalException;
@@ -75,8 +76,7 @@ public class MultiClient {
 
     public ResponseEntity<Object> getServiceCatalog(String id) {
         StringBuilder callURL = new StringBuilder().append(serviceCatalogUrl.getServiceCatalogUrl()).append(id);
-        ResponseEntity<Object> response = callApiGet(callURL.toString(), new HttpHeaders(), null);
-        return response;
+       return callApiGet(callURL.toString(), new HttpHeaders(), null);
     }
 
     public boolean doesServiceExistInServiceInventory(String id, String serviceName, String globalSubscriberId) {
@@ -86,10 +86,7 @@ public class MultiClient {
         param.put("relatedParty.id", globalSubscriberId);
 
         ResponseEntity<Object> response = callApiGet(callURL.toString(), new HttpHeaders(), param);
-        if (response == null || !response.getStatusCode().equals(HttpStatus.OK)) {
-            return false;
-        }
-        return true;
+       return response != null && response.getStatusCode().equals(HttpStatus.OK);
     }
 
 
@@ -125,10 +122,7 @@ public class MultiClient {
         StringBuilder callURL = new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_CUSTOMER_PATH)
                 .append(customerId);
         ResponseEntity<Object> response = callApiGet(callURL.toString(), buildRequestHeaderForAAI(), null);
-        if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
-            return true;
-        }
-        return false;
+        return(response != null && response.getStatusCode().equals(HttpStatus.OK));
     }
 
 
@@ -141,10 +135,7 @@ public class MultiClient {
                 aaiHost + OnapComponentsUrlPaths.AAI_GET_CUSTOMER_PATH + subscriberInfo.getGlobalSubscriberId();
 
         ResponseEntity<Object> response = putRequest(param, callURL, buildRequestHeaderForAAI());
-        if (response != null && response.getStatusCode().equals(HttpStatus.CREATED)) {
-            return true;
-        }
-        return false;
+        return response != null && response.getStatusCode().equals(HttpStatus.CREATED);
     }
 
 
@@ -166,10 +157,7 @@ public class MultiClient {
         String callURL = aaiHost + OnapComponentsUrlPaths.AAI_PUT_SERVICE_FOR_CUSTOMER_PATH + serviceName;
         String callUrlFormated = callURL.replace("$customerId", globalSubscriberId);
         ResponseEntity<Object> response =  putRequest(param, callUrlFormated, buildRequestHeaderForAAI());
-        if (response != null && response.getStatusCode().equals(HttpStatus.CREATED)) {
-            return true;
-        }
-        return false;
+        return response != null && response.getStatusCode().equals(HttpStatus.CREATED);
     }
 
 
@@ -178,9 +166,8 @@ public class MultiClient {
             ResponseEntity<Object> response =
                     restTemplate.exchange(callUrl, HttpMethod.PUT, new HttpEntity<>(param, httpHeaders), Object.class);
             LOGGER.info("response status : " + response.getStatusCodeValue());
-            if (!response.getStatusCode().equals(HttpStatus.CREATED)) {
-                LOGGER.warn("HTTP call on " + callUrl + " returns " + response.getStatusCodeValue() + ", "
-                        + response.getBody().toString());
+            if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.CREATED)) {
+                LOGGER.warn("HTTP call on {} returns {} , {}", callUrl , response.getStatusCodeValue(), response.getBody().toString());
             }
             return response;
         } catch (BackendFunctionalException|ResourceAccessException e) {
@@ -196,8 +183,9 @@ public class MultiClient {
 
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(callURL);
             if (param != null) {
-                for (String paramName : param.keySet()) {
-                    builder.queryParam(paramName, param.get(paramName));
+                for (Entry<String, String> stringEntry : param.entrySet()) {
+                    builder.queryParam(stringEntry.getKey(), stringEntry.getValue());
+
                 }
             }
             URI uri = builder.build().encode().toUri();
@@ -205,11 +193,13 @@ public class MultiClient {
 
             ResponseEntity<Object> response =
                     restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(httpHeaders), Object.class);
-            LOGGER.debug("response body : " + response.getBody().toString());
-            LOGGER.info("response status : " + response.getStatusCodeValue());
-            if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn("HTTP call on " + callURL + " returns " + response.getStatusCodeValue() + ", "
-                        + response.getBody().toString());
+            if(LOGGER.isDebugEnabled()){
+                LOGGER.debug("response body : {}", response.getBody().toString());
+            }
+            LOGGER.info("response status : {}", response.getStatusCodeValue());
+            if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
+                LOGGER.warn("HTTP call on {} returns {} , {}", callURL , response.getStatusCodeValue(), response.getBody().toString());
+
             }
             return response;
 

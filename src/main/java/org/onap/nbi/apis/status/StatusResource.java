@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/status")
-public class StatusResource extends ResourceManagement<ApplicationStatus> {
+public class StatusResource extends ResourceManagement {
 
     @Autowired
     private StatusService statusService;

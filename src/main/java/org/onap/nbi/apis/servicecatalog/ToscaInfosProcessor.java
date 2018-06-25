@@ -106,8 +106,8 @@ public class ToscaInfosProcessor {
     }
 
     private void buildCharacteristicValuesFormShema(String parameterType,
-            List<LinkedHashMap> serviceSpecCharacteristicValues, Object aDefault, ArrayList entry_schema) {
-        LinkedHashMap constraints = (LinkedHashMap) entry_schema.get(0);
+            List<LinkedHashMap> serviceSpecCharacteristicValues, Object aDefault, ArrayList entrySchema) {
+        LinkedHashMap constraints = (LinkedHashMap) entrySchema.get(0);
         if (constraints != null) {
             ArrayList constraintsList = (ArrayList) constraints.get("constraints");
             if (CollectionUtils.isNotEmpty(constraintsList)) {
@@ -129,9 +129,9 @@ public class ToscaInfosProcessor {
     }
 
 
-    private LinkedHashMap getToscaInfosFromResourceUUID(LinkedHashMap node_templates, String name) {
-        if(node_templates!=null) {
-            for (Object nodeTemplateObject : node_templates.values()) {
+    private LinkedHashMap getToscaInfosFromResourceUUID(LinkedHashMap nodeTemplates, String name) {
+        if(nodeTemplates!=null) {
+            for (Object nodeTemplateObject : nodeTemplates.values()) {
                 LinkedHashMap nodeTemplate = (LinkedHashMap) nodeTemplateObject;
                 LinkedHashMap metadata = (LinkedHashMap) nodeTemplate.get("metadata");
                 if(metadata.get("UUID")!=null && metadata.get("type")!=null) {
@@ -265,14 +265,10 @@ public class ToscaInfosProcessor {
                         while ((len = zis.read(buffer)) > 0) {
                             fos.write(buffer, 0, len);
                         }
-
-                        fos.close();
                     }
                     ze = zis.getNextEntry();
                 }
-
                 zis.closeEntry();
-                zis.close();
             }
 
             LOGGER.debug("Done");

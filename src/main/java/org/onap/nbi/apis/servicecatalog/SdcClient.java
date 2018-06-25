@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.exceptions.BackendFunctionalException;
@@ -44,7 +45,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class SdcClient {
 
-    public static final String HTTP_CALL_SDC_ON = "HTTP call SDC on ";
     @Autowired
     private RestTemplate restTemplate;
 
@@ -79,9 +79,9 @@ public class SdcClient {
         UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(sdcHost + OnapComponentsUrlPaths.SDC_ROOT_URL);
         if (parametersMap != null) {
             Map<String, String> stringStringMap = parametersMap.toSingleValueMap();
-            for (String key : stringStringMap.keySet()) {
-                if (!key.equals("fields")) {
-                    callURI.queryParam(key, stringStringMap.get(key));
+            for (Entry<String, String> entry : stringStringMap.entrySet()) {
+                if (!entry.getKey().equals("fields")) {
+                    callURI.queryParam(entry.getKey(), entry.getValue());
                 }
             }
         }
@@ -118,17 +118,17 @@ public class SdcClient {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HEADER_ECOMP_INSTANCE_ID, ecompInstanceId);
         httpHeaders.add(HEADER_AUTHORIZATION, sdcHeaderAuthorization);
-        HttpEntity<String> entity = new HttpEntity<>("parameters", httpHeaders);
-
-        return entity;
+        return new HttpEntity<>("parameters", httpHeaders);
     }
 
 
     private ResponseEntity<Object> callSdc(URI callURI) {
         ResponseEntity<Object> response =
                 restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), Object.class);
-        LOGGER.debug("response body : " + response.getBody().toString());
-        LOGGER.info("response status : " + response.getStatusCodeValue());
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("response body : {} ",response.getBody().toString());
+        }
+        LOGGER.info("response status : {}", response.getStatusCodeValue());
         loggDebugIfResponseKo(callURI.toString(), response);
         return response;
     }
@@ -139,22 +139,21 @@ public class SdcClient {
             ResponseEntity<byte[]> response =
                     restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), byte[].class);
             LOGGER.info("response status : " + response.getStatusCodeValue());
-            if (!response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn(HTTP_CALL_SDC_ON + callURI.toString() + " returns " + response.getStatusCodeValue() + ", ");
+            if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
+                LOGGER.warn("HTTP call SDC on {} returns {} ", callURI.toString() , response.getStatusCodeValue());
             }
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(HTTP_CALL_SDC_ON + callURI.toString() + " error " + e);
+            LOGGER.error("HTTP call SDC on {} error : {}", callURI.toString() , e);
             return null;
         }
     }
 
 
     private void loggDebugIfResponseKo(String callURI, ResponseEntity<Object> response) {
-        if (!response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn(HTTP_CALL_SDC_ON + callURI + " returns " + response.getStatusCodeValue() + ", "
-                + response.getBody().toString());
+        if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
+            LOGGER.warn("HTTP call SDC on {} returns {} , {}", callURI , response.getStatusCodeValue() , response.getBody().toString());
         }
     }
 }

@@ -33,8 +33,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class JacksonFilter {
 
-    private final static List<String> SKIPPED_FIELDS = Arrays.asList("internalId");
+    private static final List<String> SKIPPED_FIELDS = Arrays.asList("internalId");
 
+    private JacksonFilter() {
+    }
 
     public static <R> List<ObjectNode> createNodes(List<R> list, JsonRepresentation jsonRepresentation) {
 
@@ -65,7 +67,7 @@ public class JacksonFilter {
         // split fieldNames in 2 categories :
         // simpleFields for simple property names with no '.'
         // nestedFields for nested property names with a '.'
-        Set<String> simpleFields = new LinkedHashSet<String>();
+        Set<String> simpleFields = new LinkedHashSet<>();
         MultiValueMap nestedFields = new LinkedMultiValueMap();
         buildFields(names, simpleFields, nestedFields);
 
@@ -86,7 +88,7 @@ public class JacksonFilter {
                 if (nestedBean == null) {
                     continue;
                 }
-                Set<String> nestedFieldNames = new LinkedHashSet<String>(entry.getValue());
+                Set<String> nestedFieldNames = new LinkedHashSet<>(entry.getValue());
                 // current node is an array or a list
                 if ((nestedBean.getClass().isArray()) || (Collection.class.isAssignableFrom(nestedBean.getClass()))) {
                     handleListNode(mapper, rootNode, rootFieldName, nestedBean, nestedFieldNames);
@@ -133,7 +135,7 @@ public class JacksonFilter {
         if (array.length > 0) {
             // create a node for each element in array
             // and add created node in an arrayNode
-            Collection<JsonNode> nodes = new LinkedList<JsonNode>();
+            Collection<JsonNode> nodes = new LinkedList<>();
             for (Object object : array) {
                 ObjectNode nestedNode = JacksonFilter.createNode(mapper, object, nestedFieldNames);
                 if ((nestedNode != null) && (nestedNode.size() > 0)) {
