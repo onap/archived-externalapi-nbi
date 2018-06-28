@@ -38,6 +38,7 @@ package org.onap.nbi.apis.serviceorder.model;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  *
@@ -65,6 +66,11 @@ public enum RelationshipType {
             }
         }
         return null;
+    }
+
+    @JsonValue
+    public String value() {
+        return this.value;
     }
 }
 

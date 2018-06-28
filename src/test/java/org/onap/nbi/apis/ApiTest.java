@@ -572,8 +572,8 @@ public class ApiTest {
         assertThat(serviceOrders.size()).isEqualTo(1);
 
         MultiValueMap<String, String> paramsDate = new LinkedMultiValueMap<>();
-        paramsDate.add("orderDate.gt", "2017-01-01 00:00:00.000");
-        paramsDate.add("orderDate.lt", "2030-01-01 00:00:00.000");
+        paramsDate.add("orderDate.gt", "2017-01-01T00:00:00.000Z");
+        paramsDate.add("orderDate.lt", "2030-01-01T00:00:00.000Z");
         paramsDate.add("offset", "0");
         paramsDate.add("limit", "2");
 

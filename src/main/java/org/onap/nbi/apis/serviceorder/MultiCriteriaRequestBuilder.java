@@ -15,6 +15,8 @@
  */
 package org.onap.nbi.apis.serviceorder;
 
+import java.util.Locale;
+import java.util.TimeZone;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +109,7 @@ public class MultiCriteriaRequestBuilder {
     }
 
     private Date convertDate(String dateString) {
-        String dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+        String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
         try {
             return formatter.parse(dateString);
