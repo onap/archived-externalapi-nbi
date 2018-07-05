@@ -8,7 +8,6 @@
       "invariantUUID": "invariantUUID",
       "toscaModelURL": "toscaModelURL",
       "toscaResourceName": "toscaResourceName",
-      "resourceInstanceName" : "modelCustomizationName",
       "category ": "category",
       "subcategory": "subcategory",
       "distributionStatus": "distributionStatus",
@@ -37,15 +36,14 @@
            "resourceUUID": "resourceSpecification[&1].id",
            "resourceVersion": "resourceSpecification[&1].version",
            "resourceName": "resourceSpecification[&1].name",
-           "resourceInstanceName": "resourceSpecification[&1].instanceName",
+           "resourceInstanceName": ["resourceSpecification[&1].resourceInstanceName","resourceSpecification[&1].modelCustomizationName"],
            "resourceInvariantUUID": "resourceSpecification[&1].resourceInvariantUUID",
-           "resourceType": "resourceSpecification[&1].resourceType"
+           "resoucreType": "resourceSpecification[&1].resourceType"
+
          }
 
-       }
-
-
-
+       },
+       "serviceSpecInputSchema" : "serviceSpecCharacteristic.serviceSpecInputSchema"
      }
   },
   {
@@ -71,6 +69,11 @@
         "*": {
           "@type": "ONAPresource"
         }
+
+      },
+      "serviceSpecCharacteristic" : {
+          "valueType": "complex",
+          "@type": "serviceSpecInputSchema"
 
       }
     }

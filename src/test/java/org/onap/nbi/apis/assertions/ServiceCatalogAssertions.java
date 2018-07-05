@@ -37,7 +37,6 @@ public class ServiceCatalogAssertions {
                 .isEqualTo("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/toscaModel");
         assertThat(service.get("distributionStatus")).isEqualTo("DISTRIBUTED");
         assertThat(service.get("version")).isEqualTo("2.0");
-        assertThat(service.get("modelCustomizationName")).isEqualTo("vFW-vSINK 0");
         assertThat(service.get("lifecycleStatus")).isEqualTo("CERTIFIED");
         assertThat(service.get("@type")).isEqualTo("ONAPservice");
         assertThat(((ArrayList) service.get("attachment")).size()).isEqualTo(5);
@@ -49,67 +48,20 @@ public class ServiceCatalogAssertions {
         assertThat(((ArrayList) service.get("resourceSpecification")).size()).isEqualTo(2);
         LinkedHashMap resource1 = (LinkedHashMap) ((ArrayList) service.get("resourceSpecification")).get(0);
         assertThat(resource1.get("name")).isEqualTo("vFW-vSINK");
-        assertThat(resource1.get("instanceName")).isEqualTo("vFW-vSINK 0");
+        assertThat(resource1.get("resourceInstanceName")).isEqualTo("vFW-vSINK 0");
+        assertThat(resource1.get("resourceType")).isEqualTo("VF");
         assertThat(resource1.get("resourceInvariantUUID")).isEqualTo("18b90934-aa82-456f-938e-e74a07a426f3");
         assertThat(resource1.get("@type")).isEqualTo("ONAPresource");
-        assertThat(resource1.get("modelCustomizationId")).isEqualTo("f7ae574e-fd5f-41e7-9b21-75e001561c96");
-        assertThat(resource1.get("modelCustomizationName")).isEqualTo("vFW-vSINK");
+        assertThat(resource1.get("modelCustomizationName")).isEqualTo("vFW-vSINK 0");
 
-        assertThat(((ArrayList) service.get("serviceSpecCharacteristic")).size()).isEqualTo(4);
-        ArrayList serviceSPecCharacteristics = (ArrayList) service.get("serviceSpecCharacteristic");
-        for (Object serviceSPecCharacteristic : serviceSPecCharacteristics) {
-            LinkedHashMap serviceSPecCharacteristicMap = (LinkedHashMap) serviceSPecCharacteristic;
-            if (serviceSPecCharacteristicMap.get("name").toString().equals("cpus")) {
-                assertThat(serviceSPecCharacteristicMap.get("valueType")).isEqualTo("integer");
-                assertThat(serviceSPecCharacteristicMap.get("@type")).isEqualTo("ONAPserviceCharacteristic");
-                ArrayList serviceSpecCharacteristicValues =
-                        (ArrayList) serviceSPecCharacteristicMap.get("serviceSpecCharacteristicValue");
-                for (Object serviceSpecCharacteristicValue : serviceSpecCharacteristicValues) {
-                    LinkedHashMap serviceSpecCharacteristicValueMap = (LinkedHashMap) serviceSpecCharacteristicValue;
-                    if (serviceSpecCharacteristicValueMap.get("value").toString().equals("2")) {
-                        assertThat(serviceSpecCharacteristicValueMap.get("isDefault")).isEqualTo(true);
-                        assertThat(serviceSpecCharacteristicValueMap.get("valueType")).isEqualTo("integer");
-                    } else {
-                        assertThat(serviceSpecCharacteristicValueMap.get("isDefault")).isEqualTo(false);
-                        assertThat(serviceSpecCharacteristicValueMap.get("valueType")).isEqualTo("integer");
-                    }
-                }
-            }
-        }
+        LinkedHashMap serviceSpecCharacteristic = (LinkedHashMap) service.get("serviceSpecCharacteristic");
+        assertThat(serviceSpecCharacteristic.get("valueType")).isEqualTo("complex");
+        assertThat(serviceSpecCharacteristic.get("@type")).isEqualTo("serviceSpecInputSchema");
+        String serviceSpecInputSchema=serviceSpecCharacteristic.get("serviceSpecInputSchema").toString();
+        String serviceSpecInputSchemaUrl= serviceSpecInputSchema.substring(serviceSpecInputSchema.indexOf("/nbi"),serviceSpecInputSchema.length());
+        assertThat(serviceSpecInputSchemaUrl).isEqualTo("/nbi/api/v1/serviceSpecification/1e3feeb0-8e36-46c6-862c-236d9c626439/serviceSpecInputSchema");
+
     }
-
-
-
-    public static void asserGetServiceCatalogWithoutTosca(ResponseEntity<Object> resource) {
-        assertThat(resource.getStatusCode()).isEqualTo(HttpStatus.PARTIAL_CONTENT);
-        LinkedHashMap service = (LinkedHashMap) resource.getBody();
-        assertThat(service.get("id")).isEqualTo("1e3feeb0-8e36-46c6-862c-236d9c626439");
-        assertThat(service.get("name")).isEqualTo("vFW");
-        assertThat(service.get("invariantUUID")).isEqualTo("b58a118e-eeb9-4f6e-bdca-e292f84d17df");
-        assertThat(service.get("toscaModelURL"))
-                .isEqualTo("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439toto/toscaModel");
-        assertThat(service.get("distributionStatus")).isEqualTo("DISTRIBUTED");
-        assertThat(service.get("version")).isEqualTo("2.0");
-        assertThat(service.get("lifecycleStatus")).isEqualTo("CERTIFIED");
-        assertThat(service.get("@type")).isEqualTo("ONAPservice");
-        assertThat(((ArrayList) service.get("attachment")).size()).isEqualTo(5);
-        LinkedHashMap relatedParty = (LinkedHashMap) service.get("relatedParty");
-        assertThat(relatedParty.get("name")).isEqualTo("Joni Mitchell");
-        assertThat(relatedParty.get("role")).isEqualTo("lastUpdater");
-
-
-        assertThat(((ArrayList) service.get("resourceSpecification")).size()).isEqualTo(2);
-        LinkedHashMap resource1 = (LinkedHashMap) ((ArrayList) service.get("resourceSpecification")).get(0);
-        assertThat(resource1.get("name")).isEqualTo("vFW-vSINK");
-        assertThat(resource1.get("instanceName")).isEqualTo("vFW-vSINK 0");
-        assertThat(resource1.get("resourceInvariantUUID")).isEqualTo("18b90934-aa82-456f-938e-e74a07a426f3");
-        assertThat(resource1.get("@type")).isEqualTo("ONAPresource");
-        assertThat(resource1.get("modelCustomizationId")).isNull();
-        assertThat(resource1.get("modelCustomizationName")).isNull();
-
-        assertThat(service.get("serviceSpecCharacteristic")).isNull();
-    }
-
 
 
     public static void assertFindServiceCatalog(ResponseEntity<Object> resource) {

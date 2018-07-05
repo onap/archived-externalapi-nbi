@@ -22,8 +22,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.onap.nbi.apis.servicecatalog.jolt.FindServiceSpecJsonTransformer;
 import org.onap.nbi.apis.servicecatalog.jolt.GetServiceSpecJsonTransformer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.onap.nbi.apis.serviceorder.ServiceCatalogUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -43,20 +42,16 @@ public class ServiceSpecificationService {
     @Autowired
     ToscaInfosProcessor toscaInfosProcessor;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceSpecificationService.class);
+    @Autowired
+    private ServiceCatalogUrl serviceCatalogUrl;
+
+    private static final String SERVICE_SPEC_INPUT_SCHEMA = "serviceSpecInputSchema";
 
 
     public Map get(String serviceSpecId) {
         Map sdcResponse = sdcClient.callGet(serviceSpecId);
-        LinkedHashMap serviceCatalogResponse = (LinkedHashMap) getServiceSpecJsonTransformer.transform(sdcResponse);
-        Map toscaInfosTopologyTemplate = toscaInfosProcessor.getToscaInfos(serviceCatalogResponse);
-        if (toscaInfosTopologyTemplate != null) {
-            LOGGER.debug("tosca file found, retrieving informations");
-            toscaInfosProcessor.buildResponseWithToscaInfos(toscaInfosTopologyTemplate, serviceCatalogResponse);
-        } else {
-            LOGGER.debug("no tosca file found, partial response");
-        }
-        return serviceCatalogResponse;
+        sdcResponse.put(SERVICE_SPEC_INPUT_SCHEMA,serviceCatalogUrl.getServiceCatalogUrl()+serviceSpecId+"/"+SERVICE_SPEC_INPUT_SCHEMA);
+        return (LinkedHashMap) getServiceSpecJsonTransformer.transform(sdcResponse);
     }
 
 
