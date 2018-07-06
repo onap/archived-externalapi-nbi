@@ -41,9 +41,13 @@ public class AaiClient extends BaseClient {
     @Value("${aai.api.id}")
     private String aaiApiId;
 
+    @Value("${aai.header.transaction.id}")
+    private String aaiTransactionId;
+
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String X_FROM_APP_ID = "X-FromAppId";
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiClient.class);
+    private static final String X_TRANSACTION_ID = "X-TransactionId";
 
     private HttpHeaders buildRequestHeaderForAAI() {
 
@@ -52,6 +56,8 @@ public class AaiClient extends BaseClient {
         httpHeaders.add(X_FROM_APP_ID, aaiApiId);
         httpHeaders.add("Accept", "application/json");
         httpHeaders.add("Content-Type", "application/json");
+        httpHeaders.add(X_TRANSACTION_ID, aaiTransactionId);
+
         return httpHeaders;
 
     }

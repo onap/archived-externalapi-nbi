@@ -28,6 +28,8 @@ import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceRespon
 import org.onap.nbi.apis.serviceorder.model.consumer.GetRequestStatusResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.MSOPayload;
 import org.onap.nbi.apis.serviceorder.model.consumer.ModelInfo;
+import org.onap.nbi.apis.serviceorder.model.consumer.OwningEntity;
+import org.onap.nbi.apis.serviceorder.model.consumer.Project;
 import org.onap.nbi.apis.serviceorder.model.consumer.RequestDetails;
 import org.onap.nbi.apis.serviceorder.model.consumer.RequestInfo;
 import org.onap.nbi.apis.serviceorder.model.consumer.RequestParameters;
@@ -59,6 +61,15 @@ public class SOTaskProcessor {
 
     @Value("${onap.tenantId}")
     private String tenantId;
+
+    @Value("${so.owning.entity.id}")
+    private String soOwningEntityId;
+
+    @Value("${so.owning.entity.name}")
+    private String soOwningEntityName;
+
+    @Value("${so.project.name}")
+    private String soProjectName;
 
 
     @Autowired
@@ -289,6 +300,17 @@ public class SOTaskProcessor {
 
         CloudConfiguration cloudConfiguration = new CloudConfiguration(lcpCloudRegionId, tenantId);
         requestDetails.setCloudConfiguration(cloudConfiguration);
+
+        OwningEntity owningEntity = new OwningEntity();
+        owningEntity.setOwningEntityId(soOwningEntityId);
+        owningEntity.setOwningEntityName(soOwningEntityName);
+        requestDetails.setOwningEntity(owningEntity);
+
+        Project project = new Project();
+        project.setProjectName(soProjectName);
+
+        requestDetails.setProject(project);
+
         return requestDetails;
     }
 

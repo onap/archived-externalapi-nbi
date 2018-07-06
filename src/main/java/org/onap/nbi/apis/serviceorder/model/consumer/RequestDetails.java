@@ -27,6 +27,25 @@ public class RequestDetails {
 
     private CloudConfiguration cloudConfiguration;
 
+    private OwningEntity owningEntity;
+
+    private Project project;
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public OwningEntity getOwningEntity() {
+        return owningEntity;
+    }
+
+    public void setOwningEntity(OwningEntity owningEntity) {
+        this.owningEntity = owningEntity;
+    }
 
     public CloudConfiguration getCloudConfiguration() {
         return cloudConfiguration;

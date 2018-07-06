@@ -61,9 +61,9 @@ This API is used to perform Service Order and thus instantiate a service
 
 ::
 
-    MSO_CREATE_SERVICE_INSTANCE_PATH = "/ecomp/mso/infra/serviceInstance/v4"
+    MSO_CREATE_SERVICE_INSTANCE_PATH = "/ecomp/mso/infra/serviceInstance/v6"
 
-    MSO_GET_REQUEST_STATUS_PATH = "/ecomp/mso/infra/orchestrationRequests/v4/"
+    MSO_GET_REQUEST_STATUS_PATH = "/ecomp/mso/infra/orchestrationRequests/v6/"
 
-    MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/"
+    MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/v6/"
 

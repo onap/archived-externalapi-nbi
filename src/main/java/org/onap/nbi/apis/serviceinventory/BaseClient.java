@@ -29,13 +29,23 @@ public abstract class BaseClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseClient.class);
 
+
     @Autowired
     private RestTemplate restTemplate;
 
+
+
     protected ResponseEntity<Object> callApiGet(String callURL, HttpHeaders httpHeaders) {
 
-        ResponseEntity<Object> response = restTemplate.exchange(callURL, HttpMethod.GET,
-                new HttpEntity<>("parameters", httpHeaders), Object.class);
+
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("log request : "+callURL+ " "+httpHeaders);
+        }
+
+        ResponseEntity<Object> response = null;
+            response = restTemplate.exchange(callURL, HttpMethod.GET,
+                    new HttpEntity<>("parameters", httpHeaders), Object.class);
+
         if(LOGGER.isDebugEnabled()){
             LOGGER.debug("response body : {}",response.getBody().toString());
         }
