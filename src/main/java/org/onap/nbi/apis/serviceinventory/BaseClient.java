@@ -34,6 +34,10 @@ public abstract class BaseClient {
 
     protected ResponseEntity<Object> callApiGet(String callURL, HttpHeaders httpHeaders) {
 
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("log request : "+callURL+ " "+httpHeaders);
+        }
+
         ResponseEntity<Object> response = restTemplate.exchange(callURL, HttpMethod.GET,
                 new HttpEntity<>("parameters", httpHeaders), Object.class);
         LOGGER.debug("response body : " + response.getBody().toString());

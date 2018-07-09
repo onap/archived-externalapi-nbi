@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "url": "/ecomp/mso/infra/orchestrationRequests/v4/requestId"
+        "url": "/ecomp/mso/infra/orchestrationRequests/v6/requestId"
     },
     "response": {
         "status": 200,

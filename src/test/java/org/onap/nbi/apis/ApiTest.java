@@ -674,7 +674,7 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v4/requestId");
+        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v6/requestId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -716,7 +716,7 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
              executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v4");
+        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v6");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -738,8 +738,8 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v4");
-        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v4/requestId");
+        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v6");
+        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v6/requestId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);

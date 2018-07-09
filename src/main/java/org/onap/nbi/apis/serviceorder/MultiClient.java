@@ -61,6 +61,9 @@ public class MultiClient {
     @Value("${onap.cloudOwner}")
     private String cloudOwner;
 
+    @Value("${aai.header.transaction.id}")
+    private String aaiTransactionId;
+
     @Autowired
     private ServiceCatalogUrl serviceCatalogUrl;
 
@@ -70,6 +73,7 @@ public class MultiClient {
 
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String X_FROM_APP_ID = "X-FromAppId";
+    private static final String X_TRANSACTION_ID = "X-TransactionId";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiClient.class);
 
@@ -99,6 +103,8 @@ public class MultiClient {
         httpHeaders.add(X_FROM_APP_ID, aaiApiId);
         httpHeaders.add("Accept", "application/json");
         httpHeaders.add("Content-Type", "application/json");
+        httpHeaders.add(X_TRANSACTION_ID, aaiTransactionId);
+
         return httpHeaders;
     }
 
