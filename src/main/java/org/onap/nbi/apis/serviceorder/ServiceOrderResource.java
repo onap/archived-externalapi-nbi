@@ -15,8 +15,6 @@
  */
 package org.onap.nbi.apis.serviceorder;
 
-import java.util.List;
-import javax.validation.Valid;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
@@ -38,14 +36,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/serviceOrder")
@@ -122,7 +116,7 @@ public class ServiceOrderResource extends ResourceManagement {
             throw new ValidationException(errors.getAllErrors());
         }
 
-        ServiceOrder serviceOrderSaved =serviceOrderService.updateOrderAndItemStateToAcknowledged(serviceOrder);
+        ServiceOrder serviceOrderSaved =serviceOrderService.createServiceOrder(serviceOrder);
         serviceOrderService.updateOrderHref(serviceOrderSaved);
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.createResponse(serviceOrderSaved, filter);
@@ -135,9 +129,9 @@ public class ServiceOrderResource extends ResourceManagement {
         for (ServiceOrder serviceOrder : acknowledgedOrders) {
             ServiceOrderInfo serviceOrderInfo = checkOrderConsistenceManager.checkServiceOrder(serviceOrder);
             if (serviceOrderInfo.isServiceOrderRejected()) {
-                serviceOrderService.updateOrderFinalState(serviceOrder, StateType.REJECTED);
+                serviceOrderService.updateOrderState(serviceOrder, StateType.REJECTED);
             } else if (serviceOrderInfo.isAllItemsCompleted()) {
-                serviceOrderService.updateOrderFinalState(serviceOrder, StateType.COMPLETED);
+                serviceOrderService.updateOrderState(serviceOrder, StateType.COMPLETED);
             } else {
                 createAAICustomer.createAAICustomer(serviceOrder,serviceOrderInfo);
                 if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {

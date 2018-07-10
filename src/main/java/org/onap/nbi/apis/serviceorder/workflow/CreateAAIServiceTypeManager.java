@@ -12,9 +12,6 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.onap.nbi.apis.serviceorder.MultiClient;
 import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
@@ -27,6 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CreateAAIServiceTypeManager {
@@ -53,7 +54,7 @@ public class CreateAAIServiceTypeManager {
                     boolean serviceCreated = serviceOrderConsumerService.putServiceType(
                         serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), sdcServiceName);
                     if (!serviceCreated) {
-                        serviceOrderService.updateOrderFinalState(serviceOrder,StateType.REJECTED);
+                        serviceOrderService.updateOrderState(serviceOrder,StateType.REJECTED);
                         LOGGER.warn("serviceOrder {} rejected : cannot create service type {} for customer {}",
                             serviceOrder.getId(), sdcServiceName,
                             serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());

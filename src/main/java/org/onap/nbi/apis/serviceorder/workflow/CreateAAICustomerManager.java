@@ -45,7 +45,7 @@ public class CreateAAICustomerManager {
 
             boolean customerCreated = serviceOrderConsumerService.putCustomer(serviceOrderInfo.getSubscriberInfo());
             if (!customerCreated) {
-                serviceOrderService.updateOrderFinalState(serviceOrder,StateType.REJECTED);
+                serviceOrderService.updateOrderState(serviceOrder,StateType.REJECTED);
                 LOGGER.warn("serviceOrder {} rejected : cannot create customer", serviceOrder.getId());
             }
         }

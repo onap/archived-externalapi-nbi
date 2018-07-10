@@ -12,30 +12,12 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import org.onap.nbi.apis.serviceorder.SoClient;
 import org.onap.nbi.apis.serviceorder.model.ServiceCharacteristic;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
-import org.onap.nbi.apis.serviceorder.model.consumer.CloudConfiguration;
-import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
-import org.onap.nbi.apis.serviceorder.model.consumer.GetRequestStatusResponse;
-import org.onap.nbi.apis.serviceorder.model.consumer.MSOPayload;
-import org.onap.nbi.apis.serviceorder.model.consumer.ModelInfo;
-import org.onap.nbi.apis.serviceorder.model.consumer.OwningEntity;
-import org.onap.nbi.apis.serviceorder.model.consumer.Project;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestDetails;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestInfo;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestParameters;
-import org.onap.nbi.apis.serviceorder.model.consumer.RequestState;
-import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
-import org.onap.nbi.apis.serviceorder.model.consumer.UserParams;
+import org.onap.nbi.apis.serviceorder.model.consumer.*;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
@@ -49,6 +31,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class SOTaskProcessor {
@@ -216,7 +201,7 @@ public class SOTaskProcessor {
             } else {
                 finalState=StateType.COMPLETED;
             }
-            serviceOrderService.updateOrderFinalState(serviceOrder,finalState);
+            serviceOrderService.updateOrderState(serviceOrder,finalState);
         }
     }
 

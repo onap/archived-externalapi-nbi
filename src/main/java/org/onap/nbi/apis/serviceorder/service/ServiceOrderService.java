@@ -15,14 +15,15 @@
  */
 package org.onap.nbi.apis.serviceorder.service;
 
-import java.util.Date;
-import java.util.List;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class ServiceOrderService {
@@ -38,15 +39,12 @@ public class ServiceOrderService {
         return serviceOrderRepository.findByState(state);
     }
 
-    public void updateOrderState(ServiceOrder serviceOrder,StateType state){
+    public ServiceOrder updateOrderState(ServiceOrder serviceOrder,StateType state){
+        if(StateType.COMPLETED.equals(state) || StateType.REJECTED.equals(state)) {
+            serviceOrder.setCompletionDateTime(new Date());
+        }
         serviceOrder.setState(state);
-        serviceOrderRepository.save(serviceOrder);
-    }
-
-    public void updateOrderFinalState(ServiceOrder serviceOrder,StateType state){
-        serviceOrder.setState(state);
-        serviceOrder.setCompletionDateTime(new Date());
-        serviceOrderRepository.save(serviceOrder);
+        return serviceOrderRepository.save(serviceOrder);
     }
 
     public void updateOrderItemState(ServiceOrder serviceOrder,ServiceOrderItem serviceOrderItem, StateType state){
@@ -54,7 +52,7 @@ public class ServiceOrderService {
         serviceOrderRepository.save(serviceOrder);
     }
 
-    public ServiceOrder updateOrderAndItemStateToAcknowledged(ServiceOrder serviceOrder){
+    public ServiceOrder createServiceOrder(ServiceOrder serviceOrder){
         serviceOrder.setState(StateType.ACKNOWLEDGED);
         serviceOrder.setOrderDate(new Date());
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
