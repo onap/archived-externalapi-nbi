@@ -37,6 +37,9 @@ import java.util.Set;
 public class ServiceRegisterRunner implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(ServiceRegisterRunner.class);
 
+    @Value("${msb.enabled}")
+    private boolean IS_ENABLED;
+
     @Value("${msb.discovery.host}")
     private String DISCOVERY_HOST;
 
@@ -72,6 +75,8 @@ public class ServiceRegisterRunner implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        if (!IS_ENABLED) return;
+
         MicroServiceInfo msinfo = new MicroServiceInfo();
         msinfo.setServiceName(SERVICE_NAME);
         msinfo.setVersion(SERVICE_VERSION);
