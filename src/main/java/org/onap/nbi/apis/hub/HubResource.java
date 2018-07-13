@@ -15,8 +15,11 @@
  */
 package org.onap.nbi.apis.hub;
 
-import org.onap.nbi.apis.hub.model.EventSubscription;
-import org.onap.nbi.apis.hub.repository.EventSubscriptionRepository;
+import org.onap.nbi.apis.hub.model.Subscriber;
+import org.onap.nbi.apis.hub.model.Subscription;
+import org.onap.nbi.apis.hub.repository.SubscriberRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,16 +37,22 @@ import java.net.URI;
 @EnableScheduling
 public class HubResource {
 
+    Logger logger = LoggerFactory.getLogger(HubResource.class);
+
     @Autowired
-    EventSubscriptionRepository eventSubscriptionRepository;
+    SubscriberRepository subscriberRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createEventSubscription(@RequestBody EventSubscription eventSubscription) {
-        EventSubscription result = eventSubscriptionRepository.save(eventSubscription);
+    public ResponseEntity<Subscriber> createEventSubscription(@RequestBody Subscription subscription) {
+        logger.debug("Received subscription request: {}", subscription);
+
+        Subscriber sub = Subscriber.createFromRequest(subscription);
+        sub = subscriberRepository.save(sub);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("{id}")
-                .buildAndExpand(result.getId())
+                .buildAndExpand(sub.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

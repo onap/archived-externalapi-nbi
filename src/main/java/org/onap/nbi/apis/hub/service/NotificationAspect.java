@@ -13,26 +13,34 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis.hub;
+package org.onap.nbi.apis.hub.service;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.onap.nbi.apis.hub.repository.SubscriberRepository;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.StateType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 @Configurable
-public class MyAspect {
+public class NotificationAspect {
+
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+
+    @Autowired
+    private NotifierService notifier;
 
     @AfterReturning(value = "execution(* org.onap.nbi.apis.serviceorder.service.ServiceOrderService" +
             ".createServiceOrder(..))", returning = "serviceOrderCreated")
     public void whenCreateServiceOrder(ServiceOrder serviceOrderCreated) {
         if(StateType.ACKNOWLEDGED.equals(serviceOrderCreated.getState())) {
-            //  Notif createServiceOrder
+            // Notif createServiceOrder
         }
     }
 

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis;
+package org.onap.nbi.configuration;
 
 import org.onap.nbi.exceptions.BackendErrorHandler;
 import org.springframework.boot.web.client.RestTemplateBuilder;
