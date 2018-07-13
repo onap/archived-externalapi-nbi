@@ -15,41 +15,22 @@
  */
 package org.onap.nbi.apis.hub.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.Objects;
 
+public class Subscription {
 
-@Document
-public class EventSubscription {
-
-    @Id
-    private String id;
 
     private String callback;
 
     private String query;
 
-    private String eventType;
-
-    public EventSubscription(){
+    public Subscription(){
 
     }
 
-    public EventSubscription(String id, String callback, String query, String eventType) {
-        this.id = id;
+    public Subscription(String callback, String query) {
         this.callback = callback;
         this.query = query;
-        this.eventType = eventType;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getCallback() {
@@ -68,28 +49,18 @@ public class EventSubscription {
         this.query = query;
     }
 
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EventSubscription that = (EventSubscription) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(callback, that.callback) &&
-                Objects.equals(query, that.query) &&
-                Objects.equals(eventType, that.eventType);
+        Subscription that = (Subscription) o;
+        return Objects.equals(callback, that.callback) &&
+                Objects.equals(query, that.query);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, callback, query, eventType);
+        return Objects.hash(callback, query);
     }
 }

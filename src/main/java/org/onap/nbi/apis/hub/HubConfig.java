@@ -13,21 +13,17 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis;
+package org.onap.nbi.apis.hub;
 
-import org.onap.nbi.exceptions.BackendErrorHandler;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.onap.nbi.apis.hub.service.CriteriaBuilder;
+import org.onap.nbi.apis.hub.service.CriteriaBuilderServiceOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class RestConfiguration {
-
+public class HubConfig {
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        RestTemplate restTemplate = builder.build();
-        restTemplate.setErrorHandler(new BackendErrorHandler());
-        return restTemplate;
+    CriteriaBuilder criteriaBuilder() {
+        return new CriteriaBuilderServiceOrder();
     }
 }

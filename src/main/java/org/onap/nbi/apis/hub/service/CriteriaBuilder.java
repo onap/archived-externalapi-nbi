@@ -13,10 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis.hub.repository;
+package org.onap.nbi.apis.hub.service;
 
-import org.onap.nbi.apis.hub.model.EventSubscription;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.onap.nbi.apis.hub.model.Event;
+import org.springframework.data.mongodb.core.query.Criteria;
 
-public interface EventSubscriptionRepository extends MongoRepository<EventSubscription, String> {
+public interface CriteriaBuilder {
+    Criteria adjust(Criteria base, Event event);
 }
