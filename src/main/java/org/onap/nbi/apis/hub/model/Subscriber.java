@@ -15,6 +15,7 @@
  */
 package org.onap.nbi.apis.hub.model;
 
+import org.onap.nbi.commons.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
@@ -26,7 +27,7 @@ import java.util.stream.Stream;
 
 
 @Document
-public class Subscriber {
+public class Subscriber implements Resource {
     private static final Logger logger = LoggerFactory.getLogger(Subscriber.class);
 
     @Id

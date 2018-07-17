@@ -24,6 +24,7 @@ import org.onap.nbi.apis.serviceorder.workflow.CreateAAICustomerManager;
 import org.onap.nbi.apis.serviceorder.workflow.CreateAAIServiceTypeManager;
 import org.onap.nbi.apis.serviceorder.workflow.SOTaskManager;
 import org.onap.nbi.commons.JsonRepresentation;
+import org.onap.nbi.commons.MultiCriteriaRequestBuilder;
 import org.onap.nbi.commons.ResourceManagement;
 import org.onap.nbi.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -27,7 +27,7 @@ public class Event {
     private LocalDateTime eventDate;
 
     @NotNull
-    private String eventType;
+    private String eventType = "string";
 
     @NotNull
     private JsonNode event;
