@@ -34,10 +34,9 @@ public class CriteriaBuilderServiceOrder implements CriteriaBuilder {
                 if (stateNode.isValueNode())
                     return base.orOperator(
                             Criteria.where("query.serviceOrder__state").exists(false),
-                            Criteria.where("query.serviceOrder__state").in(event.getEvent().path("state").textValue())
+                            Criteria.where("query.serviceOrder__state").in(stateNode.textValue())
                     );
-                else
-                    return base.and("query.serviceOrder__state").exists(false);
+                break;
 
             case "ServiceOrderItemStateChangeNotification":
                 Object[] states = getStates(event);
@@ -46,8 +45,7 @@ public class CriteriaBuilderServiceOrder implements CriteriaBuilder {
                             Criteria.where("query.serviceOrder__serviceOrderItem__state").exists(false),
                             Criteria.where("query.serviceOrder__serviceOrderItem__state").in(states)
                     );
-                else
-                    return base.and("query.serviceOrder__serviceOrderItem__state").exists(false);
+                break;
         }
 
         return base;

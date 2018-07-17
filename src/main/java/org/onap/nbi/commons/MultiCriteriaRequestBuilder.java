@@ -13,12 +13,8 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis.serviceorder;
+package org.onap.nbi.commons;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +26,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class MultiCriteriaRequestBuilder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceOrderResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultiCriteriaRequestBuilder.class);
 
 
     public Query buildRequest(MultiValueMap<String, String> params) {
@@ -58,6 +59,20 @@ public class MultiCriteriaRequestBuilder {
             String description = descriptions.get(0);
             LOGGER.debug("add criterion description {}", description);
             query.addCriteria(Criteria.where("description").is(description));
+
+        }
+        List<String> eventTypes = params.get("query.eventType");
+        if (!CollectionUtils.isEmpty(eventTypes)) {
+            Object[] eventType = new String[]{eventTypes.get(0)};
+            LOGGER.debug("add criterion query.eventType {}", eventType);
+            query.addCriteria(Criteria.where("query.eventType").in(eventType));
+
+        }
+        List<String> callbacks = params.get("callback");
+        if (!CollectionUtils.isEmpty(callbacks)) {
+            String callback = callbacks.get(0);
+            LOGGER.debug("add criterion callback {}", callback);
+            query.addCriteria(Criteria.where("callback").is(callback));
 
         }
 
