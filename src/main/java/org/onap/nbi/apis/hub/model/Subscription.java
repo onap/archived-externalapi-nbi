@@ -15,10 +15,12 @@
  */
 package org.onap.nbi.apis.hub.model;
 
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Subscription {
 
+
+    private String id;
 
     private String callback;
 
@@ -28,9 +30,18 @@ public class Subscription {
 
     }
 
-    public Subscription(String callback, String query) {
+    public Subscription(String id, String callback, String query) {
+        this.id = id;
         this.callback = callback;
         this.query = query;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCallback() {
@@ -49,18 +60,17 @@ public class Subscription {
         this.query = query;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Subscription that = (Subscription) o;
-        return Objects.equals(callback, that.callback) &&
-                Objects.equals(query, that.query);
-    }
+    public static Subscription createFromSubscriber(Subscriber subscriber) {
+        Subscription sub = new Subscription();
+        sub.setId(subscriber.getId());
+        sub.setCallback(subscriber.getCallback());
 
-    @Override
-    public int hashCode() {
+        String query = subscriber.getQuery().entrySet()
+                .stream()
+                .map(entry -> entry.getKey()+ "=" + String.join(" ",entry.getValue()))
+                .collect(Collectors.joining());
 
-        return Objects.hash(callback, query);
+        sub.setQuery(query);
+        return sub;
     }
 }

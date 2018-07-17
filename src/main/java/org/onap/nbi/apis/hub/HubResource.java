@@ -17,44 +17,87 @@ package org.onap.nbi.apis.hub;
 
 import org.onap.nbi.apis.hub.model.Subscriber;
 import org.onap.nbi.apis.hub.model.Subscription;
-import org.onap.nbi.apis.hub.repository.SubscriberRepository;
+import org.onap.nbi.apis.hub.service.SubscriptionService;
+import org.onap.nbi.commons.JsonRepresentation;
+import org.onap.nbi.commons.MultiCriteriaRequestBuilder;
+import org.onap.nbi.commons.ResourceManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hub")
 @EnableScheduling
-public class HubResource {
+public class HubResource extends ResourceManagement {
 
     Logger logger = LoggerFactory.getLogger(HubResource.class);
 
     @Autowired
-    SubscriberRepository subscriberRepository;
+    MongoTemplate mongoTemplate;
+
+    @Autowired
+    SubscriptionService subscriptionService;
+
+    @Autowired
+    MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Subscriber> createEventSubscription(@RequestBody Subscription subscription) {
-        logger.debug("Received subscription request: {}", subscription);
+        logger.debug("POST request for subscription : {}", subscription);
 
-        Subscriber sub = Subscriber.createFromRequest(subscription);
-        sub = subscriberRepository.save(sub);
+        Subscriber subscriber = subscriptionService.createSubscription(subscription);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("{id}")
-                .buildAndExpand(sub.getId())
+                .path("/{id}")
+                .buildAndExpand(subscriber.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Subscription> getSubscription(@PathVariable String subscriptionId) {
+
+        Subscriber subscriber  = subscriptionService.findSubscriptionById(subscriptionId);
+        if (subscriber == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(Subscription.createFromSubscriber(subscriber));
+    }
+
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> findServiceOrder(@RequestParam MultiValueMap<String, String> params) {
+
+        Query query = multiCriteriaRequestBuilder.buildRequest(params);
+        List<Subscriber> subscribers = mongoTemplate.find(query, Subscriber.class);
+        JsonRepresentation filter = new JsonRepresentation(params);
+        long totalCount = subscriptionService.countSubscription();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Total-Count", String.valueOf(totalCount));
+        headers.add("X-Result-Count", String.valueOf(subscribers.size()));
+
+        return this.findResponse(subscribers, filter, headers);
+
+    }
+
+    @DeleteMapping("/{subscriptionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSubscription(@PathVariable String subscriptionId) {
+        logger.debug("DELETE request for subscription id #{}", subscriptionId);
+        subscriptionService.deleteSubscription(subscriptionId);
     }
 }
