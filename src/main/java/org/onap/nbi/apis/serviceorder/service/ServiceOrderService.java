@@ -58,14 +58,10 @@ public class ServiceOrderService {
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
             serviceOrderItem.setState(StateType.ACKNOWLEDGED);
         }
+        serviceOrder = serviceOrderRepository.save(serviceOrder);
+        serviceOrder.setHref("serviceOrder/" + serviceOrder.getId());
         return serviceOrderRepository.save(serviceOrder);
     }
-
-    public void updateOrderHref(ServiceOrder serviceOrder){
-        serviceOrder.setHref("serviceOrder/" + serviceOrder.getId());
-        serviceOrderRepository.save(serviceOrder);
-    }
-
 
     public void deleteServiceOrder(String serviceOrderId){
         serviceOrderRepository.delete(serviceOrderId);

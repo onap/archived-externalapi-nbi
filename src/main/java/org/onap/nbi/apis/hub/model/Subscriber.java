@@ -63,7 +63,7 @@ public class Subscriber implements Resource {
         Stream.of(request.getQuery().split("&"))
                 .map(q -> q.split("="))
                 .filter(q -> q.length == 2)
-                .forEach(q -> sub.getQuery().put(q[0], q[1].split(",")));
+                .forEach(q -> sub.getQuery().put(q[0].trim(), q[1].trim().split(",")));
 
         return sub;
     }

@@ -18,8 +18,11 @@ package org.onap.nbi.apis.hub.service;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.onap.nbi.apis.hub.model.Event;
+import org.onap.nbi.apis.hub.model.EventType;
 import org.onap.nbi.apis.hub.repository.SubscriberRepository;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
+import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -40,7 +43,7 @@ public class NotificationAspect {
             ".createServiceOrder(..))", returning = "serviceOrderCreated")
     public void whenCreateServiceOrder(ServiceOrder serviceOrderCreated) {
         if(StateType.ACKNOWLEDGED.equals(serviceOrderCreated.getState())) {
-            // Notif createServiceOrder
+            processEvent(EventFactory.getEvent(EventType.SERVICE_ORDER_CREATION, serviceOrderCreated, null));
         }
     }
 
@@ -49,7 +52,7 @@ public class NotificationAspect {
     public void whenUpdateServiceOrderState(ServiceOrder serviceOrderUpdated) {
         if(StateType.COMPLETED.equals(serviceOrderUpdated.getState())||
                 StateType.FAILED.equals(serviceOrderUpdated.getState())) {
-            // Notif updateServiceOrder
+            processEvent(EventFactory.getEvent(EventType.SERVICE_ORDER_STATE_CHANGE, serviceOrderUpdated, null));
         }
     }
 
@@ -59,9 +62,23 @@ public class NotificationAspect {
         Object[] signatureArgs = joinPoint.getArgs();
 
         if(signatureArgs != null && signatureArgs.length == 3) {
+            ServiceOrder serviceOrder = (ServiceOrder) signatureArgs[0];
+            ServiceOrderItem serviceOrderItem = (ServiceOrderItem) signatureArgs[1];
             StateType serviceOrderItemState = (StateType) signatureArgs[2];
-            //  Notif updateServiceOrderItem
 
+            processEvent(EventFactory.getEvent(EventType.SERVICE_ORDER_ITEM_STATE_CHANGE, serviceOrder,
+                    serviceOrderItem));
         }
+    }
+
+    /**
+     * Retreive subscribers that match an event and fire notification
+     * asynchronously
+     * @param event
+     */
+    private void processEvent(Event event) {
+        subscriberRepository
+                .findSubscribersUsingEvent(event)
+                .forEach(sub -> notifier.run(sub, event));
     }
 }

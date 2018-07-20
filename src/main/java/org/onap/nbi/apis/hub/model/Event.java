@@ -18,16 +18,16 @@ package org.onap.nbi.apis.hub.model;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 
 public class Event {
 
-    private String eventId;
-    private LocalDateTime eventDate;
+    private java.lang.String eventId;
+    private Date eventDate;
 
     @NotNull
-    private String eventType = "string";
+    private String eventType;
 
     @NotNull
     private JsonNode event;
@@ -40,20 +40,12 @@ public class Event {
         this.eventId = eventId;
     }
 
-    public LocalDateTime getEventDate() {
+    public Date getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(LocalDateTime eventDate) {
+    public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
-    }
-
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
     }
 
     public JsonNode getEvent() {
@@ -62,5 +54,13 @@ public class Event {
 
     public void setEvent(JsonNode event) {
         this.event = event;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
 }

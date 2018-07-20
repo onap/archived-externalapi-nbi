@@ -118,7 +118,6 @@ public class ServiceOrderResource extends ResourceManagement {
         }
 
         ServiceOrder serviceOrderSaved =serviceOrderService.createServiceOrder(serviceOrder);
-        serviceOrderService.updateOrderHref(serviceOrderSaved);
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.createResponse(serviceOrderSaved, filter);
 
