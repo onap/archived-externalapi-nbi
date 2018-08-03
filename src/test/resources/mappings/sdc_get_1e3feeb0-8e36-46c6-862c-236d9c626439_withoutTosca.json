@@ -1,0 +1,213 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439_withoutTosca/metadata"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "uuid": "1e3feeb0-8e36-46c6-862c-236d9c626439",
+      "invariantUUID": "b58a118e-eeb9-4f6e-bdca-e292f84d17df",
+      "name": "vFW",
+      "version": "2.0",
+      "toscaModelURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439toto/toscaModel",
+      "category": "Network Service",
+      "lifecycleState": "CERTIFIED",
+      "lastUpdaterUserId": "jm0007",
+      "distributionStatus": "DISTRIBUTED",
+      "lastUpdaterFullName": "Joni Mitchell",
+      "resources": [{
+        "resourceInstanceName": "vFW-vSINK 0",
+        "resourceName": "vFW-vSINK",
+        "resourceInvariantUUID": "18b90934-aa82-456f-938e-e74a07a426f3",
+        "resourceVersion": "2.0",
+        "resoucreType": "VF",
+        "resourceUUID": "89a6b4c5-3973-4c19-b651-fae3713ca8d5",
+        "artifacts": [{
+          "artifactName": "vf-license-model.xml",
+          "artifactType": "VF_LICENSE",
+          "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vfwvsink0/artifacts/f6fa3f94-f5cd-4233-a7b2-b5e8dc2e1ec6",
+          "artifactDescription": "VF license file",
+          "artifactChecksum": "NDQ2NzIxNzgyMjZhNTc1NDNlMWU0ODI1ZmIyNjc3Zjg=",
+          "artifactUUID": "f6fa3f94-f5cd-4233-a7b2-b5e8dc2e1ec6",
+          "artifactVersion": "1",
+          "artifactLabel": "vflicense",
+          "artifactGroupType": "DEPLOYMENT"
+        },
+          {
+            "artifactName": "vfwvsink0_modules.json",
+            "artifactType": "VF_MODULES_METADATA",
+            "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vfwvsink0/artifacts/d0aaecf9-6ffb-4b4b-81fd-c59c1e8e6fb6",
+            "artifactDescription": "Auto-generated VF Modules information artifact",
+            "artifactChecksum": "ZGIyOWY3YzE0MTM2MjlhMjY1ZjkzNDg3YjE2ZmQxY2Y=",
+            "artifactUUID": "d0aaecf9-6ffb-4b4b-81fd-c59c1e8e6fb6",
+            "artifactVersion": "1",
+            "artifactLabel": "vfModulesMetadata",
+            "artifactGroupType": "DEPLOYMENT"
+          },
+          {
+            "artifactName": "base_vfw.yaml",
+            "artifactType": "HEAT",
+            "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vfwvsink0/artifacts/c94e8eec-b1a7-431c-ab6f-2fda5f0ee920",
+            "artifactDescription": "created from csar",
+            "artifactTimeout": 60,
+            "artifactChecksum": "YTY0MDg5ODUwZDE4YzQyYWI0NjE5Y2NjYmM3ZDg5ZGE=",
+            "artifactUUID": "c94e8eec-b1a7-431c-ab6f-2fda5f0ee920",
+            "artifactVersion": "4",
+            "artifactLabel": "heat1",
+            "artifactGroupType": "DEPLOYMENT"
+          },
+          {
+            "artifactName": "vendor-license-model.xml",
+            "artifactType": "VENDOR_LICENSE",
+            "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vfwvsink0/artifacts/423d2c66-6c3a-4257-9342-7b57ebf9dd54",
+            "artifactDescription": " Vendor license file",
+            "artifactChecksum": "YTNhYTc3ZGE4ZWViMmYzOThkOGQ3ZTVjZGNmNmU0ZmQ=",
+            "artifactUUID": "423d2c66-6c3a-4257-9342-7b57ebf9dd54",
+            "artifactVersion": "1",
+            "artifactLabel": "vendorlicense",
+            "artifactGroupType": "DEPLOYMENT"
+          },
+          {
+            "artifactName": "base_vfw.env",
+            "artifactType": "HEAT_ENV",
+            "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vfwvsink0/artifacts/a1a58cc9-8225-4b6f-b81a-02fa3c7fb6ec",
+            "artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+            "artifactChecksum": "ZmVkM2MwODhlZjcwNWY5MDk5ZGEyMjI5ZTAyYWRjNjY=",
+            "artifactUUID": "a1a58cc9-8225-4b6f-b81a-02fa3c7fb6ec",
+            "artifactVersion": "2",
+            "generatedFromUUID": "32591489-33c9-4461-a47c-7c463250788d.heat1",
+            "artifactLabel": "heat1env",
+            "artifactGroupType": "DEPLOYMENT"
+          }
+        ]
+      },
+        {
+          "resourceInstanceName": "vPkG 0",
+          "resourceName": "vPkG",
+          "resourceInvariantUUID": "8d8a20c0-746c-4d5e-a1a2-fa49fa5786ad",
+          "resourceVersion": "2.0",
+          "resoucreType": "VF",
+          "resourceUUID": "31961e27-2a2c-4beb-87c9-bfe0067088f5",
+          "artifacts": [{
+            "artifactName": "vf-license-model.xml",
+            "artifactType": "VF_LICENSE",
+            "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vpkg0/artifacts/7af6cc3b-2ba3-4164-9d7d-65b3b46a71f4",
+            "artifactDescription": "VF license file",
+            "artifactChecksum": "MWM5NDlmNjdhZTdmZTA5MzIzY2RhYjcxZmFkYzQyZDM=",
+            "artifactUUID": "7af6cc3b-2ba3-4164-9d7d-65b3b46a71f4",
+            "artifactVersion": "1",
+            "artifactLabel": "vflicense",
+            "artifactGroupType": "DEPLOYMENT"
+          },
+            {
+              "artifactName": "vpkg0_modules.json",
+              "artifactType": "VF_MODULES_METADATA",
+              "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vpkg0/artifacts/37b16173-bd54-447f-a5a2-1a5e24db8afb",
+              "artifactDescription": "Auto-generated VF Modules information artifact",
+              "artifactChecksum": "ZDA3MWQ3MTE3MTA1MzNkY2M1ODQ4YTUxN2YwMDk0MmM=",
+              "artifactUUID": "37b16173-bd54-447f-a5a2-1a5e24db8afb",
+              "artifactVersion": "1",
+              "artifactLabel": "vfModulesMetadata",
+              "artifactGroupType": "DEPLOYMENT"
+            },
+            {
+              "artifactName": "base_vpkg.yaml",
+              "artifactType": "HEAT",
+              "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vpkg0/artifacts/43184998-c107-40a7-92f6-00ba74de8539",
+              "artifactDescription": "created from csar",
+              "artifactTimeout": 60,
+              "artifactChecksum": "NDZhY2U0YTExZjllNTFmZjc4ZTE4YzU2Zjk1ZDc2MWI=",
+              "artifactUUID": "43184998-c107-40a7-92f6-00ba74de8539",
+              "artifactVersion": "4",
+              "artifactLabel": "heat1",
+              "artifactGroupType": "DEPLOYMENT"
+            },
+            {
+              "artifactName": "vendor-license-model.xml",
+              "artifactType": "VENDOR_LICENSE",
+              "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vpkg0/artifacts/6cd5f968-20aa-4b86-9a50-97db5e4ca806",
+              "artifactDescription": " Vendor license file",
+              "artifactChecksum": "YTNhYTc3ZGE4ZWViMmYzOThkOGQ3ZTVjZGNmNmU0ZmQ=",
+              "artifactUUID": "6cd5f968-20aa-4b86-9a50-97db5e4ca806",
+              "artifactVersion": "1",
+              "artifactLabel": "vendorlicense",
+              "artifactGroupType": "DEPLOYMENT"
+            },
+            {
+              "artifactName": "base_vpkg.env",
+              "artifactType": "HEAT_ENV",
+              "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/resourceInstances/vpkg0/artifacts/60944038-d382-4aa6-b387-7b87c9c9df19",
+              "artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+              "artifactChecksum": "OGU0OGFlZTFiZDdhYmQ0MmM0MjAyY2U5YjljYWViYTA=",
+              "artifactUUID": "60944038-d382-4aa6-b387-7b87c9c9df19",
+              "artifactVersion": "2",
+              "generatedFromUUID": "0d3918df-ea14-4fc3-a5c9-34032eaae573.heat1",
+              "artifactLabel": "heat1env",
+              "artifactGroupType": "DEPLOYMENT"
+            }
+          ]
+        }
+      ],
+      "artifacts": [{
+        "artifactName": "AAI-vFW-service-2VF-based-service-2.0.xml",
+        "artifactType": "MODEL_INVENTORY_PROFILE",
+        "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/artifacts/2e6cd967-93c2-4f53-82bd-c56ab98e8df7",
+        "artifactDescription": "AAI Service Model",
+        "artifactChecksum": "ZTY5ZTJmYTY4YzE2NGUxMTQxNWNkN2QzMmI4MWIzNDU=",
+        "artifactUUID": "2e6cd967-93c2-4f53-82bd-c56ab98e8df7",
+        "artifactVersion": "1",
+        "artifactLabel": "aaiservice1603481860",
+        "artifactGroupType": "DEPLOYMENT"
+      },
+        {
+          "artifactName": "AAI-Vpkg..base_vpkg..module-0-resource-2.xml",
+          "artifactType": "MODEL_INVENTORY_PROFILE",
+          "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/artifacts/ad600a09-edde-4356-bb0a-9e638a671d06",
+          "artifactDescription": "AAI Resource Model",
+          "artifactChecksum": "MzQyMjczOGVmYzM1OWQ1NmFhZjBhOWUxM2JjMmYxZTQ=",
+          "artifactUUID": "ad600a09-edde-4356-bb0a-9e638a671d06",
+          "artifactVersion": "1",
+          "artifactLabel": "aairesource529289386",
+          "artifactGroupType": "DEPLOYMENT"
+        },
+        {
+          "artifactName": "AAI-vFW-vSINK-resource-2.0.xml",
+          "artifactType": "MODEL_INVENTORY_PROFILE",
+          "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/artifacts/413a631e-69c4-453b-ab68-fac09b390259",
+          "artifactDescription": "AAI Resource Model",
+          "artifactChecksum": "ZWRmMzQzYzc0MThlYjQ1YjY2ZTFkYzJmMjAyNzQ1YWU=",
+          "artifactUUID": "413a631e-69c4-453b-ab68-fac09b390259",
+          "artifactVersion": "1",
+          "artifactLabel": "aairesource1461475898",
+          "artifactGroupType": "DEPLOYMENT"
+        },
+        {
+          "artifactName": "AAI-vPkG-resource-2.0.xml",
+          "artifactType": "MODEL_INVENTORY_PROFILE",
+          "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/artifacts/aee30754-eec4-4820-ae3a-790b80b76e81",
+          "artifactDescription": "AAI Resource Model",
+          "artifactChecksum": "OGQ4ZTdhYjkyZDRkYmFiZTBhNWU4MDc4YTM2YjY1NmI=",
+          "artifactUUID": "aee30754-eec4-4820-ae3a-790b80b76e81",
+          "artifactVersion": "1",
+          "artifactLabel": "aairesource936479495",
+          "artifactGroupType": "DEPLOYMENT"
+        },
+        {
+          "artifactName": "AAI-VfwVsink..base_vfw..module-0-resource-2.xml",
+          "artifactType": "MODEL_INVENTORY_PROFILE",
+          "artifactURL": "/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/artifacts/ac9a3bbf-a052-4176-abff-fe2d2741194a",
+          "artifactDescription": "AAI Resource Model",
+          "artifactChecksum": "OWIzNjVhNmI2ZWYyZThlMjk1NjA2MDFhZTU3MGQ0ZDU=",
+          "artifactUUID": "ac9a3bbf-a052-4176-abff-fe2d2741194a",
+          "artifactVersion": "1",
+          "artifactLabel": "aairesource1106409880",
+          "artifactGroupType": "DEPLOYMENT"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -43,7 +43,12 @@ public class ServiceSpecificationResource extends ResourceManagement {
             @RequestParam MultiValueMap<String, String> params) {
         Map response = serviceSpecificationService.get(serviceSpecId);
         JsonRepresentation filter = new JsonRepresentation(params);
-        return this.getResponse(response, filter);
+        if (response.get("serviceSpecCharacteristic") != null) {
+            return this.getResponse(response, filter);
+        } else {
+            return this.getPartialResponse(response, filter);
+
+        }
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)

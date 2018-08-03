@@ -42,8 +42,7 @@
 
          }
 
-       },
-       "serviceSpecInputSchema" : "serviceSpecCharacteristic.serviceSpecInputSchema"
+       }
      }
   },
   {
@@ -69,11 +68,6 @@
         "*": {
           "@type": "ONAPresource"
         }
-
-      },
-      "serviceSpecCharacteristic" : {
-          "valueType": "complex",
-          "@type": "serviceSpecInputSchema"
 
       }
     }

@@ -136,11 +136,21 @@ public class ApiTest {
 
 
     @Test
-    public void testServiceCatalogGetResource() throws Exception {
+    @Ignore
+    public void testServiceResourceGetCatalog() throws Exception {
+
+        ResponseEntity<Object> resource =
+            serviceSpecificationResource.getServiceSpecification("1e3feeb0-8e36-46c6-862c-236d9c626439", null);
+        ServiceCatalogAssertions.assertGetServiceCatalog(resource);
+
+    }
+
+    @Test
+    public void testServiceCatalogGetResourceWithoutTosca() throws Exception {
 
         ResponseEntity<Object> resource = serviceSpecificationResource
-                .getServiceSpecification("1e3feeb0-8e36-46c6-862c-236d9c626439", null);
-        ServiceCatalogAssertions.assertGetServiceCatalog(resource);
+            .getServiceSpecification("1e3feeb0-8e36-46c6-862c-236d9c626439_withoutTosca", null);
+        ServiceCatalogAssertions.assertGetServiceCatalogWithoutTosca(resource);
 
     }
 
