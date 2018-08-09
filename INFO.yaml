@@ -19,11 +19,11 @@ project: 'externalapi-nbi'
 project_creation_date: '2017-06-29'
 lifecycle_state: 'Incubation'
 project_lead: &onap_releng_ptl
-    name: 'Andy Mayer'
-    email: 'am803u@att.com'
-    id: 'ajmayer'
-    company: 'ATT'
-    timezone: 'America/New York'
+    - name: 'Matthieu Geerebaert'
+      email: 'matthieu.geerebaert@orange.com'
+      id: 'matthieugeerebaert'
+      company: 'Orange'
+      timezone: 'Europe/Paris'
 primary_contact: *onap_releng_ptl
 issue_tracking:
     type: 'jira'
