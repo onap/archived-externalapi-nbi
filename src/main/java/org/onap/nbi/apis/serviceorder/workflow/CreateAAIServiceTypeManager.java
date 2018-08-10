@@ -38,12 +38,13 @@ public class CreateAAIServiceTypeManager {
     @Autowired
     ServiceOrderService serviceOrderService;
 
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAIServiceTypeManager.class);
 
     public void createAAIServiceType(ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
 
         Map servicesInAaiForCustomer = serviceOrderConsumerService
-            .getServicesInAaiForCustomer(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
+            .getServicesInAaiForCustomer(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceOrder);
 
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
             if (ActionType.ADD == serviceOrderItem.getAction()) {
@@ -52,12 +53,14 @@ public class CreateAAIServiceTypeManager {
                 String sdcServiceName = (String) serviceOrderItemInfo.getCatalogResponse().get("name");
                 if (!serviceNameExistsInAAI(servicesInAaiForCustomer, sdcServiceName)) {
                     boolean serviceCreated = serviceOrderConsumerService.putServiceType(
-                        serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), sdcServiceName);
+                        serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), sdcServiceName, serviceOrder);
                     if (!serviceCreated) {
                         serviceOrderService.updateOrderState(serviceOrder,StateType.REJECTED);
                         LOGGER.warn("serviceOrder {} rejected : cannot create service type {} for customer {}",
                             serviceOrder.getId(), sdcServiceName,
                             serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
+                        serviceOrderService.addOrderMessage(serviceOrder, "501");
+
                     }
                 }
             }

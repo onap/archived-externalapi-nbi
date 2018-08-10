@@ -121,6 +121,9 @@ public class ServiceOrder implements Resource {
     @JsonProperty("orderItem")
     private List<ServiceOrderItem> orderItem = null;
 
+    @JsonProperty("orderMessage")
+    private List<OrderMessage> orderMessage = null;
+
     public ServiceOrder id(String id) {
         this.id = id;
         return this;
@@ -526,6 +529,46 @@ public class ServiceOrder implements Resource {
     }
 
 
+    public ServiceOrder orderMessage(List<OrderMessage> orderMessage) {
+        this.orderMessage = orderMessage;
+        return this;
+    }
+
+    public ServiceOrder addOrderMessageItem(OrderMessage orderMessageItem) {
+        if (this.orderMessage == null) {
+            this.orderMessage = new ArrayList<OrderMessage>();
+        }
+        boolean mesageAlreadyExist=false;
+        for (OrderMessage message : this.orderMessage) {
+            if(message.getCode().equals(orderMessageItem.getCode())){
+                mesageAlreadyExist=true;
+
+            }
+        }
+        if(!mesageAlreadyExist) {
+            this.orderMessage.add(orderMessageItem);
+        }
+        return this;
+    }
+
+    /**
+     *
+     * @return orderMessage
+     **/
+    @JsonProperty("orderMessage")
+    @ApiModelProperty(value = "")
+    public List<OrderMessage> getOrderMessage() {
+        return orderMessage;
+    }
+
+    public void setOrderMessage(List<OrderMessage> orderMessage) {
+        this.orderMessage = orderMessage;
+    }
+
+
+
+
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -551,14 +594,16 @@ public class ServiceOrder implements Resource {
                 && Objects.equals(this.schemaLocation, serviceOrder.schemaLocation)
                 && Objects.equals(this.relatedParty, serviceOrder.relatedParty)
                 && Objects.equals(this.orderRelationship, serviceOrder.orderRelationship)
-                && Objects.equals(this.orderItem, serviceOrder.orderItem);
+                && Objects.equals(this.orderItem, serviceOrder.orderItem)
+                && Objects.equals(this.orderMessage, serviceOrder.orderMessage);
     }
+
 
     @Override
     public int hashCode() {
         return Objects.hash(id, href, externalId, priority, description, category, state, orderDate, completionDateTime,
                 expectedCompletionDate, requestedStartDate, requestedCompletionDate, startDate, baseType, type,
-                schemaLocation, relatedParty, orderRelationship, orderItem);
+                schemaLocation, relatedParty, orderRelationship, orderItem, orderMessage);
     }
 
 
@@ -586,6 +631,7 @@ public class ServiceOrder implements Resource {
         sb.append("    relatedParty: ").append(toIndentedString(relatedParty)).append("\n");
         sb.append("    orderRelationship: ").append(toIndentedString(orderRelationship)).append("\n");
         sb.append("    orderItem: ").append(toIndentedString(orderItem)).append("\n");
+        sb.append("    orderMessage: ").append(toIndentedString(orderMessage)).append("\n");
         sb.append("}");
         return sb.toString();
     }

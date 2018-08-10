@@ -1,17 +1,14 @@
 /**
- *     Copyright (c) 2018 Orange
+ * Copyright (c) 2018 Orange
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.onap.nbi.apis.serviceorder;
 
@@ -67,19 +64,21 @@ public class SoClient {
 
         try {
             ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.POST,
-                    new HttpEntity<>(msoPayload, buildRequestHeader()), CreateServiceInstanceResponse.class);
+                new HttpEntity<>(msoPayload, buildRequestHeader()), CreateServiceInstanceResponse.class);
 
             logResponsePost(url, response);
             return response;
 
-        } catch (BackendFunctionalException|ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
-            return null;
+        } catch (BackendFunctionalException e) {
+            LOGGER.error("error on calling " + url + " ," + e);
+            return new ResponseEntity<>(e.getHttpStatus());
+        } catch (ResourceAccessException e) {
+            LOGGER.error("error on calling " + url + " ," + e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<CreateServiceInstanceResponse> callDeleteServiceInstance(MSOPayload msoPayload,
-            String serviceId) {
+    public ResponseEntity<CreateServiceInstanceResponse> callDeleteServiceInstance(MSOPayload msoPayload, String serviceId) {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Calling SO DeleteServiceInstance with msoPayload : " + msoPayload.toString());
@@ -89,26 +88,30 @@ public class SoClient {
 
         try {
             ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.DELETE,
-                    new HttpEntity<>(msoPayload, buildRequestHeader()), CreateServiceInstanceResponse.class);
+                new HttpEntity<>(msoPayload, buildRequestHeader()), CreateServiceInstanceResponse.class);
 
             logResponsePost(url, response);
             return response;
 
-        } catch (BackendFunctionalException|ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
-            return null;
+        } catch (BackendFunctionalException e) {
+            LOGGER.error("error on calling " + url + " ," + e);
+            return new ResponseEntity<>(e.getHttpStatus());
+        } catch (ResourceAccessException e) {
+            LOGGER.error("error on calling " + url + " ," + e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     private void logResponsePost(String url, ResponseEntity<CreateServiceInstanceResponse> response) {
         LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("response body : {}", response.getBody().toString());
         }
 
         if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.CREATED)) {
-            LOGGER.warn("HTTP call SO on {} returns {} , {}",url ,response.getStatusCodeValue(), response.getBody().toString());
+            LOGGER.warn("HTTP call SO on {} returns {} , {}", url, response.getStatusCodeValue(),
+                response.getBody().toString());
         }
     }
 
@@ -119,27 +122,28 @@ public class SoClient {
         try {
 
             ResponseEntity<GetRequestStatusResponse> response = restTemplate.exchange(url, HttpMethod.GET,
-                    new HttpEntity<>(buildRequestHeader()), GetRequestStatusResponse.class);
+                new HttpEntity<>(buildRequestHeader()), GetRequestStatusResponse.class);
             logResponseGet(url, response);
             return response.getBody();
 
-        } catch (BackendFunctionalException|ResourceAccessException e) {
+        } catch (BackendFunctionalException | ResourceAccessException e) {
             LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return null;
         }
     }
 
     private void logResponseGet(String url, ResponseEntity<GetRequestStatusResponse> response) {
-        if(response!=null){
-            if(LOGGER.isDebugEnabled()){
+        if (response != null) {
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("response body : {}", response.getBody().toString());
             }
             LOGGER.info("response status : {}", response.getStatusCodeValue());
             if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn("HTTP call SO on {} returns {} , {}",url ,response.getStatusCodeValue(), response.getBody().toString());
+                LOGGER.warn("HTTP call SO on {} returns {} , {}", url, response.getStatusCodeValue(),
+                    response.getBody().toString());
             }
         } else {
-            LOGGER.info("no response calling url {}",url);
+            LOGGER.info("no response calling url {}", url);
         }
     }
 

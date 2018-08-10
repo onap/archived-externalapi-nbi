@@ -22,7 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.onap.nbi.OnapComponentsUrlPaths;
+import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
+import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
+import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.onap.nbi.exceptions.BackendFunctionalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +75,9 @@ public class MultiClient {
     @Autowired
     private ServiceInventoryUrl serviceInventoryUrl;
 
+    @Autowired
+    private ServiceOrderService serviceOrderService;
+
 
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String X_FROM_APP_ID = "X-FromAppId";
@@ -79,19 +85,34 @@ public class MultiClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiClient.class);
 
-    public ResponseEntity<Object> getServiceCatalog(String id) {
+    public Map getServiceCatalog(String id,ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem){
         StringBuilder callURL = new StringBuilder().append(serviceCatalogUrl.getServiceCatalogUrl()).append(id);
-       return callApiGet(callURL.toString(), new HttpHeaders(), null);
+        ResponseEntity<Object> response = callApiGet(callURL.toString(), new HttpHeaders(), null);
+
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            serviceOrderService.addOrderMessage(serviceOrder, "500");
+            LOGGER.warn("unable to retrieve catalog information for service {}",
+                serviceOrderItem.getService().getServiceSpecification().getId());
+        }
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return (LinkedHashMap) response.getBody();
+        }
+        return null;
+
     }
 
-    public boolean doesServiceExistInServiceInventory(String id, String serviceName, String globalSubscriberId) {
+    public boolean doesServiceExistInServiceInventory(String id, String serviceName, String globalSubscriberId, ServiceOrder serviceOrder) {
         StringBuilder callURL = new StringBuilder().append(serviceInventoryUrl.getServiceInventoryUrl()).append(id);
         Map<String, String> param = new HashMap<>();
         param.put("serviceSpecification.name", serviceName);
         param.put("relatedParty.id", globalSubscriberId);
 
         ResponseEntity<Object> response = callApiGet(callURL.toString(), new HttpHeaders(), param);
-       return response != null && response.getStatusCode().equals(HttpStatus.OK);
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
+            return false;
+        }
+        return response.getStatusCode().equals(HttpStatus.OK);
     }
 
 
@@ -107,13 +128,13 @@ public class MultiClient {
     }
 
 
-    public boolean isTenantIdPresentInAAI() {
+    public boolean isTenantIdPresentInAAI(ServiceOrder serviceOrder) {
         StringBuilder callURL = new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_TENANTS_PATH);
         String callUrlFormated = callURL.toString().replace("$onap.lcpCloudRegionId", lcpCloudRegionId);
         callUrlFormated = callUrlFormated.replace("$onap.cloudOwner", cloudOwner);
 
         ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI(), null);
-        if (response != null) {
+        if (response.getStatusCode().is2xxSuccessful()) {
             LinkedHashMap body = (LinkedHashMap) response.getBody();
             List<LinkedHashMap> tenants = (List<LinkedHashMap>) body.get("tenant");
             for (LinkedHashMap tenant : tenants) {
@@ -121,19 +142,27 @@ public class MultiClient {
                     return true;
                 }
             }
+        } else {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
         }
         return false;
     }
 
-    public boolean isCustomerPresentInAAI(String customerId) {
+    public boolean isCustomerPresentInAAI(String customerId,
+        ServiceOrder serviceOrder) {
         StringBuilder callURL = new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_CUSTOMER_PATH)
                 .append(customerId);
         ResponseEntity<Object> response = callApiGet(callURL.toString(), buildRequestHeaderForAAI(), null);
-        return(response != null && response.getStatusCode().equals(HttpStatus.OK));
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
+            return false;
+        }
+        return response.getStatusCode().equals(HttpStatus.OK);
     }
 
 
-    public boolean putCustomer(SubscriberInfo subscriberInfo) {
+    public boolean putCustomer(SubscriberInfo subscriberInfo,
+        ServiceOrder serviceOrder) {
         Map<String, String> param = new HashMap<>();
         param.put("global-customer-id", subscriberInfo.getGlobalSubscriberId());
         param.put("subscriber-name", subscriberInfo.getSubscriberName());
@@ -142,29 +171,42 @@ public class MultiClient {
                 aaiHost + OnapComponentsUrlPaths.AAI_GET_CUSTOMER_PATH + subscriberInfo.getGlobalSubscriberId();
 
         ResponseEntity<Object> response = putRequest(param, callURL, buildRequestHeaderForAAI());
-        return response != null && response.getStatusCode().equals(HttpStatus.CREATED);
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
+            return false;
+        }
+        return response.getStatusCode().equals(HttpStatus.CREATED);
     }
 
 
-    public Map getServicesInAaiForCustomer(String customerId) {
+    public Map getServicesInAaiForCustomer(String customerId,
+        ServiceOrder serviceOrder) {
         StringBuilder callURL =
                 new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH);
         String callUrlFormated = callURL.toString().replace("$customerId", customerId);
 
         ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI(), null);
-        if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
+            return null;
+        }
+        else if (response.getStatusCode().is2xxSuccessful()) {
             return (LinkedHashMap) response.getBody();
         }
         return null;
     }
 
-    public boolean putServiceType(String globalSubscriberId, String serviceName) {
+    public boolean putServiceType(String globalSubscriberId, String serviceName,
+        ServiceOrder serviceOrder) {
         Map<String, String> param = new HashMap<>();
         param.put("service-type", serviceName);
         String callURL = aaiHost + OnapComponentsUrlPaths.AAI_PUT_SERVICE_FOR_CUSTOMER_PATH + serviceName;
         String callUrlFormated = callURL.replace("$customerId", globalSubscriberId);
         ResponseEntity<Object> response =  putRequest(param, callUrlFormated, buildRequestHeaderForAAI());
-        return response != null && response.getStatusCode().equals(HttpStatus.CREATED);
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
+        }
+        return response.getStatusCode().is2xxSuccessful();
     }
 
 
@@ -177,17 +219,17 @@ public class MultiClient {
                 LOGGER.warn("HTTP call on {} returns {} , {}", callUrl , response.getStatusCodeValue(), response.getBody().toString());
             }
             return response;
-        } catch (BackendFunctionalException|ResourceAccessException e) {
+        } catch (BackendFunctionalException e) {
             LOGGER.error("error on calling " + callUrl + " ," + e);
-            return null;
+            return new ResponseEntity<>("problem calling onap services", e.getHttpStatus());
+        }catch (ResourceAccessException e) {
+            LOGGER.error("error on calling " + callUrl + " ," + e);
+            return new ResponseEntity<>("unable to reach onap services", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     private ResponseEntity<Object> callApiGet(String callURL, HttpHeaders httpHeaders, Map<String, String> param) {
-
-
         try {
-
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(callURL);
             if (param != null) {
                 for (Entry<String, String> stringEntry : param.entrySet()) {
@@ -196,8 +238,6 @@ public class MultiClient {
                 }
             }
             URI uri = builder.build().encode().toUri();
-
-
             ResponseEntity<Object> response =
                     restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(httpHeaders), Object.class);
             if(LOGGER.isDebugEnabled()){
@@ -210,10 +250,14 @@ public class MultiClient {
             }
             return response;
 
-        } catch (BackendFunctionalException|ResourceAccessException e) {
+        } catch (BackendFunctionalException e) {
             LOGGER.error("error on calling " + callURL + " ," + e);
-            return null;
+            return new ResponseEntity<>("problem calling onap services", e.getHttpStatus());
+        }catch (ResourceAccessException e) {
+            LOGGER.error("error on calling " + callURL + " ," + e);
+            return new ResponseEntity<>("unable to reach onap services", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
 

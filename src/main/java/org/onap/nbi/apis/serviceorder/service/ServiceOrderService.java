@@ -15,8 +15,10 @@
  */
 package org.onap.nbi.apis.serviceorder.service;
 
+import org.onap.nbi.apis.serviceorder.model.OrderMessage;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
+import org.onap.nbi.apis.serviceorder.model.SeverityMessage;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +73,76 @@ public class ServiceOrderService {
         return serviceOrderRepository.count();
     }
 
+
+
+    public void addOrderMessage(ServiceOrder serviceOrder, String code) {
+        OrderMessage orderMessage = new OrderMessage();
+        orderMessage.setCode(code);
+        orderMessage.setSeverity(SeverityMessage.ERROR);
+        orderMessage.setCorrectionRequired(true);
+
+        if ("104".equalsIgnoreCase(code)) {
+            orderMessage.setField("relatedParty.id");
+            orderMessage.setMessageInformation("Referred customer did not exist in ONAP");
+            serviceOrder.addOrderMessageItem(orderMessage);
+        }
+        if ("500".equalsIgnoreCase(code)) {
+            orderMessage.setMessageInformation("Problem with SDC API");
+            serviceOrder.addOrderMessageItem(orderMessage);
+        }
+        if ("501".equalsIgnoreCase(code)) {
+            orderMessage.setMessageInformation("Problem with AAI API");
+            serviceOrder.addOrderMessageItem(orderMessage);
+        }
+        if ("502".equalsIgnoreCase(code)) {
+            orderMessage.setMessageInformation("Problem with SO API");
+            serviceOrder.addOrderMessageItem(orderMessage);
+        }
+        if ("503".equalsIgnoreCase(code)) {
+            orderMessage.setMessageInformation("tenantId not found in AAI");
+            serviceOrder.addOrderMessageItem(orderMessage);
+        }
+        serviceOrderRepository.save(serviceOrder);
+    }
+
+    public void addOrderItemMessage(ServiceOrder serviceOrder,ServiceOrderItem serviceOrderItem, String code) {
+        OrderMessage orderMessage = new OrderMessage();
+        orderMessage.setCode(code);
+        orderMessage.setSeverity(SeverityMessage.ERROR);
+        orderMessage.setCorrectionRequired(true);
+
+        if ("101".equalsIgnoreCase(code)) {
+            orderMessage.setField("service.id");
+            orderMessage.setMessageInformation("Missing Information - orderItem.service.id must be provided");
+            serviceOrderItem.addOrderItemMessageItem(orderMessage);
+        }
+        if ("102".equalsIgnoreCase(code)) {
+            orderMessage.setField("serviceSpecification.id");
+            orderMessage
+                .setMessageInformation("Incorrect serviceSpecification.id provided – not found in Catalog (SDC");
+            serviceOrderItem.addOrderItemMessageItem(orderMessage);
+        }
+        if ("103".equalsIgnoreCase(code)) {
+            orderMessage.setField("service.id");
+            orderMessage.setMessageInformation(
+                "Inconsistence information provided. service.id must not be provided for add action");
+            serviceOrderItem.addOrderItemMessageItem(orderMessage);
+        }
+        if ("105".equalsIgnoreCase(code)) {
+            orderMessage.setField("service.name");
+            orderMessage.setMessageInformation("ServiceName already exist in AAI");
+            serviceOrderItem.addOrderItemMessageItem(orderMessage);
+        }
+        if ("106".equalsIgnoreCase(code)) {
+            orderMessage.setField("service.id");
+            orderMessage.setMessageInformation("Incorrect service.id provided – not found in Inventory (AAI)");
+            serviceOrderItem.addOrderItemMessageItem(orderMessage);
+        }
+        if ("107".equalsIgnoreCase(code)) {
+            orderMessage.setMessageInformation("tenantId not found in AAI");
+            serviceOrderItem.addOrderItemMessageItem(orderMessage);
+        }
+        serviceOrderRepository.save(serviceOrder);
+    }
 
 }

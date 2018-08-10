@@ -281,6 +281,30 @@ public class ApiTest {
 
     }
 
+
+    @Test
+    public void testCheckServiceOrderWithUnknownSverviceSpecId() throws Exception {
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.getService().getServiceSpecification().setId("toto");
+        }
+
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("102");
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("serviceSpecification.id");
+        }
+    }
+
     @Test
     public void testCheckServiceOrderWithGenericCustomer() throws Exception {
 
@@ -337,6 +361,80 @@ public class ApiTest {
 
     }
 
+    @Test
+    public void testCheckServiceOrderInDeleteWithNoServiceId() throws Exception {
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.DELETE);
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.getService().setId(null);
+        }
+
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("101");
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("service.id");
+        }
+    }
+
+    @Test
+    public void testCheckServiceOrderInAddWithServiceId() throws Exception {
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.getService().setId("toto");
+        }
+
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("103");
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("service.id");
+        }
+    }
+
+    @Test
+    public void testCheckServiceOrderWithUnKnownCustomerInChange() throws Exception {
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.DELETE);
+        List<RelatedParty> customers = new ArrayList<>();
+        RelatedParty customer = new RelatedParty();
+        customer.setId("new");
+        customer.setRole("ONAPcustomer");
+        customer.setName("romain");
+        customers.add(customer);
+        testServiceOrder.setRelatedParty(customers);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+
+        assertThat(serviceOrderChecked.getOrderMessage().size()).isGreaterThan(0);
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getCode()).isEqualTo("104");
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getField()).isEqualTo("relatedParty.id");
+    }
+
+
 
     @Test
     public void testCheckServiceOrderWithCustomerAAINotResponding() throws Exception {
@@ -360,7 +458,44 @@ public class ApiTest {
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
 
+
+        assertThat(serviceOrderChecked.getOrderMessage().size()).isGreaterThan(0);
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getCode()).isEqualTo("501");
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getMessageInformation()).isEqualTo("Problem with AAI API");
     }
+
+
+    @Test
+    public void testCheckServiceOrderWithSDCNotResponding() throws Exception {
+
+        removeWireMockMapping("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/metadata");
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        List<RelatedParty> customers = new ArrayList<>();
+        RelatedParty customer = new RelatedParty();
+        customer.setId("new");
+        customer.setRole("ONAPcustomer");
+        customer.setName("romain");
+        customers.add(customer);
+        testServiceOrder.setRelatedParty(customers);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+
+
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("102");
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("serviceSpecification.id");
+        }
+    }
+
+
 
 
     @Test
@@ -423,6 +558,11 @@ public class ApiTest {
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
 
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("106");
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("service.id");
+        }
     }
 
     @Test
@@ -514,6 +654,13 @@ public class ApiTest {
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
 
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if(serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+                assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("102");
+                assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("serviceSpecification.id");
+            }
+        }
     }
 
     @Test

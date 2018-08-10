@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -83,7 +84,7 @@ public class SOTaskProcessor {
 
         if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
 
-            ResponseEntity<CreateServiceInstanceResponse> response = postServiceOrderItem(serviceOrderInfo,
+            ResponseEntity<CreateServiceInstanceResponse> response = postServiceOrderItem(serviceOrderInfo,serviceOrder,
                 serviceOrderItem);
             updateServiceOrderItem(response, serviceOrderItem,serviceOrder);
         }
@@ -108,10 +109,10 @@ public class SOTaskProcessor {
     }
 
     private ResponseEntity<CreateServiceInstanceResponse> postServiceOrderItem(ServiceOrderInfo serviceOrderInfo,
-        ServiceOrderItem serviceOrderItem) {
+        ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem) {
         ResponseEntity<CreateServiceInstanceResponse> response = null;
         try {
-            response = postSORequest(serviceOrderItem, serviceOrderInfo);
+            response = postSORequest(serviceOrderItem,serviceOrder, serviceOrderInfo);
         } catch (NullPointerException e) {
             LOGGER.error("Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
             response = null;
@@ -145,7 +146,7 @@ public class SOTaskProcessor {
     }
 
     private ResponseEntity<CreateServiceInstanceResponse> postSORequest(ServiceOrderItem serviceOrderItem,
-        ServiceOrderInfo serviceOrderInfo) {
+        ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
         RequestDetails requestDetails = buildSoRequest(serviceOrderItem,
             serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()).getCatalogResponse(),
             serviceOrderInfo.getSubscriberInfo());
@@ -157,10 +158,13 @@ public class SOTaskProcessor {
                 response = soClient.callCreateServiceInstance(msoPayload);
                 break;
             case DELETE:
-                response = soClient.callDeleteServiceInstance(msoPayload, serviceOrderItem.getService().getId());
+                response = soClient.callDeleteServiceInstance(msoPayload,serviceOrderItem.getService().getId());
                 break;
             default:
                 break;
+        }
+        if(response!=null && response.getStatusCode()== HttpStatus.INTERNAL_SERVER_ERROR) {
+            serviceOrderService.addOrderMessage(serviceOrder, "502");
         }
         return response;
     }
@@ -326,8 +330,8 @@ public class SOTaskProcessor {
     private void updateServiceOrderItem(ResponseEntity<CreateServiceInstanceResponse> response,
         ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
 
-        if (response == null) {
-            LOGGER.warn("response=null for serviceOrderItem.id=" + orderItem.getId());
+        if (response==null || !response.getStatusCode().is2xxSuccessful()) {
+            LOGGER.warn("response ko for serviceOrderItem.id=" + orderItem.getId());
             serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.FAILED);
         }
         else {

@@ -80,6 +80,11 @@ public class ServiceOrderItem {
     @JsonProperty("service")
     private Service service = null;
 
+
+    @JsonProperty("orderMessage")
+    private List<OrderMessage> orderItemMessage = new ArrayList<>();
+
+
     public ServiceOrderItem id(String id) {
         this.id = id;
         return this;
@@ -257,6 +262,46 @@ public class ServiceOrderItem {
         this.requestId = requestId;
     }
 
+
+    public ServiceOrderItem orderItemMessage(List<OrderMessage> orderItemMessage) {
+        this.orderItemMessage = orderItemMessage;
+        return this;
+    }
+
+    public ServiceOrderItem addOrderItemMessageItem(OrderMessage orderItemMessageItem) {
+        if (this.orderItemMessage == null) {
+            this.orderItemMessage = new ArrayList<OrderMessage>();
+        }
+        boolean mesageAlreadyExist=false;
+        for (OrderMessage message : this.orderItemMessage) {
+            if(message.getCode().equals(orderItemMessageItem.getCode())){
+                mesageAlreadyExist=true;
+
+            }
+        }
+        if(!mesageAlreadyExist) {
+            this.orderItemMessage.add(orderItemMessageItem);
+        }
+        return this;
+    }
+
+    /**
+     *
+     * @return orderItemMessage
+     **/
+    @JsonProperty("orderItemMessage")
+    @ApiModelProperty(value = "")
+    public List<OrderMessage> getOrderItemMessage() {
+        return orderItemMessage;
+    }
+
+    public void setOrderMessage(List<OrderMessage> orderItemMessage) {
+        this.orderItemMessage = orderItemMessage;
+    }
+
+
+
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -273,13 +318,15 @@ public class ServiceOrderItem {
                 && Objects.equals(this.baseType, serviceOrderItem.baseType)
                 && Objects.equals(this.orderItemRelationship, serviceOrderItem.orderItemRelationship)
                 && Objects.equals(this.service, serviceOrderItem.service)
-                && Objects.equals(this.requestId, serviceOrderItem.requestId);
+                && Objects.equals(this.requestId, serviceOrderItem.requestId)
+                && Objects.equals(this.orderItemMessage, serviceOrderItem.orderItemMessage);
+
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, action, state, type, schemaLocation, baseType, orderItemRelationship, service,
-                requestId);
+                requestId,orderItemMessage);
     }
 
 
@@ -287,7 +334,6 @@ public class ServiceOrderItem {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class ServiceOrderItem {\n");
-
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    action: ").append(toIndentedString(action)).append("\n");
         sb.append("    state: ").append(toIndentedString(state)).append("\n");
@@ -297,6 +343,7 @@ public class ServiceOrderItem {
         sb.append("    orderItemRelationship: ").append(toIndentedString(orderItemRelationship)).append("\n");
         sb.append("    requestId: ").append(toIndentedString(requestId)).append("\n");
         sb.append("    service: ").append(toIndentedString(service)).append("\n");
+        sb.append("    service: ").append(toIndentedString(orderItemMessage)).append("\n");
         sb.append("}");
         return sb.toString();
     }

@@ -41,12 +41,13 @@ public class CreateAAICustomerManager {
 
         if (serviceOrderInfo.isUseServiceOrderCustomer() && serviceOrderInfo.isAllItemsInAdd()
             && !serviceOrderConsumerService
-            .isCustomerPresentInAAI(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
+            .isCustomerPresentInAAI(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceOrder)) {
 
-            boolean customerCreated = serviceOrderConsumerService.putCustomer(serviceOrderInfo.getSubscriberInfo());
+            boolean customerCreated = serviceOrderConsumerService.putCustomer(serviceOrderInfo.getSubscriberInfo(), serviceOrder);
             if (!customerCreated) {
                 serviceOrderService.updateOrderState(serviceOrder,StateType.REJECTED);
                 LOGGER.warn("serviceOrder {} rejected : cannot create customer", serviceOrder.getId());
+                serviceOrderService.addOrderMessage(serviceOrder, "501");
             }
         }
     }
