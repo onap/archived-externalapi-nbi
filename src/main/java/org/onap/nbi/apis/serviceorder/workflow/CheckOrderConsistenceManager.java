@@ -101,7 +101,15 @@ public class CheckOrderConsistenceManager {
     private void handleServiceOrderItemInAdd(ServiceOrderInfo serviceOrderInfo,
         ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
         ServiceOrderItemInfo serviceOrderItemInfo) {
-        if (shouldAcceptServiceOrderItemToAdd(serviceOrderItem, serviceOrder, serviceOrderInfo.getServiceOrderId())) {
+    	Map<String,Object> sdcInfos = serviceOrderItemInfo.getCatalogResponse();
+        boolean e2eService = false;
+        String category = ((String)sdcInfos.get("category")).toLowerCase();
+    	// Until SO comes up with one consolidated API for Service CRUD, ExtAPI has to be handle SO (serviceInstance and e2eServiceInstances )APIs for service CRUD
+        // All E2E Services are required to be created in SDC under category "E2E Services" until SO fixes the multiple API issue.
+        if(category.startsWith("e2e")) {
+    		    e2eService = true;
+        }
+        if (shouldAcceptServiceOrderItemToAdd(serviceOrderItem, serviceOrder, serviceOrderInfo.getServiceOrderId(), e2eService)) {
             serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
         } else {
             serviceOrderInfo.setIsServiceOrderRejected(true);
@@ -110,14 +118,14 @@ public class CheckOrderConsistenceManager {
     }
 
     private boolean shouldAcceptServiceOrderItemToAdd(ServiceOrderItem serviceOrderItem,
-        ServiceOrder serviceOrder, String serviceOrderId) {
+        ServiceOrder serviceOrder, String serviceOrderId, Boolean e2eService) {
         if (!StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
             LOGGER
                 .warn("serviceOrderItem {} for serviceorder {} rejected cause service.id must be empty in add action",
                     serviceOrderItem.getId(), serviceOrderId);
             serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "103");
             return false;
-        } else if (!serviceOrderConsumerService.isTenantIdPresentInAAI(serviceOrder)) {
+        } else if (!serviceOrderConsumerService.isTenantIdPresentInAAI(serviceOrder) && !e2eService) {
             LOGGER.warn("serviceOrderItem {}  for serviceOrder {} rejected cause tenantId not found in AAI",
                 serviceOrderItem.getId(), serviceOrderId);
             serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "107");

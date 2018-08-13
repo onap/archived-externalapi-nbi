@@ -776,6 +776,43 @@ public class ApiTest {
 
     }
 
+    @Test
+    public void testE2EExecutionTaskSuccess() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForE2EExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+
+
+    }
 
     @Test
     public void testExecutionTaskDeleteSuccess() throws Exception {
@@ -856,7 +893,44 @@ public class ApiTest {
     }
 
 
+    @Test
+    public void testE2EExecutionTaskFailed() throws Exception {
 
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForE2EExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.ADD);
+
+        removeWireMockMapping("/ecomp/mso/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA.getNbRetries()).isEqualTo(2);
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        executionTaskA = getExecutionTask("A");
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        executionTaskA = getExecutionTask("A");
+        SoTaskProcessor.processOrderItem(executionTaskA);
+
+        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+
+    }
 
     @Test
     public void testExecutionTaskFailedNoSoResponse() throws Exception {
@@ -888,6 +962,27 @@ public class ApiTest {
 
         removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v6");
         removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v6/requestId");
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+    
+    @Test
+    public void testE2EExecutionTaskFailedNoSoAndStatusResponse() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForE2EExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.ADD);
+
+        removeWireMockMapping("/ecomp/mso/infra/e2eServiceInstances/v3");
+        removeWireMockMapping("/ecomp/mso/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
