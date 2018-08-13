@@ -1,0 +1,25 @@
+{
+"request": {
+    "method": "GET",
+    "url": "/ecomp/mso/infra/e2eServiceInstances/v3/serviceId/operations/operationId"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "operation": {
+        "operationId": "operationid",
+        "operation": "create",
+        "result": "finished",
+        "reason": "",
+        "userid": "",
+        "operationContent": "Creating E2E SOTN Service",
+        "progress": 100,
+        "operateAt": "",
+        "finishedAt": ""
+      }
+    }
+  }
+}
