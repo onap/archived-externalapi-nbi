@@ -18,6 +18,7 @@ import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderItemInfo;
 import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
+import org.onap.nbi.apis.serviceorder.utils.E2EServiceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +102,8 @@ public class CheckOrderConsistenceManager {
     private void handleServiceOrderItemInAdd(ServiceOrderInfo serviceOrderInfo,
         ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
         ServiceOrderItemInfo serviceOrderItemInfo) {
-        if (shouldAcceptServiceOrderItemToAdd(serviceOrderItem, serviceOrder, serviceOrderInfo.getServiceOrderId())) {
+    	boolean e2eService= E2EServiceUtils.isE2EService(serviceOrderItemInfo);
+        if (shouldAcceptServiceOrderItemToAdd(serviceOrderItem, serviceOrder, serviceOrderInfo.getServiceOrderId(), e2eService)) {
             serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
         } else {
             serviceOrderInfo.setIsServiceOrderRejected(true);
@@ -110,14 +112,14 @@ public class CheckOrderConsistenceManager {
     }
 
     private boolean shouldAcceptServiceOrderItemToAdd(ServiceOrderItem serviceOrderItem,
-        ServiceOrder serviceOrder, String serviceOrderId) {
+        ServiceOrder serviceOrder, String serviceOrderId, Boolean e2eService) {
         if (!StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
             LOGGER
                 .warn("serviceOrderItem {} for serviceorder {} rejected cause service.id must be empty in add action",
                     serviceOrderItem.getId(), serviceOrderId);
             serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "103");
             return false;
-        } else if (!serviceOrderConsumerService.isTenantIdPresentInAAI(serviceOrder)) {
+        } else if (!e2eService && !serviceOrderConsumerService.isTenantIdPresentInAAI(serviceOrder)) {
             LOGGER.warn("serviceOrderItem {}  for serviceOrder {} rejected cause tenantId not found in AAI",
                 serviceOrderItem.getId(), serviceOrderId);
             serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "107");

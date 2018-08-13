@@ -45,4 +45,7 @@ public final class OnapComponentsUrlPaths {
     public static final String MSO_CREATE_SERVICE_INSTANCE_PATH = "/ecomp/mso/infra/serviceInstances/v6";
     public static final String MSO_GET_REQUEST_STATUS_PATH = "/ecomp/mso/infra/orchestrationRequests/v6/";
     public static final String MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/v6/";
+    public static final String MSO_CREATE_E2ESERVICE_INSTANCE_PATH = "/ecomp/mso/infra/e2eServiceInstances/v3";
+    public static final String MSO_DELETE_E2ESERVICE_INSTANCE_PATH = "/ecomp/mso/infra/e2eServiceInstances/v3/";
+    public static final String MSO_GET_E2EREQUEST_STATUS_PATH = "/ecomp/mso/infra/e2eServiceInstances/v3/$serviceId/operations/$operationId";
 }
