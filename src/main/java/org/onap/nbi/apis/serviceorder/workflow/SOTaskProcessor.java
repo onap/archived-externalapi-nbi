@@ -81,18 +81,36 @@ public class SOTaskProcessor {
 
         ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderInfo.getServiceOrderId());
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
-
+        Map<String,Object> sdcInfos = serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()).getCatalogResponse();
+        boolean e2eService = false;
+        String category = ((String)sdcInfos.get("category")).toLowerCase();
+    	// Until SO comes up with one consolidated API for Service CRUD, ExtAPI has to be handle SO (serviceInstance and e2eServiceInstances )APIs for service CRUD
+        // All E22 Services are required to be created in SDC under category "E2E Services" until SO fixes the multiple API issue.
+        if(category.startsWith("e2e")) {
+    		    e2eService = true;
+        }
+        
         if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+        	if (e2eService) {
+                ResponseEntity<CreateE2EServiceInstanceResponse> response = postE2EServiceOrderItem(serviceOrderInfo,
+                    serviceOrderItem, serviceOrder);
+                updateE2EServiceOrderItem(response, serviceOrderItem, serviceOrder);
+            } else {
 
-            ResponseEntity<CreateServiceInstanceResponse> response = postServiceOrderItem(serviceOrderInfo,serviceOrder,
-                serviceOrderItem);
-            updateServiceOrderItem(response, serviceOrderItem,serviceOrder);
+                ResponseEntity<CreateServiceInstanceResponse> response = postServiceOrderItem(serviceOrderInfo,serviceOrder,
+                    serviceOrderItem);
+                updateServiceOrderItem(response, serviceOrderItem,serviceOrder);
+            }
         }
 
         if (executionTask.getNbRetries() > 0 && StateType.FAILED != serviceOrderItem.getState()
             ) {
             // TODO lancer en asynchrone
-            pollSoRequestStatus(serviceOrder,serviceOrderItem);
+        	if (e2eService)
+                pollE2ESoRequestStatus(serviceOrder, serviceOrderItem);
+            else
+                pollSoRequestStatus(serviceOrder, serviceOrderItem);
+            
             if (serviceOrderItem.getState().equals(StateType.COMPLETED)) {
                 updateSuccessTask(executionTask);
             } else {
@@ -120,6 +138,18 @@ public class SOTaskProcessor {
         return response;
     }
 
+    private ResponseEntity<CreateE2EServiceInstanceResponse> postE2EServiceOrderItem(ServiceOrderInfo serviceOrderInfo,
+        ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder) {
+        ResponseEntity<CreateE2EServiceInstanceResponse> response;
+        try {
+            response = postE2ESORequest(serviceOrderItem, serviceOrderInfo, serviceOrder);
+        } catch (NullPointerException e) {
+            LOGGER.error("Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
+            response = null;
+        }
+        return response;
+    }
+    
     private ServiceOrderItem getServiceOrderItem(ExecutionTask executionTask, ServiceOrder serviceOrder) {
         for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
             if (item.getId().equals(executionTask.getOrderItemId())) {
@@ -169,6 +199,27 @@ public class SOTaskProcessor {
         return response;
     }
 
+    private ResponseEntity<CreateE2EServiceInstanceResponse> postE2ESORequest(ServiceOrderItem serviceOrderItem,
+        ServiceOrderInfo serviceOrderInfo, ServiceOrder serviceOrder) {
+        ServiceModel service = buildE2ESoRequest(serviceOrderItem, serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()).getCatalogResponse(), serviceOrderInfo.getSubscriberInfo(), serviceOrder);
+        MSOE2EPayload msoE2EPayload = new MSOE2EPayload(service);
+        ResponseEntity<CreateE2EServiceInstanceResponse> response = null;
+        switch (serviceOrderItem.getAction()) {
+            case ADD:
+                response = soClient.callE2ECreateServiceInstance(msoE2EPayload);
+                break;
+            case DELETE:
+                response = soClient.callE2EDeleteServiceInstance(service.getGlobalSubscriberId(), service.getServiceType(),serviceOrderItem.getService().getId());
+                break;
+            default:
+                break;
+        }
+        if(response!=null && response.getStatusCode()== HttpStatus.INTERNAL_SERVER_ERROR) {
+            serviceOrderService.addOrderMessage(serviceOrder, "502");
+        }
+        return response;
+    }
+    
     private void updateServiceOrder(ServiceOrder serviceOrder) {
         boolean atLeastOneCompleted = false;
         boolean atLeastOneNotFinished = false;
@@ -250,6 +301,47 @@ public class SOTaskProcessor {
         }
     }
 
+    private void pollE2ESoRequestStatus(ServiceOrder serviceOrder, ServiceOrderItem orderItem) throws InterruptedException {
+        boolean stopPolling = false;
+        String operationId = orderItem.getRequestId();
+        String serviceId = orderItem.getService().getId();
+        int nbRetries = 0;
+        GetE2ERequestStatusResponse response = null;
+        final String ERROR = "error";
+        final String FINISHED = "finished";
+        final String PROCESSING = "processing";
+        String result = null;
+        while (!stopPolling) {
+            response = soClient.callE2EGetRequestStatus(operationId, serviceId);
+            if (response != null) {
+                result = response.getOperation().getResult();
+                if (PROCESSING.equals(result)) {
+                    nbRetries++;
+                    serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.INPROGRESS);
+                    Thread.sleep(1000);
+                    LOGGER.debug("orderitem id {} still in progress from so",orderItem.getId());
+                } else if (ERROR.equals(result)) {
+                	serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.FAILED);
+                    stopPolling = true;
+                    LOGGER.debug("orderitem id {} failed, response from request status {}",orderItem.getId(),response.getOperation().getResult());
+                } else if (FINISHED.equals(result)) {
+                	serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.COMPLETED);
+                    stopPolling = true;
+                    LOGGER.debug("orderitem id {} completed");
+                }
+            } else {
+            	serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.INPROGRESS);
+                stopPolling = true;
+                LOGGER.debug("orderitem id {} still in progress from so",orderItem.getId());
+            }
+            if (nbRetries == 3) {
+                stopPolling = true;
+                LOGGER.debug("orderitem id {} stop polling from getrequeststatus, 3 retries done",orderItem.getId());
+
+            }
+        }
+    }
+    
     /**
      * Build SO CREATE request from the ServiceOrder and catalog informations from SDC
      *
@@ -302,6 +394,57 @@ public class SOTaskProcessor {
 
         return requestDetails;
     }
+    
+    /**
+     * Build E2E SO CREATE request from the ServiceOrder and catalog informations from SDC
+     *
+     * @param serviceOrderItem
+     * @param serviceOrder
+     * @param sdcInfos
+     * @return
+     */
+    //ServiceOrderItem serviceOrderItem --> orderItem?
+    private ServiceModel buildE2ESoRequest(ServiceOrderItem serviceOrderItem, Map<String, Object> sdcInfos,
+            SubscriberInfo subscriberInfo, ServiceOrder serviceOrder) {
+
+        subscriberInfo.getGlobalSubscriberId();
+        ServiceModel service = new ServiceModel();
+        service.setName(serviceOrderItem.getService().getName());
+        service.setDescription(serviceOrder.getDescription());
+        service.setServiceUuid(serviceOrderItem.getService().getServiceSpecification().getId());
+        service.setServiceInvariantUuid((String) sdcInfos.get("invariantUUID"));
+        service.setGlobalSubscriberId(subscriberInfo.getGlobalSubscriberId());
+        service.setServiceType((String) sdcInfos.get("name"));
+
+        ParametersModel parameters = new ParametersModel();
+        ArrayList<ResourceModel> resources = new ArrayList();
+
+        ArrayList<Object> resourceObjects = (ArrayList<Object>)sdcInfos.get("resourceSpecification");
+
+        for(int i = 0; i < resourceObjects.size(); i++) {
+
+            ResourceModel resourceModel = new ResourceModel((Map<String, Object>)resourceObjects.get(i));
+            ParametersModel resourceParameters = new ParametersModel();
+            resourceModel.setParameters(resourceParameters);
+            resources.add(resourceModel);
+
+        }
+        parameters.setResources(resources);
+        List<UserParams> userParams = retrieveUserParamsFromServiceCharacteristics(serviceOrderItem.getService().getServiceCharacteristic());
+
+        // If there are ServiceCharacteristics add them to requestInputs
+        if (!userParams.isEmpty()){
+        	Map<String, String> requestInputs = new HashMap<String, String>();
+	        for (int i = 0; i < userParams.size(); i++) {
+				requestInputs.put(userParams.get(i).getName(), userParams.get(i).getValue());
+			}
+
+	        parameters.setRequestInputs(requestInputs);
+        }
+        service.setParameters(parameters);
+
+        return service;
+    }
 
     /**
      * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics from SDC
@@ -351,6 +494,36 @@ public class SOTaskProcessor {
         }
     }
 
+    /**
+     * Update E2EServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
+     *  @param response
+     * @param orderItem
+     * @param serviceOrder
+     */
+    private void updateE2EServiceOrderItem(ResponseEntity<CreateE2EServiceInstanceResponse> response,
+        ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
+
+    	if (response==null || !response.getStatusCode().is2xxSuccessful()) {
+            LOGGER.warn("response ko for serviceOrderItem.id=" + orderItem.getId());
+            serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.FAILED);
+        }
+        else {
+            CreateE2EServiceInstanceResponse createE2EServiceInstanceResponse = response.getBody();
+            if (createE2EServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
+                orderItem.getService().setId(createE2EServiceInstanceResponse.getService().getServiceId());
+                orderItem.setRequestId(createE2EServiceInstanceResponse.getService().getOperationId());
+            }
+
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null
+                || response.getBody().getService().getOperationId() == null || response.getBody().getService().getServiceId() == null) {
+            	serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.FAILED);
+                LOGGER.warn("order item {} failed , status {} , response {}",orderItem.getId(),response.getStatusCode(),response.getBody());
+            } else {
+                serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.INPROGRESS);
+            }
+        }
+    }
+    
     /**
      * Update an executionTask in database when it's process with a success
      *

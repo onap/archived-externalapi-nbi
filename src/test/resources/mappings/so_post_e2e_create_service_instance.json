@@ -1,0 +1,18 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/ecomp/mso/infra/e2eServiceInstances/v3"
+    },
+    "response": {
+        "status": 201,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "jsonBody": {
+            "service": {
+                "serviceId": "serviceId",
+                "operationId": "operationId"
+            }
+        }
+    }
+}
