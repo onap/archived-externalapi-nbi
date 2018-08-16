@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-version: "2"
+version: "2.1"
 services:
   mongo:
     image: mongo:3
@@ -35,7 +35,7 @@ services:
       MYSQL_USER: rene
 # APP  ***************************************************************************************
   nbi:
-    image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:latest
+    image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:${DOCKER_IMAGE_VERSION:-latest}
     ports:
     - 8080:8080
     env_file:
