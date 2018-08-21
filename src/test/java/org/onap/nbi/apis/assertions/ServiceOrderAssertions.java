@@ -23,11 +23,14 @@ import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.OrderItemRelationship;
 import org.onap.nbi.apis.serviceorder.model.OrderRelationship;
 import org.onap.nbi.apis.serviceorder.model.RelatedParty;
+import org.onap.nbi.apis.serviceorder.model.ResourceSpecification;
 import org.onap.nbi.apis.serviceorder.model.Service;
+import org.onap.nbi.apis.serviceorder.model.ServiceCharacteristic;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.ServiceSpecificationRef;
 import org.onap.nbi.apis.serviceorder.model.StateType;
+import org.onap.nbi.apis.serviceorder.model.Value;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
@@ -178,6 +181,7 @@ public class ServiceOrderAssertions {
         sdcResponse.put("invariantUUID", "uuid");
         sdcResponse.put("name", "vFW");
         sdcResponse.put("version", "v1");
+        sdcResponse.put("category", "NonE2E");
 
         ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
         serviceOrderInfo.setServiceOrderId("test");
@@ -212,6 +216,83 @@ public class ServiceOrderAssertions {
         return executionTaskA;
     }
 
+    public static ExecutionTask setUpBddForE2EExecutionTaskSucess(ServiceOrderRepository serviceOrderRepository,
+            ExecutionTaskRepository executionTaskRepository,
+            ActionType actionType) {
+            ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
+
+            for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+                serviceOrderItem.setState(StateType.ACKNOWLEDGED);
+                List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
+                ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
+                serviceCharacteristic1.setName("access-site-id");
+                Value value1 = new Value();
+                value1.setServiceCharacteristicValue("1234765");
+				serviceCharacteristic1.setValue(value1);
+				serviceCharacteristics.add(serviceCharacteristic1);
+				ServiceCharacteristic serviceCharacteristic2 = new ServiceCharacteristic();
+                serviceCharacteristic2.setName("provider-site-id");
+                Value value2 = new Value();
+                value2.setServiceCharacteristicValue("654321");
+				serviceCharacteristic2.setValue(value2);
+				serviceCharacteristics.add(serviceCharacteristic2);
+				serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+            }
+
+            testServiceOrder.setState(StateType.ACKNOWLEDGED);
+            testServiceOrder.setId("test");
+            serviceOrderRepository.save(testServiceOrder);
+
+            LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
+            sdcResponse.put("invariantUUID", "uuid");
+            sdcResponse.put("name", "vFW");
+            sdcResponse.put("version", "v1");
+            sdcResponse.put("category", "E2E Service");
+
+            List<ResourceSpecification> resourceSpecs = new ArrayList<>();
+            ResourceSpecification resourceSpecificationA = new ResourceSpecification();
+            resourceSpecificationA.setId("2e3feeb0-8e36-46c6-862c-236d9c626438");
+            resourceSpecificationA.setInstanceName("vFW-vSINK");
+            resourceSpecificationA.setName("vFW-SINK");
+            resourceSpecificationA.setType("ONAPresource");
+            resourceSpecificationA.setVersion("2.0");
+            resourceSpecificationA.setResourceInvariantUUID("6e3feeb0-8e36-46c6-862c-236d9c626438");
+            resourceSpecs.add(resourceSpecificationA);
+
+            sdcResponse.put("resourceSpecification", resourceSpecs );
+
+            ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+            serviceOrderInfo.setServiceOrderId("test");
+            SubscriberInfo subscriberInfo = new SubscriberInfo();
+            subscriberInfo.setGlobalSubscriberId("6490");
+            subscriberInfo.setSubscriberName("edgar");
+            serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+
+            ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
+            serviceOrderItemInfoA.setId("A");
+            serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+
+            ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
+            serviceOrderItemInfoB.setId("B");
+            serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
+            serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
+            serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+
+            String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+
+            ExecutionTask executionTaskA = new ExecutionTask();
+            executionTaskA.setNbRetries(3);
+            executionTaskA.setOrderItemId("A");
+            executionTaskA.setServiceOrderInfoJson(json);
+            executionTaskA = executionTaskRepository.save(executionTaskA);
+            ExecutionTask executionTaskB = new ExecutionTask();
+            executionTaskB.setNbRetries(3);
+            executionTaskB.setOrderItemId("B");
+            executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
+            executionTaskB.setServiceOrderInfoJson(json);
+            executionTaskRepository.save(executionTaskB);
+            return executionTaskA;
+        }
 
 
 }
