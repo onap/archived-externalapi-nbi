@@ -83,7 +83,7 @@ public class SOTaskProcessor {
         ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderInfo.getServiceOrderId());
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
         boolean e2eService = E2EServiceUtils.isE2EService(serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()));
-        
+
         if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
         	if (e2eService) {
                 ResponseEntity<CreateE2EServiceInstanceResponse> response = postE2EServiceOrderItem(serviceOrderInfo,
@@ -104,7 +104,7 @@ public class SOTaskProcessor {
                 pollE2ESoRequestStatus(serviceOrder, serviceOrderItem);
             else
                 pollSoRequestStatus(serviceOrder, serviceOrderItem);
-            
+
             if (serviceOrderItem.getState().equals(StateType.COMPLETED)) {
                 updateSuccessTask(executionTask);
             } else {
@@ -143,7 +143,7 @@ public class SOTaskProcessor {
         }
         return response;
     }
-    
+
     private ServiceOrderItem getServiceOrderItem(ExecutionTask executionTask, ServiceOrder serviceOrder) {
         for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
             if (item.getId().equals(executionTask.getOrderItemId())) {
@@ -187,10 +187,24 @@ public class SOTaskProcessor {
             default:
                 break;
         }
-        if(response!=null && response.getStatusCode()== HttpStatus.INTERNAL_SERVER_ERROR) {
-            serviceOrderService.addOrderMessage(serviceOrder, "502");
-        }
+        buildOrderMessageIfNeeded(serviceOrderItem, serviceOrder, response);
         return response;
+    }
+
+    private void buildOrderMessageIfNeeded(ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder,
+        ResponseEntity<?> response) {
+        if(response!=null)
+        {
+            if(response.getStatusCode()== HttpStatus.INTERNAL_SERVER_ERROR) {
+                serviceOrderService.addOrderMessage(serviceOrder, "502");
+            }
+            if(response.getStatusCode()== HttpStatus.BAD_REQUEST) {
+                ResponseEntity<?> messageError=response;
+                if(messageError.getBody().toString().toLowerCase().contains("serviceinstance already exists")){
+                    serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "105");
+                }
+            }
+        }
     }
 
     private ResponseEntity<CreateE2EServiceInstanceResponse> postE2ESORequest(ServiceOrderItem serviceOrderItem,
@@ -208,12 +222,10 @@ public class SOTaskProcessor {
             default:
                 break;
         }
-        if(response!=null && response.getStatusCode()== HttpStatus.INTERNAL_SERVER_ERROR) {
-            serviceOrderService.addOrderMessage(serviceOrder, "502");
-        }
+        buildOrderMessageIfNeeded(serviceOrderItem, serviceOrder, response);
         return response;
     }
-    
+
     private void updateServiceOrder(ServiceOrder serviceOrder) {
         boolean atLeastOneCompleted = false;
         boolean atLeastOneNotFinished = false;
@@ -335,7 +347,7 @@ public class SOTaskProcessor {
             }
         }
     }
-    
+
     /**
      * Build SO CREATE request from the ServiceOrder and catalog informations from SDC
      *
@@ -388,7 +400,7 @@ public class SOTaskProcessor {
 
         return requestDetails;
     }
-    
+
     /**
      * Build E2E SO CREATE request from the ServiceOrder and catalog informations from SDC
      *
@@ -517,7 +529,7 @@ public class SOTaskProcessor {
             }
         }
     }
-    
+
     /**
      * Update an executionTask in database when it's process with a success
      *

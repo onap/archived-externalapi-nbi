@@ -54,7 +54,7 @@ public class ServiceInventoryService {
 
         if (StringUtils.isEmpty(serviceSpecId) && StringUtils.isEmpty(serviceSpecName)) {
             throw new BackendFunctionalException(HttpStatus.NOT_FOUND,
-                "serviceSpecName or serviceSpecId must be provided");
+                "serviceSpecName or serviceSpecId must be provided","serviceSpecName or serviceSpecId must be provided");
         }
 
         String customerId = getCustomerId(clientId);
@@ -68,7 +68,7 @@ public class ServiceInventoryService {
             addRelatedPartyId(customerId, serviceInventoryResponse);
             return serviceInventoryResponse;
         } else {
-            throw new BackendFunctionalException(HttpStatus.NOT_FOUND, "no catalog service found");
+            throw new BackendFunctionalException(HttpStatus.NOT_FOUND, "no catalog service found","no catalog service found");
         }
 
     }

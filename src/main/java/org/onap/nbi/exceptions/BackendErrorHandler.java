@@ -15,10 +15,12 @@
  */
 package org.onap.nbi.exceptions;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.IOUtils;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
-import java.io.IOException;
 
 public class BackendErrorHandler implements ResponseErrorHandler {
 
@@ -32,7 +34,12 @@ public class BackendErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
         if (response.getStatusCode() != null) {
-            throw new BackendFunctionalException(response.getStatusCode(), response.getStatusText());
+            String body=null;
+            if(response.getBody()!=null) {
+                body = IOUtils.toString(response.getBody(), StandardCharsets.UTF_8.name());
+            }
+
+            throw new BackendFunctionalException(response.getStatusCode(), response.getStatusText(),body);
         }
     }
 }

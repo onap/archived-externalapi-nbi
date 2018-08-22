@@ -21,13 +21,20 @@ public class BackendFunctionalException extends ApiException {
 
     private final HttpStatus httpStatus;
 
-    public BackendFunctionalException(HttpStatus httpStatus, String message) {
+    private final String bodyResponse;
+
+    public BackendFunctionalException(HttpStatus httpStatus, String message, String bodyResponse) {
         super(message);
         this.httpStatus = httpStatus;
+        this.bodyResponse = bodyResponse;
     }
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
+    }
+
+    public String getBodyResponse() {
+        return bodyResponse;
     }
 
 }

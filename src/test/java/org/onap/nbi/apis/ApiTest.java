@@ -17,6 +17,8 @@ package org.onap.nbi.apis;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -128,9 +130,26 @@ public class ApiTest {
             if (mapping.getRequest().getUrl().equals(s)) {
                 mappingToDelete = mapping;
             }
+
+
         }
+
         wireMockServer.removeStubMapping(mappingToDelete);
     }
+
+    private void changeWireMockResponse(String s,int statusCode, String bodyContent) {
+        ListStubMappingsResult listStubMappingsResult = wireMockServer.listAllStubMappings();
+        ResponseDefinition responseDefinition = new ResponseDefinition(statusCode,bodyContent);
+        List<StubMapping> mappings = listStubMappingsResult.getMappings();
+        for (StubMapping mapping : mappings) {
+            if (mapping.getRequest().getUrl().equals(s)) {
+                mapping.setResponse(responseDefinition);
+            }
+        }
+    }
+
+
+
 
     // serviceCatalog
 
@@ -1033,4 +1052,39 @@ public class ApiTest {
         assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
+
+
+    @Test
+    public void testExecutionTaskFailedBadRequestSo() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.ADD);
+
+
+        changeWireMockResponse("/ecomp/mso/infra/serviceInstances/v6",400,"\"serviceException\": {\n"
+            + "        \"messageId\": \"SVC0002\",\n"
+            + "        \"text\": \"Error parsing request.  org.openecomp.mso.apihandler.common.ValidationException: serviceInstance already existsd\"\n"
+            + "    }");
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if(serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+                assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("105");
+                assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("service.name");
+            }
+        }
+
+    }
+
+
 }

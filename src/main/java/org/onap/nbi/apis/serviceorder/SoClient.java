@@ -77,7 +77,7 @@ public class SoClient {
 
         } catch (BackendFunctionalException e) {
             LOGGER.error("error on calling " + url + " ," + e);
-            return new ResponseEntity<>(e.getHttpStatus());
+            return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
             LOGGER.error("error on calling " + url + " ," + e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,7 +101,7 @@ public class SoClient {
 
         } catch (BackendFunctionalException e) {
             LOGGER.error("error on calling " + url + " ," + e);
-            return new ResponseEntity<>(e.getHttpStatus());
+            return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
             LOGGER.error("error on calling " + url + " ," + e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
