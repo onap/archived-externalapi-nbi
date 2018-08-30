@@ -74,7 +74,6 @@ public class ServiceOrderService {
     }
 
 
-
     public void addOrderMessage(ServiceOrder serviceOrder, String code) {
         OrderMessage orderMessage = new OrderMessage();
         orderMessage.setCode(code);
@@ -142,6 +141,17 @@ public class ServiceOrderService {
             orderMessage.setMessageInformation("tenantId not found in AAI");
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
+        serviceOrderRepository.save(serviceOrder);
+    }
+
+
+    public void addOrderItemMessageRequestSo(ServiceOrder serviceOrder,ServiceOrderItem serviceOrderItem, String message) {
+        OrderMessage orderMessage = new OrderMessage();
+        orderMessage.setCode("105");
+        orderMessage.setSeverity(SeverityMessage.ERROR);
+        orderMessage.setCorrectionRequired(true);
+        orderMessage.setMessageInformation(message);
+        serviceOrderItem.addOrderItemMessageItem(orderMessage);
         serviceOrderRepository.save(serviceOrder);
     }
 

@@ -62,7 +62,14 @@ public enum StateType {
 
     FAILED("failed"),
 
-    PARTIAL("partial");
+    PARTIAL("partial"),
+
+    INPROGRESS_MODIFY_REQUEST_DELETE_SEND("inProgressModifyRequestDeleteSend"),
+
+    INPROGRESS_MODIFY_ITEM_TO_CREATE("inProgressModifyItemToCreate"),
+
+    INPROGRESS_MODIFY_REQUEST_CREATE_SEND("inProgressModifyRequestCreateSend");
+
 
     private String value;
 
@@ -86,7 +93,12 @@ public enum StateType {
     }
 
     @JsonValue
-    public String value() {
+    public String value()
+    {
+        if("inProgressModifyRequestDeleteSend".equalsIgnoreCase(this.value) || "inProgressModifyItemToCreate".equalsIgnoreCase(this.value)
+            || "inProgressModifyRequestCreateSend".equalsIgnoreCase(this.value)) {
+            return INPROGRESS.value;
+        }
         return this.value;
     }
 

@@ -18,7 +18,10 @@ package org.onap.nbi.apis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
+import com.github.tomakehurst.wiremock.stubbing.ListStubMappingsResult;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,9 +58,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.stubbing.ListStubMappingsResult;
-import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -384,6 +384,31 @@ public class ApiTest {
     public void testCheckServiceOrderInDeleteWithNoServiceId() throws Exception {
 
         ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.DELETE);
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.getService().setId(null);
+        }
+
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        serviceOrderResource.scheduleCheckServiceOrders();
+
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
+
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("101");
+            assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("service.id");
+        }
+    }
+
+
+    @Test
+    public void testCheckServiceOrderInModifyWithNoServiceId() throws Exception {
+
+        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.MODIFY);
         for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
             serviceOrderItem.getService().setId(null);
         }
@@ -1085,6 +1110,99 @@ public class ApiTest {
         }
 
     }
+
+
+    @Test
+    public void testExecutionTaskModifySuccess() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.MODIFY);
+        ExecutionTask executionTaskB;
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                //assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        SoTaskProcessor.processOrderItem(executionTaskB);
+
+        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
+
+
+
+    @Test
+    public void testExecutionTaskModifyFailed() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.MODIFY);
+        ExecutionTask executionTaskB;
+        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v6/requestId");
+
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                //assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA.getNbRetries()).isEqualTo(2);
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        executionTaskA = getExecutionTask("A");
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        executionTaskA = getExecutionTask("A");
+        SoTaskProcessor.processOrderItem(executionTaskA);
+
+        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
 
 
 }
