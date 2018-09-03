@@ -113,13 +113,17 @@
 					<groupId>org.apache.tomcat.embed</groupId>
 					<artifactId>tomcat-embed-core</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
-			<version>8.5.33</version>
+			<version>8.5.32</version>
 		</dependency>
 
 		<dependency>
@@ -159,7 +163,7 @@
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.0</version>
+			<version>1.7.0</version>
 		</dependency>
 
 		<dependency>

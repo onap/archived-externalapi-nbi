@@ -13,6 +13,8 @@
  */
 package org.onap.nbi.apis.servicecatalog;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,15 +28,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.onap.nbi.exceptions.TechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class ToscaInfosProcessor {
@@ -96,7 +96,7 @@ public class ToscaInfosProcessor {
             Object aDefault = parameter.get("default");
             if (parameter.get("entry_schema") != null) {
                 ArrayList entrySchema = (ArrayList) parameter.get("entry_schema");
-                if (CollectionUtils.isNotEmpty(entrySchema)) {
+                if (!CollectionUtils.isEmpty(entrySchema)) {
                     buildCharacteristicValuesFormShema(parameterType, serviceSpecCharacteristicValues, aDefault,
                             entrySchema);
                 }
@@ -110,7 +110,7 @@ public class ToscaInfosProcessor {
         LinkedHashMap constraints = (LinkedHashMap) entrySchema.get(0);
         if (constraints != null) {
             ArrayList constraintsList = (ArrayList) constraints.get("constraints");
-            if (CollectionUtils.isNotEmpty(constraintsList)) {
+            if (!CollectionUtils.isEmpty(constraintsList)) {
                 LinkedHashMap valuesMap = (LinkedHashMap) constraintsList.get(0);
                 if (valuesMap != null) {
                     List<Object> values = (List<Object>) valuesMap.get("valid_values");
