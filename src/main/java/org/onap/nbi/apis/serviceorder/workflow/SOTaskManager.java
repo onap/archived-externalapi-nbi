@@ -95,7 +95,7 @@ public class SOTaskManager {
     }
 
 
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedDelay = 2000)
     private void processExecutionPlan() throws InterruptedException {
         List<ExecutionTask> taskToExecute = executionTaskRepository.findByReliedTasksIsEmpty();
         for (ExecutionTask executionTask : taskToExecute) {
