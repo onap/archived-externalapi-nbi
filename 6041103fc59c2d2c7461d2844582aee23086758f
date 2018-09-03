@@ -1,0 +1,7 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Matthieu Geerebaert <matthieu.geerebaert@orange.com>
+Submitted-by: Matthieu Geerebaert <matthieu.geerebaert@orange.com>
+Submitted-at: Mon, 03 Sep 2018 13:05:18 +0000
+Reviewed-on: https://gerrit.onap.org/r/64237
+Project: externalapi/nbi
+Branch: refs/heads/master
