@@ -27,4 +27,10 @@ public class GetE2ERequestStatusResponse {
         this.operation = operation;
     }
 
+    @Override
+    public String toString() {
+        return "GetE2ERequestStatusResponse{" +
+            "operation=" + operation +
+            '}';
+    }
 }

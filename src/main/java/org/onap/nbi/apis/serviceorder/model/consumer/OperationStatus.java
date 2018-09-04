@@ -209,5 +209,20 @@ public class OperationStatus implements Serializable {
         return true;
     }
 
-
+    @Override
+    public String toString() {
+        return "OperationStatus{" +
+            "serviceId='" + serviceId + '\'' +
+            ", operationId='" + operationId + '\'' +
+            ", serviceName='" + serviceName + '\'' +
+            ", operation='" + operation + '\'' +
+            ", userId='" + userId + '\'' +
+            ", result='" + result + '\'' +
+            ", operationContent='" + operationContent + '\'' +
+            ", progress='" + progress + '\'' +
+            ", reason='" + reason + '\'' +
+            ", operateAt=" + operateAt +
+            ", finishedAt=" + finishedAt +
+            '}';
+    }
 }

@@ -17,6 +17,8 @@ package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class CreateE2EServiceInstanceResponse {
 
+	private ServiceResponse service;
+
 	public ServiceResponse getService() {
 		return service;
 	}
@@ -25,6 +27,10 @@ public class CreateE2EServiceInstanceResponse {
 		this.service = service;
 	}
 
-    private ServiceResponse service;
-
+	@Override
+	public String toString() {
+		return "CreateE2EServiceInstanceResponse{" +
+			"service=" + service +
+			'}';
+	}
 }
