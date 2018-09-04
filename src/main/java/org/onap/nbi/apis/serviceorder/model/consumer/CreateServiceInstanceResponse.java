@@ -17,6 +17,8 @@ package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class CreateServiceInstanceResponse {
 
+    private RequestReferences requestReferences;
+
     public RequestReferences getRequestReferences() {
         return requestReferences;
     }
@@ -25,5 +27,10 @@ public class CreateServiceInstanceResponse {
         this.requestReferences = requestReferences;
     }
 
-    private RequestReferences requestReferences;
+    @Override
+    public String toString() {
+        return "CreateServiceInstanceResponse{" +
+            "requestReferences=" + requestReferences +
+            '}';
+    }
 }

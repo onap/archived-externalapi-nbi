@@ -76,10 +76,10 @@ public class SoClient {
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error("error on calling " + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error("error on calling " + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -100,10 +100,10 @@ public class SoClient {
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error("error on calling " + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error("error on calling " + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -124,10 +124,10 @@ public class SoClient {
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error("error on calling " + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return new ResponseEntity<>(e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error("error on calling " + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -162,10 +162,10 @@ public class SoClient {
                 return response;
 
             } catch (BackendFunctionalException e) {
-                LOGGER.error("error on calling " + url + " ," + e);
+                LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
                 return new ResponseEntity<>(e.getHttpStatus());
             } catch (ResourceAccessException e) {
-                LOGGER.error("error on calling " + url + " ," + e);
+                LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
     	}
@@ -202,7 +202,10 @@ public class SoClient {
             ResponseEntity<GetRequestStatusResponse> response = restTemplate.exchange(url, HttpMethod.GET,
                 new HttpEntity<>(buildRequestHeader()), GetRequestStatusResponse.class);
             logResponseGet(url, response);
-            return response.getBody();
+            if (null == response)
+                return null;
+            else
+                return response.getBody();
 
         } catch (BackendFunctionalException | ResourceAccessException e) {
             LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
@@ -226,7 +229,10 @@ public GetE2ERequestStatusResponse callE2EGetRequestStatus(String operationId, S
             ResponseEntity<GetE2ERequestStatusResponse> response = restTemplate.exchange(callUrlFormated, HttpMethod.GET,
                 new HttpEntity<>(buildRequestHeader()), GetE2ERequestStatusResponse.class);
             logE2EResponseGet(callUrlFormated, response);
-            return response.getBody();
+            if (null == response)
+                return null;
+            else
+                return response.getBody();
 
         } catch (BackendFunctionalException|ResourceAccessException e) {
             LOGGER.error(ERROR_ON_CALLING + callUrlFormated + " ," + e);
