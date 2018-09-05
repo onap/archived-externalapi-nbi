@@ -62,6 +62,9 @@ public class ServiceOrderItem {
     @JsonProperty("state")
     private StateType state = null;
 
+    @JsonProperty("percentProgress")
+    private String percentProgress = null;
+
     @JsonProperty("@type")
     private String type = null;
 
@@ -150,6 +153,22 @@ public class ServiceOrderItem {
     public ServiceOrderItem type(String type) {
         this.type = type;
         return this;
+    }
+
+    /**
+     * Progress of the delivery in percentage
+     *
+     * @return percentProgress
+     **/
+    @JsonProperty("percentProgress")
+    @ApiModelProperty(required = false, value = "Progress of the delivery in percentage")
+    @NotNull
+    public String getPercentProgress() {
+        return percentProgress;
+    }
+
+    public void setPercentProgress(String percentProgress) {
+        this.percentProgress = percentProgress;
     }
 
     /**
@@ -313,6 +332,7 @@ public class ServiceOrderItem {
         ServiceOrderItem serviceOrderItem = (ServiceOrderItem) o;
         return Objects.equals(this.id, serviceOrderItem.id) && Objects.equals(this.action, serviceOrderItem.action)
                 && Objects.equals(this.state, serviceOrderItem.state)
+                && Objects.equals(this.percentProgress, serviceOrderItem.percentProgress)
                 && Objects.equals(this.type, serviceOrderItem.type)
                 && Objects.equals(this.schemaLocation, serviceOrderItem.schemaLocation)
                 && Objects.equals(this.baseType, serviceOrderItem.baseType)
@@ -325,7 +345,7 @@ public class ServiceOrderItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, action, state, type, schemaLocation, baseType, orderItemRelationship, service,
+        return Objects.hash(id, action, state, percentProgress, type, schemaLocation, baseType, orderItemRelationship, service,
                 requestId,orderItemMessage);
     }
 
@@ -337,6 +357,7 @@ public class ServiceOrderItem {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    action: ").append(toIndentedString(action)).append("\n");
         sb.append("    state: ").append(toIndentedString(state)).append("\n");
+        sb.append("    percentProgress: ").append(toIndentedString(percentProgress)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
         sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
