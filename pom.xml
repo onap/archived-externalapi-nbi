@@ -121,6 +121,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.11.2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
 			<version>8.5.32</version>
@@ -163,7 +169,7 @@
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.7.0</version>
+			<version>1.9.3</version>
 		</dependency>
 
 		<dependency>
@@ -227,6 +233,12 @@
 			<groupId>com.bazaarvoice.jolt</groupId>
 			<artifactId>json-utils</artifactId>
 			<version>0.1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- test -->
@@ -259,6 +271,12 @@
 			<artifactId>spring-cloud-contract-wiremock</artifactId>
 			<version>1.0.0.RELEASE</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -293,6 +311,12 @@
 			<groupId>org.onap.msb.java-sdk</groupId>
 			<artifactId>msb-java-sdk</artifactId>
 			<version>1.1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>

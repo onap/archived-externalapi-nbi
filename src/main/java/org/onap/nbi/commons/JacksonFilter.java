@@ -15,6 +15,7 @@
  */
 package org.onap.nbi.commons;
 
+import com.fasterxml.jackson.databind.MappingJsonFactory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +60,7 @@ public class JacksonFilter {
     }
 
     public static <R> ObjectNode createNode(R bean, JsonRepresentation jsonRepresentation) {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper(new MappingJsonFactory());
         return JacksonFilter.createNode(mapper, bean, jsonRepresentation.getAttributes());
     }
 

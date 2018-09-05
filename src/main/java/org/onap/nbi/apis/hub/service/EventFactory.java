@@ -16,6 +16,7 @@
 package org.onap.nbi.apis.hub.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.onap.nbi.apis.hub.model.Event;
@@ -30,7 +31,7 @@ import java.util.UUID;
 
 public class EventFactory {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper(new MappingJsonFactory());
 
     public static Event getEvent(EventType eventType, ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem) {
         Event event = new Event();

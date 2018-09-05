@@ -15,6 +15,7 @@
  */
 package org.onap.nbi.apis.serviceorder.utils;
 
+import com.fasterxml.jackson.databind.MappingJsonFactory;
 import java.io.IOException;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +25,7 @@ public final class JsonEntityConverter {
     private JsonEntityConverter() {
     }
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper(new MappingJsonFactory());
 
     public static String convertServiceOrderInfoToJson(ServiceOrderInfo serviceOrderInfo) {
         return MAPPER.valueToTree(serviceOrderInfo).toString();
