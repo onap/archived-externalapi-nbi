@@ -94,8 +94,8 @@ public class SOTaskManager {
         registerOrderItemExecutionPlan(serviceOrder.getOrderItem(), serviceOrderInfoJson);
     }
 
-
-    @Scheduled(fixedRate = 2000)
+    // Using fixedDelay to mitigate against Scheduler queue backlog with fixedRate 
+    @Scheduled(fixedDelay = 2000)
     private void processExecutionPlan() throws InterruptedException {
         List<ExecutionTask> taskToExecute = executionTaskRepository.findByReliedTasksIsEmpty();
         for (ExecutionTask executionTask : taskToExecute) {
