@@ -44,6 +44,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/hub")
 @EnableScheduling
@@ -66,7 +70,10 @@ public class HubResource extends ResourceManagement {
 
         Subscriber subscriber = subscriptionService.createSubscription(subscription);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(subscriber.getId())
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(subscriber.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();
@@ -75,7 +82,7 @@ public class HubResource extends ResourceManagement {
     @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Subscription> getSubscription(@PathVariable String subscriptionId) {
 
-        Subscriber subscriber = subscriptionService.findSubscriptionById(subscriptionId);
+        Subscriber subscriber  = subscriptionService.findSubscriptionById(subscriptionId);
         if (subscriber == null) {
             return ResponseEntity.notFound().build();
         }
@@ -92,9 +99,9 @@ public class HubResource extends ResourceManagement {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", String.valueOf(totalCount));
         headers.add("X-Result-Count", String.valueOf(subscribers.size()));
-
-        List<Subscription> subscriptions =
-                subscribers.stream().map(Subscription::createFromSubscriber).collect(Collectors.toList());
+        List<Subscription> subscriptions = subscribers.stream()
+                .map(Subscription::createFromSubscriber)
+                .collect(Collectors.toList());
 
         return this.findResponse(subscriptions, filter, headers);
 
