@@ -62,6 +62,7 @@ public class SOGetStatusManager {
         while (!stopPolling) {
             response = soClient.callGetRequestStatus(requestId);
             if (response != null) {
+                orderItem.setPercentProgress(String.valueOf(response.getRequest().getRequestStatus().getPercentProgress()));
                 if (response.getRequest().getRequestStatus().getPercentProgress() != 100) {
                     nbRetries++;
                     Thread.sleep(1000);
@@ -114,6 +115,7 @@ public class SOGetStatusManager {
         while (!stopPolling) {
             response = soClient.callE2EGetRequestStatus(operationId, serviceId);
             if (response != null) {
+                orderItem.setPercentProgress(response.getOperation().getProgress());
                 result = response.getOperation().getResult();
                 if (PROCESSING.equals(result)) {
                     nbRetries++;
