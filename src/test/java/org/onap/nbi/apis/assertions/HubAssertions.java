@@ -15,14 +15,19 @@
  */
 package org.onap.nbi.apis.assertions;
 
+import org.onap.nbi.apis.hub.model.Event;
+import org.onap.nbi.apis.hub.model.EventType;
 import org.onap.nbi.apis.hub.model.Subscription;
+
+import java.util.Date;
+import java.util.UUID;
 
 public class HubAssertions {
 
     public static Subscription createServiceOrderCreationSubscription(){
         Subscription subscription = new Subscription();
         subscription.setId("id");
-        subscription.setCallback("http://localhost:8090");
+        subscription.setCallback("http://localhost:8080/test");
         subscription.setQuery("eventType = ServiceOrderCreationNotification");
         return subscription;
     }
@@ -30,7 +35,7 @@ public class HubAssertions {
     public static Subscription createServiceOrderStateChangeSubscription(){
         Subscription subscription = new Subscription();
         subscription.setId("id");
-        subscription.setCallback("http://localhost:8090");
+        subscription.setCallback("http://localhost/test");
         subscription.setQuery("eventType = ServiceOrderStateChangeNotification");
         return subscription;
     }
@@ -38,8 +43,16 @@ public class HubAssertions {
     public static Subscription createServiceOrderItemStateChangeSubscription(){
         Subscription subscription = new Subscription();
         subscription.setId("id");
-        subscription.setCallback("http://localhost:8090");
+        subscription.setCallback("http://localhost/test");
         subscription.setQuery("eventType = ServiceOrderItemStateChangeNotification");
         return subscription;
+    }
+
+    public static Event createFakeEvent() {
+        Event event = new Event();
+        event.setEventId(UUID.randomUUID().toString());
+        event.setEventDate(new Date());
+        event.setEventType(EventType.SERVICE_ORDER_CREATION.value());
+        return event;
     }
 }

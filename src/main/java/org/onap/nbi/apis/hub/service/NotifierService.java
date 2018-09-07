@@ -19,6 +19,7 @@ import org.onap.nbi.apis.hub.model.Event;
 import org.onap.nbi.apis.hub.model.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -31,9 +32,12 @@ import javax.validation.Valid;
 public class NotifierService {
     private final Logger logger = LoggerFactory.getLogger(NotifierService.class);
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @Async
     public void run(Subscriber subscriber, @Valid Event event) {
-        ResponseEntity<String> re = new RestTemplate().postForEntity(subscriber.getCallback(), event, String.class);
+        ResponseEntity<String> re = restTemplate.postForEntity(subscriber.getCallback(), event, String.class);
         if (re.getStatusCode() == HttpStatus.OK) logger.debug("FAILED");
     }
 }
