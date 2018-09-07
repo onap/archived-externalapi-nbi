@@ -32,7 +32,7 @@ public class SubscriptionService {
     }
 
     public Subscriber createSubscription(Subscription subscription){
-        Subscriber sub = Subscriber.createFromRequest(subscription);
+        Subscriber sub = Subscriber.createFromSubscription(subscription);
         return subscriberRepository.save(sub);
     }
 

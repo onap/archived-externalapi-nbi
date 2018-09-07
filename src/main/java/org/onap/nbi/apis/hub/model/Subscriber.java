@@ -56,7 +56,7 @@ public class Subscriber implements Resource {
         return query;
     }
 
-    public static Subscriber createFromRequest(Subscription request) {
+    public static Subscriber createFromSubscription(Subscription request) {
         Subscriber sub = new Subscriber();
         sub.setCallback(request.getCallback());
 

@@ -59,13 +59,15 @@ public class EventFactory {
      */
     private static Object filterServiceOrder(final ServiceOrder serviceOrder) {
 
-        Object filteredServiceOrder;
+        Object filteredServiceOrder = null;
 
-        JsonRepresentation jsonRepresentation = new JsonRepresentation();
-        jsonRepresentation.add("id").add("href").add("externalId").add("state").add("orderDate").add
+        if (serviceOrder != null) {
+            JsonRepresentation jsonRepresentation = new JsonRepresentation();
+            jsonRepresentation.add("id").add("href").add("externalId").add("state").add("orderDate").add
                 ("completionDateTime").add("orderItem");
 
-        filteredServiceOrder = JacksonFilter.createNode(serviceOrder, jsonRepresentation);
+            filteredServiceOrder = JacksonFilter.createNode(serviceOrder, jsonRepresentation);
+        }
 
         return filteredServiceOrder;
     }
