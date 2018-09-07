@@ -40,6 +40,10 @@ public class SubscriptionService {
         subscriberRepository.delete(subscriptionId);
     }
 
+    public void deleteAll() {
+        subscriberRepository.deleteAll();
+    }
+
     public long countSubscription(){
         return subscriberRepository.count();
     }

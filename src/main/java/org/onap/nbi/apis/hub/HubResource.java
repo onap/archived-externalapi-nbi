@@ -37,6 +37,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/hub")
@@ -89,8 +90,12 @@ public class HubResource extends ResourceManagement {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", String.valueOf(totalCount));
         headers.add("X-Result-Count", String.valueOf(subscribers.size()));
+        
+        List<Subscription> subscriptions = subscribers.stream()
+                .map(Subscription::createFromSubscriber)
+                .collect(Collectors.toList());
 
-        return this.findResponse(subscribers, filter, headers);
+        return this.findResponse(subscriptions, filter, headers);
 
     }
 
