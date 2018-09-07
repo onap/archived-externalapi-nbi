@@ -81,10 +81,13 @@ public class AaiClient extends BaseClient {
     public Map getVNF(String relatedLink) {
 
         StringBuilder callURL = new StringBuilder().append(aaiHost).append(relatedLink);
-
-        ResponseEntity<Object> response = callApiGet(callURL.toString(), buildRequestHeaderForAAI());
-        return (LinkedHashMap) response.getBody();
-
+        try{
+            ResponseEntity<Object> response = callApiGet(callURL.toString(), buildRequestHeaderForAAI());
+            return (LinkedHashMap) response.getBody();
+        } catch (BackendFunctionalException e) {
+            LOGGER.error("error on calling {} , {}" , callURL.toString(), e);
+            return null;
+        }
     }
 
     public Map getServicesInAaiForCustomer(String customerId) {

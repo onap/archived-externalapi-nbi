@@ -4,6 +4,7 @@
      "spec": {
       "service-instance-id": "id",
       "service-instance-name": "name",
+      "orchestration-status": "state",
        "model-version-id" : "serviceSpecification.id",
        "model-invariant-id": "serviceSpecification.invariantUUID",
        "vnfs" : {

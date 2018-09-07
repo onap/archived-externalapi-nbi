@@ -1,0 +1,52 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/v11/business/customers/customer/6490/service-subscriptions/service-subscription/AnsibleService/service-instances/service-instance/405c8c00-44b9-4303-9f27-6797d22ca096"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "service-instance-id": "405c8c00-44b9-4303-9f27-6797d22ca096",
+      "service-instance-name": "ansibleService-service-instance-065FYE",
+      "environment-context": "General_Revenue-Bearing",
+      "workload-context": "Production",
+      "model-invariant-id": "f3ec9092-5c98-41f1-9fea-96be80abd064",
+      "model-version-id": "0bf5f56a-4506-4e98-ab50-336d73ca4b07",
+      "resource-version": "1530200875713",
+      "orchestration-status": "Active",
+      "relationship-list": {
+        "relationship": [
+          {
+            "related-to": "generic-vnf",
+            "related-link": "/aai/v11/network/generic-vnfs/generic-vnf/3f73377f-d9be-4a33-b068-e3f35b5b770b",
+            "relationship-data": [
+              {
+                "relationship-key": "generic-vnf.vnf-id",
+                "relationship-value": "3f73377f-d9be-4a33-b068-e3f35b5b770b"
+              }
+            ],
+            "related-to-property": [
+              {
+                "property-key": "generic-vnf.vnf-name",
+                "property-value": "ansibleService-vnf-instance-DebianVNF_0_065FYE"
+              }
+            ]
+          },
+          {
+            "related-to": "owning-entity",
+            "related-link": "/aai/v11/business/owning-entities/owning-entity/OE-generic",
+            "relationship-data": [
+              {
+                "relationship-key": "owning-entity.owning-entity-id",
+                "relationship-value": "OE-generic"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

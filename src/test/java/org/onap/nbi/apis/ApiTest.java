@@ -24,6 +24,7 @@ import com.github.tomakehurst.wiremock.stubbing.ListStubMappingsResult;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Validation;
@@ -204,6 +205,21 @@ public class ApiTest {
         params.add("relatedParty.id", "6490");
         ResponseEntity<Object> resource = serviceInventoryResource.getServiceInventory(serviceId, params);
         ServiceInventoryAssertions.assertServiceInventoryGet(resource);
+
+    }
+
+    @Test
+    public void testServiceResourceGetInventoryWithStatus() throws Exception {
+
+        String serviceName = "AnsibleService";
+        String serviceId = "405c8c00-44b9-4303-9f27-6797d22ca096";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("serviceSpecification.name", serviceName);
+        params.add("relatedParty.id", "6490");
+        ResponseEntity<Object> resource = serviceInventoryResource.getServiceInventory(serviceId, params);
+        LinkedHashMap service = (LinkedHashMap) resource.getBody();
+       assertThat(service.get("state")).isEqualTo("Active");
+
 
     }
 
