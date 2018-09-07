@@ -16,8 +16,6 @@
 package org.onap.nbi.apis;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.stubbing.ListStubMappingsResult;
@@ -30,25 +28,22 @@ import java.util.Set;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.*;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.onap.nbi.apis.assertions.HubAssertions;
 import org.onap.nbi.apis.assertions.ServiceCatalogAssertions;
 import org.onap.nbi.apis.assertions.ServiceInventoryAssertions;
 import org.onap.nbi.apis.assertions.ServiceOrderAssertions;
+import org.onap.nbi.apis.hub.HubResource;
+import org.onap.nbi.apis.hub.model.Subscriber;
+import org.onap.nbi.apis.hub.model.Subscription;
+import org.onap.nbi.apis.hub.service.SubscriptionService;
 import org.onap.nbi.apis.servicecatalog.ServiceSpecificationResource;
 import org.onap.nbi.apis.serviceinventory.ServiceInventoryResource;
 import org.onap.nbi.apis.serviceorder.ServiceOrderResource;
-import org.onap.nbi.apis.serviceorder.model.ActionType;
-import org.onap.nbi.apis.serviceorder.model.RelatedParty;
-import org.onap.nbi.apis.serviceorder.model.Service;
-import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
-import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
-import org.onap.nbi.apis.serviceorder.model.ServiceSpecificationRef;
-import org.onap.nbi.apis.serviceorder.model.StateType;
+import org.onap.nbi.apis.serviceorder.model.*;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
@@ -57,9 +52,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -82,6 +83,12 @@ public class ApiTest {
     ServiceOrderResource serviceOrderResource;
 
     @Autowired
+    HubResource hubResource;
+
+    @Autowired
+    SubscriptionService subscriptionService;
+
+    @Autowired
     ServiceOrderRepository serviceOrderRepository;
 
     @Autowired
@@ -90,7 +97,16 @@ public class ApiTest {
     @Autowired
     SOTaskProcessor SoTaskProcessor;
 
+    @Mock
+    private RequestAttributes attrs;
+
     static Validator validator;
+
+    @Before
+    public void before() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    }
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -109,6 +125,7 @@ public class ApiTest {
     public void tearsDownUpPort() throws Exception {
         executionTaskRepository.deleteAll();
         serviceOrderRepository.deleteAll();
+        subscriptionService.deleteAll();
         wireMockServer.resetToDefaultMappings();
 
     }
@@ -1229,6 +1246,82 @@ public class ApiTest {
 
     }
 
+    // hub
 
+    @Test
+    public void testFindWhenNoSubscriber() throws Exception {
+        ResponseEntity<Object> findResponseEntity = hubResource.findSubscribers(new LinkedMultiValueMap<>());
+        assertThat(findResponseEntity.getStatusCodeValue()).isEqualTo(200);
+        ArrayList subscribers = (ArrayList) findResponseEntity.getBody();
+        assertThat(subscribers.size()).isEqualTo(0);
+    }
 
+    @Test
+    public void testSubscriberCreation() throws Exception {
+        ResponseEntity<Subscriber> firstCreationResponseEntity = hubResource
+                .createEventSubscription(HubAssertions.createServiceOrderCreationSubscription());
+        assertThat(firstCreationResponseEntity.getStatusCodeValue()).isEqualTo(201);
+        assertThat(firstCreationResponseEntity.getHeaders().getLocation()).isNotNull();
+        assertThat(subscriptionService.countSubscription()).isEqualTo(1);
+    }
+
+    @Test
+    public void testCreationAndFindSubscriber() throws Exception {
+        ResponseEntity<Subscriber> firstCreationResponseEntity = hubResource
+                .createEventSubscription(HubAssertions.createServiceOrderCreationSubscription());
+        ResponseEntity<Object> findResponseEntity = hubResource.findSubscribers(new LinkedMultiValueMap<>());
+        ArrayList subscribers = (ArrayList) findResponseEntity.getBody();
+        assertThat(subscribers.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testCreationAndGetByIdSubscriber() throws Exception {
+        ResponseEntity<Subscriber> createResponseEntity = hubResource
+                .createEventSubscription(HubAssertions.createServiceOrderCreationSubscription());
+        String resourceId = createResponseEntity.getHeaders().getLocation().getPath().substring(1);
+        ResponseEntity<Subscription> getResponseEntity = hubResource.getSubscription(resourceId);
+        assertThat(getResponseEntity.getStatusCodeValue()).isEqualTo(200);
+        assertThat(getResponseEntity.getBody()).isInstanceOf(Subscription.class);
+    }
+
+    @Test
+    public void testMultiCreationAndFindSubscriber() throws Exception {
+        hubResource.createEventSubscription(HubAssertions.createServiceOrderCreationSubscription());
+        hubResource.createEventSubscription(HubAssertions.createServiceOrderStateChangeSubscription());
+        hubResource.createEventSubscription(HubAssertions.createServiceOrderItemStateChangeSubscription());
+
+        ResponseEntity<Object> findAllResponseEntity = hubResource.findSubscribers(new LinkedMultiValueMap<>());
+        ArrayList subscribers = (ArrayList) findAllResponseEntity.getBody();
+        assertThat(subscribers.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void testMultiCreationAndFindWithFilteringSubscriber() throws Exception {
+        hubResource.createEventSubscription(HubAssertions.createServiceOrderCreationSubscription());
+        hubResource.createEventSubscription(HubAssertions.createServiceOrderStateChangeSubscription());
+        hubResource.createEventSubscription(HubAssertions.createServiceOrderItemStateChangeSubscription());
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("query.eventType", "ServiceOrderCreationNotification");
+        ResponseEntity<Object> findWithFilterResponseEntity = hubResource.findSubscribers(params);
+        ArrayList subscribers = (ArrayList) findWithFilterResponseEntity.getBody();
+        assertThat(subscribers.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testSubscriberDeletion() throws Exception {
+        ResponseEntity<Subscriber> createResponseEntity = hubResource
+                .createEventSubscription(HubAssertions.createServiceOrderCreationSubscription());
+        String resourceId = createResponseEntity.getHeaders().getLocation().getPath().substring(1);
+
+        ResponseEntity<Object> findResponseEntity = hubResource.findSubscribers(new LinkedMultiValueMap<>());
+        ArrayList subscribers = (ArrayList) findResponseEntity.getBody();
+        assertThat(subscribers.size()).isEqualTo(1);
+
+        hubResource.deleteSubscription(resourceId);
+
+        findResponseEntity = hubResource.findSubscribers(new LinkedMultiValueMap<>());
+        subscribers = (ArrayList) findResponseEntity.getBody();
+        assertThat(subscribers).isEmpty();
+    }
 }
