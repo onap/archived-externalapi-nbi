@@ -56,8 +56,21 @@ will be retrieve in service inventory: id, name and type
 SO API
 ******
 
-This API is used to perform Service Order and thus instantiate a service
+This API is used to perform Service Order and thus instantiate a service.
+Distinct SO APIs are used for serviceInstance creation request depending on the serviceSpecification category (set in SDC).
+If service could be delivered end-to-end from one request category is set to 'E2E Service'. 
+In this case NBI uses 
 
+::
+
+    MSO_CREATE_E2ESERVICE_INSTANCE_PATH = "/ecomp/mso/infra/e2eServiceInstances/v3"
+
+    MSO_GET_REQUEST_STATUS_PATH = "/ecomp/mso/infra/orchestrationRequests/v6/"
+
+    MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/v6/"
+
+	
+else following API are used:
 
 ::
 
@@ -66,4 +79,3 @@ This API is used to perform Service Order and thus instantiate a service
     MSO_GET_REQUEST_STATUS_PATH = "/ecomp/mso/infra/orchestrationRequests/v6/"
 
     MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/v6/"
-
