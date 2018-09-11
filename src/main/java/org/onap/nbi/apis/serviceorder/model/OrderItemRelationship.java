@@ -42,6 +42,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import javax.validation.constraints.Pattern;
 
 /**
  * Linked order item to the one containing this attribute
@@ -70,7 +71,7 @@ public class OrderItemRelationship {
     @JsonProperty("type")
     @ApiModelProperty(required = true,
             value = "The type of related order item, can be : dependancy if the order item needs to be “not started” until another order item is complete")
-    @NotNull
+    @NotNull(message = "RelationshipType type cannot be null")
     public RelationshipType getType() {
         return type;
     }
@@ -91,7 +92,8 @@ public class OrderItemRelationship {
      **/
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "Unique identifier of an order item")
-    @NotNull
+    @NotNull(message = "RelationshipType id cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="RelationshipType id  cannot be empty")
     public String getId() {
         return id;
     }

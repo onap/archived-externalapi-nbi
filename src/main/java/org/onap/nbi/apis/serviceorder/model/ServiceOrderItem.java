@@ -41,10 +41,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * An identified part of the order. A service order is decomposed into one or more order items.
@@ -63,7 +65,7 @@ public class ServiceOrderItem {
     private StateType state = null;
 
     @JsonProperty("percentProgress")
-    private String percentProgress = null;
+    private String percentProgress = "0";
 
     @JsonProperty("@type")
     private String type = null;
@@ -99,9 +101,10 @@ public class ServiceOrderItem {
      * @return id
      **/
     @JsonProperty("id")
-    @ApiModelProperty(required = true,
+    @ApiModelProperty(
             value = "Identifier of the line item (generally it is a sequence number 01, 02, 03, …)")
-    @NotNull
+    @NotNull(message = "order item id cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="order item id cannot be empty")
     public String getId() {
         return id;
     }
@@ -162,7 +165,7 @@ public class ServiceOrderItem {
      **/
     @JsonProperty("percentProgress")
     @ApiModelProperty(required = false, value = "Progress of the delivery in percentage")
-    @NotNull
+    @NotNull(message = "order item PercentProgress cannot be null")
     public String getPercentProgress() {
         return percentProgress;
     }
@@ -243,6 +246,7 @@ public class ServiceOrderItem {
      **/
     @JsonProperty("orderItemRelationship")
     @ApiModelProperty(value = "Linked order item to the one containing this attribute")
+    @Valid
     public List<OrderItemRelationship> getOrderItemRelationship() {
         return orderItemRelationship;
     }
@@ -263,7 +267,8 @@ public class ServiceOrderItem {
      **/
     @JsonProperty("service")
     @ApiModelProperty(required = true, value = "The Service to be acted on by the order item")
-    @NotNull
+    @NotNull(message = "order item service cannot be null")
+    @Valid
     public Service getService() {
         return service;
     }
@@ -310,6 +315,7 @@ public class ServiceOrderItem {
      **/
     @JsonProperty("orderItemMessage")
     @ApiModelProperty(value = "")
+    @Valid
     public List<OrderMessage> getOrderItemMessage() {
         return orderItemMessage;
     }

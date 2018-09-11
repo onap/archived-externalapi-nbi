@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.onap.nbi.apis.serviceorder.serviceordervalidator.ValidServiceOrder;
 import org.onap.nbi.commons.Resource;
@@ -463,6 +465,7 @@ public class ServiceOrder implements Resource {
     @JsonProperty("relatedParty")
     @ApiModelProperty(
             value = "A list of related parties which are involved in this order and the role they are playing.")
+    @Valid
     public List<RelatedParty> getRelatedParty() {
         return relatedParty;
     }
@@ -491,6 +494,7 @@ public class ServiceOrder implements Resource {
      **/
     @JsonProperty("orderRelationship")
     @ApiModelProperty(value = "A list of related order references .Linked order to the one containing this attribute")
+    @Valid
     public List<OrderRelationship> getOrderRelationship() {
         return orderRelationship;
     }
@@ -520,6 +524,7 @@ public class ServiceOrder implements Resource {
     @JsonProperty("orderItem")
     @ApiModelProperty(value = "A list of order items that have to be processed.")
     @NotEmpty
+    @Valid
     public List<ServiceOrderItem> getOrderItem() {
         return orderItem;
     }
@@ -557,6 +562,7 @@ public class ServiceOrder implements Resource {
      **/
     @JsonProperty("orderMessage")
     @ApiModelProperty(value = "")
+    @Valid
     public List<OrderMessage> getOrderMessage() {
         return orderMessage;
     }

@@ -23,6 +23,7 @@ import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.OrderItemRelationship;
 import org.onap.nbi.apis.serviceorder.model.OrderRelationship;
 import org.onap.nbi.apis.serviceorder.model.RelatedParty;
+import org.onap.nbi.apis.serviceorder.model.RelationshipType;
 import org.onap.nbi.apis.serviceorder.model.ResourceSpecification;
 import org.onap.nbi.apis.serviceorder.model.Service;
 import org.onap.nbi.apis.serviceorder.model.ServiceCharacteristic;
@@ -155,6 +156,7 @@ public class ServiceOrderAssertions {
         List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
         OrderItemRelationship orderItemRelationship = new OrderItemRelationship();
         orderItemRelationship.setId("A");
+        orderItemRelationship.setType(RelationshipType.RELIESON);
         orderItemRelationships.add(orderItemRelationship);
         itemB.setOrderItemRelationship(orderItemRelationships);
         items.add(itemB);

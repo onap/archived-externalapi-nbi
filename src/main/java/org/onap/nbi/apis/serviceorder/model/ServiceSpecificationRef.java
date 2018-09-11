@@ -40,8 +40,10 @@ package org.onap.nbi.apis.serviceorder.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * The service specification (default values, etc. are fetched from the catalogue).
@@ -86,7 +88,8 @@ public class ServiceSpecificationRef {
      **/
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "Unique identifier of the service specification")
-    @NotNull
+    @NotNull(message = "ServiceSpecification id cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="ServiceSpecification id cannot be empty")
     public String getId() {
         return id;
     }
@@ -161,6 +164,7 @@ public class ServiceSpecificationRef {
      **/
     @JsonProperty("targetServiceSchema")
     @ApiModelProperty(value = "")
+    @Valid
     public TargetServiceSchema getTargetServiceSchema() {
         return targetServiceSchema;
     }

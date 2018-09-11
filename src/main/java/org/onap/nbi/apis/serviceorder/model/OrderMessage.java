@@ -140,7 +140,7 @@ public class OrderMessage {
      **/
     @JsonProperty("severity")
     @ApiModelProperty(required = true,value = "Gravity of this message")
-    @NotNull
+    @NotNull(message = "OrderMessage severity cannot be null")
     public SeverityMessage getSeverity() {
         return severity;
     }
@@ -162,7 +162,7 @@ public class OrderMessage {
      **/
     @JsonProperty("correctionRequired")
     @ApiModelProperty(required = true,value = "Indicator that an action is required to allow service order fullfilment to follow up")
-    @NotNull
+    @NotNull(message = "OrderMessage correctionRequired cannot be null")
     public boolean getCorrectionRequired() {
         return correctionRequired;
     }

@@ -47,6 +47,7 @@ import org.onap.nbi.apis.serviceorder.model.RelatedParty;
 import org.onap.nbi.apis.serviceorder.model.Service;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
+import org.onap.nbi.apis.serviceorder.model.ServiceSpecificationRef;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
@@ -736,6 +737,15 @@ public class ApiTest {
 
         violations = validator.validate(serviceOrder);
         assertThat(violations).isNotEmpty();
+
+        ServiceOrder serviceOrder2 = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        serviceOrder2.getOrderItem().get(0).getService().getServiceSpecification().setId("");
+        serviceOrder2.getOrderItem().get(1).getService().getServiceSpecification().setId(" ");
+
+        violations = validator.validate(serviceOrder2);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations.size()).isEqualTo(2);
+
     }
 
 

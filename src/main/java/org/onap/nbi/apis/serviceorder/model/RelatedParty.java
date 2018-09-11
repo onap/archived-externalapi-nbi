@@ -42,6 +42,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import javax.validation.constraints.Pattern;
 
 /**
  * A related party defines party which are involved in this order and the role they are playing
@@ -77,7 +78,8 @@ public class RelatedParty {
      **/
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "Unique identifier of a related party")
-    @NotNull
+    @NotNull(message = "RelatedParty Id cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="RelatedParty Id cannot be empty")
     public String getId() {
         return id;
     }
@@ -118,7 +120,8 @@ public class RelatedParty {
      **/
     @JsonProperty("role")
     @ApiModelProperty(required = true, value = "The role of the related party (e.g. Owner, requester, fullfiller etc)")
-    @NotNull
+    @NotNull(message = "RelatedParty role cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="RelatedParty role cannot be empty")
     public String getRole() {
         return role;
     }

@@ -40,6 +40,7 @@ package org.onap.nbi.apis.serviceorder.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -72,7 +73,8 @@ public class ServiceRelationship {
     @JsonProperty("type")
     @ApiModelProperty(required = true,
             value = "Relationship type. It can be : “reliesOn” if the Service needs another already owned Service to rely on (e.g. an option on an already owned mobile access Service) or “targets” or “isTargeted” (depending on the way of expressing the link) for any other kind of links that may be useful")
-    @NotNull
+    @NotNull(message = "Relationship type cannot be null")
+    @Valid
     public RelationshipType getType() {
         return type;
     }
@@ -93,7 +95,8 @@ public class ServiceRelationship {
      **/
     @JsonProperty("service")
     @ApiModelProperty(required = true, value = "Service reference")
-    @NotNull
+    @NotNull(message = "Relationship service cannot be null")
+    @Valid
     public Service getService() {
         return service;
     }

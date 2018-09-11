@@ -40,8 +40,10 @@ package org.onap.nbi.apis.serviceorder.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import javax.validation.constraints.Pattern;
 
 /**
  * Linked order to the one containing this attribute
@@ -97,7 +99,8 @@ public class OrderRelationship {
      **/
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "The id of the related order")
-    @NotNull
+    @NotNull(message = "OrderRelationship id cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="OrderRelationship id cannot be empty")
     public String getId() {
         return id;
     }

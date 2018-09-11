@@ -137,10 +137,6 @@ public class ServiceOrderService {
             orderMessage.setMessageInformation("Incorrect service.id provided – not found in Inventory (AAI)");
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
-        if ("107".equalsIgnoreCase(code)) {
-            orderMessage.setMessageInformation("tenantId not found in AAI");
-            serviceOrderItem.addOrderItemMessageItem(orderMessage);
-        }
         serviceOrderRepository.save(serviceOrder);
     }
 

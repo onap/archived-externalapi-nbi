@@ -42,6 +42,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import javax.validation.constraints.Pattern;
 
 /**
  *
@@ -66,7 +67,8 @@ public class TargetServiceSchema {
      **/
     @JsonProperty("@type")
     @ApiModelProperty(required = true, value = "")
-    @NotNull
+    @NotNull(message = "TargetServiceSchema @type cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="TargetServiceSchema @type cannot be empty")
     public String getType() {
         return type;
     }
@@ -85,7 +87,8 @@ public class TargetServiceSchema {
      **/
     @JsonProperty("@schemaLocation")
     @ApiModelProperty(required = true, value = "")
-    @NotNull
+    @NotNull(message = "TargetServiceSchema @schemaLocation cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="TargetServiceSchema @schemaLocation cannot be empty")
     public String getSchemaLocation() {
         return schemaLocation;
     }

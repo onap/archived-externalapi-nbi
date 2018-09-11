@@ -40,6 +40,7 @@ package org.onap.nbi.apis.serviceorder.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,7 @@ public class Service {
      * @return id
      **/
     @JsonProperty("id")
-    @ApiModelProperty(required = true, value = "Identifier of a service instance")
+    @ApiModelProperty(value = "Identifier of a service instance")
     public String getId() {
         return id;
     }
@@ -223,6 +224,7 @@ public class Service {
     @JsonProperty("serviceCharacteristic")
     @ApiModelProperty(
             value = "A list of service characteristics .A name/value pair list used to store instance specific values of attributes. The behavior is equivalent to a MAP data structure where only one entry for any given value of \"name\" can exist")
+    @Valid
     public List<ServiceCharacteristic> getServiceCharacteristic() {
         return serviceCharacteristic;
     }
@@ -256,6 +258,7 @@ public class Service {
     @JsonProperty("serviceRelationship")
     @ApiModelProperty(
             value = "A list or service relationships (ServiceRelationship[*]). Linked Services to the one instantiate, it can be : “reliesOn” if the Service needs another already owned Service to rely on (e.g. an option on an already owned mobile access Service) or “targets” or “isTargeted” (depending on the way of expressing the link) for any other kind of links that may be useful")
+    @Valid
     public List<ServiceRelationship> getServiceRelationship() {
         return serviceRelationship;
     }
@@ -285,6 +288,7 @@ public class Service {
     @JsonProperty("relatedParty")
     @ApiModelProperty(
             value = "A list of related party parties linked at the Service level (it may be a User for example)")
+    @Valid
     public List<RelatedParty> getRelatedParty() {
         return relatedParty;
     }
@@ -303,7 +307,8 @@ public class Service {
      **/
     @JsonProperty("serviceSpecification")
     @ApiModelProperty(value = "")
-    @NotNull
+    @NotNull(message = "ServiceSpecification cannot be null")
+    @Valid
     public ServiceSpecificationRef getServiceSpecification() {
         return serviceSpecification;
     }

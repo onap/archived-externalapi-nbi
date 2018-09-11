@@ -122,7 +122,7 @@ public class CheckOrderConsistenceManager {
         } else if (!e2eService && !serviceOrderConsumerService.isTenantIdPresentInAAI(serviceOrder)) {
             LOGGER.warn("serviceOrderItem {}  for serviceOrder {} rejected cause tenantId not found in AAI",
                 serviceOrderItem.getId(), serviceOrderId);
-            serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "107");
+            serviceOrderService.addOrderMessage(serviceOrder,"503");
 
             return false;
         }

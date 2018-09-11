@@ -40,8 +40,10 @@ package org.onap.nbi.apis.serviceorder.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import javax.validation.constraints.Pattern;
 
 /**
  * ServiceCharacteristic
@@ -71,7 +73,8 @@ public class ServiceCharacteristic {
      **/
     @JsonProperty("name")
     @ApiModelProperty(required = true, value = "Name of characteristic")
-    @NotNull
+    @NotNull(message = "ServiceCharacteristic name cannot be null")
+    @Pattern(regexp="^(?!\\s*$).+", message="ServiceCharacteristic name cannot be empty")
     public String getName() {
         return name;
     }
@@ -108,6 +111,7 @@ public class ServiceCharacteristic {
      **/
     @JsonProperty("value")
     @ApiModelProperty(value = "")
+    @Valid
     public Value getValue() {
         return value;
     }
