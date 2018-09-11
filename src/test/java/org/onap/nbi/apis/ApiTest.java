@@ -49,6 +49,7 @@ import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.workflow.SOTaskProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -101,6 +102,9 @@ public class ApiTest {
     private RequestAttributes attrs;
 
     static Validator validator;
+
+    @Value("${scheduler.pollingDurationInMins}")
+    private float pollingDurationInMins;
 
     @Before
     public void before() {
@@ -998,11 +1002,8 @@ public class ApiTest {
             }
         }
         executionTaskA = getExecutionTask("A");
-        assertThat(executionTaskA.getNbRetries()).isEqualTo(2);
-        SoTaskProcessor.processOrderItem(executionTaskA);
-        executionTaskA = getExecutionTask("A");
-        SoTaskProcessor.processOrderItem(executionTaskA);
-        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA.getLastAttemptDate().getTime()>executionTaskA.getCreateDate().getTime()).isTrue();
+        Thread.sleep((long)(pollingDurationInMins*60000 + 1));
         SoTaskProcessor.processOrderItem(executionTaskA);
 
         serviceOrderChecked = serviceOrderRepository.findOne("test");
@@ -1038,11 +1039,8 @@ public class ApiTest {
             }
         }
         executionTaskA = getExecutionTask("A");
-        assertThat(executionTaskA.getNbRetries()).isEqualTo(2);
-        SoTaskProcessor.processOrderItem(executionTaskA);
-        executionTaskA = getExecutionTask("A");
-        SoTaskProcessor.processOrderItem(executionTaskA);
-        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA.getLastAttemptDate().getTime()>executionTaskA.getCreateDate().getTime()).isTrue();
+        Thread.sleep((long)(pollingDurationInMins*60000 + 1));
         SoTaskProcessor.processOrderItem(executionTaskA);
 
         serviceOrderChecked = serviceOrderRepository.findOne("test");
@@ -1228,11 +1226,8 @@ public class ApiTest {
             }
         }
         executionTaskA = getExecutionTask("A");
-        assertThat(executionTaskA.getNbRetries()).isEqualTo(2);
-        SoTaskProcessor.processOrderItem(executionTaskA);
-        executionTaskA = getExecutionTask("A");
-        SoTaskProcessor.processOrderItem(executionTaskA);
-        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA.getLastAttemptDate().getTime()>executionTaskA.getCreateDate().getTime()).isTrue();
+        Thread.sleep((long)(pollingDurationInMins*60000 + 1));
         SoTaskProcessor.processOrderItem(executionTaskA);
 
         serviceOrderChecked = serviceOrderRepository.findOne("test");

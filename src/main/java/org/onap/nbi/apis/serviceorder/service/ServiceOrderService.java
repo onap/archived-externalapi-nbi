@@ -33,6 +33,8 @@ public class ServiceOrderService {
     @Autowired
     ServiceOrderRepository serviceOrderRepository;
 
+    private static final String SERVICE_ID = "service.id";
+
     public ServiceOrder findServiceOrderById(String serviceOrderId){
         return serviceOrderRepository.findOne(serviceOrderId);
     }
@@ -111,7 +113,7 @@ public class ServiceOrderService {
         orderMessage.setCorrectionRequired(true);
 
         if ("101".equalsIgnoreCase(code)) {
-            orderMessage.setField("service.id");
+            orderMessage.setField(SERVICE_ID);
             orderMessage.setMessageInformation("Missing Information - orderItem.service.id must be provided");
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
@@ -122,7 +124,7 @@ public class ServiceOrderService {
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
         if ("103".equalsIgnoreCase(code)) {
-            orderMessage.setField("service.id");
+            orderMessage.setField(SERVICE_ID);
             orderMessage.setMessageInformation(
                 "Inconsistence information provided. service.id must not be provided for add action");
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
@@ -133,8 +135,12 @@ public class ServiceOrderService {
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
         if ("106".equalsIgnoreCase(code)) {
-            orderMessage.setField("service.id");
+            orderMessage.setField(SERVICE_ID);
             orderMessage.setMessageInformation("Incorrect service.id provided – not found in Inventory (AAI)");
+            serviceOrderItem.addOrderItemMessageItem(orderMessage);
+        }
+        if ("504".equalsIgnoreCase(code)) {
+            orderMessage.setMessageInformation("Service Orchestrator Service Instantiation timed out");
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
         serviceOrderRepository.save(serviceOrder);
