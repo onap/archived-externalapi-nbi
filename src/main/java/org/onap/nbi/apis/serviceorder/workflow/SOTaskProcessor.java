@@ -33,6 +33,7 @@ import org.onap.nbi.exceptions.TechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,12 +55,18 @@ public class SOTaskProcessor {
     @Autowired
     private SOGetStatusManager sOGetStatusManager;
 
+    @Value("${scheduler.pollingDurationInMins}")
+    private float pollingDurationInMins;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SOTaskProcessor.class);
 
     /**
      * Run the ServiceOrchestrator processing for a serviceOrderItem which with any sub relations
      */
-    public void processOrderItem(ExecutionTask executionTask) throws InterruptedException {
+    public void processOrderItem(ExecutionTask executionTask) {
+
+        executionTask.setLastAttemptDate(new Date());
+        executionTaskRepository.save(executionTask);
 
         ServiceOrderInfo serviceOrderInfo = getServiceOrderInfo(executionTask);
 
@@ -82,29 +89,23 @@ public class SOTaskProcessor {
             }
         }
 
-        if (executionTask.getNbRetries() > 0 && StateType.FAILED != serviceOrderItem.getState()
-            ) {
+        boolean shouldStopPolling = shoudStopPolling(executionTask);
+        if (!shouldStopPolling && StateType.FAILED != serviceOrderItem.getState()
+        ) {
             // TODO lancer en asynchrone
             sOGetStatusManager.pollRequestStatus(serviceOrder, serviceOrderItem, e2eService);
 
             if (serviceOrderItem.getState().equals(StateType.COMPLETED)) {
                 updateSuccessTask(executionTask);
-            } else if(shouldDecrementNbRetries(serviceOrderItem)){
-                int nbRetries = executionTask.getNbRetries();
-                executionTask.setNbRetries(--nbRetries);
-                executionTask.setLastAttemptDate(new Date());
-                executionTaskRepository.save(executionTask);
             }
+        } else if (shouldStopPolling && StateType.FAILED != serviceOrderItem.getState()) {
+            serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "504");
+            updateFailedTask(executionTask, serviceOrder);
         } else {
             updateFailedTask(executionTask, serviceOrder);
         }
 
         updateServiceOrder(serviceOrder);
-    }
-
-    private boolean shouldDecrementNbRetries(ServiceOrderItem serviceOrderItem) {
-        return ActionType.MODIFY!=serviceOrderItem.getAction() || (StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND ==serviceOrderItem.getState() || StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND
-            ==serviceOrderItem.getState());
     }
 
     private boolean shouldPostSo(ServiceOrderItem serviceOrderItem) {
@@ -292,7 +293,7 @@ public class SOTaskProcessor {
             for (ExecutionTask taskToDelete : executionTasksToDelete) {
                 if (taskToDelete.getOrderItemId().equals(item.getId())) {
                     serviceOrderService.updateOrderItemState(serviceOrder, item, StateType.FAILED);
-                    LOGGER.warn("task {} with orderitem id {}  to failed cause orderitem id {} failed ",
+                    LOGGER.warn("task {} with orderitem id {} failed cause orderitem id {} failed ",
                         taskToDelete.getInternalId(), taskToDelete.getOrderItemId(), executionTask.getOrderItemId());
 
                 }
@@ -322,5 +323,16 @@ public class SOTaskProcessor {
         return executionTasks;
     }
 
-
+    private boolean shoudStopPolling(ExecutionTask executionTask) {
+        long createTimeinMillis = executionTask.getCreateDate().getTime();
+        long lastAttemptTimeInMillis = executionTask.getLastAttemptDate().getTime();
+        long differenceInMillis = lastAttemptTimeInMillis-createTimeinMillis;
+        float pollingDurationInMillis = pollingDurationInMins*60000;
+        LOGGER.debug("Task {} with orderitem id {}: Task create date: {} Task last attempt date: {}",
+            executionTask.getInternalId(), executionTask.getOrderItemId(), createTimeinMillis,
+            lastAttemptTimeInMillis);
+        LOGGER.debug("Difference {} and Polling Duration {}",
+            differenceInMillis, pollingDurationInMins);
+        return (differenceInMillis > pollingDurationInMillis);
+    }
 }
