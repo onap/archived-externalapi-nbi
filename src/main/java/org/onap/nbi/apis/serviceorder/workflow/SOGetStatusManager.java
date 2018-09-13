@@ -39,8 +39,7 @@ public class SOGetStatusManager {
 
 
 
-    public void pollRequestStatus(ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem, boolean e2eService)
-        throws InterruptedException {
+    public void pollRequestStatus(ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem, boolean e2eService) {
         if (e2eService) {
             pollE2ESoRequestStatus(serviceOrder, serviceOrderItem);
         } else {
@@ -53,40 +52,27 @@ public class SOGetStatusManager {
      * * @param orderItem
      */
     private void pollSoRequestStatus(ServiceOrder serviceOrder,
-        ServiceOrderItem orderItem) throws InterruptedException {
-        boolean stopPolling = false;
+        ServiceOrderItem orderItem) {
         String requestId = orderItem.getRequestId();
         GetRequestStatusResponse response = null;
-        int nbRetries = 0;
 
-        while (!stopPolling) {
-            response = soClient.callGetRequestStatus(requestId);
-            if (response != null) {
-                orderItem.setPercentProgress(String.valueOf(response.getRequest().getRequestStatus().getPercentProgress()));
-                if (response.getRequest().getRequestStatus().getPercentProgress() != 100) {
-                    nbRetries++;
-                    Thread.sleep(1000);
-                    LOGGER.debug("orderitem id {} still in progress from so", orderItem.getId());
-                } else if (RequestState.COMPLETE != response.getRequest().getRequestStatus().getRequestState()) {
-                    serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
-                    stopPolling = true;
-                    LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
-                        response.getRequest().getRequestStatus().getRequestState());
-                } else {
-                    updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
-                    stopPolling = true;
-                    LOGGER.debug("orderitem id {} completed");
-                }
-            } else {
-                stopPolling = true;
+        response = soClient.callGetRequestStatus(requestId);
+        if (response != null) {
+            orderItem.setPercentProgress(String.valueOf(response.getRequest().getRequestStatus().getPercentProgress()));
+            if (response.getRequest().getRequestStatus().getPercentProgress() != 100) {
                 LOGGER.debug("orderitem id {} still in progress from so", orderItem.getId());
+            } else if (RequestState.COMPLETE != response.getRequest().getRequestStatus().getRequestState()) {
+                serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
+                LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
+                    response.getRequest().getRequestStatus().getRequestState());
+            } else {
+                updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
+                LOGGER.debug("orderitem id {} completed");
             }
-            if (nbRetries == 3) {
-                stopPolling = true;
-                LOGGER.debug("orderitem id {} stop polling from getrequeststatus, 3 retries done", orderItem.getId());
-
-            }
+        } else {
+            LOGGER.debug("orderitem id {} still in progress from so", orderItem.getId());
         }
+
     }
 
     private void updateOrderItemIfStatusCompleted(ServiceOrder serviceOrder, ServiceOrderItem orderItem) {
@@ -101,48 +87,31 @@ public class SOGetStatusManager {
         }
     }
 
-    private void pollE2ESoRequestStatus(ServiceOrder serviceOrder, ServiceOrderItem orderItem)
-        throws InterruptedException {
-        boolean stopPolling = false;
+    private void pollE2ESoRequestStatus(ServiceOrder serviceOrder, ServiceOrderItem orderItem) {
         String operationId = orderItem.getRequestId();
         String serviceId = orderItem.getService().getId();
-        int nbRetries = 0;
         GetE2ERequestStatusResponse response = null;
         final String ERROR = "error";
         final String FINISHED = "finished";
         final String PROCESSING = "processing";
         String result = null;
-        while (!stopPolling) {
-            response = soClient.callE2EGetRequestStatus(operationId, serviceId);
-            if (response != null) {
-                orderItem.setPercentProgress(response.getOperation().getProgress());
-                result = response.getOperation().getResult();
-                if (PROCESSING.equals(result)) {
-                    nbRetries++;
-                    Thread.sleep(1000);
-                    LOGGER.debug("orderitem id {} still in progress from so", orderItem.getId());
-                } else if (ERROR.equals(result)) {
-                    serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
-                    stopPolling = true;
-                    LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
-                        response.getOperation().getResult());
-                } else if (FINISHED.equals(result)) {
-                    updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
-                    stopPolling = true;
-                    LOGGER.debug("orderitem id {} completed");
-                }
-            } else {
-                stopPolling = true;
+        response = soClient.callE2EGetRequestStatus(operationId, serviceId);
+        if (response != null) {
+            orderItem.setPercentProgress(response.getOperation().getProgress());
+            result = response.getOperation().getResult();
+            if (PROCESSING.equals(result)) {
                 LOGGER.debug("orderitem id {} still in progress from so", orderItem.getId());
+            } else if (ERROR.equals(result)) {
+                serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
+                LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
+                    response.getOperation().getResult());
+            } else if (FINISHED.equals(result)) {
+                updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
+                LOGGER.debug("orderitem id {} completed");
             }
-            if (nbRetries == 3) {
-                stopPolling = true;
-                LOGGER.debug("orderitem id {} stop polling from getrequeststatus, 3 retries done", orderItem.getId());
-
-            }
+        } else {
+            LOGGER.debug("orderitem id {} still in progress from so", orderItem.getId());
         }
     }
-
-
 
 }

@@ -205,12 +205,12 @@ public class ServiceOrderAssertions {
         String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
 
         ExecutionTask executionTaskA = new ExecutionTask();
-        executionTaskA.setNbRetries(3);
+        executionTaskA.setCreateDate(new Date());
         executionTaskA.setOrderItemId("A");
         executionTaskA.setServiceOrderInfoJson(json);
         executionTaskA = executionTaskRepository.save(executionTaskA);
         ExecutionTask executionTaskB = new ExecutionTask();
-        executionTaskB.setNbRetries(3);
+        executionTaskB.setCreateDate(new Date());
         executionTaskB.setOrderItemId("B");
         executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
         executionTaskB.setServiceOrderInfoJson(json);
@@ -283,12 +283,12 @@ public class ServiceOrderAssertions {
             String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
 
             ExecutionTask executionTaskA = new ExecutionTask();
-            executionTaskA.setNbRetries(3);
+            executionTaskA.setCreateDate(new Date());
             executionTaskA.setOrderItemId("A");
             executionTaskA.setServiceOrderInfoJson(json);
             executionTaskA = executionTaskRepository.save(executionTaskA);
             ExecutionTask executionTaskB = new ExecutionTask();
-            executionTaskB.setNbRetries(3);
+            executionTaskB.setCreateDate(new Date());
             executionTaskB.setOrderItemId("B");
             executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
             executionTaskB.setServiceOrderInfoJson(json);

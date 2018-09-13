@@ -13,6 +13,7 @@
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class SOTaskManager {
             for (ServiceOrderItem orderItem : orderItems) {
                 ExecutionTask task = new ExecutionTask();
                 task.setOrderItemId(orderItem.getId());
-                task.setNbRetries(3);
+                task.setCreateDate(new Date());
                 StringBuilder sb = new StringBuilder();
                 for (OrderItemRelationship orderItemRelationship : orderItem.getOrderItemRelationship()) {
                     sb.append(orderItemRelationship.getId()).append(" ");

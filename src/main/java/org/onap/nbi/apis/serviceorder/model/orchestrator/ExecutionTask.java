@@ -32,7 +32,7 @@ public class ExecutionTask {
 
     private String reliedTasks;
 
-    private int nbRetries;
+    private Date createDate;
 
     private Date lastAttemptDate;
 
@@ -71,14 +71,6 @@ public class ExecutionTask {
         this.reliedTasks = reliedTasks;
     }
 
-    public int getNbRetries() {
-        return nbRetries;
-    }
-
-    public void setNbRetries(int nbRetries) {
-        this.nbRetries = nbRetries;
-    }
-
     public Long getInternalId() {
         return internalId;
     }
@@ -87,6 +79,13 @@ public class ExecutionTask {
         this.internalId = internalId;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -97,14 +96,28 @@ public class ExecutionTask {
             return false;
         }
         ExecutionTask that = (ExecutionTask) o;
-        return nbRetries == that.nbRetries && Objects.equals(internalId, that.internalId)
-            && Objects.equals(orderItemId, that.orderItemId) && Objects.equals(reliedTasks, that.reliedTasks)
-            && Objects.equals(lastAttemptDate, that.lastAttemptDate)
-            && Objects.equals(serviceOrderInfoJson, that.serviceOrderInfoJson);
+        return Objects.equals(internalId, that.internalId) &&
+            Objects.equals(orderItemId, that.orderItemId) &&
+            Objects.equals(reliedTasks, that.reliedTasks) &&
+            Objects.equals(createDate, that.createDate) &&
+            Objects.equals(lastAttemptDate, that.lastAttemptDate) &&
+            Objects.equals(serviceOrderInfoJson, that.serviceOrderInfoJson);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(internalId, orderItemId, reliedTasks, nbRetries, lastAttemptDate, serviceOrderInfoJson);
+        return Objects.hash(internalId, orderItemId, reliedTasks, createDate, lastAttemptDate, serviceOrderInfoJson);
+    }
+
+    @Override
+    public String toString() {
+        return "ExecutionTask{" +
+            "internalId=" + internalId +
+            ", orderItemId='" + orderItemId + '\'' +
+            ", reliedTasks='" + reliedTasks + '\'' +
+            ", createDate=" + createDate +
+            ", lastAttemptDate=" + lastAttemptDate +
+            ", serviceOrderInfoJson='" + serviceOrderInfoJson + '\'' +
+            '}';
     }
 }
