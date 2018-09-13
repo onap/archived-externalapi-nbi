@@ -23,7 +23,7 @@ public class ResourceModel {
 	
 	private String resourceUuid;
 	
-	//private String resourceCustomizationUuid;
+	private String resourceCustomizationUuid;
 	
 	private ParametersModel parameters;
 
@@ -32,7 +32,7 @@ public class ResourceModel {
 		setResourceName((String)info.get("name"));
 		setResourceInvariantUuid((String)info.get("resourceInvariantUUID"));
 		setResourceUuid((String)info.get("id"));
-		//setResourceCustomizationUuid((String)info.get("modelCustomizationId"));
+		setResourceCustomizationUuid((String)info.get("modelCustomizationId"));
 	}
 
 	public String getResourceName() {
@@ -59,7 +59,6 @@ public class ResourceModel {
 		this.resourceUuid = resourceUuid;
 	}
 	
-	/*
 	public String getResourceCustomizationUuid() {
 		return resourceCustomizationUuid;
 	}
@@ -67,7 +66,7 @@ public class ResourceModel {
 	public void setResourceCustomizationUuid(String resourceCustomizationUuid) {
 		this.resourceCustomizationUuid = resourceCustomizationUuid;
 	}
-	*/
+	
 	public ParametersModel getParameters() {
 		return parameters;
 	}
@@ -82,6 +81,7 @@ public class ResourceModel {
 	            "resourceName='" + resourceName + '\'' +
 	            ", resourceInvariantUuid='" + resourceInvariantUuid + '\'' +
 	            ", resourceUuid='" + resourceUuid + '\'' +
+	            ", resourceCustomizationUuid='" + resourceCustomizationUuid + '\'' +
 	            ", parameters='" + parameters + '}';
 	 }
 }
