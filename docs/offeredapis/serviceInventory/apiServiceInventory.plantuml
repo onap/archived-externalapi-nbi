@@ -1,17 +1,5 @@
-/' This work is licensed under a Creative Commons Attribution 4.0 International License.
-   http://creativecommons.org/licenses/by/4.0
-   Copyright 2018 Orange'/
-
 @startuml
 
-enum stateValues {
-   feasibilityChecked
-   designed
-   reserved
-   inactive
-   active
-   terminated
-}
 
 class ErrorRepresentation {
    code:int
@@ -28,12 +16,12 @@ class Service {
    href:string
    name:string
    type:string
+   state:string
    hasStarted:boolean
    @type:string
    @baseType:string
    @schemaLocation:string
 }
-   Service --> "0-1" stateValues : state
    Service --> "0-1" ServiceSpecificationRef : serviceSpecification
    Service --> "0-*" ServiceCharacteristic : characteristic
    Service --> "0-*" SupportingResource : supportingResource

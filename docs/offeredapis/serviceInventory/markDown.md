@@ -1,7 +1,3 @@
-# This work is licensed under a Creative Commons Attribution 4.0 International License.
-# http://creativecommons.org/licenses/by/4.0
-# Copyright 2018 Orange
-
 # API ServiceInventory
 
 
@@ -10,10 +6,10 @@
 
 ### Api URL
 
-[Swagger UI](https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5an735gnX0/swagger.json)
+[Swagger UI](https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5ymwb6l1dR/swagger.json)
 
 
-[plant UML UI](https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5an735gnX0/plantuml&noCache=304710.0)
+[plant UML UI](https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5ymwb6l1dR/plantuml&noCache=137264.0)
 
 serviceInventory API designed for ONAP Beijing Release.
 This API is build from TMF open API18.0 (applying TMF Guideline 3.0)
@@ -21,23 +17,18 @@ only operation GET (by id & byList) for resource serviceSpecification is availab
 
 
 ### Version information
-*Version* : 1.0.0_inProgress
+*Version* : 3.0.0_inProgress
 
 
 ### URI scheme
 *Host* : serverRoot  
-*BasePath* : /nbi/api/v1  
+*BasePath* : /nbi/api/v3
 *Schemes* : HTTPS
 
 
 ### Tags
 
 * Service
-
-
-### Consumes
-
-* `application/json;charset=utf-8`
 
 
 ### Produces
@@ -93,6 +84,11 @@ HTTP Response 422 Unprocessable entity
 |**503**|Service Unavailable<br><br>List of supported error codes:<br>- 5: The service is temporarily unavailable<br>- 6: Orange API is over capacity, retry later !|[ErrorRepresentation](#errorrepresentation)|
 
 
+##### Produces
+
+* `application/json;charset=utf-8`
+
+
 <a name="serviceget"></a>
 #### Retrieve a service
 ```
@@ -131,6 +127,11 @@ HTTP Response 422 Unprocessable entity
 |**422**|Unprocessable entity<br><br>Functional error|[ErrorRepresentation](#errorrepresentation)|
 |**500**|Internal Server Error<br><br>List of supported error codes:<br>- 1: Internal error|[ErrorRepresentation](#errorrepresentation)|
 |**503**|Service Unavailable<br><br>List of supported error codes:<br>- 5: The service is temporarily unavailable<br>- 6: Orange API is over capacity, retry later !|[ErrorRepresentation](#errorrepresentation)|
+
+
+##### Produces
+
+* `application/json;charset=utf-8`
 
 
 <a name="definitions"></a>
@@ -219,7 +220,7 @@ Instantiated service (service_instance) in AAI
 |**name**  <br>*optional*|Name of the service - Valued with service-instance-name|string|
 |**relatedParty**  <br>*optional*||< [RelatedPartyRef](#relatedpartyref) > array|
 |**serviceSpecification**  <br>*optional*||[ServiceSpecificationRef](#servicespecificationref)|
-|**state**  <br>*optional*||[stateValues](#statevalues)|
+|**state**  <br>*optional*|State of the service. Not managed in Beijing release|string|
 |**supportingResource**  <br>*optional*||< [SupportingResource](#supportingresource) > array|
 |**type**  <br>*optional*|Service type - valued with 'service-instance'|string|
 
@@ -283,9 +284,4 @@ Not managed in Beijing release.
 |**@schemaLocation**  <br>*optional*|Not managed in Beijing release.|string|
 |**@type**  <br>*optional*|Not managed in Beijing release.|string|
 |**serviceCharacteristicValue**  <br>*optional*|Not managed in Beijing release.|string|
-
-
-<a name="statevalues"></a>
-### stateValues
-*Type* : enum (feasibilityChecked, designed, reserved, inactive, active, terminated)
 

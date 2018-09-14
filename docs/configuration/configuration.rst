@@ -23,7 +23,7 @@ Default values
 ::
 
     # SERVER
-    server.contextPath=/nbi/api/v1
+    server.contextPath=/nbi/api/v3
     server.port = 8080
 
     # LOGGING
@@ -35,7 +35,7 @@ Default values
     onap.cloudOwner=CloudOwner
 
     # NBI
-    nbi.url=http://localhost:8080/nbi/api/v1
+    nbi.url=http://localhost:8080/nbi/api/v3
     nbi.callForVNF=false
 
     # SDC

@@ -1,9 +1,3 @@
-////
-This work is licensed under a Creative Commons Attribution 4.0 International License.
-http://creativecommons.org/licenses/by/4.0
-Copyright 2018 Orange
-////
-
 = API ServiceInventory
 
 
@@ -12,10 +6,10 @@ Copyright 2018 Orange
 
 === Api URL
 
-https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5an735gnX0/swagger.json[Swagger UI]
+https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5ymwb6l1dR/swagger.json[Swagger UI]
 
 
-https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5an735gnX0/plantuml&noCache=304710.0[plant UML UI]
+https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/5ymwb6l1dR/plantuml&noCache=137264.0[plant UML UI]
 
 serviceInventory API designed for ONAP Beijing Release.
 This API is build from TMF open API18.0 (applying TMF Guideline 3.0)
@@ -24,24 +18,19 @@ only operation GET (by id &amp; byList) for resource serviceSpecification is ava
 
 === Version information
 [%hardbreaks]
-__Version__ : 1.0.0_inProgress
+__Version__ : 3.0.0_inProgress
 
 
 === URI scheme
 [%hardbreaks]
 __Host__ : serverRoot
-__BasePath__ : /nbi/api/v1
+__BasePath__ : /nbi/api/v3
 __Schemes__ : HTTPS
 
 
 === Tags
 
 * Service
-
-
-=== Consumes
-
-* `application/json;charset=utf-8`
 
 
 === Produces
@@ -140,6 +129,11 @@ List of supported error codes:
 |===
 
 
+===== Produces
+
+* `application/json;charset=utf-8`
+
+
 [[_serviceget]]
 ==== Retrieve a service
 ....
@@ -220,6 +214,11 @@ List of supported error codes:
 - 5: The service is temporarily unavailable
 - 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
 |===
+
+
+===== Produces
+
+* `application/json;charset=utf-8`
 
 
 [[_definitions]]
@@ -353,7 +352,7 @@ __optional__||< <<_relatedpartyref,RelatedPartyRef>> > array
 |**serviceSpecification** +
 __optional__||<<_servicespecificationref,ServiceSpecificationRef>>
 |**state** +
-__optional__||<<_statevalues,stateValues>>
+__optional__|State of the service. Not managed in Beijing release|string
 |**supportingResource** +
 __optional__||< <<_supportingresource,SupportingResource>> > array
 |**type** +
@@ -459,9 +458,4 @@ __optional__|Not managed in Beijing release.|string
 |**serviceCharacteristicValue** +
 __optional__|Not managed in Beijing release.|string
 |===
-
-
-[[_statevalues]]
-=== stateValues
-__Type__ : enum (feasibilityChecked, designed, reserved, inactive, active, terminated)
 

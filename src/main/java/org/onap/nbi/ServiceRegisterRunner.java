@@ -49,16 +49,16 @@ public class ServiceRegisterRunner implements CommandLineRunner {
     @Value("${msb.service.host}")
     private String SERVICE_HOST;
 
-    @Value("${msb.service.port}")
+    @Value("${server.port}")
     private String SERVICE_PORT;
 
     @Value("${msb.service.name}")
     private String SERVICE_NAME;
 
-    @Value("${msb.service.version}")
+    @Value("${nbi.version}")
     private String SERVICE_VERSION;
 
-    @Value("${msb.service.url}")
+    @Value("${server.contextPath}")
     private String SERVICE_URL;
 
     @Value("${msb.service.custom_path}")

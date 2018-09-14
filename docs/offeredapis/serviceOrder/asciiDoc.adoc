@@ -1,9 +1,3 @@
-////
-This work is licensed under a Creative Commons Attribution 4.0 International License.
-http://creativecommons.org/licenses/by/4.0
-Copyright 2018 Orange
-////
-
 = API ServiceOrder
 
 
@@ -12,36 +6,33 @@ Copyright 2018 Orange
 
 === Api URL
 
-https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/kl1kgvz1zR/swagger.json[Swagger UI]
+https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/Ve1zj3V1gj/swagger.json[Swagger UI]
 
 
-https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/kl1kgvz1zR/plantuml&noCache=934804.0[plant UML UI]
+https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/Ve1zj3V1gj/plantuml&noCache=366455.0[plant UML UI]
 
-serviceOrder API designed for ONAP Beijing Release.
+serviceOrder API designed for ONAP.
 This API is build from TMF open API18.0 (applying TMF Guideline 3.0);
 Only operations GET (by id and list) and POST are available.
 
 
 === Version information
 [%hardbreaks]
-__Version__ : 1.0.0_inProgress
+__Version__ : 3.0.0_inProgress
 
 
 === URI scheme
 [%hardbreaks]
 __Host__ : serverRoot
-__BasePath__ : /nbi/api/v1
+__BasePath__ : /nbi/api/v3
 __Schemes__ : HTTPS
 
 
 === Tags
 
+* Hub
+* Notification
 * ServiceOrder : A Service Order is a type of order which can be used to describe a group of operations on service – one service order item per service. An action at the level of the service order item describe the operation to be done on a service (add, terminate for example). The service order is triggered from the BSS system in charge of the product order management to ONAP that will manage the service fulfillment.
-
-
-=== Consumes
-
-* `application/json;charset=utf-8`
 
 
 === Produces
@@ -51,6 +42,561 @@ __Schemes__ : HTTPS
 
 [[_paths]]
 == Resources
+
+[[_hub_resource]]
+=== Hub
+
+[[_hubcreate]]
+==== Create Hub
+....
+POST /hub
+....
+
+
+===== Description
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Body**|**Hub** +
+__required__|<<_createhub,CreateHub>>
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**201**|Success +
+**Headers** :  +
+`location` (string)|file
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**404**|Not Found
+
+List of supported error codes:
+- 60: Resource not found|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+===== Consumes
+
+* `application/json;charset=utf-8`
+
+
+[[_hubfind]]
+==== Retrieve a lits of hub
+....
+GET /hub
+....
+
+
+===== Description
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Query**|**eventType** +
+__optional__|enum (ServiceOrderCreationNotification, ServiceOrderStateChangeNotification, ServiceOrderItemStateChangeNotification)
+|**Query**|**id** +
+__optional__|string
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**200**|Success|< <<_hub,Hub>> > array
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**404**|Not Found
+
+List of supported error codes:
+- 60: Resource not found|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+===== Produces
+
+* `application/json;charset=utf-8`
+
+
+[[_hubget]]
+==== Retrieve an HUB by id
+....
+GET /hub/{hubId}
+....
+
+
+===== Description
+Retrieve an HUB by id
+
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Path**|**hubId** +
+__required__|string
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**200**|Success|<<_hub,Hub>>
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**404**|Not Found
+
+List of supported error codes:
+- 60: Resource not found|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+===== Produces
+
+* `application/json;charset=utf-8`
+
+
+[[_hubdelete]]
+==== delete hub
+....
+DELETE /hub/{hubId}
+....
+
+
+===== Description
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Path**|**hubId** +
+__required__|string
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**204**|Success|No Content
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**404**|Not Found
+
+List of supported error codes:
+- 60: Resource not found|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+[[_notification_resource]]
+=== Notification
+
+[[_notificationserviceordercreationnotification]]
+==== Service order creation notification
+....
+POST /notification/serviceOrderCreationNotification
+....
+
+
+===== Description
+Service order creation notification
+
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Body**|**serviceOrderCreationNotification** +
+__required__|<<_serviceordercreationnotification,ServiceOrderCreationNotification>>
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**204**|Success|No Content
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**404**|Not Found
+
+List of supported error codes:
+- 60: Resource not found|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+===== Consumes
+
+* `application/json;charset=utf-8`
+
+
+[[_notificationserviceorderitemstatechangenotification]]
+==== ServiceOrder Item State Change Notification description
+....
+POST /notification/serviceOrderItemStateChangeNotification
+....
+
+
+===== Description
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Body**|**serviceOrderItemStateChangeNotification** +
+__required__|<<_serviceorderitemstatechangenotification,ServiceOrderItemStateChangeNotification>>
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**204**|Success|No Content
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**404**|Not Found
+
+List of supported error codes:
+- 60: Resource not found|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+===== Consumes
+
+* `application/json;charset=utf-8`
+
+
+[[_notificationserviceorderstatechangenotification]]
+==== Service order state change notification description
+....
+POST /notification/serviceOrderStateChangeNotification
+....
+
+
+===== Description
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Body**|**serviceOrderstateChangeNotification** +
+__required__|<<_serviceorderstatechangenotification,ServiceOrderStateChangeNotification>>
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**204**|Success|No Content
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**404**|Not Found
+
+List of supported error codes:
+- 60: Resource not found|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+===== Consumes
+
+* `application/json;charset=utf-8`
+
 
 [[_serviceorder_resource]]
 === ServiceOrder
@@ -68,6 +614,11 @@ POST /serviceOrder
 This operation creates a service order entity.
 The TMF Open API specification document provides the list of mandatory and non mandatory attributes when creating a ServiceOrder, including any possible rule conditions and applicable default values.
 POST should be used without specifying the id and the href, the Service Order Management system is in charge of generating the id + href for the ServiceOrder.
+
+In Beijing Release, NBI will use only POST {{url}}/ecomp/mso/infra/serviceInstances/v4 SO API. This mean that only the 'service-instance' level will be created in AAI. Additional resource like VNF and/OR VF are not created.
+
+In Casablanca release, NBI has been improved to also be able to use POST {{url}}/e2eServiceInstances/v3 SO API. This API is able to instantiate in ONAP E2E service; This is useful for CCVPN and VoLTE UC.
+Depending on the service category defined in SDC, NBI will use one or the other SO API. If category starts with e2e, NBI will use {url}}/e2eServiceInstances/v3 SO API - else it will use {{url}}/ecomp/mso/infra/serviceInstances/v4 SO API.
 
 Specific business errors for current operation will be encapsulated in
 
@@ -103,7 +654,7 @@ __required__|<<_createserviceorder,CreateServiceOrder>>
 [options="header", cols=".^2,.^14,.^4"]
 |===
 |HTTP Code|Description|Schema
-|**201**|Success|<<_createserviceorder,CreateServiceOrder>>
+|**201**|Success|<<_serviceorder,ServiceOrder>>
 |**400**|Bad Request
 
 List of supported error codes:
@@ -162,6 +713,16 @@ List of supported error codes:
 - 5: The service is temporarily unavailable
 - 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
 |===
+
+
+===== Consumes
+
+* `application/json;charset=utf-8`
+
+
+===== Produces
+
+* `application/json;charset=utf-8`
 
 
 [[_serviceorderfind]]
@@ -258,6 +819,11 @@ List of supported error codes:
 |===
 
 
+===== Produces
+
+* `application/json;charset=utf-8`
+
+
 [[_serviceorderget]]
 ==== Retrieve a service order
 ....
@@ -336,6 +902,11 @@ List of supported error codes:
 |===
 
 
+===== Produces
+
+* `application/json;charset=utf-8`
+
+
 [[_definitions]]
 == Definitions
 
@@ -345,6 +916,23 @@ Action type to be describer on the order item.
 modify is not managed in Beijing release
 
 __Type__ : enum (add, modify, delete, noChange)
+
+
+[[_createhub]]
+=== CreateHub
+This structure is used as a request for POST Hub operation
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**callback** +
+__required__|Address where notification must be send|string
+|**query** +
+__required__|The query must have an eventType=notificationName information.
+Optionally a ? could be added to reduce hub.
+query”:”eventType = ServiceOrderStateChangeNotification”&amp;serviceOrder.state=COMPLETED|string
+|===
 
 
 [[_createserviceorder]]
@@ -434,22 +1022,34 @@ __optional__|http error code extension like 400-2|string
 |===
 
 
+[[_eventtype]]
+=== EventType
+__Type__ : enum (ServiceOrderCreationNotification, ServiceOrderStateChangeNotification, ServiceOrderItemStateChangeNotification)
+
+
 [[_hub]]
 === Hub
 An HUB resource is used by client side to subscribe to notification.
 Not managed in the Beijing release.
 
 
-[options="header", cols=".^3,.^4"]
+[options="header", cols=".^3,.^11,.^4"]
 |===
-|Name|Schema
+|Name|Description|Schema
 |**callback** +
-__required__|string
+__required__|Address where notification must be send|string
 |**id** +
-__optional__|string
+__optional__|Hub Id|string
 |**query** +
-__optional__|string
+__required__||string
 |===
+
+
+[[_notification]]
+=== Notification
+Used to describe notification for this API
+
+__Type__ : object
 
 
 [[_orderitemrelationship]]
@@ -465,6 +1065,27 @@ nbi component used this relationship to sort request to ONAP.
 __required__|Unique identifier of an order item|string
 |**type** +
 __required__||<<_relationshiptype,RelationshipType>>
+|===
+
+
+[[_ordermessage]]
+=== OrderMessage
+An optional array of messages associated with the Order
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**code** +
+__optional__|A code associated to this message|string
+|**correctionRequired** +
+__required__|Indicator that an action is required to allow service order fullfilment to follow up|boolean
+|**field** +
+__optional__|Service Order attribute related to this error message|string
+|**messageInformation** +
+__optional__|Message related to this order|string
+|**severity** +
+__required__||<<_severitymessage,SeverityMessage>>
 |===
 
 
@@ -607,6 +1228,8 @@ __required__|ID created on repository side|string
 __optional__||string (date-time)
 |**orderItem** +
 __optional__||< <<_serviceorderitem,ServiceOrderItem>> > array
+|**orderMessage** +
+__optional__||< <<_ordermessage,OrderMessage>> > array
 |**orderRelationship** +
 __optional__||< <<_orderrelationship,OrderRelationship>> > array
 |**priority** +
@@ -621,6 +1244,25 @@ __optional__|Order start date wished by the requestor|string (date-time)
 __optional__|Date when the order was started for processing|string (date-time)
 |**state** +
 __optional__||<<_statetype,StateType>>
+|===
+
+
+[[_serviceordercreationnotification]]
+=== ServiceOrderCreationNotification
+Notification structure for a service order creation notification
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**event** +
+__required__||<<_serviceordersummary,ServiceOrderSummary>>
+|**eventDate** +
+__required__||string (date-time)
+|**eventId** +
+__required__||string
+|**eventType** +
+__required__|**Default** : `"ServiceOrderCreationNotification"`|string
 |===
 
 
@@ -643,10 +1285,117 @@ not used in Beijing relase|string
 __optional__||<<_actiontype,ActionType>>
 |**id** +
 __required__|Identifier of the line item (generally it is a sequence number 01, 02, 03, …)|string
+|**orderItemMessage** +
+__optional__||< <<_ordermessage,OrderMessage>> > array
 |**orderItemRelationship** +
 __optional__||< <<_orderitemrelationship,OrderItemRelationship>> > array
+|**percentProgress** +
+__optional__|Progress of the delivery in percentage.|string
 |**service** +
 __required__||<<_service,Service>>
+|**state** +
+__optional__||<<_statetype,StateType>>
+|===
+
+
+[[_serviceorderitemstatechangenotification]]
+=== ServiceOrderItemStateChangeNotification
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**event** +
+__required__||<<_serviceordersummarywithitem,ServiceOrderSummaryWithItem>>
+|**eventDate** +
+__required__||string (date-time)
+|**eventId** +
+__required__||string
+|**eventType** +
+__required__|**Default** : `"ServiceOrderStateChangeNotification"`|string
+|===
+
+
+[[_serviceorderitemsummary]]
+=== ServiceOrderItemSummary
+Service Order item summary to be used for notification
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**action** +
+__optional__||<<_actiontype,ActionType>>
+|**id** +
+__required__|Identifier of the line item (generally it is a sequence number 01, 02, 03, …)|string
+|**service** +
+__required__||<<_service,Service>>
+|**state** +
+__optional__||<<_statetype,StateType>>
+|===
+
+
+[[_serviceorderstatechangenotification]]
+=== ServiceOrderStateChangeNotification
+Service order state change notification description
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**event** +
+__required__||<<_serviceordersummary,ServiceOrderSummary>>
+|**eventDate** +
+__required__||string (date-time)
+|**eventId** +
+__required__||string
+|**eventType** +
+__required__|**Default** : `"ServiceOrderStateChangeNotification"`|string
+|===
+
+
+[[_serviceordersummary]]
+=== ServiceOrderSummary
+This structure is used to provide a subset of serviceOrder attributes to be provided in particular for notification messages
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**completionDateTime** +
+__optional__|Date when the order was completed|string (date-time)
+|**externalId** +
+__optional__|ID given by the consumer and only understandable by him (to facilitate his searches)|string
+|**href** +
+__optional__|Hyperlink to access the order|string
+|**id** +
+__required__|ID created on repository side|string
+|**orderDate** +
+__optional__||string (date-time)
+|**state** +
+__optional__||<<_statetype,StateType>>
+|===
+
+
+[[_serviceordersummarywithitem]]
+=== ServiceOrderSummaryWithItem
+Service order item summary with item description
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**completionDateTime** +
+__optional__|Date when the order was completed|string (date-time)
+|**externalId** +
+__optional__|ID given by the consumer and only understandable by him (to facilitate his searches)|string
+|**href** +
+__optional__|Hyperlink to access the order|string
+|**id** +
+__required__|ID created on repository side|string
+|**orderDate** +
+__optional__||string (date-time)
+|**orderItem** +
+__optional__||< <<_serviceorderitemsummary,ServiceOrderItemSummary>> > array
 |**state** +
 __optional__||<<_statetype,StateType>>
 |===
@@ -712,6 +1461,11 @@ __optional__||<<_targetserviceschema,TargetServiceSchema>>
 __optional__|Version of the service Specification
 Not used in Beijing release|string
 |===
+
+
+[[_severitymessage]]
+=== SeverityMessage
+__Type__ : enum (information, error)
 
 
 [[_statetype]]

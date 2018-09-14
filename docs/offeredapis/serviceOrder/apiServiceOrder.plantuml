@@ -1,7 +1,3 @@
-/' This work is licensed under a Creative Commons Attribution 4.0 International License.
-   http://creativecommons.org/licenses/by/4.0
-   Copyright 2018 Orange'/
-
 @startuml
 
 enum ActionType {
@@ -23,6 +19,15 @@ enum StateType {
 }
 enum RelationshipType {
    reliesOn
+}
+enum EventType {
+   ServiceOrderCreationNotification
+   ServiceOrderStateChangeNotification
+   ServiceOrderItemStateChangeNotification
+}
+enum SeverityMessage {
+   information
+   error
 }
 
 class ErrorRepresentation {
@@ -89,6 +94,7 @@ class OrderItemRelationship {
 
 class ServiceOrderItem {
    id:string
+   percentProgress:string
    @type:string
    @schemaLocation:string
    @baseType:string
@@ -97,6 +103,7 @@ class ServiceOrderItem {
    ServiceOrderItem --> "0-1" StateType : state
    ServiceOrderItem --> "0-*" OrderItemRelationship : orderItemRelationship
    ServiceOrderItem --> "1-1" Service : service
+   ServiceOrderItem --> "0-*" OrderMessage : orderItemMessage
 
 class ServiceOrder {
    id:string
@@ -119,6 +126,7 @@ class ServiceOrder {
    ServiceOrder --> "0-*" RelatedParty : relatedParty
    ServiceOrder --> "0-*" OrderRelationship : orderRelationship
    ServiceOrder --> "0-*" ServiceOrderItem : orderItem
+   ServiceOrder --> "0-*" OrderMessage : orderMessage
 
 class OrderRelationship {
    type:string
@@ -168,5 +176,67 @@ class Hub {
    query:string
    callback:string
 }
+
+class CreateHub {
+   query:string
+   callback:string
+}
+
+class ServiceOrderSummary {
+   id:string
+   href:string
+   externalId:string
+   orderDate:dateTime
+   completionDateTime:dateTime
+}
+   ServiceOrderSummary --> "0-1" StateType : state
+
+class ServiceOrderCreationNotification {
+   eventId:string
+   eventDate:dateTime
+   eventType:string
+}
+   ServiceOrderCreationNotification --> "1-1" ServiceOrderSummary : event
+
+class Notification
+
+class ServiceOrderStateChangeNotification {
+   eventId:string
+   eventDate:dateTime
+   eventType:string
+}
+   ServiceOrderStateChangeNotification --> "1-1" ServiceOrderSummary : event
+
+class ServiceOrderItemSummary {
+   id:string
+}
+   ServiceOrderItemSummary --> "0-1" ActionType : action
+   ServiceOrderItemSummary --> "0-1" StateType : state
+   ServiceOrderItemSummary --> "1-1" Service : service
+
+class ServiceOrderSummaryWithItem {
+   id:string
+   href:string
+   externalId:string
+   orderDate:dateTime
+   completionDateTime:dateTime
+}
+   ServiceOrderSummaryWithItem --> "0-1" StateType : state
+   ServiceOrderSummaryWithItem --> "0-*" ServiceOrderItemSummary : orderItem
+
+class ServiceOrderItemStateChangeNotification {
+   eventId:string
+   eventDate:dateTime
+   eventType:string
+}
+   ServiceOrderItemStateChangeNotification --> "1-1" ServiceOrderSummaryWithItem : event
+
+class OrderMessage {
+   code:string
+   field:string
+   messageInformation:string
+   correctionRequired:boolean
+}
+   OrderMessage --> "1-1" SeverityMessage : severity
 
 @enduml

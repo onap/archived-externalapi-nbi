@@ -1,8 +1,3 @@
-<!--
-This work is licensed under a Creative Commons Attribution 4.0 International License.
-http://creativecommons.org/licenses/by/4.0
-Copyright 2018 Orange
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -442,33 +437,45 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_version_information">Version information</a></li>
 <li><a href="#_uri_scheme">URI scheme</a></li>
 <li><a href="#_tags">Tags</a></li>
-<li><a href="#_consumes">Consumes</a></li>
 <li><a href="#_produces">Produces</a></li>
 </ul>
 </li>
 <li><a href="#_paths">Resources</a>
 <ul class="sectlevel2">
+<li><a href="#_hub_resource">Hub</a></li>
+<li><a href="#_notification_resource">Notification</a></li>
 <li><a href="#_serviceorder_resource">ServiceOrder</a></li>
 </ul>
 </li>
 <li><a href="#_definitions">Definitions</a>
 <ul class="sectlevel2">
 <li><a href="#_actiontype">ActionType</a></li>
+<li><a href="#_createhub">CreateHub</a></li>
 <li><a href="#_createserviceorder">CreateServiceOrder</a></li>
 <li><a href="#_createserviceorderitem">CreateServiceOrderItem</a></li>
 <li><a href="#_errorrepresentation">ErrorRepresentation</a></li>
+<li><a href="#_eventtype">EventType</a></li>
 <li><a href="#_hub">Hub</a></li>
+<li><a href="#_notification">Notification</a></li>
 <li><a href="#_orderitemrelationship">OrderItemRelationship</a></li>
+<li><a href="#_ordermessage">OrderMessage</a></li>
 <li><a href="#_orderrelationship">OrderRelationship</a></li>
 <li><a href="#_relatedparty">RelatedParty</a></li>
 <li><a href="#_relationshiptype">RelationshipType</a></li>
 <li><a href="#_service">Service</a></li>
 <li><a href="#_servicecharacteristic">ServiceCharacteristic</a></li>
 <li><a href="#_serviceorder">ServiceOrder</a></li>
+<li><a href="#_serviceordercreationnotification">ServiceOrderCreationNotification</a></li>
 <li><a href="#_serviceorderitem">ServiceOrderItem</a></li>
+<li><a href="#_serviceorderitemstatechangenotification">ServiceOrderItemStateChangeNotification</a></li>
+<li><a href="#_serviceorderitemsummary">ServiceOrderItemSummary</a></li>
+<li><a href="#_serviceorderstatechangenotification">ServiceOrderStateChangeNotification</a></li>
+<li><a href="#_serviceordersummary">ServiceOrderSummary</a></li>
+<li><a href="#_serviceordersummarywithitem">ServiceOrderSummaryWithItem</a></li>
 <li><a href="#_serviceref">ServiceRef</a></li>
 <li><a href="#_servicerelationship">ServiceRelationship</a></li>
 <li><a href="#_servicespecificationref">ServiceSpecificationRef</a></li>
+<li><a href="#_severitymessage">SeverityMessage</a></li>
 <li><a href="#_statetype">StateType</a></li>
 <li><a href="#_targetserviceschema">TargetServiceSchema</a></li>
 <li><a href="#_value">Value</a></li>
@@ -482,8 +489,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_overview">Overview</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_api_url">Api URL</h3>
 <div class="paragraph">
-<p>serviceOrder API designed for ONAP Beijing Release.
+<p><a href="https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/Ve1zj3V1gj/swagger.json">Swagger UI</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&amp;src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/Ve1zj3V1gj/plantuml&amp;noCache=366455.0">plant UML UI</a></p>
+</div>
+<div class="paragraph">
+<p>serviceOrder API designed for ONAP.
 This API is build from TMF open API18.0 (applying TMF Guideline 3.0);
 Only operations GET (by id and list) and POST are available.</p>
 </div>
@@ -491,14 +505,14 @@ Only operations GET (by id and list) and POST are available.</p>
 <div class="sect2">
 <h3 id="_version_information">Version information</h3>
 <div class="paragraph">
-<p><em>Version</em> : 1.0.0_inProgress</p>
+<p><em>Version</em> : 3.0.0_inProgress</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_uri_scheme">URI scheme</h3>
 <div class="paragraph">
 <p><em>Host</em> : serverRoot<br>
-<em>BasePath</em> : /nbi/api/v1<br>
+<em>BasePath</em> : /nbi/api/v3<br>
 <em>Schemes</em> : HTTPS</p>
 </div>
 </div>
@@ -507,17 +521,13 @@ Only operations GET (by id and list) and POST are available.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>ServiceOrder : A Service Order is a type of order which can be used to describe a group of operations on service – one service order item per service. An action at the level of the service order item describe the operation to be done on a service (add, terminate for example). The service order is triggered from the BSS system in charge of the product order management to ONAP that will manage the service fulfillment.</p>
+<p>Hub</p>
 </li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_consumes">Consumes</h3>
-<div class="ulist">
-<ul>
 <li>
-<p><code>application/json;charset=utf-8</code></p>
+<p>Notification</p>
+</li>
+<li>
+<p>ServiceOrder : A Service Order is a type of order which can be used to describe a group of operations on service – one service order item per service. An action at the level of the service order item describe the operation to be done on a service (add, terminate for example). The service order is triggered from the BSS system in charge of the product order management to ONAP that will manage the service fulfillment.</p>
 </li>
 </ul>
 </div>
@@ -538,6 +548,982 @@ Only operations GET (by id and list) and POST are available.</p>
 <h2 id="_paths">Resources</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_hub_resource">Hub</h3>
+<div class="sect3">
+<h4 id="_hubcreate">Create Hub</h4>
+<div class="literalblock">
+<div class="content">
+<pre>POST /hub</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_description">Description</h5>
+<div class="paragraph">
+<p>Specific business errors for current operation will be encapsulated in</p>
+</div>
+<div class="paragraph">
+<p>HTTP Response 422 Unprocessable entity</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_parameters">Parameters</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Hub</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_createhub">CreateHub</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_responses">Responses</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>201</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Success<br>
+<strong>Headers</strong> : <br>
+<code>location</code> (string)</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Bad Request</p>
+<p class="tableblock">List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>401</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unauthorized</p>
+<p class="tableblock">List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>403</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Forbidden</p>
+<p class="tableblock">List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>404</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Not Found</p>
+<p class="tableblock">List of supported error codes:
+- 60: Resource not found</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>422</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unprocessable entity</p>
+<p class="tableblock">Functional error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p>
+<p class="tableblock">List of supported error codes:
+- 1: Internal error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>503</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Unavailable</p>
+<p class="tableblock">List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_consumes">Consumes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_hubfind">Retrieve a lits of hub</h4>
+<div class="literalblock">
+<div class="content">
+<pre>GET /hub</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_description_2">Description</h5>
+<div class="paragraph">
+<p>Specific business errors for current operation will be encapsulated in</p>
+</div>
+<div class="paragraph">
+<p>HTTP Response 422 Unprocessable entity</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_parameters_2">Parameters</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Query</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventType</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">enum (ServiceOrderCreationNotification, ServiceOrderStateChangeNotification, ServiceOrderItemStateChangeNotification)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Query</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>id</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_responses_2">Responses</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Success</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_hub">Hub</a> &gt; array</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Bad Request</p>
+<p class="tableblock">List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>401</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unauthorized</p>
+<p class="tableblock">List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>403</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Forbidden</p>
+<p class="tableblock">List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>404</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Not Found</p>
+<p class="tableblock">List of supported error codes:
+- 60: Resource not found</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>422</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unprocessable entity</p>
+<p class="tableblock">Functional error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p>
+<p class="tableblock">List of supported error codes:
+- 1: Internal error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>503</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Unavailable</p>
+<p class="tableblock">List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_produces_2">Produces</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_hubget">Retrieve an HUB by id</h4>
+<div class="literalblock">
+<div class="content">
+<pre>GET /hub/{hubId}</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_description_3">Description</h5>
+<div class="paragraph">
+<p>Retrieve an HUB by id</p>
+</div>
+<div class="paragraph">
+<p>Specific business errors for current operation will be encapsulated in</p>
+</div>
+<div class="paragraph">
+<p>HTTP Response 422 Unprocessable entity</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_parameters_3">Parameters</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>hubId</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_responses_3">Responses</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Success</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_hub">Hub</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Bad Request</p>
+<p class="tableblock">List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>401</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unauthorized</p>
+<p class="tableblock">List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>403</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Forbidden</p>
+<p class="tableblock">List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>404</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Not Found</p>
+<p class="tableblock">List of supported error codes:
+- 60: Resource not found</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>422</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unprocessable entity</p>
+<p class="tableblock">Functional error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p>
+<p class="tableblock">List of supported error codes:
+- 1: Internal error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>503</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Unavailable</p>
+<p class="tableblock">List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_produces_3">Produces</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_hubdelete">delete hub</h4>
+<div class="literalblock">
+<div class="content">
+<pre>DELETE /hub/{hubId}</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_description_4">Description</h5>
+<div class="paragraph">
+<p>Specific business errors for current operation will be encapsulated in</p>
+</div>
+<div class="paragraph">
+<p>HTTP Response 422 Unprocessable entity</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_parameters_4">Parameters</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>hubId</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_responses_4">Responses</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>204</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Success</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Bad Request</p>
+<p class="tableblock">List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>401</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unauthorized</p>
+<p class="tableblock">List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>403</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Forbidden</p>
+<p class="tableblock">List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>404</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Not Found</p>
+<p class="tableblock">List of supported error codes:
+- 60: Resource not found</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>422</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unprocessable entity</p>
+<p class="tableblock">Functional error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p>
+<p class="tableblock">List of supported error codes:
+- 1: Internal error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>503</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Unavailable</p>
+<p class="tableblock">List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_notification_resource">Notification</h3>
+<div class="sect3">
+<h4 id="_notificationserviceordercreationnotification">Service order creation notification</h4>
+<div class="literalblock">
+<div class="content">
+<pre>POST /notification/serviceOrderCreationNotification</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_description_5">Description</h5>
+<div class="paragraph">
+<p>Service order creation notification</p>
+</div>
+<div class="paragraph">
+<p>Specific business errors for current operation will be encapsulated in</p>
+</div>
+<div class="paragraph">
+<p>HTTP Response 422 Unprocessable entity</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_parameters_5">Parameters</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>serviceOrderCreationNotification</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_serviceordercreationnotification">ServiceOrderCreationNotification</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_responses_5">Responses</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>204</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Success</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Bad Request</p>
+<p class="tableblock">List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>401</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unauthorized</p>
+<p class="tableblock">List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>403</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Forbidden</p>
+<p class="tableblock">List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>404</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Not Found</p>
+<p class="tableblock">List of supported error codes:
+- 60: Resource not found</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>422</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unprocessable entity</p>
+<p class="tableblock">Functional error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p>
+<p class="tableblock">List of supported error codes:
+- 1: Internal error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>503</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Unavailable</p>
+<p class="tableblock">List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_consumes_2">Consumes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notificationserviceorderitemstatechangenotification">ServiceOrder Item State Change Notification description</h4>
+<div class="literalblock">
+<div class="content">
+<pre>POST /notification/serviceOrderItemStateChangeNotification</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_description_6">Description</h5>
+<div class="paragraph">
+<p>Specific business errors for current operation will be encapsulated in</p>
+</div>
+<div class="paragraph">
+<p>HTTP Response 422 Unprocessable entity</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_parameters_6">Parameters</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>serviceOrderItemStateChangeNotification</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_serviceorderitemstatechangenotification">ServiceOrderItemStateChangeNotification</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_responses_6">Responses</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>204</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Success</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Bad Request</p>
+<p class="tableblock">List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>401</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unauthorized</p>
+<p class="tableblock">List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>403</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Forbidden</p>
+<p class="tableblock">List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>404</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Not Found</p>
+<p class="tableblock">List of supported error codes:
+- 60: Resource not found</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>422</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unprocessable entity</p>
+<p class="tableblock">Functional error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p>
+<p class="tableblock">List of supported error codes:
+- 1: Internal error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>503</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Unavailable</p>
+<p class="tableblock">List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_consumes_3">Consumes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notificationserviceorderstatechangenotification">Service order state change notification description</h4>
+<div class="literalblock">
+<div class="content">
+<pre>POST /notification/serviceOrderStateChangeNotification</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_description_7">Description</h5>
+<div class="paragraph">
+<p>Specific business errors for current operation will be encapsulated in</p>
+</div>
+<div class="paragraph">
+<p>HTTP Response 422 Unprocessable entity</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_parameters_7">Parameters</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>serviceOrderstateChangeNotification</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_serviceorderstatechangenotification">ServiceOrderStateChangeNotification</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_responses_7">Responses</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>204</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Success</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Bad Request</p>
+<p class="tableblock">List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>401</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unauthorized</p>
+<p class="tableblock">List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>403</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Forbidden</p>
+<p class="tableblock">List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>404</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Not Found</p>
+<p class="tableblock">List of supported error codes:
+- 60: Resource not found</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>422</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Unprocessable entity</p>
+<p class="tableblock">Functional error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p>
+<p class="tableblock">List of supported error codes:
+- 1: Internal error</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>503</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Unavailable</p>
+<p class="tableblock">List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_errorrepresentation">ErrorRepresentation</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_consumes_4">Consumes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_serviceorder_resource">ServiceOrder</h3>
 <div class="paragraph">
 <p>A Service Order is a type of order which can be used to describe a group of operations on service – one service order item per service. An action at the level of the service order item describe the operation to be done on a service (add, terminate for example). The service order is triggered from the BSS system in charge of the product order management to ONAP that will manage the service fulfillment.</p>
@@ -550,11 +1536,18 @@ Only operations GET (by id and list) and POST are available.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_description">Description</h5>
+<h5 id="_description_8">Description</h5>
 <div class="paragraph">
 <p>This operation creates a service order entity.
 The TMF Open API specification document provides the list of mandatory and non mandatory attributes when creating a ServiceOrder, including any possible rule conditions and applicable default values.
 POST should be used without specifying the id and the href, the Service Order Management system is in charge of generating the id + href for the ServiceOrder.</p>
+</div>
+<div class="paragraph">
+<p>In Beijing Release, NBI will use only POST {{url}}/ecomp/mso/infra/serviceInstances/v4 SO API. This mean that only the 'service-instance' level will be created in AAI. Additional resource like VNF and/OR VF are not created.</p>
+</div>
+<div class="paragraph">
+<p>In Casablanca release, NBI has been improved to also be able to use POST {{url}}/e2eServiceInstances/v3 SO API. This API is able to instantiate in ONAP E2E service; This is useful for CCVPN and VoLTE UC.
+Depending on the service category defined in SDC, NBI will use one or the other SO API. If category starts with e2e, NBI will use {url}}/e2eServiceInstances/v3 SO API - else it will use {{url}}/ecomp/mso/infra/serviceInstances/v4 SO API.</p>
 </div>
 <div class="paragraph">
 <p>Specific business errors for current operation will be encapsulated in</p>
@@ -589,7 +1582,7 @@ POST should be used without specifying the id and the href, the Service Order Ma
 </div>
 </div>
 <div class="sect4">
-<h5 id="_parameters">Parameters</h5>
+<h5 id="_parameters_8">Parameters</h5>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 22.2222%;">
@@ -614,7 +1607,7 @@ POST should be used without specifying the id and the href, the Service Order Ma
 </table>
 </div>
 <div class="sect4">
-<h5 id="_responses">Responses</h5>
+<h5 id="_responses_8">Responses</h5>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -632,7 +1625,7 @@ POST should be used without specifying the id and the href, the Service Order Ma
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>201</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Success</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_createserviceorder">CreateServiceOrder</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_serviceorder">ServiceOrder</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>400</strong></p></td>
@@ -707,6 +1700,26 @@ POST should be used without specifying the id and the href, the Service Order Ma
 </tbody>
 </table>
 </div>
+<div class="sect4">
+<h5 id="_consumes_5">Consumes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_produces_4">Produces</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_serviceorderfind">List service orders</h4>
@@ -716,7 +1729,7 @@ POST should be used without specifying the id and the href, the Service Order Ma
 </div>
 </div>
 <div class="sect4">
-<h5 id="_description_2">Description</h5>
+<h5 id="_description_9">Description</h5>
 <div class="paragraph">
 <p>Retrieve and list service order entities according to given criteria.
 Only a predefined set of attribute is proposed.
@@ -730,7 +1743,7 @@ Attribute selection could be described in the fields attribute.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_parameters_2">Parameters</h5>
+<h5 id="_parameters_9">Parameters</h5>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 11.1111%;">
@@ -807,7 +1820,7 @@ Attribute selection could be described in the fields attribute.</p>
 </table>
 </div>
 <div class="sect4">
-<h5 id="_responses_2">Responses</h5>
+<h5 id="_responses_9">Responses</h5>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -895,6 +1908,16 @@ Attribute selection could be described in the fields attribute.</p>
 </tbody>
 </table>
 </div>
+<div class="sect4">
+<h5 id="_produces_5">Produces</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_serviceorderget">Retrieve a service order</h4>
@@ -904,7 +1927,7 @@ Attribute selection could be described in the fields attribute.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_description_3">Description</h5>
+<h5 id="_description_10">Description</h5>
 <div class="paragraph">
 <p>This operation retrieves a service order entity.
 Attribute selection is enabled for all first level attributes.</p>
@@ -917,7 +1940,7 @@ Attribute selection is enabled for all first level attributes.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_parameters_3">Parameters</h5>
+<h5 id="_parameters_10">Parameters</h5>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 11.1111%;">
@@ -952,7 +1975,7 @@ Attribute selection is enabled for all first level attributes.</p>
 </table>
 </div>
 <div class="sect4">
-<h5 id="_responses_3">Responses</h5>
+<h5 id="_responses_10">Responses</h5>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -1037,6 +2060,16 @@ Attribute selection is enabled for all first level attributes.</p>
 </tbody>
 </table>
 </div>
+<div class="sect4">
+<h5 id="_produces_6">Produces</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json;charset=utf-8</code></p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1053,6 +2086,42 @@ modify is not managed in Beijing release</p>
 <div class="paragraph">
 <p><em>Type</em> : enum (add, modify, delete, noChange)</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_createhub">CreateHub</h3>
+<div class="paragraph">
+<p>This structure is used as a request for POST Hub operation</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>callback</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Address where notification must be send</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>query</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">The query must have an eventType=notificationName information.
+Optionally a ? could be added to reduce hub.
+query”:”eventType = ServiceOrderStateChangeNotification”&amp;serviceOrder.state=COMPLETED</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_createserviceorder">CreateServiceOrder</h3>
@@ -1279,6 +2348,12 @@ Attribute description is not accurate and should be find in the serviceOrderItem
 </table>
 </div>
 <div class="sect2">
+<h3 id="_eventtype">EventType</h3>
+<div class="paragraph">
+<p><em>Type</em> : enum (ServiceOrderCreationNotification, ServiceOrderStateChangeNotification, ServiceOrderItemStateChangeNotification)</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_hub">Hub</h3>
 <div class="paragraph">
 <p>An HUB resource is used by client side to subscribe to notification.
@@ -1286,12 +2361,14 @@ Not managed in the Beijing release.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42.8571%;">
-<col style="width: 57.1429%;">
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
@@ -1299,20 +2376,32 @@ Not managed in the Beijing release.</p>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>callback</strong><br>
 <em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Address where notification must be send</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>id</strong><br>
 <em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Hub Id</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>query</strong><br>
-<em>optional</em></p></td>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_notification">Notification</h3>
+<div class="paragraph">
+<p>Used to describe notification for this API</p>
+</div>
+<div class="paragraph">
+<p><em>Type</em> : object</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_orderitemrelationship">OrderItemRelationship</h3>
@@ -1345,6 +2434,58 @@ nbi component used this relationship to sort request to ONAP.</p>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_relationshiptype">RelationshipType</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_ordermessage">OrderMessage</h3>
+<div class="paragraph">
+<p>An optional array of messages associated with the Order</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>code</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">A code associated to this message</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>correctionRequired</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Indicator that an action is required to allow service order fullfilment to follow up</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>field</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Service Order attribute related to this error message</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>messageInformation</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Message related to this order</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>severity</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_severitymessage">SeverityMessage</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1682,6 +2823,12 @@ Not managed in Beijing release.</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_serviceorderitem">ServiceOrderItem</a> &gt; array</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>orderMessage</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_ordermessage">OrderMessage</a> &gt; array</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>orderRelationship</strong><br>
 <em>optional</em></p></td>
 <td class="tableblock halign-left valign-middle"></td>
@@ -1722,6 +2869,52 @@ Not managed in Beijing release.</p></td>
 <em>optional</em></p></td>
 <td class="tableblock halign-left valign-middle"></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_statetype">StateType</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_serviceordercreationnotification">ServiceOrderCreationNotification</h3>
+<div class="paragraph">
+<p>Notification structure for a service order creation notification</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>event</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_serviceordersummary">ServiceOrderSummary</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventDate</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string (date-time)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventId</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventType</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Default</strong> : <code>"ServiceOrderCreationNotification"</code></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 </tbody>
 </table>
@@ -1777,16 +2970,285 @@ not used in Beijing relase</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>orderItemMessage</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_ordermessage">OrderMessage</a> &gt; array</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>orderItemRelationship</strong><br>
 <em>optional</em></p></td>
 <td class="tableblock halign-left valign-middle"></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_orderitemrelationship">OrderItemRelationship</a> &gt; array</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>percentProgress</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Progress of the delivery in percentage.</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>service</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_service">Service</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>state</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_statetype">StateType</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_serviceorderitemstatechangenotification">ServiceOrderItemStateChangeNotification</h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>event</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_serviceordersummarywithitem">ServiceOrderSummaryWithItem</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventDate</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string (date-time)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventId</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventType</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Default</strong> : <code>"ServiceOrderStateChangeNotification"</code></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_serviceorderitemsummary">ServiceOrderItemSummary</h3>
+<div class="paragraph">
+<p>Service Order item summary to be used for notification</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>action</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_actiontype">ActionType</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>id</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Identifier of the line item (generally it is a sequence number 01, 02, 03, …)</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>service</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_service">Service</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>state</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_statetype">StateType</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_serviceorderstatechangenotification">ServiceOrderStateChangeNotification</h3>
+<div class="paragraph">
+<p>Service order state change notification description</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>event</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_serviceordersummary">ServiceOrderSummary</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventDate</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string (date-time)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventId</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>eventType</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Default</strong> : <code>"ServiceOrderStateChangeNotification"</code></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_serviceordersummary">ServiceOrderSummary</h3>
+<div class="paragraph">
+<p>This structure is used to provide a subset of serviceOrder attributes to be provided in particular for notification messages</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>completionDateTime</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Date when the order was completed</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string (date-time)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>externalId</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">ID given by the consumer and only understandable by him (to facilitate his searches)</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>href</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Hyperlink to access the order</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>id</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">ID created on repository side</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>orderDate</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string (date-time)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>state</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_statetype">StateType</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_serviceordersummarywithitem">ServiceOrderSummaryWithItem</h3>
+<div class="paragraph">
+<p>Service order item summary with item description</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 61.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>completionDateTime</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Date when the order was completed</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string (date-time)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>externalId</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">ID given by the consumer and only understandable by him (to facilitate his searches)</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>href</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Hyperlink to access the order</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>id</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">ID created on repository side</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>orderDate</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string (date-time)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>orderItem</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_serviceorderitemsummary">ServiceOrderItemSummary</a> &gt; array</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>state</strong><br>
@@ -1937,6 +3399,12 @@ Not used in Beijing release</p></td>
 </table>
 </div>
 <div class="sect2">
+<h3 id="_severitymessage">SeverityMessage</h3>
+<div class="paragraph">
+<p><em>Type</em> : enum (information, error)</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_statetype">StateType</h3>
 <div class="paragraph">
 <p>List of possible state for the order and the orderItem.</p>
@@ -2028,7 +3496,7 @@ This attribute must be used in Beijing Release to provide characteristic value.<
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-03-22 09:37:52 UTC
+Last updated 2018-09-12 13:42:33 +00:00
 </div>
 </div>
 </body>

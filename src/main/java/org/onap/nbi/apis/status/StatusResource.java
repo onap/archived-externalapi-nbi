@@ -20,6 +20,7 @@ import org.onap.nbi.apis.status.model.StatusType;
 import org.onap.nbi.commons.JsonRepresentation;
 import org.onap.nbi.commons.ResourceManagement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +37,11 @@ public class StatusResource extends ResourceManagement {
     @Autowired
     private StatusService statusService;
 
+    @Value("${nbi.version}")
+    private String version;
+
     private JsonRepresentation fullRepresentation = new JsonRepresentation().add("name").add("status").add("version")
-            .add("components.name").add("components.status");
+        .add("components.name").add("components.status");
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> status(HttpServletRequest request) {
@@ -47,13 +51,12 @@ public class StatusResource extends ResourceManagement {
         final String[] splitPath = request.getRequestURI().split("/");
 
         final String applicationName = splitPath[1];
-        final String applicationVersion = splitPath[3];
 
-        final ApplicationStatus applicationStatus = this.statusService.get(applicationName, applicationVersion);
+        final ApplicationStatus applicationStatus = this.statusService.get(applicationName, version);
 
         final boolean isServiceFullyFunctional =
-                StatusType.OK.equals(applicationStatus.getStatus()) ? applicationStatus.getComponents().stream()
-                        .allMatch(componentStatus -> StatusType.OK.equals(componentStatus.getStatus())) : false;
+            StatusType.OK.equals(applicationStatus.getStatus()) ? applicationStatus.getComponents().stream()
+                .allMatch(componentStatus -> StatusType.OK.equals(componentStatus.getStatus())) : false;
 
         // filter object
         Object response = this.getEntity(applicationStatus, fullRepresentation);

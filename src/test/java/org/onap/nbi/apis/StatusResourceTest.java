@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.nbi.apis.status.StatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,12 +38,18 @@ public class StatusResourceTest {
     @Autowired
     StatusResource statusResource;
 
+    @Value("${server.contextPath}")
+    String contextPath;
+
+    @Value("${nbi.version}")
+    String version;
+
     private MockHttpServletRequest request;
 
     @Before
     public void setup() {
         request = new MockHttpServletRequest();
-        request.setRequestURI("/nbi/api/v1/status");
+        request.setRequestURI(contextPath);
     }
 
     @Test
@@ -52,6 +59,6 @@ public class StatusResourceTest {
         ObjectNode status = (ObjectNode) response.getBody();
         assertThat(status.get("name").textValue()).isEqualTo("nbi");
         assertThat(status.get("status").toString()).isEqualTo("OK");
-        assertThat(status.get("version").textValue()).isEqualTo("v1");
+        assertThat(status.get("version").textValue()).isEqualTo(version);
     }
 }

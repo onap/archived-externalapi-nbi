@@ -1,7 +1,3 @@
-# This work is licensed under a Creative Commons Attribution 4.0 International License.
-# http://creativecommons.org/licenses/by/4.0
-# Copyright 2018 Orange
-
 # API ServiceCatalog
 
 
@@ -10,10 +6,10 @@
 
 ### Api URL
 
-[Swagger UI](https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/N3ma89X1x0/swagger.json)
+[Swagger UI](https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/XOmvoxNn9d/swagger.json)
 
 
-[plant UML UI](https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/N3ma89X1x0/plantuml&noCache=797767.0)
+[plant UML UI](https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/XOmvoxNn9d/plantuml&noCache=995303.0)
 
 serviceCatalog API designed for ONAP Beijing Release.
 This API is build from TMF open API17.5. 
@@ -21,23 +17,18 @@ Only operation GET (by id & byList) for resource serviceSpecification is availab
 
 
 ### Version information
-*Version* : 1.0.0_inProgress
+*Version* : 3.0.0_inProgress
 
 
 ### URI scheme
 *Host* : serverRoot  
-*BasePath* : /nbi/api/v1  
+*BasePath* : /nbi/api/v3
 *Schemes* : HTTPS
 
 
 ### Tags
 
 * ServiceSpecification
-
-
-### Consumes
-
-* `application/json;charset=utf-8`
 
 
 ### Produces
@@ -91,6 +82,11 @@ HTTP Response 422 Unprocessable entity
 |**503**|Service Unavailable<br><br>List of supported error codes:<br>- 5: The service is temporarily unavailable<br>- 6: Orange API is over capacity, retry later !|[ErrorRepresentation](#errorrepresentation)|
 
 
+##### Produces
+
+* `application/json;charset=utf-8`
+
+
 <a name="servicespecificationget"></a>
 #### Retrieve a service specification
 ```
@@ -126,6 +122,11 @@ HTTP Response 422 Unprocessable entity
 |**422**|Unprocessable entity<br><br>Functional error|[ErrorRepresentation](#errorrepresentation)|
 |**500**|Internal Server Error<br><br>List of supported error codes:<br>- 1: Internal error|[ErrorRepresentation](#errorrepresentation)|
 |**503**|Service Unavailable<br><br>List of supported error codes:<br>- 5: The service is temporarily unavailable<br>- 6: Orange API is over capacity, retry later !|[ErrorRepresentation](#errorrepresentation)|
+
+
+##### Produces
+
+* `application/json;charset=utf-8`
 
 
 <a name="definitions"></a>

@@ -1,0 +1,210 @@
+
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Listener API has to be implemented on the client side in order to receive notification.\nNotification are received if HUB has been posted on server side.",
+    "version": "0.1.0",
+    "title": "API Listener",
+    "x-logo": {
+      "url": "/redoc/logo.png",
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  
+  "host": "serverRoot",
+  "basePath":	"/externalapi/listener/v1",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json;charset=utf-8"
+  ],
+  "tags": [
+  
+    {
+      "name": "Listener",
+      "description": ""
+    }
+  ],
+  "paths": {
+      "/listener": {
+      "post": {
+        "tags": [
+           "Listener"
+        ],
+        "consumes": [
+           "application/json;charset=utf-8"
+        ],
+        "produces": [
+           "application/json;charset=utf-8"
+        ],        
+        "operationId": "listenerCreate",
+        "summary": "createEvent",
+        "description": "The create event is used by the seller to trigger (POST) a notification to the buyer. The buyer has previously subscribed to receive notification\n\nSpecific business errors for current operation will be encapsulated in\n\nHTTP Response 422 Unprocessable entity\n",
+        "deprecated": false,
+        
+        "parameters": [
+          
+          {
+            "name": "event",
+            "required": true,
+            "in": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Listener"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Listener"
+            }
+
+          },
+          "400": {
+            
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+            
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "401": {
+            
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+            
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "403": {
+            
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+            
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "422": {
+            
+            "description": "Unprocessable entity\n\nFunctional error",
+            "schema": {
+            
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "500": {
+            
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+            
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "503": {
+            
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+            
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          }
+        }
+      }
+    }
+  },
+"definitions": {
+  
+    "EventType": {
+      "description": "",
+      
+      "type": "string",
+      "enum": [
+  	          "ServiceOrderCreationNotification",
+  	          "ServiceOrderStateChangeNotification",
+  	          "ServiceOrderItemStateChangeNotification"]
+      
+    },
+
+    "ErrorRepresentation": {
+      "description": "",
+
+      
+      "required": [
+          
+            "code"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "",
+              "type": "integer",
+              "format": "int32"
+        },
+        "reason": {
+          "description": "",
+              "type": "string"
+        },
+        "message": {
+          "description": "",
+              "type": "string"
+        },
+        "status": {
+          "description": "",
+              "type": "integer",
+              "format": "int32"
+        },
+        "referenceError": {
+          "description": "",
+              "type": "string"
+        },
+        "@type": {
+          "description": "",
+              "type": "string"
+        },
+        "@schemaLocation": {
+          "description": "",
+              "type": "string"
+        }
+      }
+      
+    },
+
+    "Listener": {
+      "description": "An event will be triggered for each time a notification is send to a listener.",
+
+      
+      "required": [
+          
+            "eventId",
+            "eventDate",
+            "eventType",
+            "event"
+      ],
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "description": "id of the event",
+              "type": "string"
+        },
+        "eventDate": {
+          "description": "",
+              "type": "string",
+              "format": "date-time"
+        },
+        "eventType": {
+          
+           "$ref": "#/definitions/EventType"
+        },
+        "event": {
+          "description": "An event representation is the payload of information send with the notification; it will feature event attributes + summary view of the resource.",
+              "type": "object"
+        }
+      }
+      
+    }
+  }
+}
+	

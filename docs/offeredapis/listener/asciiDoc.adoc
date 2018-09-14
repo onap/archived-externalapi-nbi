@@ -1,0 +1,175 @@
+= API Listener
+
+
+[[_overview]]
+== Overview
+
+=== Api URL
+
+https://api-designer.sso.infra.ftgroup/swagger-ui/?url=https://api-designer.sso.infra.ftgroup/api/1.0/apis/aoG0EJ01Pv/swagger.json[Swagger UI]
+
+
+https://plantuml.rd.francetelecom.fr/proxy?fmt=svg&src=https://api-designer.sso.infra.ftgroup/api/1.0/apis/aoG0EJ01Pv/plantuml&noCache=7322.0[plant UML UI]
+
+Listener API has to be implemented on the client side in order to receive notification.
+Notification are received if HUB has been posted on server side.
+
+
+=== Version information
+[%hardbreaks]
+__Version__ : 0.1.0_inProgress
+
+
+=== URI scheme
+[%hardbreaks]
+__Host__ : serverRoot
+__BasePath__ : /externalapi/listener/v1
+__Schemes__ : HTTPS
+
+
+=== Tags
+
+* Listener
+
+
+=== Produces
+
+* `application/json;charset=utf-8`
+
+
+[[_paths]]
+== Resources
+
+[[_listener_resource]]
+=== Listener
+
+[[_listenercreate]]
+==== createEvent
+....
+POST /listener
+....
+
+
+===== Description
+The create event is used by the seller to trigger (POST) a notification to the buyer. The buyer has previously subscribed to receive notification
+
+Specific business errors for current operation will be encapsulated in
+
+HTTP Response 422 Unprocessable entity
+
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Body**|**event** +
+__required__|<<_listener,Listener>>
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**201**|Success|<<_listener,Listener>>
+|**400**|Bad Request
+
+List of supported error codes:
+- 20: Invalid URL parameter value
+- 21: Missing body
+- 22: Invalid body
+- 23: Missing body field
+- 24: Invalid body field
+- 25: Missing header
+- 26: Invalid header value
+- 27: Missing query-string parameter
+- 28: Invalid query-string parameter value|<<_errorrepresentation,ErrorRepresentation>>
+|**401**|Unauthorized
+
+List of supported error codes:
+- 40: Missing credentials
+- 41: Invalid credentials
+- 42: Expired credentials|<<_errorrepresentation,ErrorRepresentation>>
+|**403**|Forbidden
+
+List of supported error codes:
+- 50: Access denied
+- 51: Forbidden requester
+- 52: Forbidden user
+- 53: Too many requests|<<_errorrepresentation,ErrorRepresentation>>
+|**422**|Unprocessable entity
+
+Functional error|<<_errorrepresentation,ErrorRepresentation>>
+|**500**|Internal Server Error
+
+List of supported error codes:
+- 1: Internal error|<<_errorrepresentation,ErrorRepresentation>>
+|**503**|Service Unavailable
+
+List of supported error codes:
+- 5: The service is temporarily unavailable
+- 6: Orange API is over capacity, retry later !|<<_errorrepresentation,ErrorRepresentation>>
+|===
+
+
+===== Consumes
+
+* `application/json;charset=utf-8`
+
+
+===== Produces
+
+* `application/json;charset=utf-8`
+
+
+[[_definitions]]
+== Definitions
+
+[[_errorrepresentation]]
+=== ErrorRepresentation
+
+[options="header", cols=".^3,.^4"]
+|===
+|Name|Schema
+|**@schemaLocation** +
+__optional__|string
+|**@type** +
+__optional__|string
+|**code** +
+__required__|integer (int32)
+|**message** +
+__optional__|string
+|**reason** +
+__optional__|string
+|**referenceError** +
+__optional__|string
+|**status** +
+__optional__|integer (int32)
+|===
+
+
+[[_eventtype]]
+=== EventType
+__Type__ : enum (ServiceOrderCreationNotification, ServiceOrderStateChangeNotification, ServiceOrderItemStateChangeNotification)
+
+
+[[_listener]]
+=== Listener
+An event will be triggered for each time a notification is send to a listener.
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|Name|Description|Schema
+|**event** +
+__required__|An event representation is the payload of information send with the notification; it will feature event attributes + summary view of the resource.|object
+|**eventDate** +
+__required__||string (date-time)
+|**eventId** +
+__required__|id of the event|string
+|**eventType** +
+__required__||<<_eventtype,EventType>>
+|===
+

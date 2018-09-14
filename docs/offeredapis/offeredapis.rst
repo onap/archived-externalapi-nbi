@@ -25,7 +25,7 @@ Following illustration provides a global view about nbi architecture,integration
 API Version
 ***********
 
-APIs are described with a  state version with “v” following the API Name, e.g.:  'nbi/api/v1/productOrder'.
+APIs are described with a  state version with “v” following the API Name, e.g.:  'nbi/api/v3/productOrder'.
 The schema associated with a REST API must have its version number aligned with that of the REST API.
 
 The version number has major, minor and revision numbers. E.g. v1.0.0
@@ -74,11 +74,12 @@ API Table
    :widths: 10,5,5,5,5,5,5
 
    " ", "json file", "html doc", "plantUML doc", "Swagger Editor", "Postman Collection", "pdf doc"
-   "serviceCatalog", ":download:`link <swaggers/serviceCatalog_1_0_0.json>`", ":download:`link <serviceCatalog/documentation.html>`", ":download:`link <serviceCatalog/apiServiceCatalog.plantuml>`", "coming", "coming", "coming"
-   "serviceInventory", ":download:`link <swaggers/serviceInventory_1_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "coming", "coming", "coming"
-   "serviceOrder", ":download:`link <swaggers/serviceOrder_1_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "coming", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
+   "serviceCatalog", ":download:`link <swaggers/serviceCatalog_3_0_0.json>`", ":download:`link <serviceCatalog/documentation.html>`", ":download:`link <serviceCatalog/apiServiceCatalog.plantuml>`", "coming", "coming", "coming"
+   "serviceInventory", ":download:`link <swaggers/serviceInventory_3_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "coming", "coming", "coming"
+   "serviceOrder", ":download:`link <swaggers/serviceOrder_3_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "coming", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
+   "listener", ":download:`link <swaggers/listener_1_0_0.json>`", ":download:`link <listener/documentation.html>`", ":download:`link <listener/apiListener.plantuml>`", "coming", "coming", "coming"
 
-
+   
 ***************
 API Description
 ***************
@@ -100,7 +101,7 @@ Only ‘basic’ service characteristics will be managed in this release. By ‘
 
 GET serviceSpecification(list)
 
-(example: GET /nbi/api/v1/serviceSpecification/?category=NetworkService&distributionStatus=DISTRIBUTED)
+(example: GET /nbi/api/v3/serviceSpecification/?category=NetworkService&distributionStatus=DISTRIBUTED)
 
 It is possible to retrieve a list of serviceSpecification (get by list).
 
@@ -110,7 +111,7 @@ if no serviceSpecification matches, an empty list is send back.
 
 GET tservice Specification (id)
 
-(example: GET /nbi/api/v1/serviceSpecification/{uuid})
+(example: GET /nbi/api/v3/serviceSpecification/{uuid})
 
 It is use to retrieve one serviceSpecification - all available information are retieved (see swagger for description)
 
@@ -126,7 +127,7 @@ This API retrieves service(s) in the AAI inventory. Only following attributes wi
 
 GET Service Inventory (list):
 
-(example: GET /nbi/api/v1/service/?relatedParty.id=Pontus
+(example: GET /nbi/api/v3/service/?relatedParty.id=Pontus
 )
 
 GET (by list) allows to request with following criteria (all optional) :
@@ -145,7 +146,7 @@ if no service matches, an empty list is send back.
 
 GET Service Inventory (id):
 
-(example: GET /nbi/api/v1/service/{uuid} but customerId & serviceSpecification.id must passed in requested parameters)
+(example: GET /nbi/api/v3/service/{uuid} but customerId & serviceSpecification.id must passed in requested parameters)
 
 
 Because of AAI capability, additionally to the service id, customer id and [serviceSpecification.id or serviceSpecification.name] must be supplied. If the customer id is not supplied, External API will use ‘generic’ customer
