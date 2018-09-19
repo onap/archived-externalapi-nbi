@@ -1,7 +1,7 @@
 {
 "request": {
     "method": "GET",
-    "url": "/ecomp/mso/infra/e2eServiceInstances/v3/serviceId/operations/operationId"
+    "url": "/onap/so/infra/e2eServiceInstances/v3/serviceId/operations/operationId"
   },
   "response": {
     "status": 200,

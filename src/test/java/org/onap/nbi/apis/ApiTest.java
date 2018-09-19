@@ -988,7 +988,7 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v6/requestId");
+        removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -1025,7 +1025,7 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForE2EExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
+        removeWireMockMapping("/onap/so/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -1061,7 +1061,7 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
              executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v6");
+        removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -1083,8 +1083,8 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/serviceInstances/v6");
-        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v6/requestId");
+        removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
+        removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -1104,8 +1104,8 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForE2EExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.ADD);
 
-        removeWireMockMapping("/ecomp/mso/infra/e2eServiceInstances/v3");
-        removeWireMockMapping("/ecomp/mso/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
+        removeWireMockMapping("/onap/so/infra/e2eServiceInstances/v3");
+        removeWireMockMapping("/onap/so/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -1127,7 +1127,7 @@ public class ApiTest {
             executionTaskRepository, ActionType.ADD);
 
 
-        changeWireMockResponse("/ecomp/mso/infra/serviceInstances/v6",400,"\"serviceException\": {\n"
+        changeWireMockResponse("/onap/so/infra/serviceInstantiation/v7/serviceInstances/",400,"\"serviceException\": {\n"
             + "        \"messageId\": \"SVC0002\",\n"
             + "        \"text\": \"Error parsing request.  org.openecomp.mso.apihandler.common.ValidationException: serviceInstance already existsd\"\n"
             + "    }");
@@ -1211,7 +1211,7 @@ public class ApiTest {
         ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.MODIFY);
         ExecutionTask executionTaskB;
-        removeWireMockMapping("/ecomp/mso/infra/orchestrationRequests/v6/requestId");
+        removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);

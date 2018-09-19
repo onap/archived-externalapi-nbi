@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "url": "/ecomp/mso/infra/serviceInstances/v6"
+        "url": "/onap/so/infra/serviceInstantiation/v7/serviceInstances/"
     },
     "response": {
         "status": 201,

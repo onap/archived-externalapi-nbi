@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "url": "/ecomp/mso/infra/orchestrationRequests/v6/requestId"
+        "url": "/onap/so/infra/orchestrationRequests/v7/requestId"
     },
     "response": {
         "status": 200,
