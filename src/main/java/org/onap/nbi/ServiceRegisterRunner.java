@@ -37,9 +37,6 @@ import java.util.Set;
 public class ServiceRegisterRunner implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(ServiceRegisterRunner.class);
 
-    @Value("${msb.enabled}")
-    private boolean IS_ENABLED;
-
     @Value("${msb.discovery.host}")
     private String DISCOVERY_HOST;
 
@@ -75,7 +72,9 @@ public class ServiceRegisterRunner implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        if (!IS_ENABLED) return;
+        // if msb integration is not activated
+        if (Strings.isNullOrEmpty(DISCOVERY_HOST) || DISCOVERY_PORT == 0)
+            return;
 
         MicroServiceInfo msinfo = new MicroServiceInfo();
         msinfo.setServiceName(SERVICE_NAME);
@@ -99,7 +98,7 @@ public class ServiceRegisterRunner implements CommandLineRunner {
         msinfo.setNodes(nodes);
 
         logger.info(
-                "Register this service with msb discovery (" + DISCOVERY_HOST + ":" + DISCOVERY_PORT + "):\n"
+                "Registering with msb discovery (" + DISCOVERY_HOST + ":" + DISCOVERY_PORT + "):\n"
                         + " - host: [" + thisNode.getIp() + "]\n"
                         + " - port: [" + thisNode.getPort() + "]\n"
                         + " - name: [" + msinfo.getServiceName() + "]\n"
@@ -111,9 +110,14 @@ public class ServiceRegisterRunner implements CommandLineRunner {
                         + " - enableSSL: [" + SERVICE_ENABLE_SSL + "]\n"
         );
 
-        MSBServiceClient msbClient = new MSBServiceClient(DISCOVERY_HOST, DISCOVERY_PORT);
-        MicroServiceFullInfo microServiceFullInfo = msbClient.registerMicroServiceInfo(msinfo);
-
-        logger.debug("microServiceFullInfo = {}", microServiceFullInfo.toString());
+        try {
+            MSBServiceClient msbClient = new MSBServiceClient(DISCOVERY_HOST, DISCOVERY_PORT);
+            MicroServiceFullInfo microServiceFullInfo = msbClient.registerMicroServiceInfo(msinfo);
+            logger.debug("Registration with msb_discovery done, microServiceFullInfo = {}", microServiceFullInfo.toString());
+        } catch (Exception ex) {
+            logger.warn("Registration with msb_discovery FAILED. " +
+                    "Make sure you've configured correctly the MSB_DISCOVERY_HOST and MSB_DISCOVERY_PORT env vars. " +
+                    "Application will be started anyway.");
+        }
     }
 }
