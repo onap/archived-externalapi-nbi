@@ -46,6 +46,12 @@ public class ServiceRegisterRunner implements CommandLineRunner {
     @Value("${msb.discovery.port}")
     private int DISCOVERY_PORT;
 
+    @Value("${msb.discovery.retry}")
+    private int RETRY;
+
+    @Value("${msb.discovery.retry_interval}")
+    private int RETRY_INTERVAL;
+
     @Value("${msb.service.host}")
     private String SERVICE_HOST;
 
@@ -75,7 +81,10 @@ public class ServiceRegisterRunner implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        if (!IS_ENABLED) return;
+        if (!IS_ENABLED) {
+            logger.info("Registration with msb discovery is not enabled");
+            return;
+        }
 
         MicroServiceInfo msinfo = new MicroServiceInfo();
         msinfo.setServiceName(SERVICE_NAME);
@@ -99,21 +108,34 @@ public class ServiceRegisterRunner implements CommandLineRunner {
         msinfo.setNodes(nodes);
 
         logger.info(
-                "Register this service with msb discovery (" + DISCOVERY_HOST + ":" + DISCOVERY_PORT + "):\n"
+                "Registering with msb discovery (" + DISCOVERY_HOST + ":" + DISCOVERY_PORT + "):\n"
                         + " - host: [" + thisNode.getIp() + "]\n"
                         + " - port: [" + thisNode.getPort() + "]\n"
                         + " - name: [" + msinfo.getServiceName() + "]\n"
                         + " - version: [" + msinfo.getVersion() + "]\n"
                         + " - url: [" + msinfo.getUrl() + "]\n"
                         + " - path: [" + msinfo.getPath() + "]\n"
-                        + " - protocol: [" + msinfo.getProtocol() + "]\n"
+                        + " - protocol: [" + msinfo.getProtocol() + "]g\n"
                         + " - visualRange: [" + msinfo.getVisualRange() + "]\n"
                         + " - enableSSL: [" + SERVICE_ENABLE_SSL + "]\n"
         );
 
-        MSBServiceClient msbClient = new MSBServiceClient(DISCOVERY_HOST, DISCOVERY_PORT);
-        MicroServiceFullInfo microServiceFullInfo = msbClient.registerMicroServiceInfo(msinfo);
-
-        logger.debug("microServiceFullInfo = {}", microServiceFullInfo.toString());
+        int attempt = 0;
+        while (true) {
+            attempt += 1;
+            try {
+                logger.info("Registration with msb discovery (attempt {}/{})", attempt, RETRY);
+                MSBServiceClient msbClient = new MSBServiceClient(DISCOVERY_HOST, DISCOVERY_PORT);
+                MicroServiceFullInfo microServiceFullInfo = msbClient.registerMicroServiceInfo(msinfo);
+                logger.debug("Registration with msb discovery done, microServiceFullInfo = {}", microServiceFullInfo.toString());
+                break;
+            } catch (Exception ex) {
+                if (attempt == RETRY) {
+                    throw new Exception("Registration with msb discovery FAILED");
+                }
+            }
+            logger.info("Registration with msb discovery (attempt {}/{}) FAILED. Sleep {}ms", attempt, RETRY, RETRY_INTERVAL);
+            Thread.sleep(RETRY_INTERVAL);
+        }
     }
 }
