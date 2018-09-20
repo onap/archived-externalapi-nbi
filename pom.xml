@@ -402,7 +402,7 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
-						<version>0.25.0</version>
+						<version>0.26.1</version>
 						<configuration>
 							<verbose>true</verbose>
 							<apiVersion>1.23</apiVersion>
@@ -410,12 +410,10 @@
 							<pushRegistry>${docker.push.registry}</pushRegistry>
 							<images>
 								<image>
-									<name>onap/externalapi/nbi</name>
-									<alias>onap/externalapi/nbi</alias>
+									<name>onap/externalapi/nbi:${docker.tag}</name>
 									<build>
 										<cleanup>true</cleanup>
 										<tags>
-											<tag>${docker.tag}</tag>
 											<tag>${docker.latest.tag}</tag>
 										</tags>
 										<dockerFileDir>${project.basedir}</dockerFileDir>
