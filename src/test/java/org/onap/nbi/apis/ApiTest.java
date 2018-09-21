@@ -21,6 +21,7 @@ import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.stubbing.ListStubMappingsResult;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1002,8 +1003,10 @@ public class ApiTest {
             }
         }
         executionTaskA = getExecutionTask("A");
-        assertThat(executionTaskA.getLastAttemptDate().getTime()>executionTaskA.getCreateDate().getTime()).isTrue();
-        Thread.sleep((long)(pollingDurationInMins*60000 + 1));
+        Date createDate = executionTaskA.getCreateDate();
+        assertThat(executionTaskA.getLastAttemptDate().getTime()> createDate.getTime()).isTrue();
+
+        changeCreationDate(executionTaskA);
         SoTaskProcessor.processOrderItem(executionTaskA);
 
         serviceOrderChecked = serviceOrderRepository.findOne("test");
@@ -1016,6 +1019,13 @@ public class ApiTest {
         assertThat(executionTaskRepository.count()).isEqualTo(0);
 
 
+    }
+
+    private void changeCreationDate(ExecutionTask executionTaskA) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(executionTaskA.getCreateDate());
+        cal.add(Calendar.SECOND, -30);
+        executionTaskA.setCreateDate(cal.getTime());
     }
 
 
@@ -1040,7 +1050,7 @@ public class ApiTest {
         }
         executionTaskA = getExecutionTask("A");
         assertThat(executionTaskA.getLastAttemptDate().getTime()>executionTaskA.getCreateDate().getTime()).isTrue();
-        Thread.sleep((long)(pollingDurationInMins*60000 + 1));
+        changeCreationDate(executionTaskA);
         SoTaskProcessor.processOrderItem(executionTaskA);
 
         serviceOrderChecked = serviceOrderRepository.findOne("test");
@@ -1227,7 +1237,7 @@ public class ApiTest {
         }
         executionTaskA = getExecutionTask("A");
         assertThat(executionTaskA.getLastAttemptDate().getTime()>executionTaskA.getCreateDate().getTime()).isTrue();
-        Thread.sleep((long)(pollingDurationInMins*60000 + 1));
+        changeCreationDate(executionTaskA);
         SoTaskProcessor.processOrderItem(executionTaskA);
 
         serviceOrderChecked = serviceOrderRepository.findOne("test");
