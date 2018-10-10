@@ -22,7 +22,7 @@
 
 	<groupId>org.onap.externalapi-nbi</groupId>
 	<artifactId>nbi-rest-services</artifactId>
-	<version>3.0.1-STAGING</version>
+	<version>3.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>externalapi-nbi</name>
