@@ -1,0 +1,10 @@
+Code-Review+2: Matthieu Geerebaert <matthieu.geerebaert@orange.com>
+Verified+1: Matthieu Geerebaert <matthieu.geerebaert@orange.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Eric Debeau <eric.debeau@orange.com>
+Verified+1: Eric Debeau <eric.debeau@orange.com>
+Submitted-by: Eric Debeau <eric.debeau@orange.com>
+Submitted-at: Wed, 10 Oct 2018 07:58:32 +0000
+Reviewed-on: https://gerrit.onap.org/r/70079
+Project: externalapi/nbi
+Branch: refs/heads/master
