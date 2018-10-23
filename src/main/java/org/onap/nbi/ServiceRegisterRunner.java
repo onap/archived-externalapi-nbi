@@ -121,7 +121,7 @@ public class ServiceRegisterRunner implements CommandLineRunner {
         );
 
         int attempt = 0;
-        while (true) {
+        while (attempt<RETRY) {
             attempt += 1;
             try {
                 logger.info("Registration with msb discovery (attempt {}/{})", attempt, RETRY);
@@ -130,11 +130,8 @@ public class ServiceRegisterRunner implements CommandLineRunner {
                 logger.debug("Registration with msb discovery done, microServiceFullInfo = {}", microServiceFullInfo.toString());
                 break;
             } catch (Exception ex) {
-                if (attempt == RETRY) {
-                    throw new Exception("Registration with msb discovery FAILED");
-                }
+                logger.info("Registration with msb discovery (attempt {}/{}) FAILED. Sleep {}ms", attempt, RETRY, RETRY_INTERVAL);
             }
-            logger.info("Registration with msb discovery (attempt {}/{}) FAILED. Sleep {}ms", attempt, RETRY, RETRY_INTERVAL);
             Thread.sleep(RETRY_INTERVAL);
         }
     }
