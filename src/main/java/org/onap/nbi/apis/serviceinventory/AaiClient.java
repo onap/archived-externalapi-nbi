@@ -17,6 +17,7 @@ package org.onap.nbi.apis.serviceinventory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.exceptions.BackendFunctionalException;
 import org.slf4j.Logger;
@@ -49,6 +50,25 @@ public class AaiClient extends BaseClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiClient.class);
     private static final String X_TRANSACTION_ID = "X-TransactionId";
 
+
+    private String aaiServiceUrl;
+    private String aaiServicesUrl;
+    private String aaiServicesInstancesUrl;
+
+    @PostConstruct
+    private void setUpAndlogAAIUrl() {
+        aaiServiceUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_FOR_CUSTOMER_PATH).toString();
+        aaiServicesUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH).toString();
+        aaiServicesInstancesUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH).toString();
+
+
+        LOGGER.info("AAI service url :  "+aaiServiceUrl);
+        LOGGER.info("AAI services url :  "+aaiServicesUrl);
+        LOGGER.info("AAI service instances url :  "+aaiServicesInstancesUrl);
+
+    }
+
+
     private HttpHeaders buildRequestHeaderForAAI() {
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -64,9 +84,7 @@ public class AaiClient extends BaseClient {
 
     public Map getCatalogService(String customerId, String serviceSpecName, String serviceId) {
 
-        StringBuilder callURL =
-                new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_FOR_CUSTOMER_PATH);
-        String callUrlFormated = callURL.toString().replace(CUSTOMER_ID, customerId);
+        String callUrlFormated = aaiServiceUrl.replace(CUSTOMER_ID, customerId);
         callUrlFormated = callUrlFormated.replace("$serviceSpecName", serviceSpecName);
         callUrlFormated = callUrlFormated.replace("$serviceId", serviceId);
 
@@ -91,9 +109,7 @@ public class AaiClient extends BaseClient {
     }
 
     public Map getServicesInAaiForCustomer(String customerId) {
-        StringBuilder callURL =
-                new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH);
-        String callUrlFormated = callURL.toString().replace(CUSTOMER_ID, customerId);
+        String callUrlFormated = aaiServicesUrl.replace(CUSTOMER_ID, customerId);
         try{
             ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
             return (LinkedHashMap) response.getBody();
@@ -104,9 +120,7 @@ public class AaiClient extends BaseClient {
     }
 
     public Map getServiceInstancesInAaiForCustomer(String customerId, String serviceType) {
-        StringBuilder callURL =
-                new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH);
-        String callUrlFormated = callURL.toString().replace(CUSTOMER_ID, customerId);
+        String callUrlFormated = aaiServicesInstancesUrl.replace(CUSTOMER_ID, customerId);
         callUrlFormated = callUrlFormated.replace("$serviceSpecName", serviceType);
 
         try{

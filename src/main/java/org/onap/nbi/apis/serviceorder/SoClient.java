@@ -12,6 +12,7 @@
  */
 package org.onap.nbi.apis.serviceorder;
 
+import javax.annotation.PostConstruct;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateE2EServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
@@ -59,6 +60,32 @@ public class SoClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SoClient.class);
 
+    private String createSoUrl;
+    private String createE2ESoUrl;
+    private String getSoStatus;
+    private String getE2ESoStatus;
+    private String deleteE2ESoUrl;
+    private String deleteSoUrl;
+
+
+    @PostConstruct
+    private void setUpAndLogSOUrl() {
+        createSoUrl = new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_CREATE_SERVICE_INSTANCE_PATH).toString();
+        createE2ESoUrl = new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_CREATE_E2ESERVICE_INSTANCE_PATH).toString();
+        deleteSoUrl= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_DELETE_REQUEST_STATUS_PATH).toString();
+        deleteE2ESoUrl= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_DELETE_E2ESERVICE_INSTANCE_PATH).toString();
+        getSoStatus= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_REQUEST_STATUS_PATH).toString();
+        getE2ESoStatus= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_E2EREQUEST_STATUS_PATH).toString();
+
+        LOGGER.info("SO create service url :  "+ createSoUrl);
+        LOGGER.info("SO create e2e service url :  "+ createE2ESoUrl);
+        LOGGER.info("SO delete service url :  "+deleteSoUrl);
+        LOGGER.info("SO delete e2e service url :  "+deleteE2ESoUrl);
+        LOGGER.info("SO get so status url :  "+getSoStatus);
+        LOGGER.info("SO get e2e so status url :  "+getE2ESoStatus);
+
+    }
+
 
     public ResponseEntity<CreateServiceInstanceResponse> callCreateServiceInstance(MSOPayload msoPayload) {
 
@@ -66,20 +93,18 @@ public class SoClient {
             LOGGER.debug("Calling SO CreateServiceInstance with msoPayload : " + msoPayload.toString());
         }
 
-        String url = soHostname + OnapComponentsUrlPaths.MSO_CREATE_SERVICE_INSTANCE_PATH;
-
         try {
-            ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.POST,
+            ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(createSoUrl, HttpMethod.POST,
                 new HttpEntity<>(msoPayload, buildRequestHeader()), CreateServiceInstanceResponse.class);
 
-            logResponsePost(url, response);
+            logResponsePost(createSoUrl, response);
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e);
             return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -90,20 +115,18 @@ public class SoClient {
             LOGGER.debug("Calling SO CreateServiceInstanceE2E with msoPayload : " + msoPayloadE2E.toString());
         }
 
-        String url = soHostname + OnapComponentsUrlPaths.MSO_CREATE_E2ESERVICE_INSTANCE_PATH;
-
         try {
-            ResponseEntity<CreateE2EServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.POST,
+            ResponseEntity<CreateE2EServiceInstanceResponse> response = restTemplate.exchange(createE2ESoUrl, HttpMethod.POST,
                     new HttpEntity<>(msoPayloadE2E, buildRequestHeader()), CreateE2EServiceInstanceResponse.class);
 
-            logE2EResponsePost(url, response);
+            logE2EResponsePost(createE2ESoUrl, response);
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e);
             return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -114,7 +137,7 @@ public class SoClient {
             LOGGER.debug("Calling SO DeleteServiceInstance with msoPayload : " + msoPayload.toString());
         }
 
-        String url = soHostname + OnapComponentsUrlPaths.MSO_DELETE_REQUEST_STATUS_PATH + serviceId;
+        String url = deleteSoUrl + serviceId;
 
         try {
             ResponseEntity<CreateServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.DELETE,
@@ -136,7 +159,7 @@ public class SoClient {
     public ResponseEntity<CreateE2EServiceInstanceResponse> callE2EDeleteServiceInstance(String globalSubscriberId, String serviceType,
             String serviceInstanceId) {
 
-            String url = soHostname + OnapComponentsUrlPaths.MSO_DELETE_E2ESERVICE_INSTANCE_PATH + serviceInstanceId;
+            String url = deleteE2ESoUrl + serviceInstanceId;
             MSODeleteE2EPayload msoDeleteE2EPayload = new MSODeleteE2EPayload();
             msoDeleteE2EPayload.setGlobalSubscriberId(globalSubscriberId);
             msoDeleteE2EPayload.setServiceType(serviceType);
@@ -195,7 +218,7 @@ public class SoClient {
     }
 
     public GetRequestStatusResponse callGetRequestStatus(String requestId) {
-        String url = soHostname + OnapComponentsUrlPaths.MSO_GET_REQUEST_STATUS_PATH + requestId;
+        String url = getSoStatus + requestId;
 
         try {
 
@@ -215,9 +238,7 @@ public class SoClient {
 
 public GetE2ERequestStatusResponse callE2EGetRequestStatus(String operationId, String serviceId) {
     	
-    	StringBuilder callURL =
-                new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_E2EREQUEST_STATUS_PATH);
-        String callUrlFormated = callURL.toString().replace("$serviceId", serviceId);
+        String callUrlFormated = getE2ESoStatus.replace("$serviceId", serviceId);
         callUrlFormated = callUrlFormated.replace("$operationId", operationId);
 
         if (LOGGER.isDebugEnabled()) {

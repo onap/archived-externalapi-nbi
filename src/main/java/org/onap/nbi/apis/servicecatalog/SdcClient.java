@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.annotation.PostConstruct;
 import org.apache.commons.io.IOUtils;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.exceptions.BackendFunctionalException;
@@ -63,20 +64,35 @@ public class SdcClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(SdcClient.class);
 
 
+
+    private String sdcGetUrl;
+    private String sdcFindUrl;
+
+    @PostConstruct
+    private void setUpAndLogSDCUrl() {
+        sdcGetUrl= new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL+"/{id}"+OnapComponentsUrlPaths.SDC_GET_PATH).toString();
+        sdcFindUrl = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL).toString();
+
+
+        LOGGER.info("SDC GET url :  "+sdcGetUrl);
+        LOGGER.info("SDC FIND url :  "+ sdcFindUrl);
+
+    }
+
+
     public Map callGet(String id) {
-        StringBuilder urlBuilder = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL)
-                .append("/").append(id).append(OnapComponentsUrlPaths.SDC_GET_PATH);
 
-        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(urlBuilder.toString());
+        String callUrl = sdcGetUrl.replace("{id}", id);
+        UriComponentsBuilder callURLFormated = UriComponentsBuilder.fromHttpUrl(callUrl);
 
-        ResponseEntity<Object> response = callSdc(callURI.build().encode().toUri());
+        ResponseEntity<Object> response = callSdc(callURLFormated.build().encode().toUri());
         return (LinkedHashMap) response.getBody();
 
     }
 
     public List<LinkedHashMap> callFind(MultiValueMap<String, String> parametersMap) {
 
-        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(sdcHost + OnapComponentsUrlPaths.SDC_ROOT_URL);
+        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(sdcFindUrl);
         if (parametersMap != null) {
             Map<String, String> stringStringMap = parametersMap.toSingleValueMap();
             for (Entry<String, String> entry : stringStringMap.entrySet()) {

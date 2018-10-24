@@ -16,6 +16,9 @@
 package org.onap.nbi;
 
 import com.google.common.base.Strings;
+import java.net.InetAddress;
+import java.util.HashSet;
+import java.util.Set;
 import org.onap.msb.sdk.discovery.entity.MicroServiceFullInfo;
 import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
 import org.onap.msb.sdk.discovery.entity.Node;
@@ -25,10 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.net.InetAddress;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Register this NBI instance with MSB discovery when the app is fully started
@@ -120,9 +119,8 @@ public class ServiceRegisterRunner implements CommandLineRunner {
                         + " - enableSSL: [" + SERVICE_ENABLE_SSL + "]\n"
         );
 
-        int attempt = 0;
-        while (attempt<RETRY) {
-            attempt += 1;
+        int attempt = 1;
+        while (attempt<=RETRY) {
             try {
                 logger.info("Registration with msb discovery (attempt {}/{})", attempt, RETRY);
                 MSBServiceClient msbClient = new MSBServiceClient(DISCOVERY_HOST, DISCOVERY_PORT);
@@ -130,9 +128,13 @@ public class ServiceRegisterRunner implements CommandLineRunner {
                 logger.debug("Registration with msb discovery done, microServiceFullInfo = {}", microServiceFullInfo.toString());
                 break;
             } catch (Exception ex) {
-                logger.info("Registration with msb discovery (attempt {}/{}) FAILED. Sleep {}ms", attempt, RETRY, RETRY_INTERVAL);
+                logger.warn("Registration with msb discovery (attempt {}/{}) FAILED.", attempt, RETRY);
+                attempt += 1;
+                if(attempt<=RETRY) {
+                    logger.warn("Sleep {}ms", RETRY_INTERVAL);
+                    Thread.sleep(RETRY_INTERVAL);
+                }
             }
-            Thread.sleep(RETRY_INTERVAL);
         }
     }
 }
