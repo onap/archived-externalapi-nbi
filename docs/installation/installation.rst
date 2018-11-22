@@ -1,6 +1,4 @@
-.. This work is licensed under
-.. a Creative Commons Attribution 4.0 International License.
-.. http://creativecommons.org/licenses/by/4.0
+.. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright 2018 ORANGE
 
 
@@ -41,7 +39,8 @@ Defaults
 
     Mongo, host=localhost, port=27017, database=ServiceOrderDB
 
-    Mariadb, url=jdbc:mariadb://localhost:3306/nbi, username=root, password=secret
+    Mariadb, url=jdbc:mariadb://localhost:3306/nbi, username=root,
+    password=secret
 
 Run
 ::
@@ -99,4 +98,3 @@ configuration file and */json/* package with samples requests that can be run.
 **Play with Postman**
 
 A collection is available here *docs/offeredapis/postman*
-
