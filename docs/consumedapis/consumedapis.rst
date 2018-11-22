@@ -1,6 +1,4 @@
-.. This work is licensed under
-.. a Creative Commons Attribution 4.0 International License.
-.. http://creativecommons.org/licenses/by/4.0
+.. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright 2018 ORANGE
 
 
@@ -57,9 +55,10 @@ SO API
 ******
 
 This API is used to perform Service Order and thus instantiate a service.
-Distinct SO APIs are used for serviceInstance creation request depending on the serviceSpecification category (set in SDC).
-If service could be delivered end-to-end from one request category is set to 'E2E Service'. 
-In this case NBI uses 
+Distinct SO APIs are used for serviceInstance creation request depending on the
+serviceSpecification category (set in SDC). If service could be delivered
+end-to-end from one request category is set to 'E2E Service'.
+In this case NBI uses
 
 ::
 
@@ -69,7 +68,7 @@ In this case NBI uses
 
     MSO_DELETE_REQUEST_STATUS_PATH = "/ecomp/mso/infra/serviceInstances/v6/"
 
-	
+
 else following API are used:
 
 ::
