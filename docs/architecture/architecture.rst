@@ -1,6 +1,4 @@
-.. This work is licensed under
-.. a Creative Commons Attribution 4.0 International License.
-.. http://creativecommons.org/licenses/by/4.0
+.. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright 2018 ORANGE
 
 
@@ -17,9 +15,9 @@ used by external systems as BSS for example.
 These API are based on **TMF API**.
 
 
-*******************************************
+**********************************************
 Global NBI architecture for Casablanca release
-*******************************************
+**********************************************
 
 Following illustration provides a global view about NBI architecture,
 integration with other ONAP components and API resource/operation provided.
@@ -38,4 +36,3 @@ could be found here: :doc:`NBI_Developer_Guide <NBI_Developer_Guide>`
 
 API Flow illustration (with example messages) is described in this document:
 :download:`nbicallflow.pdf <../offeredapis/pdf/nbicallflow.pdf>`
-
