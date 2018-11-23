@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,6 +31,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.FileUtils;
 import org.onap.nbi.exceptions.TechnicalException;
+import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
+import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
+import org.onap.sdc.toscaparser.api.NodeTemplate;
+import org.onap.sdc.toscaparser.api.parameters.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,8 +94,71 @@ public class ToscaInfosProcessor {
             }
         }
     }
+    
+    public void buildResponseWithSdcToscaParser(Path path, Map serviceCatalogResponse) throws SdcToscaParserException {
 
-    private List<LinkedHashMap> buildServiceSpecCharacteristicsValues(LinkedHashMap parameter, String parameterType) {
+        SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
+        ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(),false);
+        List<Input> inputs = sdcCsarHelper.getServiceInputs();
+        if(inputs != null && inputs.size() > 0) {
+            ArrayList serviceSpecCharacteristic = new ArrayList();
+            for(Input input : inputs) {
+                    LinkedHashMap mapParameter = new LinkedHashMap();
+                    mapParameter.put("name", input.getName());
+                    mapParameter.put("description", input.getDescription());
+                    mapParameter.put("valueType", input.getType());
+                    mapParameter.put("@type", "ONAPserviceCharacteristic");
+                    mapParameter.put("required", input.isRequired());
+                    mapParameter.put("status", null);
+                    mapParameter.put("serviceSpecCharacteristicValue", null);
+                    // If this Input has a default value, then put it in serviceSpecCharacteristicValue
+                    if (input.getDefault() != null)
+                    {
+                    List<LinkedHashMap> serviceSpecCharacteristicValues =
+                            buildServiceSpecCharacteristicsValuesFromSdc(input);
+                        mapParameter.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValues);
+                    }
+                    serviceSpecCharacteristic.add(mapParameter);
+            }
+            serviceCatalogResponse.put("serviceSpecCharacteristic", serviceSpecCharacteristic);
+           }
+        List<NodeTemplate> nodeTemplates = sdcCsarHelper.getServiceNodeTemplates();
+
+        List<LinkedHashMap> resourceSpecifications =
+                (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
+        for (LinkedHashMap resourceSpecification : resourceSpecifications) {
+            if(resourceSpecification.get("id")!=null){
+                String id = (String) resourceSpecification.get("id");
+                LOGGER.debug("get tosca infos for service id: {}", id);
+                NodeTemplate nodeTemplate = null;
+                for(NodeTemplate node : nodeTemplates) {
+                        if(node.getMetaData().getValue("UUID").equals(id)) {
+                                nodeTemplate = node;
+                                break;
+                        }
+                }
+                if(nodeTemplate == null)
+                        continue;
+                resourceSpecification.put("modelCustomizationId", sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
+            }
+        }
+    }
+
+        
+    private List<LinkedHashMap> buildServiceSpecCharacteristicsValuesFromSdc(Input input) {
+		
+    	List<LinkedHashMap> serviceSpecCharacteristicValues = new ArrayList<>();
+    	LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
+    	
+    	serviceSpecCharacteristicValue.put("isDefault", true);
+        serviceSpecCharacteristicValue.put("value", input.getDefault());
+        serviceSpecCharacteristicValue.put("valueType", input.getType());
+        serviceSpecCharacteristicValues.add(serviceSpecCharacteristicValue);
+        
+		return serviceSpecCharacteristicValues;
+	}
+
+	private List<LinkedHashMap> buildServiceSpecCharacteristicsValues(LinkedHashMap parameter, String parameterType) {
         List<LinkedHashMap> serviceSpecCharacteristicValues = new ArrayList<>();
         if (!"map".equalsIgnoreCase(parameterType) && !"list".equalsIgnoreCase(parameterType)) {
             LOGGER.debug("get tosca infos for serviceSpecCharacteristicValues of type map or string : {}", parameter);

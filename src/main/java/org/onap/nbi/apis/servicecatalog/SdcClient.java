@@ -16,7 +16,11 @@ package org.onap.nbi.apis.servicecatalog;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,6 +132,26 @@ public class SdcClient {
         }
         return toscaFile;
 
+    }
+    
+    public Path getServiceToscaModel(String uuid) throws IOException {
+        StringBuilder urlBuilder = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL)
+                .append("/").append(uuid).append(OnapComponentsUrlPaths.SDC_TOSCA_PATH);
+
+        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(urlBuilder.toString());
+
+        InputStream inputStream = (InputStream) callSdc(callURI.build().encode().toUri()).getBody();
+
+        return createTmpFile(inputStream);
+    }
+    
+    private Path createTmpFile(InputStream csarInputStream) throws IOException {
+        Path csarFile = Files.createTempFile("csar", ".zip");
+        Files.copy(csarInputStream, csarFile, StandardCopyOption.REPLACE_EXISTING);
+
+        LOGGER.debug("Tosca file was saved at: {} ", csarFile.toAbsolutePath());
+
+        return csarFile;
     }
 
     private HttpEntity<String> buildRequestHeader() {
