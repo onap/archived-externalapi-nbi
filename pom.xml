@@ -214,6 +214,14 @@
 			<artifactId>jackson-dataformat-yaml</artifactId>
 			<version>2.9.6</version>
 		</dependency>
+		
+		<!-- sdc tosca parser -->
+		
+		<dependency>
+            <groupId>org.onap.sdc.sdc-tosca</groupId>
+            <artifactId>sdc-tosca</artifactId>
+            <version>1.4.6</version>
+        </dependency>
 
 		<!-- jolt -->
 
