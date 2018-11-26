@@ -1,6 +1,4 @@
-.. This work is licensed under a
-.. Creative Commons Attribution 4.0 International License.
-.. http://creativecommons.org/licenses/by/4.0
+.. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright 2018 ORANGE
 
 Release Notes
@@ -21,7 +19,7 @@ Main features are:
 - `EXTAPI-101 <https://jira.onap.org/browse/EXTAPI-101>`_ - Integrate ExtAPI/NBI to MSB
 - `EXTAPI-102 <https://jira.onap.org/browse/EXTAPI-102>`_ - Integrate ExtAPI/NBI to an E2E ONAP UC
 - `EXTAPI-116 <https://jira.onap.org/browse/EXTAPI-116>`_ - Help NBI user to get information when Service order fails
-- `EXTAPI-125 <https://jira.onap.org/browse/EXTAPI-125>`_ - Hadd support for progress percentage on ServiceOrder tracking
+- `EXTAPI-125 <https://jira.onap.org/browse/EXTAPI-125>`_ - Add support for progress percentage on ServiceOrder tracking
 
 Detail of features described in the readTheDoc documentation.
 
@@ -37,12 +35,10 @@ No new issue (see Beijing ones)
 **Security Notes**
 
 To be completed
- 
+
 Quick Links:
 
 - `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
-- `Passing Badge information for External API <to be completed>`_
-- `Project Vulnerability Review Table for External API <to be completed>`_
 
 **Upgrade Notes**
 

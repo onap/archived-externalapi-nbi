@@ -1,5 +1,4 @@
-.. This work is licensed under a Creative Commons Attribution 4.0 International License.
-.. http://creativecommons.org/licenses/by/4.0
+.. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright 2018 ORANGE
 
 
@@ -10,7 +9,8 @@ Delivery
 NBI Dockers Containers Structure
 ********************************
 
-Below is a diagram of the ExternalAPI/NBI project docker containers and the connections between them.
+Below is a diagram of the ExternalAPI/NBI project docker containers and the
+connections between them.
 
 .. blockdiag::
 
@@ -32,4 +32,3 @@ Below is a diagram of the ExternalAPI/NBI project docker containers and the conn
             MongoDB; MariaDB;
         }
     }
-
