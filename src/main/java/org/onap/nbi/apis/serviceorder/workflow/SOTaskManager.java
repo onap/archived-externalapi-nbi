@@ -12,11 +12,7 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import org.onap.nbi.apis.serviceorder.model.OrderItemRelationship;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
@@ -71,14 +67,17 @@ public class SOTaskManager {
             }
             // then we replace all orderitem ids in reliedtasks field with internalid of the tasks
             for (ExecutionTask executionTask : executionTasksSaved) {
-                for (Entry<String, Long> entry : internalIdOrderItemsMap.entrySet()) {
-                    String replace = executionTask.getReliedTasks().replace(entry.getKey(),
-                        String.valueOf(entry.getValue()));
-                    executionTask.setReliedTasks(replace);
+                List<String> reliedOrderItemsIds = new ArrayList<String>(Arrays.asList(executionTask.getReliedTasks().split(" ")));
+                List<String> reliedTasksInternalIds = new ArrayList<String>();
+                for (Entry<String, Long> entry : internalIdOrderItemsMap.entrySet()){
+                   if(reliedOrderItemsIds.contains(entry.getKey())) {
+                       reliedTasksInternalIds.add(entry.getValue().toString());
+                    }
                 }
+            String reliedTasksString = String.join(" ", reliedTasksInternalIds);
+            executionTask.setReliedTasks(reliedTasksString);
                 if(LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("saving task with id {} , orderItemId {} , reliedtasks {}", executionTask.getInternalId(),
-                        executionTask.getOrderItemId(), executionTask.getReliedTasks());
+                    LOGGER.debug("saving task with id {} , orderItemId {} , reliedtasks {}", executionTask.getInternalId(), executionTask.getOrderItemId(), executionTask.getReliedTasks());
                 }
                 executionTaskRepository.save(executionTask);
             }
