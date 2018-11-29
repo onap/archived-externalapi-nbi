@@ -4,10 +4,10 @@
 Release Notes
 =============
 
-Version: 3.0.0
+Version: 3.0.1
 --------------
 
-:Release Date: 2018-11-15
+:Release Date: 2018-11-30
 
 **New Features**
 
@@ -23,18 +23,13 @@ Main features are:
 
 Detail of features described in the readTheDoc documentation.
 
-**Bug Fixes**
-
-- `EXTAPI-70 <https://jira.onap.org/browse/EXTAPI-70>`_ - NBI should add relationship to tenant when creating service-subscription in AAI
-
-
 **Known Issues**
 
 No new issue (see Beijing ones)
 
 **Security Notes**
 
-To be completed
+- `Vulnerability Report <https://wiki.onap.org/pages/viewpage.action?pageId=45301150>`_
 
 Quick Links:
 
@@ -42,11 +37,11 @@ Quick Links:
 
 **Upgrade Notes**
 
-To be completed
+No upgrade available from Beijing
 
 **Deprecation Notes**
 
-No deprecated feature from Beijing.
+NA
 
 **Other**
 
