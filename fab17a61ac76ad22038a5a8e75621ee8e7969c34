@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Matthieu Geerebaert <matthieu.geerebaert@orange.com>
+Code-Review+2: Andy Mayer <am803u@att.com>
+Verified+1: Andy Mayer <am803u@att.com>
+Submitted-by: Andy Mayer <am803u@att.com>
+Submitted-at: Tue, 08 Jan 2019 09:48:45 +0000
+Reviewed-on: https://gerrit.onap.org/r/75386
+Project: externalapi/nbi
+Branch: refs/heads/casablanca
