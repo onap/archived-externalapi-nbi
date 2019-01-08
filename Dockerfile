@@ -17,7 +17,7 @@
 FROM openjdk:8-jre-alpine
 
 ARG SERVER_PORT
-ARG PKG_FILENAME=nbi-rest-services-3.0.1.jar
+ARG PKG_FILENAME=nbi-rest-services-3.0.2.jar
 ADD target/$PKG_FILENAME app.jar
 
 COPY src/main/resources/certificate /certs
