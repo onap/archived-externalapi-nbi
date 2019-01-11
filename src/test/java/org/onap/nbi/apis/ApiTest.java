@@ -20,16 +20,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.stubbing.ListStubMappingsResult;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -61,6 +51,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -332,7 +327,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
@@ -349,10 +344,9 @@ public class ApiTest {
         for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
             serviceOrderItem.getService().getServiceSpecification().setId("toto");
         }
-
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -372,7 +366,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
@@ -389,7 +383,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
@@ -412,7 +406,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
@@ -431,7 +425,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -456,7 +450,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -480,7 +474,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -507,7 +501,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -536,7 +530,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -565,7 +559,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -598,7 +592,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -617,7 +611,7 @@ public class ApiTest {
         }
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
@@ -636,7 +630,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -660,7 +654,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
@@ -687,7 +681,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.ACKNOWLEDGED);
@@ -710,7 +704,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -732,7 +726,7 @@ public class ApiTest {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
