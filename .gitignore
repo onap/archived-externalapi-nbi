@@ -36,6 +36,9 @@ Icon
 .Spotlight-V100
 .Trashes
 
+# vscode
+ .vscode
+
 ### Windows related ###
 # Windows image file caches
 Thumbs.db

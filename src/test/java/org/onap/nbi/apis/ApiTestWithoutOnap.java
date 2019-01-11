@@ -15,10 +15,6 @@
  */
 package org.onap.nbi.apis;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,11 +22,7 @@ import org.onap.nbi.apis.assertions.ServiceOrderAssertions;
 import org.onap.nbi.apis.servicecatalog.ServiceSpecificationResource;
 import org.onap.nbi.apis.serviceinventory.ServiceInventoryResource;
 import org.onap.nbi.apis.serviceorder.ServiceOrderResource;
-import org.onap.nbi.apis.serviceorder.model.ActionType;
-import org.onap.nbi.apis.serviceorder.model.RelatedParty;
-import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
-import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
-import org.onap.nbi.apis.serviceorder.model.StateType;
+import org.onap.nbi.apis.serviceorder.model.*;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
@@ -42,6 +34,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -120,7 +117,7 @@ public class ApiTestWithoutOnap {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
