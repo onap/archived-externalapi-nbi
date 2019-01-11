@@ -41,7 +41,7 @@ import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.utils.JsonEntityConverter;
 
 
-public class ServiceOrderAssertions {
+public class ServiceOrderExecutionTaskAssertions {
 
     public static ServiceOrder createTestServiceOrderRejected() {
         ServiceOrder serviceOrder = new ServiceOrder();

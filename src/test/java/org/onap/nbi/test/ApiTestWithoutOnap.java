@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis;
+package org.onap.nbi.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +22,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.nbi.apis.assertions.ServiceOrderAssertions;
+import org.onap.nbi.apis.assertions.ServiceOrderExecutionTaskAssertions;
 import org.onap.nbi.apis.servicecatalog.ServiceSpecificationResource;
 import org.onap.nbi.apis.serviceinventory.ServiceInventoryResource;
 import org.onap.nbi.apis.serviceorder.ServiceOrderResource;
@@ -39,12 +39,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+@ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode= ClassMode.AFTER_CLASS)
 public class ApiTestWithoutOnap {
 
 
@@ -65,6 +70,8 @@ public class ApiTestWithoutOnap {
 
     @Autowired
     ServiceOrderResource serviceOrderResource;
+
+
 
     @After
     public void tearsDownUpPort() throws Exception {
@@ -88,7 +95,7 @@ public class ApiTestWithoutOnap {
     @Test
     public void testExecutionTaskWithoutOnap() throws Exception {
 
-        ExecutionTask executionTaskA = ServiceOrderAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
             executionTaskRepository, ActionType.ADD);
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -108,7 +115,7 @@ public class ApiTestWithoutOnap {
     @Test
     public void testCheckServiceOrderWithSDCNotResponding() throws Exception {
 
-        ServiceOrder testServiceOrder = ServiceOrderAssertions.createTestServiceOrder(ActionType.ADD);
+        ServiceOrder testServiceOrder = ServiceOrderExecutionTaskAssertions.createTestServiceOrder(ActionType.ADD);
         List<RelatedParty> customers = new ArrayList<>();
         RelatedParty customer = new RelatedParty();
         customer.setId("new");
@@ -120,7 +127,7 @@ public class ApiTestWithoutOnap {
         testServiceOrder.setId("test");
         serviceOrderRepository.save(testServiceOrder);
 
-        serviceOrderResource.scheduleCheckServiceOrders();
+        serviceOrderResource.checkServiceOrder(testServiceOrder);
 
         ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
@@ -154,6 +161,7 @@ public class ApiTestWithoutOnap {
         params.add("relatedParty.id", "6490");
         ResponseEntity<Object> resource = serviceInventoryResource.getServiceInventory(serviceId, params);
         assertThat(resource.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+
 
     }
 
