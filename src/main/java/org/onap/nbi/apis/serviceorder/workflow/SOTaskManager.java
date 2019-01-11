@@ -12,8 +12,6 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
-import java.util.*;
-import java.util.Map.Entry;
 import org.onap.nbi.apis.serviceorder.model.OrderItemRelationship;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
@@ -25,8 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Service
 @EnableScheduling
@@ -94,12 +94,5 @@ public class SOTaskManager {
         registerOrderItemExecutionPlan(serviceOrder.getOrderItem(), serviceOrderInfoJson);
     }
 
-    // Using fixedDelay to mitigate against Scheduler queue backlog with fixedRate 
-    @Scheduled(fixedDelay = 2000)
-    private void processExecutionPlan() throws InterruptedException {
-        List<ExecutionTask> taskToExecute = executionTaskRepository.findByReliedTasksIsEmpty();
-        for (ExecutionTask executionTask : taskToExecute) {
-            soTaskProcessor.processOrderItem(executionTask);
-        }
-    }
+
 }

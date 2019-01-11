@@ -33,8 +33,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -44,10 +42,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/serviceOrder")
-@EnableScheduling
 public class ServiceOrderResource extends ResourceManagement {
-
-
 
     @Autowired
     ServiceOrderService serviceOrderService;
@@ -69,6 +64,8 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @Autowired
     MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
+
+
 
 
     @GetMapping(value = "/{serviceOrderId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -123,26 +120,33 @@ public class ServiceOrderResource extends ResourceManagement {
 
     }
 
-    @Scheduled(fixedDelay = 5000)
-    public void scheduleCheckServiceOrders() {
-        List<ServiceOrder> acknowledgedOrders = serviceOrderService.findServiceOrdersByState(StateType.ACKNOWLEDGED);
-        for (ServiceOrder serviceOrder : acknowledgedOrders) {
-            ServiceOrderInfo serviceOrderInfo = checkOrderConsistenceManager.checkServiceOrder(serviceOrder);
-            if (serviceOrderInfo.isServiceOrderRejected()) {
-                serviceOrderService.updateOrderState(serviceOrder, StateType.REJECTED);
-            } else if (serviceOrderInfo.isAllItemsCompleted()) {
-                serviceOrderService.updateOrderState(serviceOrder, StateType.COMPLETED);
-            } else {
-                createAAICustomer.createAAICustomer(serviceOrder,serviceOrderInfo);
-                if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {
-                    createAAIServiceType.createAAIServiceType(serviceOrder, serviceOrderInfo);
-                    if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {
-                        serviceOrchestratorManager.registerServiceOrder(serviceOrder, serviceOrderInfo);
-                    }
-                }
 
+    @PutMapping(value = "/test/{serviceOrderId}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> checkServiceOrderRessource(@PathVariable String serviceOrderId,@RequestParam MultiValueMap<String, String> params){
+        ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
+        serviceOrder = checkServiceOrder(serviceOrder);
+        JsonRepresentation filter = new JsonRepresentation(params);
+        return this.createResponse(serviceOrder,filter);
+    }
+
+
+    public ServiceOrder checkServiceOrder(ServiceOrder serviceOrder) {
+        ServiceOrderInfo serviceOrderInfo = checkOrderConsistenceManager.checkServiceOrder(serviceOrder);
+        if (serviceOrderInfo.isServiceOrderRejected()) {
+            serviceOrderService.updateOrderState(serviceOrder, StateType.REJECTED);
+        } else if (serviceOrderInfo.isAllItemsCompleted()) {
+            serviceOrderService.updateOrderState(serviceOrder, StateType.COMPLETED);
+        } else {
+            createAAICustomer.createAAICustomer(serviceOrder,serviceOrderInfo);
+            if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {
+                createAAIServiceType.createAAIServiceType(serviceOrder, serviceOrderInfo);
+                if(StateType.ACKNOWLEDGED==serviceOrder.getState()) {
+                    serviceOrchestratorManager.registerServiceOrder(serviceOrder, serviceOrderInfo);
+                }
             }
+
         }
+        return serviceOrder;
     }
 
 }
