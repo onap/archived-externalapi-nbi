@@ -15,18 +15,16 @@
  */
 package org.onap.nbi.apis.hub.service;
 
+import javax.validation.Valid;
 import org.onap.nbi.apis.hub.model.Event;
 import org.onap.nbi.apis.hub.model.Subscriber;
+import org.onap.nbi.exceptions.BackendFunctionalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import javax.validation.Valid;
 
 @Service
 public class NotifierService {
@@ -37,7 +35,11 @@ public class NotifierService {
 
     @Async
     public void run(Subscriber subscriber, @Valid Event event) {
-        ResponseEntity<String> re = restTemplate.postForEntity(subscriber.getCallback(), event, String.class);
-        if (re.getStatusCode() == HttpStatus.OK) logger.debug("FAILED");
+        try {
+             restTemplate.postForEntity(subscriber.getCallback(), event, Object.class);
+        } catch (BackendFunctionalException e) {
+                logger.error(" unable to post event to {} , receive {}, {}",subscriber.getCallback(),e.getHttpStatus(), e.getBodyResponse());
+        }
+
     }
 }

@@ -101,10 +101,10 @@ public class SoClient {
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getHttpStatus()+" , "+e.getBodyResponse());
             return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -123,10 +123,10 @@ public class SoClient {
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getHttpStatus()+" , "+e.getBodyResponse());
             return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

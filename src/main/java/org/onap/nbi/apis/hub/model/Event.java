@@ -15,6 +15,7 @@
  */
 package org.onap.nbi.apis.hub.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import javax.validation.constraints.NotNull;
@@ -40,6 +41,7 @@ public class Event {
         this.eventId = eventId;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     public Date getEventDate() {
         return eventDate;
     }

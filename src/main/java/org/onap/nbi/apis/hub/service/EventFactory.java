@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.onap.nbi.apis.hub.model.Event;
 import org.onap.nbi.apis.hub.model.EventType;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
@@ -38,6 +40,9 @@ public class EventFactory {
         event.setEventId(UUID.randomUUID().toString());
         event.setEventDate(new Date());
         event.setEventType(eventType.value());
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        mapper.setDateFormat(df);
 
         JsonNode serviceOrderJson = mapper.valueToTree(filterServiceOrder(serviceOrder));
 
