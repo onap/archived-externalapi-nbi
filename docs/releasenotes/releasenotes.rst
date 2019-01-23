@@ -9,6 +9,29 @@ Version: 3.0.2
 
 :Release Date: 2019-01-31
 
+Part of Casablanca Maintenance Release tag - 3.0.1 January 31st, 2019
+
+**Fix**
+
+Main features are:
+
+- `EXTAPI-164 <https://jira.onap.org/browse/EXTAPI-164>`_ - Start up failed without msb
+- `EXTAPI-172 <https://jira.onap.org/browse/EXTAPI-172>`_ - Multiple service orders in a single request
+
+Detail of features described in the readTheDoc documentation.
+
+**Known Issues**
+
+No new issues
+
+**Security Notes**
+
+- `Vulnerability Report <https://wiki.onap.org/pages/viewpage.action?pageId=45310585>`_
+
+Quick Links:
+
+- `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
+
 
 
 Version: 3.0.1
