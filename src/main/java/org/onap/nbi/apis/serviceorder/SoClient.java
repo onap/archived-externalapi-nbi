@@ -70,19 +70,25 @@ public class SoClient {
 
     @PostConstruct
     private void setUpAndLogSOUrl() {
-        createSoUrl = new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_CREATE_SERVICE_INSTANCE_PATH).toString();
-        createE2ESoUrl = new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_CREATE_E2ESERVICE_INSTANCE_PATH).toString();
-        deleteSoUrl= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_DELETE_REQUEST_STATUS_PATH).toString();
-        deleteE2ESoUrl= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_DELETE_E2ESERVICE_INSTANCE_PATH).toString();
-        getSoStatus= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_REQUEST_STATUS_PATH).toString();
-        getE2ESoStatus= new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_E2EREQUEST_STATUS_PATH).toString();
+        createSoUrl = new StringBuilder().append(soHostname)
+            .append(OnapComponentsUrlPaths.MSO_CREATE_SERVICE_INSTANCE_PATH).toString();
+        createE2ESoUrl = new StringBuilder().append(soHostname)
+            .append(OnapComponentsUrlPaths.MSO_CREATE_E2ESERVICE_INSTANCE_PATH).toString();
+        deleteSoUrl = new StringBuilder().append(soHostname)
+            .append(OnapComponentsUrlPaths.MSO_DELETE_REQUEST_STATUS_PATH).toString();
+        deleteE2ESoUrl = new StringBuilder().append(soHostname)
+            .append(OnapComponentsUrlPaths.MSO_DELETE_E2ESERVICE_INSTANCE_PATH).toString();
+        getSoStatus = new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_REQUEST_STATUS_PATH)
+            .toString();
+        getE2ESoStatus = new StringBuilder().append(soHostname)
+            .append(OnapComponentsUrlPaths.MSO_GET_E2EREQUEST_STATUS_PATH).toString();
 
-        LOGGER.info("SO create service url :  "+ createSoUrl);
-        LOGGER.info("SO create e2e service url :  "+ createE2ESoUrl);
-        LOGGER.info("SO delete service url :  "+deleteSoUrl);
-        LOGGER.info("SO delete e2e service url :  "+deleteE2ESoUrl);
-        LOGGER.info("SO get so status url :  "+getSoStatus);
-        LOGGER.info("SO get e2e so status url :  "+getE2ESoStatus);
+        LOGGER.info("SO create service url :  " + createSoUrl);
+        LOGGER.info("SO create e2e service url :  " + createE2ESoUrl);
+        LOGGER.info("SO delete service url :  " + deleteSoUrl);
+        LOGGER.info("SO delete e2e service url :  " + deleteE2ESoUrl);
+        LOGGER.info("SO get so status url :  " + getSoStatus);
+        LOGGER.info("SO get e2e so status url :  " + getE2ESoStatus);
 
     }
 
@@ -101,14 +107,14 @@ public class SoClient {
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e);
-            return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getHttpStatus() + " , " + e.getBodyResponse());
+            return new ResponseEntity(e.getBodyResponse(), e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     public ResponseEntity<CreateE2EServiceInstanceResponse> callE2ECreateServiceInstance(MSOE2EPayload msoPayloadE2E) {
 
         if (LOGGER.isDebugEnabled()) {
@@ -116,22 +122,24 @@ public class SoClient {
         }
 
         try {
-            ResponseEntity<CreateE2EServiceInstanceResponse> response = restTemplate.exchange(createE2ESoUrl, HttpMethod.POST,
+            ResponseEntity<CreateE2EServiceInstanceResponse> response = restTemplate
+                .exchange(createE2ESoUrl, HttpMethod.POST,
                     new HttpEntity<>(msoPayloadE2E, buildRequestHeader()), CreateE2EServiceInstanceResponse.class);
 
             logE2EResponsePost(createE2ESoUrl, response);
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e);
-            return new ResponseEntity(e.getBodyResponse(),e.getHttpStatus());
+            LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getHttpStatus() + " , " + e.getBodyResponse());
+            return new ResponseEntity(e.getBodyResponse(), e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e);
+            LOGGER.error(ERROR_ON_CALLING + createE2ESoUrl + " ," + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<CreateServiceInstanceResponse> callDeleteServiceInstance(MSOPayload msoPayload, String serviceId) {
+    public ResponseEntity<CreateServiceInstanceResponse> callDeleteServiceInstance(MSOPayload msoPayload,
+        String serviceId) {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Calling SO DeleteServiceInstance with msoPayload : " + msoPayload.toString());
@@ -156,42 +164,47 @@ public class SoClient {
 
     }
 
-    public ResponseEntity<CreateE2EServiceInstanceResponse> callE2EDeleteServiceInstance(String globalSubscriberId, String serviceType,
-            String serviceInstanceId) {
+    public ResponseEntity<CreateE2EServiceInstanceResponse> callE2EDeleteServiceInstance(String globalSubscriberId,
+        String serviceType,
+        String serviceInstanceId) {
 
-            String url = deleteE2ESoUrl + serviceInstanceId;
-            MSODeleteE2EPayload msoDeleteE2EPayload = new MSODeleteE2EPayload();
-            msoDeleteE2EPayload.setGlobalSubscriberId(globalSubscriberId);
-            msoDeleteE2EPayload.setServiceType(serviceType);
-            
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Calling SO DeleteE2EServiceInstance with url : " + url + " MSODeleteE2EPayload : " + msoDeleteE2EPayload.toString() );
-            }
-            
-            try {
-                ResponseEntity<DeleteE2EServiceInstanceResponse> deleteresponse = restTemplate.exchange(url, HttpMethod.DELETE,
-                        new HttpEntity<>(msoDeleteE2EPayload, buildRequestHeader()), DeleteE2EServiceInstanceResponse.class);
+        String url = deleteE2ESoUrl + serviceInstanceId;
+        MSODeleteE2EPayload msoDeleteE2EPayload = new MSODeleteE2EPayload();
+        msoDeleteE2EPayload.setGlobalSubscriberId(globalSubscriberId);
+        msoDeleteE2EPayload.setServiceType(serviceType);
 
-                // For E2E Services , Create and Delete Service responses are different, to maintain consistentcy with ServiceInstances
-                // Copy contents of DeleteE2EServiceInstanceResponse to CreateE2EServiceInstanceResponse
-                CreateE2EServiceInstanceResponse dummyresponse = new CreateE2EServiceInstanceResponse();
-                ServiceResponse serviceResponse = new ServiceResponse();
-                dummyresponse.setService(serviceResponse);
-                dummyresponse.getService().setOperationId(deleteresponse.getBody().getOperationId());
-                dummyresponse.getService().setServiceId(serviceInstanceId);
-                
-                ResponseEntity<CreateE2EServiceInstanceResponse> response = new ResponseEntity(dummyresponse, deleteresponse.getStatusCode());  
-                logE2EResponsePost(url, response);
-                return response;
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Calling SO DeleteE2EServiceInstance with url : " + url + " MSODeleteE2EPayload : "
+                + msoDeleteE2EPayload.toString());
+        }
 
-            } catch (BackendFunctionalException e) {
-                LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
-                return new ResponseEntity<>(e.getHttpStatus());
-            } catch (ResourceAccessException e) {
-                LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-    	}
+        try {
+            ResponseEntity<DeleteE2EServiceInstanceResponse> deleteresponse = restTemplate
+                .exchange(url, HttpMethod.DELETE,
+                    new HttpEntity<>(msoDeleteE2EPayload, buildRequestHeader()),
+                    DeleteE2EServiceInstanceResponse.class);
+
+            // For E2E Services , Create and Delete Service responses are different, to maintain consistentcy with ServiceInstances
+            // Copy contents of DeleteE2EServiceInstanceResponse to CreateE2EServiceInstanceResponse
+            CreateE2EServiceInstanceResponse dummyresponse = new CreateE2EServiceInstanceResponse();
+            ServiceResponse serviceResponse = new ServiceResponse();
+            dummyresponse.setService(serviceResponse);
+            dummyresponse.getService().setOperationId(deleteresponse.getBody().getOperationId());
+            dummyresponse.getService().setServiceId(serviceInstanceId);
+
+            ResponseEntity<CreateE2EServiceInstanceResponse> response = new ResponseEntity(dummyresponse,
+                deleteresponse.getStatusCode());
+            logE2EResponsePost(url, response);
+            return response;
+
+        } catch (BackendFunctionalException e) {
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            return new ResponseEntity<>(e.getHttpStatus());
+        } catch (ResourceAccessException e) {
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     private void logResponsePost(String url, ResponseEntity<CreateServiceInstanceResponse> response) {
         LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
@@ -225,10 +238,11 @@ public class SoClient {
             ResponseEntity<GetRequestStatusResponse> response = restTemplate.exchange(url, HttpMethod.GET,
                 new HttpEntity<>(buildRequestHeader()), GetRequestStatusResponse.class);
             logResponseGet(url, response);
-            if (null == response)
+            if (null == response) {
                 return null;
-            else
+            } else {
                 return response.getBody();
+            }
 
         } catch (BackendFunctionalException | ResourceAccessException e) {
             LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
@@ -236,26 +250,28 @@ public class SoClient {
         }
     }
 
-public GetE2ERequestStatusResponse callE2EGetRequestStatus(String operationId, String serviceId) {
-    	
+    public GetE2ERequestStatusResponse callE2EGetRequestStatus(String operationId, String serviceId) {
+
         String callUrlFormated = getE2ESoStatus.replace("$serviceId", serviceId);
         callUrlFormated = callUrlFormated.replace("$operationId", operationId);
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Calling SO callE2EGetRequestStatus with url : " + callUrlFormated );
+            LOGGER.debug("Calling SO callE2EGetRequestStatus with url : " + callUrlFormated);
         }
-        
+
         try {
 
-            ResponseEntity<GetE2ERequestStatusResponse> response = restTemplate.exchange(callUrlFormated, HttpMethod.GET,
-                new HttpEntity<>(buildRequestHeader()), GetE2ERequestStatusResponse.class);
+            ResponseEntity<GetE2ERequestStatusResponse> response = restTemplate
+                .exchange(callUrlFormated, HttpMethod.GET,
+                    new HttpEntity<>(buildRequestHeader()), GetE2ERequestStatusResponse.class);
             logE2EResponseGet(callUrlFormated, response);
-            if (null == response)
+            if (null == response) {
                 return null;
-            else
+            } else {
                 return response.getBody();
+            }
 
-        } catch (BackendFunctionalException|ResourceAccessException e) {
+        } catch (BackendFunctionalException | ResourceAccessException e) {
             LOGGER.error(ERROR_ON_CALLING + callUrlFormated + " ," + e);
             return null;
         }
@@ -275,19 +291,19 @@ public GetE2ERequestStatusResponse callE2EGetRequestStatus(String operationId, S
             LOGGER.info("no response calling url {}", url);
         }
     }
-    
+
     private void logE2EResponseGet(String url, ResponseEntity<GetE2ERequestStatusResponse> response) {
-        if(response!=null){
-        	if (LOGGER.isDebugEnabled()) {
+        if (response != null) {
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("response body : {}", response.getBody().toString());
             }
-        	LOGGER.info("response status : {}", response.getStatusCodeValue());
+            LOGGER.info("response status : {}", response.getStatusCodeValue());
             if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
                 LOGGER.warn("HTTP call SO on {} returns {} , {}", url, response.getStatusCodeValue(),
                     response.getBody().toString());
             }
         } else {
-            LOGGER.info("no response calling url {}",url);
+            LOGGER.info("no response calling url {}", url);
         }
     }
 
