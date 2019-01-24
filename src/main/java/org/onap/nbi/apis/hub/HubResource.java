@@ -1,15 +1,14 @@
 /**
  * Copyright (c) 2018 Orange
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.onap.nbi.apis.hub;
 
@@ -44,10 +43,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/hub")
 @EnableScheduling
@@ -71,10 +66,10 @@ public class HubResource extends ResourceManagement {
         Subscriber subscriber = subscriptionService.createSubscription(subscription);
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(subscriber.getId())
-                .toUri();
+            .fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(subscriber.getId())
+            .toUri();
 
         return ResponseEntity.created(location).build();
     }
@@ -82,7 +77,7 @@ public class HubResource extends ResourceManagement {
     @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Subscription> getSubscription(@PathVariable String subscriptionId) {
 
-        Subscriber subscriber  = subscriptionService.findSubscriptionById(subscriptionId);
+        Subscriber subscriber = subscriptionService.findSubscriptionById(subscriptionId);
         if (subscriber == null) {
             return ResponseEntity.notFound().build();
         }
@@ -100,8 +95,8 @@ public class HubResource extends ResourceManagement {
         headers.add("X-Total-Count", String.valueOf(totalCount));
         headers.add("X-Result-Count", String.valueOf(subscribers.size()));
         List<Subscription> subscriptions = subscribers.stream()
-                .map(Subscription::createFromSubscriber)
-                .collect(Collectors.toList());
+            .map(Subscription::createFromSubscriber)
+            .collect(Collectors.toList());
 
         return this.findResponse(subscriptions, filter, headers);
 

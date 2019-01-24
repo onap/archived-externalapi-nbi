@@ -1022,5 +1022,64 @@
         ]
       }
     ]
+  },
+  {
+    "state": "acknowledged",
+    "externalId": "extid2",
+    "priority": "1",
+    "description": "toto",
+    "category": "Consumer",
+    "requestedStartDate": "2019-01-23T12:34:56.123456789Z",
+    "requestedCompletionDate": "2019-01-23T12:34:56.123456789Z",
+    "@baseType": "toto",
+    "completionDateTime": "2019-01-23T12:34:56.123456789Z",
+    "expectedCompletionDate": "2019-01-23T12:34:56.123456789Z",
+    "@schemaLocation": "/tutu",
+    "orderRelationship": [
+      {
+        "id": "test",
+        "href": "test",
+        "referredType": "test",
+        "type": "test"
+      }
+    ],
+    "relatedParty": [
+      {
+        "id": "6490",
+        "role": "ONAPcustomer",
+        "referredType": "individual",
+        "name": "Jean Pontus"
+      }
+    ],
+    "orderItem": [
+      {
+        "id": "A",
+        "action": "add",
+        "state": "active",
+        "service": {
+          "state": "active",
+          "serviceSpecification": {
+            "id": "1e3feeb0-8e36-46c6-862c-236d9c626439"
+          }
+        }
+      },
+      {
+        "id": "B",
+        "action": "add",
+        "state": "active",
+        "service": {
+          "state": "active",
+          "serviceSpecification": {
+            "id": "1e3feeb0-8e36-46c6-862c-236d9c626439"
+          }
+        },
+        "orderItemRelationship": [
+          {
+            "id": "A",
+            "type": "reliesOn"
+          }
+        ]
+      }
+    ]
   }
 ]
