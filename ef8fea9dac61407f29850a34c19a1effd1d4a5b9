@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_7811e350",
+        "filename": "src/main/java/org/onap/nbi/apis/hub/HubResource.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 3569
+      },
+      "writtenOn": "2019-01-25T13:42:31Z",
+      "side": 1,
+      "message": "This modification is not related to https://jira.onap.org/browse/EXTAPI-188\n\nAnd why at the resource level and not service level like the serviceOrder ?",
+      "revId": "ef8fea9dac61407f29850a34c19a1effd1d4a5b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
