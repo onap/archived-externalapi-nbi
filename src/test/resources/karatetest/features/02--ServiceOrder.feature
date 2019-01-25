@@ -18,7 +18,8 @@ When method post
 Then status 201
 And match $.id contains '#notnull'
 And match $.state == 'acknowledged'
-Given path 'serviceOrder','test'
+And def serviceOrderId = $.id
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -27,16 +28,17 @@ Given path 'serviceOrder'
 And request data[0]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.id == 'test'
+And match $.id == serviceOrderId
 And match $.state == 'acknowledged'
-Given path 'serviceOrder','test'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -46,17 +48,18 @@ Given path 'serviceOrder'
 And request data[1]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test1'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderItem[0].orderItemMessage ==  '#[1]'
 And match $.orderItem[0].orderItemMessage[0] contains { code : '102'  , field : 'serviceSpecification.id' }
-Given path 'serviceOrder','test1'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test1'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -66,15 +69,16 @@ Given path 'serviceOrder'
 And request data[2]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test2'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'acknowledged'
-Given path 'serviceOrder','test2'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test2'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -83,15 +87,16 @@ Given path 'serviceOrder'
 And request data[3]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test3'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'acknowledged'
-Given path 'serviceOrder','test3'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test3'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -101,15 +106,16 @@ Given path 'serviceOrder'
 And request data[4]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test4'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'acknowledged'
-Given path 'serviceOrder','test4'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test4'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -118,17 +124,18 @@ Given path 'serviceOrder'
 And request data[5]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test5'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderItem[0].orderItemMessage ==  '#[1]'
 And match $.orderItem[0].orderItemMessage[0] contains { code : '106'  , field : 'service.id' }
-Given path 'serviceOrder','test5'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given url 'http://localhost:8080/nbi/api/v3/serviceOrder/test5'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -138,17 +145,18 @@ Given path 'serviceOrder'
 And request data[6]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test6'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderItem[0].orderItemMessage ==  '#[1]'
 And match $.orderItem[0].orderItemMessage[0] contains { code : '106'  , field : 'service.id' }
-Given path 'serviceOrder','test6'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test6'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -158,17 +166,18 @@ Given path 'serviceOrder'
 And request data[7]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test7'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderItem[0].orderItemMessage ==  '#[1]'
 And match $.orderItem[0].orderItemMessage[0] contains { code : '103'  , field : 'service.id' }
-Given path 'serviceOrder','test7'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test7'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -177,17 +186,18 @@ Given path 'serviceOrder'
 And request data[8]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test8'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderMessage ==  '#[1]'
 And match $.orderMessage[0] contains { code : '104'  , field : 'relatedParty.id' }
-Given path 'serviceOrder','test8'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test8'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -197,15 +207,16 @@ Given path 'serviceOrder'
 And request data[9]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test9'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'acknowledged'
-Given path 'serviceOrder','test9'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test9'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -214,17 +225,18 @@ Given path 'serviceOrder'
 And request data[10]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test10'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderItem[0].orderItemMessage ==  '#[1]'
 And match $.orderItem[0].orderItemMessage[0] contains { code : '106'  , field : 'service.id' }
-Given path 'serviceOrder','test10'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test10'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -233,17 +245,18 @@ Given path 'serviceOrder'
 And request data[11]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test11'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'completed'
 And match $.orderItem[0].state == 'completed'
 And match $.orderItem[1].state == 'completed'
-Given path 'serviceOrder','test11'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test11'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -252,16 +265,17 @@ Given path 'serviceOrder'
 And request data[12]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test12'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'acknowledged'
 And match $.orderItem[0].state == 'completed'
-Given path 'serviceOrder','test12'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test12'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -270,16 +284,17 @@ Given path 'serviceOrder'
 And request data[13]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test13'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderItem[0].state == 'rejected'
-Given path 'serviceOrder','test13'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test13'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -288,17 +303,18 @@ Given path 'serviceOrder'
 And request data[14]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test14'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
 And match $.state == 'rejected'
 And match $.orderItem[0].orderItemMessage ==  '#[1]'
 And match $.orderItem[0].orderItemMessage[0] contains { code : '102'  , field : 'serviceSpecification.id' }
-Given path 'serviceOrder','test14'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
-Given path 'serviceOrder','test14'
+Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
@@ -308,15 +324,17 @@ Given path 'serviceOrder'
 And request data[15]
 When method post
 Then status 201
+And def serviceOrderId15 = $.id
 Given path 'serviceOrder'
 And request data[16]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test15'
+And def serviceOrderId16 = $.id
+Given path 'serviceOrder','test',serviceOrderId15
 And request $
 When method put
 Then status 201
-Given path 'serviceOrder','test','test16'
+Given path 'serviceOrder','test',serviceOrderId16
 And request $
 When method put
 Then status 201
@@ -330,14 +348,14 @@ And params {externalId : 'extid1' , state : 'acknowledged'}
 When method get
 Then status 200
 And match $ == '#[1]'
-Given path 'serviceOrder','test15'
+Given path 'serviceOrder',serviceOrderId15
 When method get
 Then status 200
 And match $ contains '#notnull'
-Given path 'serviceOrder','test15'
+Given path 'serviceOrder',serviceOrderId15
 When method delete
 Then status 204
-Given path 'serviceOrder','test16'
+Given path 'serviceOrder',serviceOrderId16
 When method delete
 Then status 204
 
@@ -348,15 +366,16 @@ Given path 'serviceOrder'
 And request data[4]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test4'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.id == 'test4'
+And match $.id == serviceOrderId
 And match $.state == 'rejected'
 And match $.orderItem == '#[2]'
 And match $.orderMessage[0] contains { code : '501'  , messageInformation : 'Problem with AAI API' }
-Given path 'serviceOrder','test4'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
 * call Context.startServers();
@@ -368,13 +387,14 @@ Given path 'serviceOrder'
 And request data[4]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test4'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.id == 'test4'
+And match $.id == serviceOrderId
 And match $.state == 'rejected'
-Given path 'serviceOrder','test4'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
 * call Context.startServers();
@@ -385,14 +405,15 @@ Given path 'serviceOrder'
 And request data[4]
 When method post
 Then status 201
-Given path 'serviceOrder','test','test4'
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.id == 'test4'
+And match $.id == serviceOrderId
 And match $.state == 'rejected'
 And match $.orderItem[0].orderMessage[0] contains { code : '102'  , field : 'serviceSpecification.id' }
-Given path 'serviceOrder','test4'
+Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
 * call Context.startServers();

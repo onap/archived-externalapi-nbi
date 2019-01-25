@@ -59,6 +59,7 @@ public class ServiceOrderService {
     public ServiceOrder createServiceOrder(ServiceOrder serviceOrder){
         serviceOrder.setState(StateType.ACKNOWLEDGED);
         serviceOrder.setOrderDate(new Date());
+        serviceOrder.setId(null);
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
             serviceOrderItem.setState(StateType.ACKNOWLEDGED);
         }

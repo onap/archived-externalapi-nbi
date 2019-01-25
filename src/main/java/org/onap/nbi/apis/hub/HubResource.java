@@ -62,7 +62,7 @@ public class HubResource extends ResourceManagement {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Subscriber> createEventSubscription(@RequestBody Subscription subscription) {
         logger.debug("POST request for subscription : {}", subscription);
-
+        subscription.setId(null);
         Subscriber subscriber = subscriptionService.createSubscription(subscription);
 
         URI location = ServletUriComponentsBuilder
