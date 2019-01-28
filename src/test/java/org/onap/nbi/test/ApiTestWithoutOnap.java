@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,6 +89,10 @@ public class ApiTestWithoutOnap {
         return null;
     }
 
+    private ServiceOrder getServiceOrder(String serviceOrderId) {
+        Optional<ServiceOrder> serviceOrderChecked = serviceOrderRepository.findById(serviceOrderId);
+        return serviceOrderChecked.get();
+    }
 
 
     @Test
@@ -97,7 +102,7 @@ public class ApiTestWithoutOnap {
             executionTaskRepository, ActionType.ADD);
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
                 assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
@@ -127,7 +132,7 @@ public class ApiTestWithoutOnap {
 
         serviceOrderResource.checkServiceOrder(testServiceOrder);
 
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.REJECTED);
 
         assertThat(serviceOrderChecked.getOrderMessage().size()).isGreaterThan(0);

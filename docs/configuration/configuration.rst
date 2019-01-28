@@ -23,7 +23,7 @@ Default values
 ::
 
     # SERVER
-    server.contextPath=/nbi/api/v3
+    server.servlet.context-path=/nbi/api/v3
     server.port = 8080
 
     # LOGGING

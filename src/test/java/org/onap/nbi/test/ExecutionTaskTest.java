@@ -24,6 +24,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -108,6 +109,11 @@ public class ExecutionTaskTest {
         return null;
     }
 
+    private ServiceOrder getServiceOrder(String serviceOrderId) {
+        Optional<ServiceOrder> serviceOrderChecked = serviceOrderRepository.findById(serviceOrderId);
+        return serviceOrderChecked.get();
+    }
+
     private void changeWireMockResponse(String s,int statusCode, String bodyContent) {
         ListStubMappingsResult listStubMappingsResult = Context.wireMockServer.listAllStubMappings();
         ResponseDefinition responseDefinition = new ResponseDefinition(statusCode,bodyContent);
@@ -133,7 +139,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -149,7 +155,7 @@ public class ExecutionTaskTest {
         assertThat(executionTaskA).isNull();
 
         SoTaskProcessor.processOrderItem(executionTaskB);
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
@@ -171,7 +177,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -187,7 +193,7 @@ public class ExecutionTaskTest {
         assertThat(executionTaskA).isNull();
 
         SoTaskProcessor.processOrderItem(executionTaskB);
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
@@ -209,7 +215,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -225,7 +231,7 @@ public class ExecutionTaskTest {
         assertThat(executionTaskA).isNull();
 
         SoTaskProcessor.processOrderItem(executionTaskB);
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
@@ -247,7 +253,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -263,7 +269,7 @@ public class ExecutionTaskTest {
         assertThat(executionTaskA).isNull();
 
         SoTaskProcessor.processOrderItem(executionTaskB);
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
@@ -287,7 +293,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -303,7 +309,7 @@ public class ExecutionTaskTest {
         changeCreationDate(executionTaskA);
         SoTaskProcessor.processOrderItem(executionTaskA);
 
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
@@ -333,7 +339,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -347,7 +353,7 @@ public class ExecutionTaskTest {
         changeCreationDate(executionTaskA);
         SoTaskProcessor.processOrderItem(executionTaskA);
 
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
@@ -369,7 +375,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
@@ -392,7 +398,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
@@ -413,7 +419,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
@@ -438,7 +444,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
@@ -466,7 +472,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -477,7 +483,7 @@ public class ExecutionTaskTest {
             }
         }
         SoTaskProcessor.processOrderItem(executionTaskA);
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -495,7 +501,7 @@ public class ExecutionTaskTest {
         SoTaskProcessor.processOrderItem(executionTaskB);
         SoTaskProcessor.processOrderItem(executionTaskB);
 
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
@@ -519,7 +525,7 @@ public class ExecutionTaskTest {
 
 
         SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             if (serviceOrderItem.getId().equals("A")) {
@@ -534,7 +540,7 @@ public class ExecutionTaskTest {
         changeCreationDate(executionTaskA);
         SoTaskProcessor.processOrderItem(executionTaskA);
 
-        serviceOrderChecked = serviceOrderRepository.findOne("test");
+        serviceOrderChecked = getServiceOrder("test");
         assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
         for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
             assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
