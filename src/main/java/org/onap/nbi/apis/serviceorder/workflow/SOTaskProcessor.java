@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
@@ -70,7 +71,12 @@ public class SOTaskProcessor {
 
         ServiceOrderInfo serviceOrderInfo = getServiceOrderInfo(executionTask);
 
-        ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderInfo.getServiceOrderId());
+        Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderInfo.getServiceOrderId());
+        if(!optionalServiceOrder.isPresent()) {
+            throw new TechnicalException(
+                "Unable to retrieve service order for id " + serviceOrderInfo.getServiceOrderId());
+        }
+        ServiceOrder serviceOrder=optionalServiceOrder.get();
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
         boolean e2eService = E2EServiceUtils
             .isE2EService(serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()));
@@ -273,7 +279,7 @@ public class SOTaskProcessor {
      * Update an executionTask in database when it's process with a success
      */
     private void updateSuccessTask(ExecutionTask executionTask) {
-        executionTaskRepository.delete(executionTask.getInternalId());
+        executionTaskRepository.deleteById(executionTask.getInternalId());
         executionTaskRepository.updateReliedTaskAfterDelete(executionTask.getInternalId());
 
     }

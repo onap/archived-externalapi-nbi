@@ -17,9 +17,10 @@ package org.onap.nbi.test;
 
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,8 +54,8 @@ public class ServiceOrderRepositoryTest {
 
     @Test
     public void findById() {
-        ServiceOrder result = serviceOrderRepository.findOne("test");
-        assertNotNull(result);
+        Optional<ServiceOrder> optionalServiceOrderChecked = serviceOrderRepository.findById("test");
+        assertTrue(optionalServiceOrderChecked.isPresent());
     }
 
     @Test

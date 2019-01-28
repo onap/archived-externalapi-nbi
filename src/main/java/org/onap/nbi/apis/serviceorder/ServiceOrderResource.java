@@ -15,6 +15,7 @@
  */
 package org.onap.nbi.apis.serviceorder;
 
+import java.util.Optional;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
@@ -72,13 +73,13 @@ public class ServiceOrderResource extends ResourceManagement {
     public ResponseEntity<Object> getServiceOrder(@PathVariable String serviceOrderId,
             @RequestParam MultiValueMap<String, String> params) {
 
-        ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
-        if (serviceOrder == null) {
+        Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
+        if (!optionalServiceOrder.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
         JsonRepresentation filter = new JsonRepresentation(params);
-        return this.getResponse(serviceOrder, filter);
+        return this.getResponse(optionalServiceOrder.get(), filter);
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -123,7 +124,8 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @PutMapping(value = "/test/{serviceOrderId}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> checkServiceOrderRessource(@PathVariable String serviceOrderId,@RequestParam MultiValueMap<String, String> params){
-        ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
+        Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
+        ServiceOrder serviceOrder=optionalServiceOrder.get();
         serviceOrder = checkServiceOrder(serviceOrder);
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.createResponse(serviceOrder,filter);

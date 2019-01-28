@@ -63,7 +63,7 @@ public class ServiceRegisterRunner implements CommandLineRunner {
     @Value("${nbi.version}")
     private String SERVICE_VERSION;
 
-    @Value("${server.contextPath}")
+    @Value("${server.servlet.context-path}")
     private String SERVICE_URL;
 
     @Value("${msb.service.custom_path}")
