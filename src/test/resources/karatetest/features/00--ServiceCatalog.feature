@@ -36,3 +36,11 @@ Then status 200
 And assert response.length == 21
 And match $[0] contains { name : 'FreeRadius-service' }
 
+Scenario: findServiceCatalogWithoutWiremock
+* call Context.stopWiremock();
+Given path 'serviceSpecification','1e3feeb0-8e36-46c6-862c-236d9c626439'
+When method get
+Then status 500
+* call Context.startServers();
+
+

@@ -545,4 +545,25 @@ public class ExecutionTaskTest {
 
     }
 
+    @Test
+    public void testExecutionTaskWithoutOnap() throws Exception {
+        Context.stopWiremock();
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
+            executionTaskRepository, ActionType.ADD);
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = serviceOrderRepository.findOne("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+        assertThat(serviceOrderChecked.getOrderMessage().size()).isGreaterThan(0);
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getCode()).isEqualTo("502");
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getMessageInformation()).isEqualTo("Problem with SO API");
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+        Context.startWiremock();
+
+    }
+
 }
