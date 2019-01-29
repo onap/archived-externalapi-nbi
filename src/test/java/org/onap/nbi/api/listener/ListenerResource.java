@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.nbi.commons.ResourceManagement;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class ListenerResource extends ResourceManagement {
 
     Logger logger = LoggerFactory.getLogger(ListenerResource.class);
 
-    Map<String, JsonNode> events = new HashMap<>();
+    static Map<String, JsonNode> events = new ConcurrentHashMap<>();
 
     /*
         listener resource test for hub resource
@@ -71,6 +71,7 @@ public class ListenerResource extends ResourceManagement {
         if(StringUtils.isNotEmpty(serviceOrderId)) {
             for (JsonNode jsonNode : events.values()) {
                 String id = jsonNode.get("event").get("id").asText();
+                logger.info("found event with service order id : "+id);
                 if(id.equals(serviceOrderId)) {
                     values.add(jsonNode);
                 }
@@ -78,6 +79,7 @@ public class ListenerResource extends ResourceManagement {
             if(!values.isEmpty()) {
                 return ResponseEntity.ok(values);
             } else {
+                logger.error("cannot found events with service order id : "+serviceOrderId);
                 return ResponseEntity.notFound().build();
             }
         } else {

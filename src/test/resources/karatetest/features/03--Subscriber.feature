@@ -9,6 +9,7 @@ Background:
 * call Context.startServers();
 * def data = read('../data/subscriber.json')
 * def serviceOrderData = read('../data/serviceOrder.json')
+* configure retry = { count: 10, interval: 500 }
 * def checkDateFormat =
 """
 function(s) {
@@ -29,38 +30,65 @@ Given path 'hub'
 And request data[0]
 When method post
 Then status 201
-Given url 'http://localhost:8080/nbi/api/v3/hub/'
+And def location = responseHeaders['Location'][0]
+Given path 'hub'
 When method get
 And match $ == '#[1]'
+Given url location
+When method delete
+Then status 204
 
 Scenario: testGetByIdSubscriber
+Given path 'hub'
+And request data[0]
+When method post
+Then status 201
 Given path 'hub'
 When method get
 And def Id = $[0].id
 Given path 'hub',Id
 When method get
 And match $ contains { callback : 'http://localhost:8080/test' , query : 'eventType=ServiceOrderCreationNotification' }
+Given path 'hub',Id
+When method delete
+Then status 204
 
 Scenario: testFindSubscriber
 Given path 'hub'
 And request data[1]
 When method post
 Then status 201
+And def location1 = responseHeaders['Location'][0]
 Given path 'hub'
 And request data[2]
 When method post
 Then status 201
+And def location2 = responseHeaders['Location'][0]
 Given path 'hub'
 When method get
 Then status 200
 And match $ == '#notnull'
+Given url location1
+When method delete
+Then status 204
+Given url location2
+When method delete
+Then status 204
 
 Scenario: testFindWithFilteringSubscriber
+Given path 'hub'
+And request data[0]
+When method post
+Then status 201
+And def location = responseHeaders['Location'][0]
 Given path 'hub'
 And params { query.eventType : 'ServiceOrderCreationNotification' }
 When method get
 Then status 200
 And match $ == '#[1]'
+Given url location
+When method delete
+Then status 204
 
 Scenario: testSubscriberDeletion
 Given path 'hub'
@@ -93,8 +121,8 @@ Then status 201
 And def serviceOrderId = $.id
 Given path 'test/listener'
 And params {serviceOrderId : '#(serviceOrderId)'}
+And retry until responseStatus == 200
 When method get
-Then status 200
 And assert response.length == 1
 And match $[0] contains { eventId : '#notnull' , eventType : 'ServiceOrderCreationNotification' , eventDate : '#notnull' , event :'#notnull'}
 And def eventId = $[0].eventId
