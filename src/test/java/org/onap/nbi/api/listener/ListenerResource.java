@@ -41,7 +41,7 @@ public class ListenerResource extends ResourceManagement {
 
     Logger logger = LoggerFactory.getLogger(ListenerResource.class);
 
-    Map<String, JsonNode> events = new HashMap<>();
+    static Map<String, JsonNode> events = new HashMap<>();
 
     /*
         listener resource test for hub resource

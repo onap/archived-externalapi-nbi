@@ -94,5 +94,12 @@ public class Context {
     }
 
   }
+  public static void stopWiremock() throws Exception {
 
+    // Wiremock
+    if (wireMockServer != null) {
+      wireMockServer.stop();
+    }
+
+  }
 }
