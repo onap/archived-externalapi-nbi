@@ -417,3 +417,22 @@ Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
 * call Context.startServers();
+
+Scenario: testCheckServiceOrderWithSDCNotRespondingWithoutWiremock
+* call Context.stopWiremock();
+Given path 'serviceOrder'
+And request data[4]
+When method post
+Then status 201
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
+And request $
+When method put
+Then status 201
+And match $.id == serviceOrderId
+And match $.state == 'rejected'
+And match $.orderMessage[0] contains { code : '500'  , messageInformation : 'Problem with SDC API' }
+Given path 'serviceOrder',serviceOrderId
+When method get
+Then status 200
+* call Context.startServers();

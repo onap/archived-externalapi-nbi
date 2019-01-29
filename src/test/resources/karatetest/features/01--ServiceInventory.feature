@@ -82,6 +82,14 @@ And match $[1].relatedParty  contains { role : 'ONAPcustomer' , id : '6490' }
 And match $[1].serviceSpecification contains { name : 'vFW' , id : '98d95267-5e0f-4531-abf8-f14b90031dc5' }
 
 
+Scenario: testServiceResourceGetInventoryWithoutWiremock
+* call Context.stopWiremock();
+Given path 'service','e4688e5f-61a0-4f8b-ae02-a2fbde623bcb'
+And params {serviceSpecification.name : 'vFW' , relatedParty.id : '6490'}
+When method get
+Then status 500
+* call Context.startServers();
+
 
 
 

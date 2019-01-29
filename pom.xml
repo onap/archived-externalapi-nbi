@@ -354,7 +354,7 @@
             <include>org/onap/nbi/test/KarateApiTest.java</include>
              <include>org/onap/nbi/test/ExecutionTaskTest.java</include>
             <include>org/onap/nbi/test/ServiceOrderRepositoryTest.java</include>
-            <!--<include>org/onap/nbi/test/ApiTestWithoutOnap.java</include>-->
+            <include>org/onap/nbi/apis/servicecatalog/ToscaInfosProcessorTest.java</include>
           </includes>
         </configuration>
       </plugin>
