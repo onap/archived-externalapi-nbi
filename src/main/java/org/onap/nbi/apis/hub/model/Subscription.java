@@ -16,8 +16,9 @@
 package org.onap.nbi.apis.hub.model;
 
 import java.util.stream.Collectors;
+import org.onap.nbi.commons.Resource;
 
-public class Subscription {
+public class Subscription implements Resource {
 
 
     private String id;
