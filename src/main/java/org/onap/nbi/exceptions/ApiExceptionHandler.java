@@ -54,6 +54,6 @@ public class ApiExceptionHandler {
     @ResponseBody
     public ResponseEntity<ApiError> validationExceptionHandler(final ValidationException exception) {
         ApiError apiError = new ApiError("400", HttpStatus.BAD_REQUEST.getReasonPhrase(), exception.getMessages(), "");
-        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 }

@@ -38,6 +38,24 @@ Given url location
 When method delete
 Then status 204
 
+Scenario: testCreation2SameSubscribers
+Given path 'hub'
+And request data[0]
+When method post
+Then status 201
+And def location = responseHeaders['Location'][0]
+Given path 'hub'
+And request data[0]
+When method post
+Then status 400
+And match $ contains { message : 'Bad Request'}
+Given path 'hub'
+When method get
+And match $ == '#[1]'
+Given url location
+When method delete
+Then status 204
+
 Scenario: testGetByIdSubscriber
 Given path 'hub'
 And request data[0]

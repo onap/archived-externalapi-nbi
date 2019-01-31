@@ -1,16 +1,13 @@
 [
   {
-    "id": "id",
     "callback": "http://localhost:8080/test",
     "query": "eventType = ServiceOrderCreationNotification"
   },
   {
-    "id": "id",
     "callback": "http://localhost/test",
     "query": "eventType=ServiceOrderStateChangeNotification"
   },
   {
-    "id": "id",
     "callback": "http://localhost/test",
     "query": "eventType=ServiceOrderItemStateChangeNotification"
   }
