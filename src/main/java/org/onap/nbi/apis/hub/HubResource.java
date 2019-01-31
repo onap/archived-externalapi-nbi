@@ -60,18 +60,13 @@ public class HubResource extends ResourceManagement {
     MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Subscriber> createEventSubscription(@RequestBody Subscription subscription) {
+    public ResponseEntity<Object> createEventSubscription(@RequestBody Subscription subscription,
+        @RequestParam MultiValueMap<String, String> params) {
         logger.debug("POST request for subscription : {}", subscription);
-        subscription.setId(null);
         Subscriber subscriber = subscriptionService.createSubscription(subscription);
+        JsonRepresentation filter = new JsonRepresentation(params);
+        return this.createResponse(Subscription.createFromSubscriber(subscriber), filter);
 
-        URI location = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(subscriber.getId())
-            .toUri();
-
-        return ResponseEntity.created(location).build();
     }
 
     @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
