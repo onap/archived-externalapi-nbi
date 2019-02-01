@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
@@ -70,7 +71,13 @@ public class SOTaskProcessor {
 
         ServiceOrderInfo serviceOrderInfo = getServiceOrderInfo(executionTask);
 
-        ServiceOrder serviceOrder = serviceOrderService.findServiceOrderById(serviceOrderInfo.getServiceOrderId());
+        Optional<ServiceOrder> optionalServiceOrder = serviceOrderService
+            .findServiceOrderById(serviceOrderInfo.getServiceOrderId());
+        if (!optionalServiceOrder.isPresent()) {
+            throw new TechnicalException(
+                "Unable to retrieve service order for id " + serviceOrderInfo.getServiceOrderId());
+        }
+        ServiceOrder serviceOrder = optionalServiceOrder.get();
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
         boolean e2eService = E2EServiceUtils
             .isE2EService(serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()));
@@ -84,14 +91,14 @@ public class SOTaskProcessor {
             } else {
 
                 ResponseEntity<CreateServiceInstanceResponse> response = postSoProcessor
-                    .postServiceOrderItem(serviceOrderInfo,serviceOrderItem);
+                    .postServiceOrderItem(serviceOrderInfo, serviceOrderItem);
                 updateServiceOrderItem(response, serviceOrderItem, serviceOrder);
             }
         }
 
         boolean shouldStopPolling = shouldStopPolling(executionTask);
         if (!shouldStopPolling && StateType.FAILED != serviceOrderItem.getState()
-        ) {
+            ) {
             // TODO lancer en asynchrone
             sOGetStatusManager.pollRequestStatus(serviceOrder, serviceOrderItem, e2eService);
 
@@ -109,7 +116,8 @@ public class SOTaskProcessor {
     }
 
     private boolean shouldPostSo(ServiceOrderItem serviceOrderItem) {
-        return StateType.ACKNOWLEDGED == serviceOrderItem.getState() || StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState();
+        return StateType.ACKNOWLEDGED == serviceOrderItem.getState()
+            || StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState();
     }
 
     private ServiceOrderItem getServiceOrderItem(ExecutionTask executionTask, ServiceOrder serviceOrder) {
@@ -178,7 +186,6 @@ public class SOTaskProcessor {
     }
 
 
-
     /**
      * Update ServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
      */
@@ -188,7 +195,7 @@ public class SOTaskProcessor {
         if (response == null || !response.getStatusCode().is2xxSuccessful()) {
             LOGGER.warn("response ko for serviceOrderItem.id=" + orderItem.getId());
             serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
-            buildOrderMessageIfNeeded(orderItem,serviceOrder,response);
+            buildOrderMessageIfNeeded(orderItem, serviceOrder, response);
         } else {
             CreateServiceInstanceResponse createServiceInstanceResponse = response.getBody();
             if (createServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
@@ -209,14 +216,16 @@ public class SOTaskProcessor {
     }
 
 
-    private void updateOrderItemToInProgress(ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem){
-        if(serviceOrderItem.getAction()!= ActionType.MODIFY){
+    private void updateOrderItemToInProgress(ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem) {
+        if (serviceOrderItem.getAction() != ActionType.MODIFY) {
             serviceOrderService.updateOrderItemState(serviceOrder, serviceOrderItem, StateType.INPROGRESS);
         } else {
-            if(StateType.ACKNOWLEDGED==serviceOrderItem.getState()){
-                serviceOrderService.updateOrderItemState(serviceOrder, serviceOrderItem, StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
+            if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+                serviceOrderService.updateOrderItemState(serviceOrder, serviceOrderItem,
+                    StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
             } else {
-                serviceOrderService.updateOrderItemState(serviceOrder,serviceOrderItem,StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND);
+                serviceOrderService.updateOrderItemState(serviceOrder, serviceOrderItem,
+                    StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND);
             }
         }
     }
@@ -224,17 +233,16 @@ public class SOTaskProcessor {
 
     private void buildOrderMessageIfNeeded(ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder,
         ResponseEntity<?> response) {
-        if(response!=null)
-        {
-            if(response.getStatusCode()== HttpStatus.INTERNAL_SERVER_ERROR) {
+        if (response != null) {
+            if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
                 serviceOrderService.addOrderMessage(serviceOrder, "502");
-            }
-            else if(response.getStatusCode()== HttpStatus.BAD_REQUEST) {
-                ResponseEntity<?> messageError=response;
-                if(messageError.getBody().toString().toLowerCase().contains("serviceinstance already exists")){
+            } else if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                ResponseEntity<?> messageError = response;
+                if (messageError.getBody().toString().toLowerCase().contains("serviceinstance already exists")) {
                     serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "105");
                 } else {
-                    serviceOrderService.addOrderItemMessageRequestSo(serviceOrder, serviceOrderItem, messageError.getBody().toString());
+                    serviceOrderService.addOrderItemMessageRequestSo(serviceOrder, serviceOrderItem,
+                        messageError.getBody().toString());
                 }
             }
         }
@@ -273,7 +281,7 @@ public class SOTaskProcessor {
      * Update an executionTask in database when it's process with a success
      */
     private void updateSuccessTask(ExecutionTask executionTask) {
-        executionTaskRepository.delete(executionTask.getInternalId());
+        executionTaskRepository.deleteById(executionTask.getInternalId());
         executionTaskRepository.updateReliedTaskAfterDelete(executionTask.getInternalId());
 
     }
@@ -326,8 +334,8 @@ public class SOTaskProcessor {
     private boolean shouldStopPolling(ExecutionTask executionTask) {
         long createTimeinMillis = executionTask.getCreateDate().getTime();
         long lastAttemptTimeInMillis = executionTask.getLastAttemptDate().getTime();
-        long differenceInMillis = lastAttemptTimeInMillis-createTimeinMillis;
-        float pollingDurationInMillis = pollingDurationInMins*60000;
+        long differenceInMillis = lastAttemptTimeInMillis - createTimeinMillis;
+        float pollingDurationInMillis = pollingDurationInMins * 60000;
         LOGGER.debug("Task {} with orderitem id {}: Task create date: {} Task last attempt date: {}",
             executionTask.getInternalId(), executionTask.getOrderItemId(), createTimeinMillis,
             lastAttemptTimeInMillis);

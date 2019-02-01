@@ -15,6 +15,7 @@ package org.onap.nbi.apis.hub.service;
 import com.google.common.collect.Lists;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 import org.onap.nbi.apis.hub.model.Subscriber;
 import org.onap.nbi.apis.hub.model.Subscription;
 import org.onap.nbi.apis.hub.repository.SubscriberRepository;
@@ -30,8 +31,8 @@ public class SubscriptionService {
     @Autowired
     SubscriberRepository subscriberRepository;
 
-    public Subscriber findSubscriptionById(String subscriptionId) {
-        return subscriberRepository.findOne(subscriptionId);
+    public Optional<Subscriber> findSubscriptionById(String subscriptionId) {
+        return subscriberRepository.findById(subscriptionId);
     }
 
     public Subscriber createSubscription(Subscription subscription) {
@@ -51,12 +52,12 @@ public class SubscriptionService {
 
     private boolean isSubscriberAlreadyExisting(Subscriber subscriber) {
         Example<Subscriber> subscriberExample = Example.of(subscriber);
-        Subscriber subscriberAlreadyExisting = subscriberRepository.findOne(subscriberExample);
-        return subscriberAlreadyExisting != null;
+        Optional<Subscriber> subscriberAlreadyExisting = subscriberRepository.findOne(subscriberExample);
+        return subscriberAlreadyExisting.isPresent();
     }
 
     public void deleteSubscription(String subscriptionId) {
-        subscriberRepository.delete(subscriptionId);
+        subscriberRepository.deleteById(subscriptionId);
     }
 
     public void deleteAll() {
