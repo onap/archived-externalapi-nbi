@@ -48,24 +48,20 @@ public class ServiceInventoryService {
 
     public Map get(String serviceId, MultiValueMap<String, String> params) {
 
-        String clientId = params.getFirst("relatedParty.id");
-        String serviceSpecId = params.getFirst("serviceSpecification.id");
-        String serviceSpecName = params.getFirst("serviceSpecification.name");
-
-        if (StringUtils.isEmpty(serviceSpecId) && StringUtils.isEmpty(serviceSpecName)) {
-            throw new BackendFunctionalException(HttpStatus.NOT_FOUND,
-                "serviceSpecName or serviceSpecId must be provided","serviceSpecName or serviceSpecId must be provided");
-        }
-
-        String customerId = getCustomerId(clientId);
-        String serviceName = getServiceName(serviceSpecName, serviceSpecId);
-        Map serviceResponse = aaiClient.getCatalogService(customerId, serviceName, serviceId);
+        String clientId = params.getFirst("relatedParty.id");        
+        Map serviceResponse = aaiClient.getService(serviceId);
 
         if (serviceResponse != null) {
             addVnfsToResponse(serviceResponse);
             LinkedHashMap serviceInventoryResponse =
                 (LinkedHashMap) getServiceInventoryJsonTransformer.transform(serviceResponse);
-            addRelatedPartyId(customerId, serviceInventoryResponse);
+            // If CustomerId passed in the query, add the relatedParty to the response
+            if (!StringUtils.isEmpty(clientId))
+            {
+            	String customerId = getCustomerId(clientId);
+                addRelatedPartyId(customerId, serviceInventoryResponse);
+            	
+            }
             return serviceInventoryResponse;
         } else {
             throw new BackendFunctionalException(HttpStatus.NOT_FOUND, "no catalog service found","no catalog service found");

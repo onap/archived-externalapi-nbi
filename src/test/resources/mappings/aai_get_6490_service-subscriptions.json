@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/aai/v11/business/customers/customer/6490/service-subscriptions"
+    "url": "/aai/v14/business/customers/customer/6490/service-subscriptions"
   },
   "response": {
     "status": 200,

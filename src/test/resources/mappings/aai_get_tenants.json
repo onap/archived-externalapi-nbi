@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "url": "/aai/v11/cloud-infrastructure/cloud-regions/cloud-region/CloudOwner/RegionOne/tenants"
+        "url": "/aai/v14/cloud-infrastructure/cloud-regions/cloud-region/CloudOwner/RegionOne/tenants"
     },
     "response": {
         "status": 200,
