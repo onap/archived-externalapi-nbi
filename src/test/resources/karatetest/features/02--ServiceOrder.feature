@@ -361,7 +361,7 @@ Then status 204
 
 
 Scenario: testCheckServiceOrderWithCustomerAAINotResponding
-* call Context.removeWireMockMapping("/aai/v11/business/customers/customer/new");
+* call Context.removeWireMockMapping("/aai/v14/business/customers/customer/new");
 Given path 'serviceOrder'
 And request data[4]
 When method post
@@ -382,7 +382,7 @@ Then status 200
 
 
 Scenario: testAAIPutServiceNotResponding
-* call Context.removeWireMockMapping("/aai/v11/business/customers/customer/new/service-subscriptions/service-subscription/vFW");
+* call Context.removeWireMockMapping("/aai/v14/business/customers/customer/new/service-subscriptions/service-subscription/vFW");
 Given path 'serviceOrder'
 And request data[4]
 When method post

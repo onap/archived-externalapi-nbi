@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/aai/v11/business/customers/customer/6490/service-subscriptions/service-subscription/vFW/service-instances/service-instance/e4688e5f-61a0-4f8b-ae02-a2fbde623bcbWithoutList"
+    "url": "/aai/v14/nodes/service-instances/service-instance/e4688e5f-61a0-4f8b-ae02-a2fbde623bcbWithoutList"
   },
   "response": {
     "status": 200,

@@ -30,16 +30,16 @@ public final class OnapComponentsUrlPaths {
 
     // AAI
     public static final String AAI_GET_TENANTS_PATH =
-            "/aai/v11/cloud-infrastructure/cloud-regions/cloud-region/$onap.cloudOwner/$onap.lcpCloudRegionId/tenants";
-    public static final String AAI_GET_CUSTOMER_PATH = "/aai/v11/business/customers/customer/";
+            "/aai/v14/cloud-infrastructure/cloud-regions/cloud-region/$onap.cloudOwner/$onap.lcpCloudRegionId/tenants";
+    public static final String AAI_GET_CUSTOMER_PATH = "/aai/v14/business/customers/customer/";
     public static final String AAI_GET_SERVICES_FOR_CUSTOMER_PATH =
-            "/aai/v11/business/customers/customer/$customerId/service-subscriptions";
+            "/aai/v14/business/customers/customer/$customerId/service-subscriptions";
     public static final String AAI_PUT_SERVICE_FOR_CUSTOMER_PATH =
-            "/aai/v11/business/customers/customer/$customerId/service-subscriptions/service-subscription/";
-    public static final String AAI_GET_SERVICE_FOR_CUSTOMER_PATH =
-            "/aai/v11/business/customers/customer/$customerId/service-subscriptions/service-subscription/$serviceSpecName/service-instances/service-instance/$serviceId";
+            "/aai/v14/business/customers/customer/$customerId/service-subscriptions/service-subscription/";
+    public static final String AAI_GET_SERVICE =
+            "/aai/v14/nodes/service-instances/service-instance/$serviceId";
     public static final String AAI_GET_SERVICE_INSTANCES_PATH =
-            "/aai/v11/business/customers/customer/$customerId/service-subscriptions/service-subscription/$serviceSpecName/service-instances/";
+            "/aai/v14/business/customers/customer/$customerId/service-subscriptions/service-subscription/$serviceSpecName/service-instances/";
 
     // MSO
     public static final String MSO_CREATE_SERVICE_INSTANCE_PATH = "/onap/so/infra/serviceInstantiation/v7/serviceInstances/";

@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "PUT",
-        "url": "/aai/v11/business/customers/customer/new/service-subscriptions/service-subscription/vFW"
+        "url": "/aai/v14/business/customers/customer/new/service-subscriptions/service-subscription/vFW"
     },
     "response": {
         "status": 201,

@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/aai/v11/business/customers/customer/6490/service-subscriptions/service-subscription/vFW-service-2VF-based/service-instances/"
+    "url": "/aai/v14/business/customers/customer/6490/service-subscriptions/service-subscription/vFW-service-2VF-based/service-instances/"
   },
   "response": {
     "status": 200,

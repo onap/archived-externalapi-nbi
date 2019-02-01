@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/aai/v14/business/customers/customer/6490/service-subscriptions/service-subscription/AnsibleService/service-instances/service-instance/405c8c00-44b9-4303-9f27-6797d22ca096"
+    "url": "/aai/v14/nodes/service-instances/service-instance/405c8c00-44b9-4303-9f27-6797d22ca096"
   },
   "response": {
     "status": 200,

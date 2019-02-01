@@ -57,7 +57,7 @@ public class AaiClient extends BaseClient {
 
     @PostConstruct
     private void setUpAndlogAAIUrl() {
-        aaiServiceUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_FOR_CUSTOMER_PATH).toString();
+        aaiServiceUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE).toString();
         aaiServicesUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH).toString();
         aaiServicesInstancesUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH).toString();
 
@@ -94,7 +94,17 @@ public class AaiClient extends BaseClient {
         }
         return null;
     }
+    
+    public Map getService(String serviceId) {
 
+        String callUrlFormated = aaiServiceUrl.replace("$serviceId", serviceId);
+        
+        ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
+        if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
+            return (LinkedHashMap) response.getBody();
+        }
+        return null;
+    }
 
     public Map getVNF(String relatedLink) {
 

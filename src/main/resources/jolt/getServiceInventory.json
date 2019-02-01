@@ -25,7 +25,6 @@
     "operation": "default",
     "spec": {
       "type": "service-instance",
-      "hasStarted": "yes",
       "@type": "serviceONAP",
       "serviceSpecification" : {
         "@type" :"ONAPservice"
