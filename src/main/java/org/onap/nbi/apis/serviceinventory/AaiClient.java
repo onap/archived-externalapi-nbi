@@ -52,12 +52,14 @@ public class AaiClient extends BaseClient {
 
 
     private String aaiServiceUrl;
+    private String aaiServiceCustomerUrl;
     private String aaiServicesUrl;
     private String aaiServicesInstancesUrl;
 
     @PostConstruct
     private void setUpAndlogAAIUrl() {
         aaiServiceUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE).toString();
+        aaiServiceCustomerUrl = new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_CUSTOMER).toString();
         aaiServicesUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH).toString();
         aaiServicesInstancesUrl= new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH).toString();
 
@@ -97,8 +99,17 @@ public class AaiClient extends BaseClient {
     
     public Map getService(String serviceId) {
 
-        String callUrlFormated = aaiServiceUrl.replace("$serviceId", serviceId);
-        
+        String callUrlFormated = aaiServiceUrl.replace("$serviceId", serviceId);        
+        ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
+        if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
+            return (LinkedHashMap) response.getBody();
+        }
+        return null;
+    }
+
+    public Map getServiceCustomer(String serviceId) {
+
+        String callUrlFormated = aaiServiceCustomerUrl.replace("$serviceId", serviceId);        
         ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI());
         if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
             return (LinkedHashMap) response.getBody();

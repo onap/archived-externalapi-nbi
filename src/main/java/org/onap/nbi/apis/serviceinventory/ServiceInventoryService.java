@@ -47,7 +47,6 @@ public class ServiceInventoryService {
 
 
     public Map get(String serviceId, MultiValueMap<String, String> params) {
-
                 
         Map serviceResponse = aaiClient.getService(serviceId);
 
@@ -55,6 +54,7 @@ public class ServiceInventoryService {
             addVnfsToResponse(serviceResponse);
             LinkedHashMap serviceInventoryResponse =
                 (LinkedHashMap) getServiceInventoryJsonTransformer.transform(serviceResponse);
+            addrelatedPartyIdIdandSpecName(serviceId, serviceInventoryResponse);
             return serviceInventoryResponse;
         } else {
             throw new BackendFunctionalException(HttpStatus.NOT_FOUND, "no catalog service found","no catalog service found");
@@ -84,11 +84,32 @@ public class ServiceInventoryService {
 
     }
 
-    private void addRelatedPartyId(String customerId, LinkedHashMap serviceInventoryResponse) {
+    private void addrelatedPartyIdIdandSpecName(String serviceId, LinkedHashMap serviceInventoryResponse) {
 
-        LinkedHashMap relatedParty = (LinkedHashMap) serviceInventoryResponse.get("relatedParty");
-        relatedParty.put("id", customerId);
+    	String customerId;
+    	String serviceSpecName;
+    	LinkedHashMap relatedParty = (LinkedHashMap) serviceInventoryResponse.get("relatedParty");
+    	LinkedHashMap serviceSpecification = (LinkedHashMap) serviceInventoryResponse.get("serviceSpecification");
+        Map servicecustomerResponse = aaiClient.getServiceCustomer(serviceId);
+        if (servicecustomerResponse != null) {
+            List<LinkedHashMap> serviceCustomerResults =
+                (List<LinkedHashMap>) servicecustomerResponse.get("results");
 
+            if (!CollectionUtils.isEmpty(serviceCustomerResults)) {
+                for (LinkedHashMap serviceCustomerResult : serviceCustomerResults) {
+                	String url = (String) serviceCustomerResult.get("url");
+                    String[] pathObjects = url.split("/");
+                    customerId = pathObjects[6];
+                    serviceSpecName = pathObjects[9];
+                    relatedParty.put("id", customerId);
+                    serviceSpecification.put("name", serviceSpecName);
+                }
+            } else {
+                LOGGER.warn("no service instance found for serviceId {}",serviceId);
+            }
+        } else {
+        	LOGGER.warn("no service instance found for serviceId {}",serviceId);
+        }
     }
 
     private void addVnfsToResponse(Map serviceResponse) {
