@@ -14,7 +14,8 @@ Given path 'service','e4688e5f-61a0-4f8b-ae02-a2fbde623bcb'
 When method get
 Then status 200
 And match $ contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01', type : 'service-instance', @type : 'serviceONAP' }
-And match $.serviceSpecification contains { id : '98d95267-5e0f-4531-abf8-f14b90031dc5' , invariantUUID : '709d157b-52fb-4250-976e-7133dff5c347' , @type : 'ONAPservice' }
+And match $.serviceSpecification contains { id : '98d95267-5e0f-4531-abf8-f14b90031dc5' , invariantUUID : '709d157b-52fb-4250-976e-7133dff5c347' , @type : 'ONAPservice', name :'servicename2' }
+And match $.relatedParty  contains { role : 'ONAPcustomer' , id : 'DemoTest2' }
 And match $.supportingResource[0] contains { id : 'cb80fbb6-9aa7-4ac5-9541-e14f45de533e' , name : 'NewFreeRadius-VNF-instance-01' , status :  'PREPROV' , modelInvariantId : 'f5993703-977f-4346-a1c9-c1884f8cfd8d' , modelVersionId : '902438f7-1e4c-492d-b7cc-8650e13b8aeb' , @referredType : 'ONAP resource' }
 And match $.supportingResource == '#[2]'
 
@@ -23,23 +24,18 @@ Given url 'http://localhost:8080/nbi/api/v3/service/405c8c00-44b9-4303-9f27-6797
 When method get
 Then status 200
 And match $.state == 'Active'
+And match $.relatedParty  contains { role : 'ONAPcustomer' , id : 'DemoTest1' }
+And match $.serviceSpecification contains { id : '0bf5f56a-4506-4e98-ab50-336d73ca4b07' , invariantUUID : 'f3ec9092-5c98-41f1-9fea-96be80abd064' , @type : 'ONAPservice', name :'servicename1' }
+
 
 Scenario: testServiceResourceGetInventoryWithoutRelationShipList
 Given path 'service','e4688e5f-61a0-4f8b-ae02-a2fbde623bcbWithoutList'
 When method get
 Then status 200
 And match $ contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01' , type : 'service-instance' , @type : 'serviceONAP' }
-And match $.serviceSpecification contains { id : '98d95267-5e0f-4531-abf8-f14b90031dc5' , invariantUUID : '709d157b-52fb-4250-976e-7133dff5c347' , @type : 'ONAPservice' }
+And match $.serviceSpecification contains { id : '98d95267-5e0f-4531-abf8-f14b90031dc5' , invariantUUID : '709d157b-52fb-4250-976e-7133dff5c347' , @type : 'ONAPservice', name : 'servicename3' }
+And match $.relatedParty  contains { role : 'ONAPcustomer' , id : 'DemoTest3' }
 And match $.supportingResource == '#[0]'
-
-Scenario: testServiceResourceGetInventoryWithServiceSpecId
-Given path 'service','e4688e5f-61a0-4f8b-ae02-a2fbde623bcb'
-When method get
-Then status 200
-And match $ contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01', type : 'service-instance', @type : 'serviceONAP' }
-And match $.serviceSpecification contains { id : '98d95267-5e0f-4531-abf8-f14b90031dc5' , invariantUUID : '709d157b-52fb-4250-976e-7133dff5c347' , @type : 'ONAPservice' }
-And match $.supportingResource[0] contains { id : 'cb80fbb6-9aa7-4ac5-9541-e14f45de533e' , name : 'NewFreeRadius-VNF-instance-01' , status :  'PREPROV' , modelInvariantId : 'f5993703-977f-4346-a1c9-c1884f8cfd8d' , modelVersionId : '902438f7-1e4c-492d-b7cc-8650e13b8aeb' , @referredType : 'ONAP resource' }
-And match $.supportingResource == '#[2]'
 
 
 Scenario: testServiceInventoryFind
