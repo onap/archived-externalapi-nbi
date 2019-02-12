@@ -174,14 +174,13 @@ if no service matches, an empty list is send back.
 
 **GET Service Inventory (id)**
 
-Example: ``GET /nbi/api/v3/service/{uuid}`` but ``customerId`` &
-``serviceSpecification.id`` must passed in requested parameters
+Example: ``GET /nbi/api/v3/service/{id}`` When querying for a specific service 
+instance id, no additional filters are required.
 
-
-Because of **A&AI** capability, additionally to the service id, customer id
-and ``serviceSpecification.id`` or ``serviceSpecification.name`` must be
-supplied. If the customer id is not supplied, External API will use *generic*
-customer
+The Service Inventory API will retrieve the service instance data from A&AI using 
+the nodes query with the service instance id as the key. ``relatedParty.id`` + 
+``serviceSpecification.name`` are added to the response based on the A&AI service 
+instance url.
 
 ------------
 serviceOrder
