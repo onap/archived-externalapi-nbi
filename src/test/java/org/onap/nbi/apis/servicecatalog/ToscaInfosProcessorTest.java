@@ -26,8 +26,15 @@ import java.util.List;
 
 import org.assertj.core.api.AbstractBooleanAssert;
 import org.junit.Test;
+import org.onap.nbi.apis.servicecatalog.SchemaGenerator.SwaggerGenerator;
 import org.onap.nbi.exceptions.TechnicalException;
+import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
+import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
+import org.onap.sdc.toscaparser.api.parameters.Input;
+
+import io.swagger.models.Swagger;
+import io.swagger.util.Json;
 
 
 public class ToscaInfosProcessorTest {
@@ -109,6 +116,35 @@ public class ToscaInfosProcessorTest {
 
     }
 
+    @Test
+    public void generateInputsSwaggerSchema() {
+    	ClassLoader classLoader = getClass().getClassLoader();
+        Path path = new File(classLoader.getResource("toscafile/service-Sotnvpninfraservice-csar.csar").getFile()).toPath().toAbsolutePath();
+        List<LinkedHashMap> resources = new ArrayList<>();
+        LinkedHashMap resource1 = new LinkedHashMap();
+        resource1.put("id", "218df3c3-50dd-4c26-9e36-4771387bb771");
+        resources.add(resource1);
+        LinkedHashMap resource2 = new LinkedHashMap();
+        resource2.put("id", "81b9430b-8abe-45d6-8bf9-f41a8f5c735f");
+        resources.add(resource2);
+        LinkedHashMap response = new LinkedHashMap();
+        response.put("resourceSpecification", resources);
+        
+        Swagger swagger = null;
+        try {
+        	SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
+            ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(),false);	
+            SwaggerGenerator generator = new SwaggerGenerator(sdcCsarHelper);
+            swagger = generator.generateSwagger();
+        }
+        catch(SdcToscaParserException e) {
+            throw new TechnicalException("unable to build response from tosca csar using sdc-parser : " + path.toString()+" "+e.getMessage());
+        }
+        System.out.println(Json.pretty(swagger));              
+        assertThat(swagger).isNotNull();    
+        assertThat(swagger.getDefinitions().get("inputs").getProperties().get("sotnconnectivity0_eir").getType()).isEqualTo("string");
+    }
+    
     @Test
     public void buildResponseWithSdcToscaParserWithDefaultInputs() {
 

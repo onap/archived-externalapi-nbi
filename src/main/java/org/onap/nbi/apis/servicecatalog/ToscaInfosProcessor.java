@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.onap.nbi.apis.servicecatalog.SchemaGenerator.SwaggerGenerator;
 
 @Service
 public class ToscaInfosProcessor {
@@ -100,6 +101,7 @@ public class ToscaInfosProcessor {
         SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
         ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(),false);
         List<Input> inputs = sdcCsarHelper.getServiceInputs();
+
         if(inputs != null && inputs.size() > 0) {
             ArrayList serviceSpecCharacteristic = new ArrayList();
             for(Input input : inputs) {
