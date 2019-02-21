@@ -14,6 +14,7 @@ package org.onap.nbi.apis.hub;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.onap.nbi.apis.hub.model.Subscriber;
 import org.onap.nbi.apis.hub.model.Subscription;
@@ -72,11 +73,12 @@ public class HubResource extends ResourceManagement {
     @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Subscription> getSubscription(@PathVariable String subscriptionId) {
 
-        Subscriber subscriber = subscriptionService.findSubscriptionById(subscriptionId);
-        if (subscriber == null) {
+
+        Optional<Subscriber> optionalSubscriber = subscriptionService.findSubscriptionById(subscriptionId);
+        if (!optionalSubscriber.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(Subscription.createFromSubscriber(subscriber));
+        return ResponseEntity.ok(Subscription.createFromSubscriber(optionalSubscriber.get()));
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
