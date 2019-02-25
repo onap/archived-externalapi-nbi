@@ -155,3 +155,97 @@ Then status 204
 Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
+
+
+Scenario: testSubscriberWithTestListenerForServiceInventorCreationEvents
+* def listenerUrl = nbiBaseUrl + "/test/listener"
+Given path 'test/listener'
+When method delete
+Then status 204
+Given path 'hub'
+And request { id : 'id', callback : '#(listenerUrl)' , query : 'eventType = ServiceCreationNotification' }
+When method post
+Then status 201
+Given path 'hub'
+When method get
+And def hubId = $[0].id
+Given path 'hub/testaaievents'
+Then status 200
+When method get
+Given path 'test/listener'
+And params {serviceInstanceId : 'new-test5'}
+And retry until responseStatus == 200
+When method get
+And assert response.length == 1
+And match $[0] contains { eventId : '#notnull' , eventType : 'ServiceCreationNotification' , eventDate : '#notnull' , event :'#notnull'}
+And def eventId = $[0].eventId
+And def eventDate = $[0].eventDate
+And call checkDateFormat(eventDate)
+Given path 'hub',hubId
+When method delete
+Then status 204
+Given path 'test/listener',eventId
+When method delete
+Then status 204
+
+Scenario: testSubscriberWithTestListenerForServiceInventoryUpdateEvents
+* def listenerUrl = nbiBaseUrl + "/test/listener"
+Given path 'test/listener'
+When method delete
+Then status 204
+Given path 'hub'
+And request { id : 'id', callback : '#(listenerUrl)' , query : 'eventType = ServiceAttributeValueChangeNotification' }
+When method post
+Then status 201
+Given path 'hub'
+When method get
+And def hubId = $[0].id
+Given path 'hub/testaaievents'
+Then status 200
+When method get
+Given path 'test/listener'
+And params {serviceInstanceId : 'new-test5'}
+And retry until responseStatus == 200
+When method get
+And assert response.length == 1
+And match $[0] contains { eventId : '#notnull' , eventType : 'ServiceAttributeValueChangeNotification' , eventDate : '#notnull' , event :'#notnull'}
+And def eventId = $[0].eventId
+And def eventDate = $[0].eventDate
+And call checkDateFormat(eventDate)
+Given path 'hub',hubId
+When method delete
+Then status 204
+Given path 'test/listener',eventId
+When method delete
+Then status 204
+
+Scenario: testSubscriberWithTestListenerForServiceInventoryRemoveEvents
+* def listenerUrl = nbiBaseUrl + "/test/listener"
+Given path 'test/listener'
+When method delete
+Then status 204
+Given path 'hub'
+And request { id : 'id', callback : '#(listenerUrl)' , query : 'eventType = ServiceRemoveNotification' }
+When method post
+Then status 201
+Given path 'hub'
+When method get
+And def hubId = $[0].id
+Given path 'hub/testaaievents'
+Then status 200
+When method get
+Given path 'test/listener'
+And params {serviceInstanceId : 'new-test5'}
+And retry until responseStatus == 200
+When method get
+And assert response.length == 1
+And match $[0] contains { eventId : '#notnull' , eventType : 'ServiceRemoveNotification' , eventDate : '#notnull' , event :'#notnull'}
+And def eventId = $[0].eventId
+And def eventDate = $[0].eventDate
+And call checkDateFormat(eventDate)
+Given path 'hub',hubId
+When method delete
+Then status 204
+Given path 'test/listener',eventId
+When method delete
+Then status 204
