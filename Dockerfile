@@ -20,6 +20,9 @@ ARG SERVER_PORT
 ARG PKG_FILENAME=nbi-rest-services-3.0.1.jar
 ADD target/$PKG_FILENAME app.jar
 
+RUN addgroup -S appgroup
+RUN adduser -S appuser -G appgroup
+
 COPY src/main/resources/certificate /certs
 ARG CERT_PASS=changeit
 RUN for cert in $(ls -d /certs/*); do \
@@ -31,6 +34,8 @@ RUN for cert in $(ls -d /certs/*); do \
                 -alias "$(basename $cert)" \
                 --noprompt; \
     done
+
+USER appuser:appgroup
 
 ENV SERVER_PORT=${SERVER_PORT:-8080}
 ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
