@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/events/AAI-EVENT/NBICG1/NBIC1?timeout=2000"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": [
+    "{\"cambria.partition\":\"AAI\",\"event-header\":{\"severity\":\"NORMAL\",\"entity-type\":\"service-instance\",\"top-entity-type\":\"customer\",\"entity-link\":\"/aai/v14/business/customers/customer/testcustomer2/service-subscriptions/service-subscription/HSIA_Service/service-instances/service-instance/new-test5\",\"event-type\":\"AAI-EVENT\",\"domain\":\"dev\",\"action\":\"CREATE\",\"sequence-number\":\"0\",\"id\":\"c3654954-9802-4b46-a397-6e12c74d2254\",\"source-name\":\"AAI\",\"version\":\"v14\",\"timestamp\":\"20190301-10:20:47:154\"},\"entity\":{\"global-customer-id\":\"testcustomer2\",\"subscriber-name\":\"testcustomer2\",\"service-subscriptions\":{\"service-subscription\":[{\"service-type\":\"HSIA_Service\",\"service-instances\":{\"service-instance\":[{\"service-instance-id\":\"new-test5\",\"resource-version\":\"1551435647134\",\"service-instance-name\":\"testname\",\"orchestration-status\":\"assigned\"}]}}]}}}",
+    "{\"cambria.partition\":\"AAI\",\"event-header\":{\"severity\":\"NORMAL\",\"entity-type\":\"service-instance\",\"top-entity-type\":\"customer\",\"entity-link\":\"/aai/v14/business/customers/customer/testcustomer2/service-subscriptions/service-subscription/HSIA_Service/service-instances/service-instance/new-test5\",\"event-type\":\"AAI-EVENT\",\"domain\":\"dev\",\"action\":\"UPDATE\",\"sequence-number\":\"0\",\"id\":\"a746584a-72b7-4994-97b2-bc43ec24fd35\",\"source-name\":\"AAI\",\"version\":\"v14\",\"timestamp\":\"20190301-13:50:34:121\"},\"entity\":{\"global-customer-id\":\"testcustomer2\",\"subscriber-name\":\"testcustomer2\",\"service-subscriptions\":{\"service-subscription\":[{\"service-type\":\"HSIA_Service\",\"service-instances\":{\"service-instance\":[{\"service-instance-id\":\"new-test5\",\"resource-version\":\"1551448234103\",\"service-instance-name\":\"testname\",\"orchestration-status\":\"active\"}]}}]}}}","{\"cambria.partition\":\"AAI\",\"event-header\":{\"severity\":\"NORMAL\",\"entity-type\":\"service-instance\",\"top-entity-type\":\"customer\",\"entity-link\":\"/aai/v14/business/customers/customer/testcustomer2/service-subscriptions/service-subscription/HSIA_Service/service-instances/service-instance/new-test5\",\"event-type\":\"AAI-EVENT\",\"domain\":\"dev\",\"action\":\"DELETE\",\"sequence-number\":\"0\",\"id\":\"011c139e-d00f-4a55-b1fc-b319f16e0f70\",\"source-name\":\"AAI\",\"version\":\"v14\",\"timestamp\":\"20190301-13:53:09:590\"},\"entity\":{\"global-customer-id\":\"testcustomer2\",\"subscriber-name\":\"testcustomer2\",\"service-subscriptions\":{\"service-subscription\":[{\"service-type\":\"HSIA_Service\",\"service-instances\":{\"service-instance\":[{\"service-instance-id\":\"new-test5\",\"resource-version\":\"1551448234103\",\"service-instance-name\":\"testname\",\"orchestration-status\":\"active\"}]}}]}}}"
+    ],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

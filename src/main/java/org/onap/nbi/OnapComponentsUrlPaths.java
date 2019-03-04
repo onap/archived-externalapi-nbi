@@ -50,4 +50,8 @@ public final class OnapComponentsUrlPaths {
     public static final String MSO_CREATE_E2ESERVICE_INSTANCE_PATH = "/onap/so/infra/e2eServiceInstances/v3";
     public static final String MSO_DELETE_E2ESERVICE_INSTANCE_PATH = "/onap/so/infra/e2eServiceInstances/v3/";
     public static final String MSO_GET_E2EREQUEST_STATUS_PATH = "/onap/so/infra/e2eServiceInstances/v3/$serviceId/operations/$operationId";
+    
+    // DMaaP Message Router REST Client
+    public static final String DMAAP_CONSUME_EVENTS =
+            "/events/$topic/$consumergroup/$consumerid?timeout=$timeout";
 }
