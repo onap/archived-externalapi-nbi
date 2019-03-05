@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/sdc/v1/catalog/services/462f84e5-f0e5-44c5-ab95-38fb4bf77064/toscaModel"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "toscafile/service-Sdwanvpninfraservice-csar.csar"
+    }
+}
