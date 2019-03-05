@@ -18,6 +18,13 @@ And match $.resourceSpecification[0] contains { name : 'vFW-vSINK', resourceInst
 And match $.resourceSpecification == '#[2]'
 And match $.attachment == '#[5]'
 
+Scenario: testServiceCatalogGetServiceWithToscaInputs
+Given path 'serviceSpecification','462f84e5-f0e5-44c5-ab95-38fb4bf77064'
+When method get
+Then status 200
+And match $ contains { id : '462f84e5-f0e5-44c5-ab95-38fb4bf77064' , name : 'vFW' , invariantUUID : 'b58a118e-eeb9-4f6e-bdca-e292f84d17df' , toscaModelURL : '/sdc/v1/catalog/services/462f84e5-f0e5-44c5-ab95-38fb4bf77064/toscaModel' , distributionStatus : 'DISTRIBUTED' , version : '2.0' , lifecycleStatus : 'CERTIFIED' , @type : 'ONAPservice' , attachment : '#array' , relatedParty : '#notnull' , resourceSpecification : '#array' }
+And match $.serviceSpecCharacteristic[0] contains { name : 'sdwanconnectivity0_topology', description : 'full mesh, hub-spoke', valueType : 'string', required : '#boolean', serviceSpecCharacteristicValue : '#null' }
+
 Scenario: findServiceCatalog
 Given path 'serviceSpecification'
 When method get
