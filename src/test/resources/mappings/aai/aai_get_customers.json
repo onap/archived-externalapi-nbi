@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/v14/business/customers"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "customer": [
+        {
+          "global-customer-id": "generic",
+          "subscriber-name": "generic",
+          "subscriber-type": "INFRA",
+          "resource-version": "1550238542827"
+        },
+        {
+          "global-customer-id": "Generic-Vendor",
+          "subscriber-name": "Generic-Vendor",
+          "subscriber-type": "INFRA",
+          "resource-version": "1550569650318"
+        },
+        {
+          "global-customer-id": "customerRG",
+          "subscriber-name": "customerRG",
+          "subscriber-type": "INFRA",
+          "resource-version": "1551445667218"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/xml"
+    }
+  }
+}

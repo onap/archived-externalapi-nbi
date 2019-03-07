@@ -88,12 +88,8 @@ public class CheckDMaaPEventsManager {
     ObjectMapper mapper = new ObjectMapper();
 
 
-    String dmaapGetEventsUrlFormated = dmaapGetEventsUrl.replace("$topic", topic);
-    dmaapGetEventsUrlFormated = dmaapGetEventsUrlFormated.replace("$consumergroup", consumerGroup);
-    dmaapGetEventsUrlFormated = dmaapGetEventsUrlFormated.replace("$consumerid", consumerId);
-    dmaapGetEventsUrlFormated = dmaapGetEventsUrlFormated.replace("$timeout", timeout);
 
-    List<String> dmaapResponse = callDMaaPGetEvents(dmaapGetEventsUrlFormated);
+    List<String> dmaapResponse = callDMaaPGetEvents();
     if (!CollectionUtils.isEmpty(dmaapResponse)) {
       for (int i = 0; i < dmaapResponse.size(); i++) {
         String aaiEventString = dmaapResponse.get(i);
@@ -158,7 +154,13 @@ public class CheckDMaaPEventsManager {
     }
   }
 
-  public List<String> callDMaaPGetEvents(String dmaapGetEventsUrlFormated) {
+  public List<String> callDMaaPGetEvents() {
+
+    String dmaapGetEventsUrlFormated = dmaapGetEventsUrl.replace("$topic", topic);
+    dmaapGetEventsUrlFormated = dmaapGetEventsUrlFormated.replace("$consumergroup", consumerGroup);
+    dmaapGetEventsUrlFormated = dmaapGetEventsUrlFormated.replace("$consumerid", consumerId);
+    dmaapGetEventsUrlFormated = dmaapGetEventsUrlFormated.replace("$timeout", timeout);
+
 
     if (logger.isDebugEnabled()) {
       logger.debug("Calling DMaaP Url : " + dmaapGetEventsUrlFormated);

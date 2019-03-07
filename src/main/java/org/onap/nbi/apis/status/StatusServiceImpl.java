@@ -16,11 +16,17 @@
 package org.onap.nbi.apis.status;
 
 import org.onap.nbi.apis.status.model.ApplicationStatus;
+import org.onap.nbi.apis.status.model.OnapModuleType;
 import org.onap.nbi.apis.status.model.StatusType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("statusService")
 public class StatusServiceImpl implements StatusService {
+
+    @Autowired
+    private OnapClient onapClient;
+
 
     @Override
     public ApplicationStatus get(final String serviceName, final String serviceVersion) {
@@ -29,9 +35,11 @@ public class StatusServiceImpl implements StatusService {
 
     }
 
+    @Override
+    public ApplicationStatus getOnapConnectivity(OnapModuleType onapModuleType) {
 
-    public boolean serviceIsUp() {
-        return true;
+        return onapClient.checkConnectivity(onapModuleType);
     }
+
 
 }

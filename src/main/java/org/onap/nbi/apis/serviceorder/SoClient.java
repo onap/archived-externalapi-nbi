@@ -66,6 +66,7 @@ public class SoClient {
     private String getE2ESoStatus;
     private String deleteE2ESoUrl;
     private String deleteSoUrl;
+    private String SoHealthCheck;
 
 
     @PostConstruct
@@ -82,6 +83,8 @@ public class SoClient {
             .toString();
         getE2ESoStatus = new StringBuilder().append(soHostname)
             .append(OnapComponentsUrlPaths.MSO_GET_E2EREQUEST_STATUS_PATH).toString();
+        SoHealthCheck = new StringBuilder().append(soHostname)
+            .append(OnapComponentsUrlPaths.MSO_HEALTH_CHECK).toString();
 
         LOGGER.info("SO create service url :  " + createSoUrl);
         LOGGER.info("SO create e2e service url :  " + createE2ESoUrl);
@@ -89,6 +92,7 @@ public class SoClient {
         LOGGER.info("SO delete e2e service url :  " + deleteE2ESoUrl);
         LOGGER.info("SO get so status url :  " + getSoStatus);
         LOGGER.info("SO get e2e so status url :  " + getE2ESoStatus);
+        LOGGER.info("SO healthCheck :  " + SoHealthCheck);
 
     }
 
@@ -248,6 +252,14 @@ public class SoClient {
             LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
             return null;
         }
+    }
+
+
+    public void callCheckConnectivity() {
+        String url = SoHealthCheck;
+        restTemplate.exchange(url, HttpMethod.GET,
+            new HttpEntity<>(buildRequestHeader()), String.class);
+
     }
 
     public GetE2ERequestStatusResponse callE2EGetRequestStatus(String operationId, String serviceId) {

@@ -33,7 +33,7 @@ public class ApplicationStatus implements Resource {
      * Builds a new {@code ApplicationStatus} with the following attributes :
      *
      * @param name name of the service
-     * @param state state of the service ({@code OK} | {@code KO})
+     * @param status status of the service ({@code OK} | {@code KO})
      * @param version version of the service ({@code x.y.z})
      */
     public ApplicationStatus(final String name, final StatusType status, final String version) {
@@ -58,7 +58,7 @@ public class ApplicationStatus implements Resource {
         return this.components;
     }
 
-    public ApplicationStatus component(final ApplicationStatus componentStatus) {
+    public ApplicationStatus addComponent(final ApplicationStatus componentStatus) {
         this.components.add(componentStatus);
         return this;
     }
