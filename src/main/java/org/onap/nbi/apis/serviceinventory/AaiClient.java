@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,6 +54,9 @@ public class AaiClient extends BaseClient {
   private String aaiServiceCustomerUrl;
   private String aaiServicesUrl;
   private String aaiServicesInstancesUrl;
+  private String aaiHealthCheckUrl;
+
+
 
   @PostConstruct
   private void setUpAndlogAAIUrl() {
@@ -64,11 +68,13 @@ public class AaiClient extends BaseClient {
         .append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH).toString();
     aaiServicesInstancesUrl = new StringBuilder().append(aaiHost)
         .append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH).toString();
-
+    aaiHealthCheckUrl = new StringBuilder().append(aaiHost)
+        .append(OnapComponentsUrlPaths.AAI_HEALTH_CHECK).toString();
 
     LOGGER.info("AAI service url :  " + aaiServiceUrl);
     LOGGER.info("AAI services url :  " + aaiServicesUrl);
     LOGGER.info("AAI service instances url :  " + aaiServicesInstancesUrl);
+    LOGGER.info("AAI aaiHealthCheckUrl :  " + aaiHealthCheckUrl);
 
   }
 
@@ -117,6 +123,11 @@ public class AaiClient extends BaseClient {
       return (LinkedHashMap) response.getBody();
     }
     return null;
+  }
+
+  public void callCheckConnectivity() {
+    String customersUrl = new StringBuilder().append(aaiHealthCheckUrl).toString();
+    ResponseEntity<String> response = callApiGetHealthCheck(customersUrl, buildRequestHeaderForAAI());
   }
 
   public Map getVNF(String relatedLink) {

@@ -71,15 +71,19 @@ public class SdcClient {
 
     private String sdcGetUrl;
     private String sdcFindUrl;
+    private String sdcHealthCheck;
 
     @PostConstruct
     private void setUpAndLogSDCUrl() {
         sdcGetUrl= new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL+"/{id}"+OnapComponentsUrlPaths.SDC_GET_PATH).toString();
         sdcFindUrl = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL).toString();
+        sdcHealthCheck = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_HEALTH_CHECK).toString();
+
 
 
         LOGGER.info("SDC GET url :  "+sdcGetUrl);
         LOGGER.info("SDC FIND url :  "+ sdcFindUrl);
+        LOGGER.info("SDC HealthCheck :  "+ sdcHealthCheck);
 
     }
 
@@ -110,6 +114,15 @@ public class SdcClient {
         return (List<LinkedHashMap>) response.getBody();
 
     }
+
+    public List<LinkedHashMap> callCheckConnectivity() {
+
+        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(sdcHealthCheck);
+        ResponseEntity<Object> response = callSdc(callURI.build().encode().toUri());
+        return (List<LinkedHashMap>) response.getBody();
+
+    }
+
 
 
     public File callGetWithAttachment(String toscaModelUrl) {

@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 public abstract class BaseClient {
@@ -45,6 +46,28 @@ public abstract class BaseClient {
         ResponseEntity<Object> response = null;
             response = restTemplate.exchange(callURL, HttpMethod.GET,
                     new HttpEntity<>("parameters", httpHeaders), Object.class);
+
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("response body : {}",response.getBody().toString());
+        }
+        LOGGER.info("response status : {}", response.getStatusCodeValue());
+        if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
+            LOGGER.warn("HTTP call on {} returns {}, {}", callURL , response.getStatusCodeValue() ,response.getBody().toString());
+        }
+        return response;
+    }
+
+
+    protected ResponseEntity<String> callApiGetHealthCheck(String callURL, HttpHeaders httpHeaders) {
+
+
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.debug("log request : "+callURL+ " "+httpHeaders);
+        }
+
+        ResponseEntity<String> response = null;
+        response = restTemplate.exchange(callURL, HttpMethod.GET,
+            new HttpEntity<>("parameters", httpHeaders), String.class);
 
         if(LOGGER.isDebugEnabled()){
             LOGGER.debug("response body : {}",response.getBody().toString());

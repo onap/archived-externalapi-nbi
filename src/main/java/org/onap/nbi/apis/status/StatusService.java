@@ -16,9 +16,14 @@
 package org.onap.nbi.apis.status;
 
 import org.onap.nbi.apis.status.model.ApplicationStatus;
+import org.onap.nbi.apis.status.model.OnapModuleType;
 
 public interface StatusService {
 
     ApplicationStatus get(String serviceName, String serviceVersion);
+
+
+    ApplicationStatus getOnapConnectivity(OnapModuleType onapModuleType);
+
 
 }

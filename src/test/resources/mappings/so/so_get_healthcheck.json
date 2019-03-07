@@ -1,0 +1,12 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/globalhealthcheck"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "bodyFileName": "so_healthcheck.xml"
+        }
+    }
+}

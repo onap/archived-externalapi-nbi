@@ -1,0 +1,68 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/sdc/v1/artifactTypes"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody":
+[
+    "CHEF",
+    "PUPPET",
+    "YANG",
+    "SHELL_SCRIPT",
+    "SHELL",
+    "ICON",
+    "UNKNOWN",
+    "HEAT",
+    "DG_XML",
+    "MURANO_PKG",
+    "HEAT_ENV",
+    "YANG_XML",
+    "HEAT_VOL",
+    "HEAT_NET",
+    "OTHER",
+    "WORKFLOW",
+    "NETWORK_CALL_FLOW",
+    "TOSCA_TEMPLATE",
+    "TOSCA_CSAR",
+    "VNF_CATALOG",
+    "VF_LICENSE",
+    "BPEL",
+    "VENDOR_LICENSE",
+    "MODEL_INVENTORY_PROFILE",
+    "MODEL_QUERY_SPEC",
+    "APPC_CONFIG",
+    "HEAT_NESTED",
+    "HEAT_ARTIFACT",
+    "VF_MODULES_METADATA",
+    "LIFECYCLE_OPERATIONS",
+    "VES_EVENTS",
+    "PERFORMANCE_COUNTER",
+    "UCPE_LAYER_2_CONFIGURATION",
+    "DCAE_TOSCA",
+    "DCAE_JSON",
+    "DCAE_POLICY",
+    "DCAE_DOC",
+    "DCAE_EVENT",
+    "DCAE_INVENTORY_TOSCA",
+    "DCAE_INVENTORY_JSON",
+    "DCAE_INVENTORY_POLICY",
+    "DCAE_INVENTORY_DOC",
+    "DCAE_INVENTORY_BLUEPRINT",
+    "DCAE_INVENTORY_EVENT",
+    "AAI_SERVICE_MODEL",
+    "AAI_VF_MODEL",
+    "AAI_VF_MODULE_MODEL",
+    "AAI_VF_INSTANCE_MODEL",
+    "SNMP_POLL",
+    "SNMP_TRAP",
+    "GUIDE",
+    "PLAN"
+]
+        ,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

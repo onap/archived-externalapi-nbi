@@ -1,21 +1,19 @@
 /**
- *     Copyright (c) 2018 Orange
+ * Copyright (c) 2018 Orange
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.onap.nbi.apis.status;
 
 import org.onap.nbi.apis.status.model.ApplicationStatus;
+import org.onap.nbi.apis.status.model.OnapModuleType;
 import org.onap.nbi.apis.status.model.StatusType;
 import org.onap.nbi.commons.JsonRepresentation;
 import org.onap.nbi.commons.ResourceManagement;
@@ -52,22 +50,26 @@ public class StatusResource extends ResourceManagement {
 
         final String applicationName = splitPath[1];
 
-        final ApplicationStatus applicationStatus = this.statusService.get(applicationName, version);
-
-        final boolean isServiceFullyFunctional =
-            StatusType.OK.equals(applicationStatus.getStatus()) ? applicationStatus.getComponents().stream()
-                .allMatch(componentStatus -> StatusType.OK.equals(componentStatus.getStatus())) : false;
+        final ApplicationStatus applicationStatus = buildNbiStatus(applicationName);
 
         // filter object
         Object response = this.getEntity(applicationStatus, fullRepresentation);
 
-        if (isServiceFullyFunctional) {
-            responseEntity = ResponseEntity.ok(response);
-        } else {
-            responseEntity = ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
-        }
+        responseEntity = ResponseEntity.ok(response);
 
         return responseEntity;
+    }
+
+    private ApplicationStatus buildNbiStatus(String applicationName) {
+        final ApplicationStatus applicationStatus = this.statusService.get(applicationName, version);
+        final ApplicationStatus sdcConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.SDC);
+        final ApplicationStatus aaiConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.AAI);
+        final ApplicationStatus soConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.SO);
+        final ApplicationStatus dmaapConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.DMAAP);
+
+        applicationStatus.addComponent(sdcConnectivityStatus).addComponent(aaiConnectivityStatus)
+            .addComponent(soConnectivityStatus).addComponent(dmaapConnectivityStatus);
+        return applicationStatus;
     }
 
 }
