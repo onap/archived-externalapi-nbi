@@ -121,6 +121,7 @@ public class CheckDMaaPEventsManager {
               JsonNode serviceInstances = childserviceInstances.get("service-instance");
               JsonNode serviceInstance = serviceInstances.get(0);
               serviceInstanceEvent.setId(serviceInstance.get("service-instance-id").asText());
+              serviceInstanceEvent.setHref("service/" + serviceInstance.get("service-instance-id").asText());
               serviceInstanceEvent.setState(serviceInstance.get("orchestration-status").asText());
               if (action.equals("CREATE")) {
                 if (logger.isDebugEnabled()) {

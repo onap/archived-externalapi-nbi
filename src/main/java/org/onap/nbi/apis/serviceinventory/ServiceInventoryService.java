@@ -55,6 +55,8 @@ public class ServiceInventoryService {
       LinkedHashMap serviceInventoryResponse =
           (LinkedHashMap) getServiceInventoryJsonTransformer.transform(serviceResponse);
       addrelatedPartyIdIdandSpecName(serviceId, serviceInventoryResponse);
+      String href = "service/" + serviceId;
+      serviceInventoryResponse.put("href", href );
       return serviceInventoryResponse;
     } else {
       throw new BackendFunctionalException(HttpStatus.NOT_FOUND, "no catalog service found",
@@ -153,6 +155,8 @@ public class ServiceInventoryService {
     if (!CollectionUtils.isEmpty(serviceInstances)) {
       serviceInventoryResponse = findServiceInventoryJsonTransformer.transform(serviceInstances);
       for (LinkedHashMap serviceInventory : serviceInventoryResponse) {
+    	String href = "service/" + serviceInventory.get("id");
+    	serviceInventory.put("href", href);
         LinkedHashMap party = (LinkedHashMap) serviceInventory.get("relatedParty");
         party.put("id", customerId);
       }

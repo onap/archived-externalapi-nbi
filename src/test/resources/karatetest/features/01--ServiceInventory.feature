@@ -12,7 +12,7 @@ Scenario: testServiceResourceGetInventory
 Given path 'service','e4688e5f-61a0-4f8b-ae02-a2fbde623bcb'
 When method get
 Then status 200
-And match $ contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01', type : 'service-instance', @type : 'serviceONAP' }
+And match $ contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , href : 'service/e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01', type : 'service-instance', @type : 'serviceONAP' }
 And match $.serviceSpecification contains { id : '98d95267-5e0f-4531-abf8-f14b90031dc5' , invariantUUID : '709d157b-52fb-4250-976e-7133dff5c347' , @type : 'ONAPservice', name :'servicename2' }
 And match $.relatedParty  contains { role : 'ONAPcustomer' , id : 'DemoTest2' }
 And match $.supportingResource[0] contains { id : 'cb80fbb6-9aa7-4ac5-9541-e14f45de533e' , name : 'NewFreeRadius-VNF-instance-01' , status :  'PREPROV' , modelInvariantId : 'f5993703-977f-4346-a1c9-c1884f8cfd8d' , modelVersionId : '902438f7-1e4c-492d-b7cc-8650e13b8aeb' , @referredType : 'ONAP resource' }
@@ -32,7 +32,7 @@ Scenario: testServiceResourceGetInventoryWithoutRelationShipList
 Given path 'service','e4688e5f-61a0-4f8b-ae02-a2fbde623bcbWithoutList'
 When method get
 Then status 200
-And match $ contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01' , type : 'service-instance' , @type : 'serviceONAP' }
+And match $ contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcbWithoutList' , href : 'service/e4688e5f-61a0-4f8b-ae02-a2fbde623bcbWithoutList' , name : 'NewFreeRadius-service-instance-01' , type : 'service-instance' , @type : 'serviceONAP' }
 And match $.serviceSpecification contains { id : '98d95267-5e0f-4531-abf8-f14b90031dc5' , invariantUUID : '709d157b-52fb-4250-976e-7133dff5c347' , @type : 'ONAPservice', name : 'servicename3' }
 And match $.relatedParty  contains { role : 'ONAPcustomer' , id : 'DemoTest3' }
 And match $.supportingResource == '#[0]'
@@ -44,7 +44,7 @@ And params {serviceSpecification.name : 'vFW' , relatedParty.id : '6490' }
 When method get
 Then status 200
 And match $ == '#[1]'
-And match $[0] contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01' }
+And match $[0] contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , href : 'service/e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' ,  name : 'NewFreeRadius-service-instance-01' }
 And match $[0].relatedParty  contains { role : 'ONAPcustomer' , id : '6490' }
 And match $[0].serviceSpecification contains { name : 'vFW' , id : '98d95267-5e0f-4531-abf8-f14b90031dc5' }
 
@@ -54,7 +54,7 @@ And params {serviceSpecification.id : '1e3feeb0-8e36-46c6-862c-236d9c626439' , r
 When method get
 Then status 200
 And match $ == '#[1]'
-And match $[0] contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01' }
+And match $[0] contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' ,  href : 'service/e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01' }
 And match $[0].relatedParty  contains { role : 'ONAPcustomer' , id : '6490' }
 And match $[0].serviceSpecification contains { name : 'vFW' , id : '98d95267-5e0f-4531-abf8-f14b90031dc5' }
 
@@ -64,7 +64,7 @@ And params {relatedParty.id:'6490'}
 When method get
 Then status 200
 And match $ == '#[2]'
-And match $[0] contains { id : 'vfw-service-id' , name : 'vfw-service-name' }
+And match $[0] contains { id : 'vfw-service-id' , href : 'service/vfw-service-id' , name : 'vfw-service-name' }
 And match $[0].relatedParty  contains { role : 'ONAPcustomer' , id : '6490' }
 And match $[0].serviceSpecification contains { name : 'vFW-service-2VF-based' , id : '9vfw-service-modek-version-id' }
 And match $[1] contains { id : 'e4688e5f-61a0-4f8b-ae02-a2fbde623bcb' , name : 'NewFreeRadius-service-instance-01' }
