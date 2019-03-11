@@ -64,5 +64,10 @@ committers:
       id: 'matthieugeerebaert'
       company: 'Orange'
       timezone: 'Europe/Paris'
+    - name: 'Adrian O Sullivan'
+      email: 'adrian.osullivan@huawei.com'
+      id: 'aosull01'
+      company: 'Huawei'
+      timezone: 'Europe/Dublin'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
