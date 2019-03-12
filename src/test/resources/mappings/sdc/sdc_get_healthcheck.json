@@ -1,0 +1,92 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/sdc2/rest/healthCheck"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody":
+        {
+            "sdcVersion": "1.3.6",
+            "siteMode": "unknown",
+            "componentsInfo": [
+                {
+                    "healthCheckComponent": "BE",
+                    "healthCheckStatus": "UP",
+                    "version": "1.3.6",
+                    "description": "OK"
+                },
+                {
+                    "healthCheckComponent": "TITAN",
+                    "healthCheckStatus": "UP",
+                    "description": "OK"
+                },
+                {
+                    "healthCheckComponent": "ES",
+                    "healthCheckStatus": "UP",
+                    "version": "1.3.6",
+                    "description": "OK"
+                },
+                {
+                    "healthCheckComponent": "DE",
+                    "healthCheckStatus": "UP",
+                    "description": "OK"
+                },
+                {
+                    "healthCheckComponent": "CASSANDRA",
+                    "healthCheckStatus": "UP",
+                    "description": "OK"
+                },
+                {
+                    "healthCheckComponent": "ON_BOARDING",
+                    "healthCheckStatus": "UP",
+                    "version": "1.3.6",
+                    "description": "OK",
+                    "componentsInfo": [
+                        {
+                            "healthCheckComponent": "ZU",
+                            "healthCheckStatus": "UP",
+                            "description": "OK"
+                        },
+                        {
+                            "healthCheckComponent": "BE",
+                            "healthCheckStatus": "UP",
+                            "version": "1.3.6",
+                            "description": "OK"
+                        },
+                        {
+                            "healthCheckComponent": "CAS",
+                            "healthCheckStatus": "UP",
+                            "version": "2.1.17",
+                            "description": "OK"
+                        }
+                    ]
+                },
+                {
+                    "healthCheckComponent": "DCAE",
+                    "healthCheckStatus": "UP",
+                    "version": "1.3.0",
+                    "description": "OK",
+                    "componentsInfo": [
+                        {
+                            "healthCheckComponent": "BE",
+                            "healthCheckStatus": "UP",
+                            "version": "1.3.0",
+                            "description": "OK"
+                        },
+                        {
+                            "healthCheckComponent": "TOSCA_LAB",
+                            "healthCheckStatus": "UP",
+                            "version": "1.3.0",
+                            "description": "OK"
+                        }
+                    ]
+                }
+            ]
+        }
+        ,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

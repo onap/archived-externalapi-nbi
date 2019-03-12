@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/util/echo?action=long"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody":{
+      "responseMessages": {
+        "responseMessage": [
+          {
+            "messageId": "INF0001",
+            "text": "Success X-FromAppId=%1 X-TransactionId=%2 (msg=%3) (rc=%4)",
+            "variables": {
+              "variable": [
+                "AAI",
+                "808b54e3-e563-4144-a1b9-e24e2ed93d4f",
+                "Successful health check:OK",
+                "0.0.0002"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "headers": {
+      "Content-Type": "application/xml"
+    }
+  }
+}

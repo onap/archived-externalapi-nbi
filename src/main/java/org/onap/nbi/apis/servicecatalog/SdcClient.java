@@ -115,11 +115,11 @@ public class SdcClient {
 
     }
 
-    public List<LinkedHashMap> callCheckConnectivity() {
+    public LinkedHashMap callCheckConnectivity() {
 
         UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(sdcHealthCheck);
         ResponseEntity<Object> response = callSdc(callURI.build().encode().toUri());
-        return (List<LinkedHashMap>) response.getBody();
+        return (LinkedHashMap) response.getBody();
 
     }
 

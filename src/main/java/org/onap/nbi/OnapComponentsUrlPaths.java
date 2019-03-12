@@ -27,7 +27,7 @@ public final class OnapComponentsUrlPaths {
     public static final String SDC_ROOT_URL = "/sdc/v1/catalog/services";
     public static final String SDC_GET_PATH = "/metadata";
     public static final String SDC_TOSCA_PATH = "/toscaModel";
-    public static final String SDC_HEALTH_CHECK = "/sdc/v1/artifactTypes";
+    public static final String SDC_HEALTH_CHECK = "/sdc2/rest/healthCheck";
 
 
     // AAI
@@ -39,7 +39,7 @@ public final class OnapComponentsUrlPaths {
     public static final String AAI_PUT_SERVICE_FOR_CUSTOMER_PATH =
             "/aai/v14/business/customers/customer/$customerId/service-subscriptions/service-subscription/";
     public static final String AAI_HEALTH_CHECK =
-        "/aai/v14/business/customers";
+        "aai/util/echo?action=long";
     public static final String AAI_GET_SERVICE =
             "/aai/v14/nodes/service-instances/service-instance/$serviceId";
     public static final String AAI_GET_SERVICE_CUSTOMER =

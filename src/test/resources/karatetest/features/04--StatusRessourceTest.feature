@@ -36,10 +36,9 @@ And match response.status == 'ok'
 And match response.name == 'nbi'
 And assert response.components.length == 4
 And match each response.components contains {  status: 'ko'}
-* call Context.startServers();
 
 Scenario: testFullHealthCheckWithSDCNotResponding
-* call Context.removeWireMockMapping("/sdc/v1/artifactTypes");
+* call Context.removeWireMockMapping("/sdc2/rest/healthCheck");
 Given path 'status'
 And params {fullStatus :true}
 When method get
@@ -48,4 +47,3 @@ And match response.status == 'ok'
 And match response.name == 'nbi'
 And assert response.components.length == 4
 And match response.components contains [{name:'sdc connectivity', status: 'ko'},{name:'so connectivity', status: 'ok'},{name:'aai connectivity', status: 'ok'},{name:'dmaap connectivity', status: 'ok'},]
-* call Context.startServers();
