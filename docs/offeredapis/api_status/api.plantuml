@@ -1,0 +1,43 @@
+@startuml
+
+enum StatusValue {
+   ok
+   ko
+}
+enum ComponentsName {
+   sdc connectivity
+   so connectivity
+   aai connectivity
+   dmaap connectivity
+}
+enum ApplicationName {
+   nbi
+}
+
+class ErrorDetail {
+   code:int
+   message:string
+   description:string
+   infoURL:string
+}
+
+class Error {
+   code:int
+   message:string
+   description:string
+   infoURL:string
+}
+   Error --> "0-*" ErrorDetail : details
+
+class Component
+   Component --> "1-1" ComponentsName : name
+   Component --> "1-1" StatusValue : status
+
+class Status {
+   version:string
+}
+   Status --> "1-1" ApplicationName : name
+   Status --> "1-1" StatusValue : status
+   Status --> "0-*" Component : components
+
+@enduml

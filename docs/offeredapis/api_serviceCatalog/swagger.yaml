@@ -1,15 +1,15 @@
 swagger: "2.0"
 info:
-  description: "serviceCatalog API designed for ONAP Casablanca Release.\nThis API is\
+  description: "serviceCatalog API designed for ONAP Beijing Release.\nThis API is\
     \ build from TMF open API17.5. \nOnly operation GET (by id & byList) for resource\
-    \ serviceSpecification is available"
-  version: "3.0.0"
+    \ serviceSpecification is available\n\n"
+  version: "3.0.0_tag"
   title: "API ServiceCatalog"
   x-logo:
     url: "/redoc/logo.png"
     backgroundColor: "#FFFFFF"
 host: "serverRoot"
-basePath: "/nbi/api/v3"
+basePath: "/nbi/api/v1"
 schemes:
 - "https"
 produces:
@@ -29,9 +29,7 @@ paths:
       description: "This operation returns service specifications from a catalog.\n\
         Only a predefined set of attribute is proposed : Based on SDC limitations,\
         \ only attributes category and distributionStatus are available for serviceSpecification\
-        \ filtering\nFields attribute could be used to filter attributes retrieved\n\
-        \nSpecific business errors for current operation will be encapsulated in\n\
-        \nHTTP Response 422 Unprocessable entity\n"
+        \ filtering\nFields attribute could be used to filter attributes retrieved"
       deprecated: false
       parameters:
       - name: "fields"
@@ -51,7 +49,7 @@ paths:
         type: "string"
       responses:
         200:
-          description: "Success"
+          description: "Ok"
           schema:
             type: "array"
             items:
@@ -104,16 +102,13 @@ paths:
       operationId: "serviceSpecificationGet"
       summary: "Retrieve a service specification"
       description: "This operation returns a service specification by its id from\
-        \ a catalog. Attribute selection is enabled using the fields attribute.\n\n\
-        Specific business errors for current operation will be encapsulated in\n\n\
-        HTTP Response 422 Unprocessable entity\n"
+        \ a catalog. Attribute selection is enabled using the fields attribute."
       deprecated: false
       parameters:
       - name: "id"
-        in: "path"
         required: true
+        in: "path"
         type: "string"
-        description: ""
       - name: "fields"
         required: false
         in: "query"
@@ -121,7 +116,7 @@ paths:
         type: "string"
       responses:
         200:
-          description: "Success"
+          description: "Ok"
           schema:
             $ref: "#/definitions/ServiceSpecification"
         400:

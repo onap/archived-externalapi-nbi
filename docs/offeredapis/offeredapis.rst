@@ -79,16 +79,19 @@ API Table
 .. |postman-icon| image:: images/postman.png
                   :width: 40px
 
-.. csv-table::
-   :header: "API", "|swagger-icon|", "|html-icon|", "|plantuml-icon|", "|swagger-icon|", "|postman-icon|", "|pdf-icon|"
-   :widths: 10,5,5,5,5,5,5
+.. |xml-icon| image:: images/text_xml.png
+                  :width: 40px
 
-   " ", "json file", "html doc", "plantUML doc", "Swagger Editor", "Postman Collection", "pdf doc"
-   "serviceCatalog", ":download:`link <swaggers/serviceCatalog_3_0_0.json>`", ":download:`link <serviceCatalog/documentation.html>`", ":download:`link <serviceCatalog/apiServiceCatalog.plantuml>`", "coming", "coming", "coming"
-   "serviceInventory", ":download:`link <swaggers/serviceInventory_3_0_0.json>`", ":download:`link <serviceInventory/documentation.html>`", ":download:`link <serviceInventory/apiServiceInventory.plantuml>`", "coming", "coming", "coming"
-   "serviceOrder", ":download:`link <swaggers/serviceOrder_3_0_0.json>`", ":download:`link <serviceOrder/documentation.html>`", ":download:`link <serviceOrder/apiServiceOrder.plantuml>`", "coming", ":download:`link <postman/ONAPBeijingServiceOrderDoc.postman_collection.json>`", "coming"
-   "listener", ":download:`link <swaggers/listener-1_0_0.json>`", ":download:`link <listener/documentation.html>`", ":download:`link <listener/apiListener.plantuml>`", "coming", "coming", "coming"
-   "healthCheck", ":download:`link <swaggers/healthCheck_3_0_0.json>`", "coming", "coming", "coming", "coming", "coming"
+.. csv-table::
+   :header: "API", "|swagger-icon|", "|swagger-icon|", "|plantuml-icon|", "|xml-icon|"
+   :widths: 10,5,5,5,5
+
+   " ", "json file", "yaml file", "plant UML file", "xml schemas"
+   "hub", ":download:`link <api_hub/swagger.json>`", ":download:`link <api_hub/swagger.yaml>`", ":download:`link <api_hub/api.plantuml>`", ":download:`link <api_hub/model.xsd>`"
+   "serviceCatalog", ":download:`link <api_serviceCatalog/swagger.json>`", ":download:`link <api_serviceCatalog/swagger.yaml>`", ":download:`link <api_serviceCatalog/api.plantuml>`", ":download:`link <api_serviceCatalog/model.xsd>`"
+   "serviceInventory", ":download:`link <api_serviceInventory/swagger.json>`", ":download:`link <api_serviceInventory/swagger.yaml>`", ":download:`link <api_serviceInventory/api.plantuml>`", ":download:`link <api_serviceInventory/model.xsd>`"
+   "serviceOrder", ":download:`link <api_serviceOrder/swagger.json>`", ":download:`link <api_serviceOrder/swagger.yaml>`", ":download:`link <api_serviceOrder/api.plantuml>`", ":download:`link <api_serviceOrder/model.xsd>`"
+   "status", ":download:`link <api_status/swagger.json>`", ":download:`link <api_status/swagger.yaml>`", ":download:`link <api_status/api.plantuml>`", ":download:`link <api_status/model.xsd>`"
 
 ***************
 API Description

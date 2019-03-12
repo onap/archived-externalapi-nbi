@@ -1,0 +1,145 @@
+swagger: "2.0"
+info:
+  description: "Provides a healthcheck to verify that the NBI component is running\
+    \ fine as a standalone application or can also communicate with other onap modules.\n\
+    \n"
+  version: "4.0.0_inProgress"
+  title: "API Status"
+  x-logo:
+    url: "/redoc/logo.png"
+    backgroundColor: "#FFFFFF"
+host: "localhost:8080"
+basePath: "/nbi/api/v4"
+schemes:
+- "http"
+produces:
+- "application/json;charset=utf-8"
+tags:
+- name: "Status"
+  description: ""
+paths:
+  /status:
+    get:
+      tags:
+      - "Status"
+      produces:
+      - "application/json;charset=utf-8"
+      operationId: "statusFind"
+      summary: "retrieve application status"
+      description: "* Default\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"\
+        ok\",\n    \"version\": \"v3\"\n}\n```\n\n* Optional\n\n```\n?fullStatus=true\n\
+        ```\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"ok\",\n    \"version\"\
+        : \"v3\",\n    \"components\": [\n        {\n            \"name\": \"sdc connectivity\"\
+        ,\n            \"status\": \"ko\"\n        },\n        {\n            \"name\"\
+        : \"so connectivity\",\n            \"status\": \"ok\"\n        },\n     \
+        \   {\n            \"name\": \"aai connectivity\",\n            \"status\"\
+        : \"ok\"\n        },\n        {\n            \"name\": \"dmaap connectivity\"\
+        ,\n            \"status\": \"ok\"\n        }\n    ]\n}\n```"
+      deprecated: false
+      parameters:
+      - name: "fullStatus"
+        required: false
+        in: "query"
+        description: ""
+        type: "boolean"
+        default: false
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/Status"
+definitions:
+  StatusValue:
+    description: ""
+    type: "string"
+    enum:
+    - "ok"
+    - "ko"
+  ComponentsName:
+    description: ""
+    type: "string"
+    enum:
+    - "sdc connectivity"
+    - "so connectivity"
+    - "aai connectivity"
+    - "dmaap connectivity"
+  ApplicationName:
+    description: ""
+    type: "string"
+    enum:
+    - "nbi"
+  ErrorDetail:
+    description: ""
+    required:
+    - "code"
+    - "message"
+    type: "object"
+    properties:
+      code:
+        description: ""
+        type: "integer"
+        format: "int32"
+      message:
+        description: ""
+        type: "string"
+      description:
+        description: ""
+        type: "string"
+      infoURL:
+        description: ""
+        type: "string"
+  Error:
+    description: ""
+    required:
+    - "code"
+    - "message"
+    type: "object"
+    properties:
+      code:
+        description: ""
+        type: "integer"
+        format: "int32"
+      message:
+        description: ""
+        type: "string"
+      description:
+        description: ""
+        type: "string"
+      infoURL:
+        description: ""
+        type: "string"
+      details:
+        type: "array"
+        items:
+          $ref: "#/definitions/ErrorDetail"
+  Component:
+    description: ""
+    required:
+    - "name"
+    - "status"
+    type: "object"
+    properties:
+      name:
+        $ref: "#/definitions/ComponentsName"
+      status:
+        $ref: "#/definitions/StatusValue"
+  Status:
+    description: ""
+    required:
+    - "name"
+    - "status"
+    - "version"
+    - "components"
+    type: "object"
+    properties:
+      name:
+        $ref: "#/definitions/ApplicationName"
+      status:
+        $ref: "#/definitions/StatusValue"
+      version:
+        description: ""
+        type: "string"
+      components:
+        type: "array"
+        items:
+          $ref: "#/definitions/Component"

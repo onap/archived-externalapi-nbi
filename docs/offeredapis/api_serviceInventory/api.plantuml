@@ -1,5 +1,10 @@
 @startuml
 
+enum eventType {
+   ServiceCreationNotification
+   ServiceAttributeValueChangeNotification
+   ServiceRemoveNotification
+}
 
 class ErrorRepresentation {
    code:int
@@ -17,7 +22,6 @@ class Service {
    name:string
    type:string
    state:string
-   hasStarted:boolean
    @type:string
    @baseType:string
    @schemaLocation:string
@@ -85,5 +89,21 @@ class ListService {
 }
    ListService --> "0-1" ListServiceSpecificationRef : serviceSpecification
    ListService --> "0-1" ListRelatedPartyRef : relatedParty
+
+class ServiceInventoryEvent {
+   id:string
+   href:string
+   name:string
+   type:string
+   state:string
+}
+   ServiceInventoryEvent --> "1-1" RelatedPartyRef : relatedParty
+
+class Notification {
+   eventId:string
+   eventDate:dateTime
+}
+   Notification --> "1-1" eventType : eventType
+   Notification --> "1-1" ServiceInventoryEvent : event
 
 @enduml

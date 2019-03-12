@@ -30,14 +30,12 @@ enum SeverityMessage {
    error
 }
 
-class ErrorRepresentation {
+class Error {
    code:int
    reason:string
    message:string
    status:string
    referenceError:string
-   @type:string
-   @schemaLocation:string
 }
 
 class ServiceRelationship
@@ -141,16 +139,11 @@ class TargetServiceSchema {
 }
 
 class Value {
-   @type:string
-   @schemaLocation:string
    serviceCharacteristicValue:string
 }
 
 class CreateServiceOrderItem {
    id:string
-   @type:string
-   @schemaLocation:string
-   @baseType:string
 }
    CreateServiceOrderItem --> "0-1" ActionType : action
    CreateServiceOrderItem --> "0-*" OrderItemRelationship : orderItemRelationship
@@ -163,24 +156,10 @@ class CreateServiceOrder {
    category:string
    requestedStartDate:dateTime
    requestedCompletionDate:dateTime
-   @baseType:string
-   @type:string
-   @schemaLocation:string
 }
    CreateServiceOrder --> "0-*" RelatedParty : relatedParty
    CreateServiceOrder --> "0-*" OrderRelationship : orderRelationship
    CreateServiceOrder --> "0-*" CreateServiceOrderItem : orderItem
-
-class Hub {
-   id:string
-   query:string
-   callback:string
-}
-
-class CreateHub {
-   query:string
-   callback:string
-}
 
 class ServiceOrderSummary {
    id:string
@@ -191,21 +170,12 @@ class ServiceOrderSummary {
 }
    ServiceOrderSummary --> "0-1" StateType : state
 
-class ServiceOrderCreationNotification {
+class Notification {
    eventId:string
    eventDate:dateTime
-   eventType:string
 }
-   ServiceOrderCreationNotification --> "1-1" ServiceOrderSummary : event
-
-class Notification
-
-class ServiceOrderStateChangeNotification {
-   eventId:string
-   eventDate:dateTime
-   eventType:string
-}
-   ServiceOrderStateChangeNotification --> "1-1" ServiceOrderSummary : event
+   Notification --> "1-1" EventType : eventType
+   Notification --> "1-1" ServiceOrderSummaryWithItem : event
 
 class ServiceOrderItemSummary {
    id:string
@@ -223,13 +193,6 @@ class ServiceOrderSummaryWithItem {
 }
    ServiceOrderSummaryWithItem --> "0-1" StateType : state
    ServiceOrderSummaryWithItem --> "0-*" ServiceOrderItemSummary : orderItem
-
-class ServiceOrderItemStateChangeNotification {
-   eventId:string
-   eventDate:dateTime
-   eventType:string
-}
-   ServiceOrderItemStateChangeNotification --> "1-1" ServiceOrderSummaryWithItem : event
 
 class OrderMessage {
    code:string
