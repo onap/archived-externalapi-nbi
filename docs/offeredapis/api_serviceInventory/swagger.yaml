@@ -1,22 +1,26 @@
 swagger: "2.0"
 info:
-  description: "serviceInventory API designed for ONAP Casablanca Release.\nThis API\
-    \ is build from TMF open API18.0 (applying TMF Guideline 3.0)\nonly operation\
-    \ GET (by id & byList) for resource serviceSpecification is available"
-  version: "3.0.0"
+  description: "Query information about instantiated services\n\nList of available\
+    \ subscription for serviceInventory notifications, see /hub resources for more\
+    \ information:\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n\
+    - ServiceRemoveNotification\n\n"
+  version: "4.0.0_inProgress"
   title: "API ServiceInventory"
   x-logo:
     url: "/redoc/logo.png"
     backgroundColor: "#FFFFFF"
-host: "serverRoot"
-basePath: "/nbi/api/v3"
+host: "localhost:8080"
+basePath: "/nbi/api/v4"
 schemes:
-- "https"
+- "http"
 produces:
 - "application/json;charset=utf-8"
 tags:
 - name: "Service"
-  description: ""
+  description: "Provided by NBI"
+- name: "Notification"
+  description: "provided by subscriber, which MUST has been registered by creating\
+    \ a Hub ressource on NBI"
 paths:
   /service:
     get:
@@ -28,8 +32,7 @@ paths:
       summary: "List services"
       description: "This operation list service entities. \nAttribute selection is\
         \ restricted. \nfields attribute may be used to filter retrieved attribute(s)\
-        \ for each service\n\nSpecific business errors for current operation will\
-        \ be encapsulated in\n\nHTTP Response 422 Unprocessable entity\n"
+        \ for each service"
       deprecated: false
       parameters:
       - name: "relatedParty.id"
@@ -59,50 +62,11 @@ paths:
         type: "string"
       responses:
         200:
-          description: "Success"
+          description: "Ok"
           schema:
             type: "array"
             items:
               $ref: "#/definitions/ListService"
-        400:
-          description: "Bad Request\n\nList of supported error codes:\n- 20: Invalid\
-            \ URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing\
-            \ body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid\
-            \ header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string\
-            \ parameter value"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        401:
-          description: "Unauthorized\n\nList of supported error codes:\n- 40: Missing\
-            \ credentials\n- 41: Invalid credentials\n- 42: Expired credentials"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        403:
-          description: "Forbidden\n\nList of supported error codes:\n- 50: Access\
-            \ denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many\
-            \ requests"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        404:
-          description: "Not Found\n\nList of supported error codes:\n- 60: Resource\
-            \ not found"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        422:
-          description: "Unprocessable entity\n\nFunctional error"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        500:
-          description: "Internal Server Error\n\nList of supported error codes:\n\
-            - 1: Internal error"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        503:
-          description: "Service Unavailable\n\nList of supported error codes:\n- 5:\
-            \ The service is temporarily unavailable\n- 6: Orange API is over capacity,\
-            \ retry later !"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
   /service/{id}:
     get:
       tags:
@@ -112,79 +76,52 @@ paths:
       operationId: "serviceGet"
       summary: "Retrieve a service"
       description: "This operation retrieves a service entity. \nAttribute selection\
-        \ is enabled for all first level attributes.\n\nSpecific business errors for\
-        \ current operation will be encapsulated in\n\nHTTP Response 422 Unprocessable\
-        \ entity\n"
+        \ is enabled for all first level attributes."
       deprecated: false
       parameters:
       - name: "id"
-        in: "path"
         required: true
-        type: "string"
-        description: ""
-      - name: "relatedParty.id"
-        required: false
-        in: "query"
-        description: ""
-        type: "string"
-      - name: "serviceSpecification.id"
-        required: false
-        in: "query"
-        description: ""
-        type: "string"
-      - name: "serviceSpecification.name"
-        required: false
-        in: "query"
-        description: ""
+        in: "path"
         type: "string"
       responses:
         200:
-          description: "Success"
+          description: "Ok"
           schema:
             $ref: "#/definitions/Service"
-        400:
-          description: "Bad Request\n\nList of supported error codes:\n- 20: Invalid\
-            \ URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing\
-            \ body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid\
-            \ header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string\
-            \ parameter value"
+  /notification:
+    post:
+      tags:
+      - "Notification"
+      consumes:
+      - "application/json;charset=utf-8"
+      produces:
+      - "application/json;charset=utf-8"
+      operationId: "notificationCreate"
+      summary: "NBI will send notification to this operation provided by subscribers"
+      description: ""
+      deprecated: false
+      parameters:
+      - name: "Notification"
+        required: true
+        in: "body"
+        description: ""
+        schema:
+          $ref: "#/definitions/Notification"
+      responses:
+        201:
+          description: "Created"
           schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        401:
-          description: "Unauthorized\n\nList of supported error codes:\n- 40: Missing\
-            \ credentials\n- 41: Invalid credentials\n- 42: Expired credentials"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        403:
-          description: "Forbidden\n\nList of supported error codes:\n- 50: Access\
-            \ denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many\
-            \ requests"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        404:
-          description: "Not Found\n\nList of supported error codes:\n- 60: Resource\
-            \ not found"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        422:
-          description: "Unprocessable entity\n\nFunctional error"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        500:
-          description: "Internal Server Error\n\nList of supported error codes:\n\
-            - 1: Internal error"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
-        503:
-          description: "Service Unavailable\n\nList of supported error codes:\n- 5:\
-            \ The service is temporarily unavailable\n- 6: Orange API is over capacity,\
-            \ retry later !"
-          schema:
-            $ref: "#/definitions/ErrorRepresentation"
+            $ref: "#/definitions/Notification"
 definitions:
+  eventType:
+    description: ""
+    type: "string"
+    enum:
+    - "ServiceCreationNotification"
+    - "ServiceAttributeValueChangeNotification"
+    - "ServiceRemoveNotification"
   ErrorRepresentation:
-    description: "This class is used to describe error.\nfor nbi Beijing release we\
-      \ do not manage additional error for serviceCatalog"
+    description: "This class is used to describe error."
     required:
     - "code"
     - "reason"
@@ -232,14 +169,8 @@ definitions:
         description: "Service type - valued with 'service-instance'"
         type: "string"
       state:
-        description: "State of the service. Not managed in Beijing release"
+        description: "State of the service."
         type: "string"
-      hasStarted:
-        description: "This is a Boolean attribute that, if TRUE, signifies that this\
-          \ Service has already been started. If the value of this attribute is FALSE,\
-          \ then this signifies that this Service has NOT been Started\nNot managed\
-          \ in Beijing release"
-        type: "boolean"
       '@type':
         description: "This attribute allows to dynamically extends TMF class. Not\
           \ used in Beijing release."
@@ -353,7 +284,7 @@ definitions:
         type: "string"
   RelatedPartyRef:
     description: "RelatedParty reference. A related party defines party or party role\
-      \ linked to a specific entity.\nOnly ONAP Customer is managed in Beijing release."
+      \ linked to a specific entity."
     type: "object"
     properties:
       id:
@@ -417,3 +348,51 @@ definitions:
         $ref: "#/definitions/ListServiceSpecificationRef"
       relatedParty:
         $ref: "#/definitions/ListRelatedPartyRef"
+  ServiceInventoryEvent:
+    description: "Structure for a service inventory event notification"
+    required:
+    - "id"
+    - "href"
+    - "name"
+    - "type"
+    - "state"
+    - "relatedParty"
+    type: "object"
+    properties:
+      id:
+        description: "The Service Instance Id"
+        type: "string"
+      href:
+        description: "A reference to the service inventory"
+        type: "string"
+      name:
+        description: "The name of the Service Instance"
+        type: "string"
+      type:
+        description: "The type of event, service-instance"
+        type: "string"
+      state:
+        description: "The state of the service instance"
+        type: "string"
+      relatedParty:
+        $ref: "#/definitions/RelatedPartyRef"
+  Notification:
+    description: "Notification structure for a service notification"
+    required:
+    - "eventId"
+    - "eventDate"
+    - "eventType"
+    - "event"
+    type: "object"
+    properties:
+      eventId:
+        description: ""
+        type: "string"
+      eventDate:
+        description: ""
+        type: "string"
+        format: "date-time"
+      eventType:
+        $ref: "#/definitions/eventType"
+      event:
+        $ref: "#/definitions/ServiceInventoryEvent"
