@@ -50,33 +50,39 @@ public class ServiceSpecificationService {
   @Autowired
   private ServiceCatalogUrl serviceCatalogUrl;
 
+  @Autowired
+  ServiceSpecificationDBManager serviceSpecificationDBManager;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ServiceSpecificationService.class);
 
-
   public Map get(String serviceSpecId) {
-    Map sdcResponse = sdcClient.callGet(serviceSpecId);
-    LinkedHashMap serviceCatalogResponse =
-        (LinkedHashMap) getServiceSpecJsonTransformer.transform(sdcResponse);
-    String toscaModelUrl = (String) sdcResponse.get("toscaModelURL");
-    String serviceId = (String) sdcResponse.get("id");
-    File toscaFile = sdcClient.callGetWithAttachment(toscaModelUrl);
-    Path pathToToscaCsar = toscaFile.toPath().toAbsolutePath();
-    try {
-      toscaInfosProcessor.buildResponseWithSdcToscaParser(pathToToscaCsar, serviceCatalogResponse);
-    } catch (SdcToscaParserException e) {
-      LOGGER.debug("unable to build response from tosca csar using sdc-parser, partial response : "
-          + pathToToscaCsar.toString() + " " + e.getMessage());
-    }
-    try {
-      if (toscaFile != null) {
-        LOGGER.debug("deleting tosca archive : " + toscaFile.getName());
-        FileUtils.forceDelete(toscaFile);
+    if(serviceSpecificationDBManager.checkServiceSpecExistence(serviceSpecId)) {
+      return serviceSpecificationDBManager.getServiceSpecification(serviceSpecId);
+    }else {
+      Map sdcResponse = sdcClient.callGet(serviceSpecId);
+      LinkedHashMap serviceCatalogResponse =
+              (LinkedHashMap) getServiceSpecJsonTransformer.transform(sdcResponse);
+      String toscaModelUrl = (String) sdcResponse.get("toscaModelURL");
+      String serviceId = (String) sdcResponse.get("id");
+      File toscaFile = sdcClient.callGetWithAttachment(toscaModelUrl);
+      Path pathToToscaCsar = toscaFile.toPath().toAbsolutePath();
+      try {
+        toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(pathToToscaCsar, serviceCatalogResponse);
+        serviceSpecificationDBManager.saveCatalogResponse(serviceCatalogResponse);
+      } catch (SdcToscaParserException e) {
+        LOGGER.debug("unable to build response from tosca csar using sdc-parser, partial response : "
+                + pathToToscaCsar.toString() + " " + e.getMessage());
       }
-    } catch (IOException e) {
-      LOGGER.error("unable to delete temp directory tosca file for id : " + serviceId, e);
+      try {
+        if (toscaFile != null) {
+          LOGGER.debug("deleting tosca archive : " + toscaFile.getName());
+          FileUtils.forceDelete(toscaFile);
+        }
+      } catch (IOException e) {
+        LOGGER.error("unable to delete temp directory tosca file for id : " + serviceId, e);
+      }
+      return serviceCatalogResponse;
     }
-    return serviceCatalogResponse;
   }
 
   public List<LinkedHashMap> find(MultiValueMap<String, String> parametersMap) {
@@ -86,5 +92,12 @@ public class ServiceSpecificationService {
       serviceCatalogResponse = findServiceSpecJsonTransformer.transform(sdcResponse);
     }
     return serviceCatalogResponse;
+  }
+  public String getInputSchema(String serviceSpecId) {
+    if(serviceSpecificationDBManager.checkInputSchemaExistence(serviceSpecId)) {
+      return serviceSpecificationDBManager.getInputSchema(serviceSpecId);
+    } else {
+      return null;
+    }
   }
 }
