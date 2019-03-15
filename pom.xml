@@ -19,15 +19,17 @@
   <name>externalapi-nbi</name>
 
   <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.2.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <groupId>org.onap.oparent</groupId>
+    <artifactId>oparent</artifactId>
+    <version>1.2.0</version>
   </parent>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <start-class>org.onap.nbi.Application</start-class>
     <nexusproxy>https://nexus.onap.org</nexusproxy>
     <snapshotNexusPath>content/repositories/snapshots/</snapshotNexusPath>
     <releaseNexusPath>content/repositories/releases/</releaseNexusPath>
@@ -93,50 +95,28 @@
     </license>
   </licenses>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>2.1.3.RELEASE</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.9.4</version>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.data</groupId>
-          <artifactId>spring-data-commons</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-commons</artifactId>
-      <version>2.1.4.RELEASE</version>
     </dependency>
 
     <dependency>
@@ -159,13 +139,11 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.4</version>
     </dependency>
 
     <!-- mongo -->
@@ -180,7 +158,6 @@
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
-      <version>1.1.7</version>
     </dependency>
 
     <!-- swagger -->
@@ -196,7 +173,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.9.6</version>
     </dependency>
 
     <!-- sdc tosca parser -->
@@ -238,7 +214,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>     
+      <scope>test</scope>
     </dependency>
 
     <!-- test h2 -->
@@ -252,7 +228,6 @@
     <dependency>
       <groupId>de.flapdoodle.embed</groupId>
       <artifactId>de.flapdoodle.embed.mongo</artifactId>
-      <version>${embedded-mongo.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -296,12 +271,6 @@
       <groupId>org.onap.msb.java-sdk</groupId>
       <artifactId>msb-java-sdk</artifactId>
       <version>1.2.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- karate -->
@@ -312,13 +281,13 @@
       <version>0.9.0</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>com.intuit.karate</groupId>
       <artifactId>karate-apache</artifactId>
       <version>0.9.0</version>
       <scope>test</scope>
     </dependency>
-
 
   </dependencies>
 
@@ -338,6 +307,16 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <mainClass>org.onap.nbi.Application</mainClass>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -345,7 +324,7 @@
         <configuration>
           <includes>
             <include>org/onap/nbi/test/KarateApiTest.java</include>
-             <include>org/onap/nbi/test/ExecutionTaskTest.java</include>
+            <include>org/onap/nbi/test/ExecutionTaskTest.java</include>
             <include>org/onap/nbi/test/ServiceOrderRepositoryTest.java</include>
             <include>org/onap/nbi/apis/servicecatalog/ToscaInfosProcessorTest.java</include>
           </includes>
@@ -354,7 +333,6 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
         <extensions>true</extensions>
         <configuration>
           <nexusUrl>${nexusproxy}</nexusUrl>
@@ -365,7 +343,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.6</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.wagon</groupId>
@@ -414,61 +391,61 @@
         <artifactId>sonar-maven-plugin</artifactId>
         <version>3.2</version>
       </plugin>
-<!--       <plugin> -->
-<!--         <groupId>org.jacoco</groupId> -->
-<!--         <artifactId>jacoco-maven-plugin</artifactId> -->
-<!--         <version>0.8.1</version> -->
-<!--         <configuration> -->
-<!--           <dumpOnExit>true</dumpOnExit> -->
-<!--           <includes> -->
-<!--             <include>org.onap.nbi.*</include> -->
-<!--           </includes> -->
-<!--           <excludes> -->
-<!--             <exclude>**/model/**/*</exclude> -->
-<!--           </excludes> -->
-<!--         </configuration> -->
-<!--         <executions> -->
-<!--           <execution> -->
-<!--             <id>pre-unit-test</id> -->
-<!--             <goals> -->
-<!--               <goal>prepare-agent</goal> -->
-<!--             </goals> -->
-<!--             <configuration> -->
-<!--               <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile> -->
-<!--               <append>true</append> -->
-<!--             </configuration> -->
-<!--           </execution> -->
-<!--           <execution> -->
-<!--             <id>pre-integration-test</id> -->
-<!--             <phase>pre-integration-test</phase> -->
-<!--             <goals> -->
-<!--               <goal>prepare-agent</goal> -->
-<!--             </goals> -->
-<!--             <configuration> -->
-<!--               <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile> -->
-<!--               <append>true</append> -->
-<!--             </configuration> -->
-<!--           </execution> -->
-<!--           <execution> -->
-<!--             <goals> -->
-<!--               <goal>merge</goal> -->
-<!--             </goals> -->
-<!--             <phase>post-integration-test</phase> -->
-<!--             <configuration> -->
-<!--               <fileSets> -->
-<!--                 <fileSet -->
-<!--                   implementation="org.apache.maven.shared.model.fileset.FileSet"> -->
-<!--                   <directory>${project.build.directory}/coverage-reports</directory> -->
-<!--                   <includes> -->
-<!--                     <include>*.exec</include> -->
-<!--                   </includes> -->
-<!--                 </fileSet> -->
-<!--               </fileSets> -->
-<!--               <destFile>${project.build.directory}/jacoco-dev.exec</destFile> -->
-<!--             </configuration> -->
-<!--           </execution> -->
-<!--         </executions> -->
-<!--       </plugin> -->
+      <!--       <plugin> -->
+      <!--         <groupId>org.jacoco</groupId> -->
+      <!--         <artifactId>jacoco-maven-plugin</artifactId> -->
+      <!--         <version>0.8.1</version> -->
+      <!--         <configuration> -->
+      <!--           <dumpOnExit>true</dumpOnExit> -->
+      <!--           <includes> -->
+      <!--             <include>org.onap.nbi.*</include> -->
+      <!--           </includes> -->
+      <!--           <excludes> -->
+      <!--             <exclude>**/model/**/*</exclude> -->
+      <!--           </excludes> -->
+      <!--         </configuration> -->
+      <!--         <executions> -->
+      <!--           <execution> -->
+      <!--             <id>pre-unit-test</id> -->
+      <!--             <goals> -->
+      <!--               <goal>prepare-agent</goal> -->
+      <!--             </goals> -->
+      <!--             <configuration> -->
+      <!--               <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile> -->
+      <!--               <append>true</append> -->
+      <!--             </configuration> -->
+      <!--           </execution> -->
+      <!--           <execution> -->
+      <!--             <id>pre-integration-test</id> -->
+      <!--             <phase>pre-integration-test</phase> -->
+      <!--             <goals> -->
+      <!--               <goal>prepare-agent</goal> -->
+      <!--             </goals> -->
+      <!--             <configuration> -->
+      <!--               <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile> -->
+      <!--               <append>true</append> -->
+      <!--             </configuration> -->
+      <!--           </execution> -->
+      <!--           <execution> -->
+      <!--             <goals> -->
+      <!--               <goal>merge</goal> -->
+      <!--             </goals> -->
+      <!--             <phase>post-integration-test</phase> -->
+      <!--             <configuration> -->
+      <!--               <fileSets> -->
+      <!--                 <fileSet -->
+      <!--                   implementation="org.apache.maven.shared.model.fileset.FileSet"> -->
+      <!--                   <directory>${project.build.directory}/coverage-reports</directory> -->
+      <!--                   <includes> -->
+      <!--                     <include>*.exec</include> -->
+      <!--                   </includes> -->
+      <!--                 </fileSet> -->
+      <!--               </fileSets> -->
+      <!--               <destFile>${project.build.directory}/jacoco-dev.exec</destFile> -->
+      <!--             </configuration> -->
+      <!--           </execution> -->
+      <!--         </executions> -->
+      <!--       </plugin> -->
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
@@ -493,7 +470,7 @@
           <plugin>
             <groupId>io.fabric8</groupId>
             <artifactId>docker-maven-plugin</artifactId>
-            <version>0.26.1</version>
+            <version>0.28.0</version>
             <configuration>
               <verbose>true</verbose>
               <apiVersion>1.23</apiVersion>
