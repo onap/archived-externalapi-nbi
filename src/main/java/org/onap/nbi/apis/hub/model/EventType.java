@@ -28,7 +28,9 @@ public enum EventType {
 
   SERVICE_ATTRIBUTE_VALUE_CHANGE("ServiceAttributeValueChangeNotification"),
 
-  SERVICE_REMOVE("ServiceRemoveNotification");
+  SERVICE_REMOVE("ServiceRemoveNotification"),
+
+  SDC_DISTRIBUTION("SdcDistributionNotification");
 
   private String value;
 

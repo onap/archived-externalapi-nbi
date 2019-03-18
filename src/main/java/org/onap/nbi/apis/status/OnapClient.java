@@ -13,7 +13,7 @@
 package org.onap.nbi.apis.status;
 
 import java.text.MessageFormat;
-import org.onap.nbi.apis.hub.service.CheckDMaaPEventsManager;
+import org.onap.nbi.apis.hub.service.dmaap.CheckDMaaPEventsManager;
 import org.onap.nbi.apis.servicecatalog.SdcClient;
 import org.onap.nbi.apis.serviceinventory.AaiClient;
 import org.onap.nbi.apis.serviceorder.SoClient;
@@ -59,7 +59,7 @@ public class OnapClient {
                     soClient.callCheckConnectivity();
                     break;
                 case DMAAP:
-                    checkDMaaPEventsManager.callDMaaPGetEvents();
+                    checkDMaaPEventsManager.callCheckConnectivity();
                     break;
             }
         } catch (BackendFunctionalException e) {
