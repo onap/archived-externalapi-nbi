@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.onap.nbi.apis.hub.model.Subscriber;
 import org.onap.nbi.apis.hub.model.Subscription;
-import org.onap.nbi.apis.hub.service.CheckDMaaPEventsManager;
+import org.onap.nbi.apis.hub.service.dmaap.CheckDMaaPEventsManager;
 import org.onap.nbi.apis.hub.service.SubscriptionService;
 import org.onap.nbi.commons.JsonRepresentation;
 import org.onap.nbi.commons.MultiCriteriaRequestBuilder;
