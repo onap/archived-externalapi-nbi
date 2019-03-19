@@ -40,7 +40,7 @@ public class ServiceSpecificationResource extends ResourceManagement {
 
     @GetMapping(value = "/{serviceSpecId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getServiceSpecification(@PathVariable String serviceSpecId,
-            @RequestParam MultiValueMap<String, String> params) {
+                                                          @RequestParam MultiValueMap<String, String> params) {
         Map response = serviceSpecificationService.get(serviceSpecId);
         JsonRepresentation filter = new JsonRepresentation(params);
         if (response.get("serviceSpecCharacteristic") != null) {
@@ -56,6 +56,14 @@ public class ServiceSpecificationResource extends ResourceManagement {
         List<LinkedHashMap> response = serviceSpecificationService.find(params);
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.findResponse(response, filter, null);
+    }
+
+    @GetMapping(value = "/{serviceSpecId}/specificationInputSchema", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> findSpecificationInputSchema(@PathVariable String serviceSpecId,
+                                                               @RequestParam MultiValueMap<String,String> params) {
+        String response = serviceSpecificationService.getInputSchema(serviceSpecId);
+        JsonRepresentation filter = new JsonRepresentation(params);
+        return this.getResponse(response, filter);
     }
 
 }
