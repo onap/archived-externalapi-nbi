@@ -25,6 +25,7 @@ Default values
     # SERVER
     server.servlet.context-path=/nbi/api/v3
     server.port = 8080
+    server.public.ip= localhost
 
     # LOGGING
     logging.level.=INFO
@@ -37,6 +38,7 @@ Default values
     # NBI
     nbi.url=http://localhost:8080/nbi/api/v3
     nbi.callForVNF=false
+    nbi.public.url= http://${server.public.ip}:${server.port}${server.servlet.context-path}
 
     # SDC
     sdc.host=http://10.0.3.1:8080

@@ -249,3 +249,18 @@ Then status 204
 Given path 'test/listener',eventId
 When method delete
 Then status 204
+
+Scenario: testcreateEventSubscription
+Given path 'hub'
+And header Target = 'http://localhost:8080'
+And request data[0]
+When method post
+Then status 201
+And def location = responseHeaders['Location'][0]
+Given path 'hub'
+And header Target = 'http://localhost:8080'
+When method get
+And match $ == '#[2]'
+Given url location
+When method delete
+Then status 204
