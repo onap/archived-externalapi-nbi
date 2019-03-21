@@ -16,13 +16,13 @@ These API are based on **TMF API**.
 
 
 **********************************************
-Global NBI architecture for Casablanca release
+Global NBI architecture for Dublin release
 **********************************************
 
 Following illustration provides a global view about NBI architecture,
 integration with other ONAP components and API resource/operation provided.
 
-.. image:: images/ONAP_External_ID_Casablanca.jpg
+.. image:: images/ONAP_External_ID_Dublin.jpg
    :width: 800px
 
 
