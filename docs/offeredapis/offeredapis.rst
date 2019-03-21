@@ -16,13 +16,13 @@ be used by external systems as BSS for example. These API are based on
 **TMF API**.
 
 **********************************************
-Global NBI architecture for Casablanca release
+Global NBI architecture for Dublin release
 **********************************************
 
 Following illustration provides a global view about **NBI** architecture,
 integration with other ONAP components and API resource/operation provided.
 
-.. image:: images/ONAP_External_ID_Casablanca.jpg
+.. image:: images/ONAP_External_ID_Dublin.jpg
    :width: 800px
 
 ***********
@@ -138,6 +138,13 @@ Example: ``GET /nbi/api/v3/serviceSpecification/{uuid}``
 
 It is use to retrieve one ``serviceSpecification`` - all available information
 are retieved (see Swagger for description)
+
+**GET service Specification Schema (id)**
+
+Example: ``GET /nbi/api/v3/serviceSpecification/{uuid}/specificationInputSchema``
+
+It is use to retrieve one  input schema from the tosca file stored in **NBI** - all available
+information are retieved (see Swagger for description)
 
 ----------------
 serviceInventory
@@ -270,7 +277,15 @@ notifications. 3 events are managed:
 • A service order state changes
 • A service order item state changes
 
-These 3 events have distinct notification allowing any system to subscribe to
+It is also possible to subscribe to **AAI** and **SDC** notifications via **NBI**.
+4 events are managed:
+
+• A new service is created in  **AAI***
+• A service attribute value is changed in **AAI**
+• A service is removed in **AAI**
+• A service specification is distributed in **SDC**
+
+These 7 events have distinct notification allowing any system to subscribe to
 one, two or all notification types.
 
 The implementation will be split in 2 components:
