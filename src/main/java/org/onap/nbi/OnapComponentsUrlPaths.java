@@ -60,4 +60,9 @@ public final class OnapComponentsUrlPaths {
     // DMaaP Message Router REST Client
     public static final String DMAAP_CONSUME_EVENTS =
             "/events/$topic/$consumergroup/$consumerid?timeout=$timeout";
+
+    //NBI and Listener URLs
+    public static final String EXTERNALAPI_PATH= "/nbi/api/v3/serviceOrder";
+    public static final String HUB_EXTERNALAPI_PATH= "/nbi/api/v3/hub";
+    public static final String LISTENER_EXTERNALAPI_PATH= "/listener";
 }

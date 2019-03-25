@@ -13,19 +13,23 @@
  */
 package org.onap.nbi.apis.hub;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.apis.hub.model.Subscriber;
 import org.onap.nbi.apis.hub.model.Subscription;
 import org.onap.nbi.apis.hub.service.dmaap.CheckDMaaPEventsManager;
 import org.onap.nbi.apis.hub.service.SubscriptionService;
+import org.onap.nbi.commons.EWInterfaceUtils;
 import org.onap.nbi.commons.JsonRepresentation;
 import org.onap.nbi.commons.MultiCriteriaRequestBuilder;
 import org.onap.nbi.commons.ResourceManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
@@ -34,15 +38,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/hub")
@@ -63,10 +59,29 @@ public class HubResource extends ResourceManagement {
   @Autowired
   CheckDMaaPEventsManager checkDMaaPEventMAnager;
 
+  @Autowired
+  EWInterfaceUtils ewInterfaceUtils;
+
+  @Value("${nbi.public.url}")
+  private String nbiPublicUrl;
+
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> createEventSubscription(@RequestBody Subscription subscription,
-      @RequestParam MultiValueMap<String, String> params) {
+      @RequestParam MultiValueMap<String, String> params, @RequestHeader(value="Target",required = false)String targetUrl) {
     logger.debug("POST request for subscription : {}", subscription);
+    if (targetUrl != null) {
+      targetUrl = targetUrl + OnapComponentsUrlPaths.HUB_EXTERNALAPI_PATH;
+      String originalCallback = subscription.getCallback();
+      subscription.setCallback(nbiPublicUrl + OnapComponentsUrlPaths.LISTENER_EXTERNALAPI_PATH);
+      ResponseEntity ewResponse = ewInterfaceUtils.callPostRequestTarget(subscription, targetUrl);
+      if (ewResponse.getStatusCode() == HttpStatus.CREATED) {
+        subscription.setCallback(originalCallback);
+       subscription.setEwHost(targetUrl);
+       subscription.setEwId(((LinkedHashMap)ewResponse.getBody()).get( "id" ).toString());
+      } else {
+        return ewResponse;
+      }
+    }
     Subscriber subscriber = subscriptionService.createSubscription(subscription);
     JsonRepresentation filter = new JsonRepresentation(params);
     return this.createResponse(Subscription.createFromSubscriber(subscriber), filter);
@@ -116,7 +131,19 @@ public class HubResource extends ResourceManagement {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteSubscription(@PathVariable String subscriptionId) {
     logger.debug("DELETE request for subscription id #{}", subscriptionId);
+    Optional<Subscriber> optionalSubscriber= subscriptionService.findSubscriptionById(subscriptionId);
     subscriptionService.deleteSubscription(subscriptionId);
+    String ewHost=optionalSubscriber.get().getEwHost();
+    String ewId=optionalSubscriber.get().getEwId();
+    logger.info("POST delete for ewHost : {}", ewHost);
+    logger.info("POST delete for ewId : {}", ewId);
+    if ( ewHost !=null && ewId !=null )
+    {
+      logger.info("POST deleteIF for ewHost : {}", ewHost);
+      String targetUrl = ewHost+ "/" + ewId;
+      ewInterfaceUtils.callDeleteRequestTarget(targetUrl);
+      logger.info("POST deleteIF for ewHost is : {}", targetUrl);
+    }
   }
 
 }

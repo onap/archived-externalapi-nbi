@@ -26,6 +26,26 @@ public class Subscription implements Resource{
     private String callback;
 
     private String query;
+    private String ewId;
+    private String ewHost;
+
+    public void setEwHost(String ewHost) {
+        this.ewHost = ewHost;
+    }
+
+    public String getEwId() {
+        return ewId;
+    }
+
+    public void setEwId(String ewId) {
+        this.ewId = ewId;
+    }
+
+
+
+    public String getEwHost() {
+        return ewHost;
+    }
 
     public Subscription(){
 
@@ -65,6 +85,9 @@ public class Subscription implements Resource{
         Subscription sub = new Subscription();
         sub.setId(subscriber.getId());
         sub.setCallback(subscriber.getCallback());
+        sub.setEwId( subscriber.getEwId());
+        sub.setEwHost( subscriber.getEwHost());
+
 
         String query = subscriber.getQuery().entrySet()
                 .stream()

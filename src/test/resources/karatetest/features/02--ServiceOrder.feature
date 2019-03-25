@@ -436,3 +436,18 @@ Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
 * call Context.startServers();
+
+
+Scenario: testTargetHeaderServiceOrder
+Given path 'serviceOrder'
+And header Target = 'http://localhost:8080'
+And request data[0]
+When method post
+Then status 201
+And match $.id contains '#notnull'
+And match $.state == 'acknowledged'
+And def serviceOrderId = $.id
+Given path 'serviceOrder',serviceOrderId
+And header Target = 'http://localhost:8080'
+When method get
+Then status 200

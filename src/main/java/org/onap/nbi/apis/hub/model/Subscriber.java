@@ -34,6 +34,26 @@ public class Subscriber implements Resource {
     private String id;
     private String callback;
 
+    public String getEwId() {
+        return ewId;
+    }
+
+    public void setEwId(String ewId) {
+        this.ewId = ewId;
+    }
+
+    private String ewId;
+
+    public String getEwHost() {
+        return ewHost;
+    }
+
+    public void setEwHost(String ewHost) {
+        this.ewHost = ewHost;
+    }
+
+    private String ewHost;
+
     private Map<String, String[]> query = new HashMap<>();
 
     public String getId() {
@@ -59,6 +79,8 @@ public class Subscriber implements Resource {
     public static Subscriber createFromSubscription(Subscription request) {
         Subscriber sub = new Subscriber();
         sub.setCallback(request.getCallback());
+        sub.setEwId( request.getEwId());
+        sub.setEwHost( request.getEwHost());
 
         Stream.of(request.getQuery().split("&"))
                 .map(q -> q.split("="))
