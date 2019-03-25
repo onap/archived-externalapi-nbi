@@ -11,9 +11,5 @@
   {
     "callback": "http://localhost/test",
     "query": "eventType=ServiceOrderItemStateChangeNotification"
-  },
-  {
-    "callback": "http://localhost:8080/nbi/api/v4/test/listener",
-    "query": "eventType=ServiceOrderStateChangeNotification"
   }
 ]

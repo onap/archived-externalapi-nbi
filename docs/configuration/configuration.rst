@@ -25,6 +25,7 @@ Default values
     # SERVER
     server.servlet.context-path          = /nbi/api/${nbi.version}
     server.port                          = 8080
+    server.public.ip                     = localhost
 
     # LOGGING
     logging.level.                       = WARN
@@ -41,6 +42,7 @@ Default values
     # NBI
     nbi.url                              = http://localhost:${server.port}${server.servlet.context-path}
     nbi.callForVNF                       = false
+    nbi.public.url                       = http://${server.public.ip}:${server.port}${server.servlet.context-path}
 
     # SCHEDULER
     scheduler.pollingDurationInMins      = 360
