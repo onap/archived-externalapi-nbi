@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/serviceOrder")
@@ -70,18 +71,26 @@ public class ServiceOrderResource extends ResourceManagement {
     @Autowired
     MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
 
+    @Autowired
+    ExtApiClient extApiClient;
+
 
     @GetMapping(value = "/{serviceOrderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getServiceOrder(@PathVariable String serviceOrderId,
-        @RequestParam MultiValueMap<String, String> params) {
+                                                  @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
 
-        Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
-        if (!optionalServiceOrder.isPresent()) {
-            return ResponseEntity.notFound().build();
+        if(targetURL != null) {
+            return extApiClient.getServiceOrder(serviceOrderId, targetURL);
+        }else {
+            Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
+            if (!optionalServiceOrder.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            JsonRepresentation filter = new JsonRepresentation(params);
+            return this.getResponse(optionalServiceOrder.get(), filter);
         }
 
-        JsonRepresentation filter = new JsonRepresentation(params);
-        return this.getResponse(optionalServiceOrder.get(), filter);
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -110,22 +119,26 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createServiceOrder(@Valid @RequestBody ServiceOrder serviceOrder, Errors errors,
-        @RequestParam MultiValueMap<String, String> params) {
+                                                     @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
 
         if (errors != null && errors.hasErrors()) {
             throw new ValidationException(errors.getAllErrors());
         }
+        if(targetURL != null) {
+            return extApiClient.postServiceOrder(serviceOrder, targetURL);
 
-        ServiceOrder serviceOrderSaved = serviceOrderService.createServiceOrder(serviceOrder);
-        JsonRepresentation filter = new JsonRepresentation(params);
-        return this.createResponse(serviceOrderSaved, filter);
+        }else {
+            ServiceOrder serviceOrderSaved = serviceOrderService.createServiceOrder(serviceOrder);
+            JsonRepresentation filter = new JsonRepresentation(params);
+            return this.createResponse(serviceOrderSaved, filter);
+        }
 
     }
 
 
     @PutMapping(value = "/test/{serviceOrderId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> checkServiceOrderRessource(@PathVariable String serviceOrderId,
-        @RequestParam MultiValueMap<String, String> params) {
+                                                             @RequestParam MultiValueMap<String, String> params) {
         Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
         if (!optionalServiceOrder.isPresent()) {
             return ResponseEntity.notFound().build();

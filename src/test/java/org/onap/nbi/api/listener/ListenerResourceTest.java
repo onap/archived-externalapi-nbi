@@ -38,9 +38,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 @RestController
 @RequestMapping("/test/listener")
-public class ListenerResource extends ResourceManagement {
+public class ListenerResourceTest extends ResourceManagement {
 
-  Logger logger = LoggerFactory.getLogger(ListenerResource.class);
+  Logger logger = LoggerFactory.getLogger(ListenerResourceTest.class);
 
   static Map<String, JsonNode> events = new ConcurrentHashMap<>();
 

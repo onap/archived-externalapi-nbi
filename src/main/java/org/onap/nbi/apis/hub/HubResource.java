@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/hub")
@@ -63,22 +64,27 @@ public class HubResource extends ResourceManagement {
   @Autowired
   CheckDMaaPEventsManager checkDMaaPEventMAnager;
 
+  @Autowired
+  ExtApiClientForHub extApiClientForHub;
+
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> createEventSubscription(@RequestBody Subscription subscription,
-      @RequestParam MultiValueMap<String, String> params) {
+                                                        @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
     logger.debug("POST request for subscription : {}", subscription);
-    Subscriber subscriber = subscriptionService.createSubscription(subscription);
-    JsonRepresentation filter = new JsonRepresentation(params);
-    return this.createResponse(Subscription.createFromSubscriber(subscriber), filter);
-
+    if(targetURL != null) {
+      return extApiClientForHub.postEventSubscription(subscription,targetURL);
+    }else {
+      Subscriber subscriber = subscriptionService.createSubscription(subscription);
+      JsonRepresentation filter = new JsonRepresentation(params);
+      return this.createResponse(Subscription.createFromSubscriber(subscriber), filter);
+    }
   }
 
   @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Subscription> getSubscription(@PathVariable String subscriptionId) {
 
 
-    Optional<Subscriber> optionalSubscriber =
-        subscriptionService.findSubscriptionById(subscriptionId);
+    Optional<Subscriber> optionalSubscriber = subscriptionService.findSubscriptionById(subscriptionId);
     if (!optionalSubscriber.isPresent()) {
       return ResponseEntity.notFound().build();
     }
@@ -86,8 +92,7 @@ public class HubResource extends ResourceManagement {
   }
 
   @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> findSubscribers(
-      @RequestParam MultiValueMap<String, String> params) {
+  public ResponseEntity<Object> findSubscribers(@RequestParam MultiValueMap<String, String> params) {
 
     Query query = multiCriteriaRequestBuilder.buildRequest(params);
     List<Subscriber> subscribers = mongoTemplate.find(query, Subscriber.class);
@@ -96,8 +101,7 @@ public class HubResource extends ResourceManagement {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Total-Count", String.valueOf(totalCount));
     headers.add("X-Result-Count", String.valueOf(subscribers.size()));
-    List<Subscription> subscriptions =
-        subscribers.stream().map(Subscription::createFromSubscriber).collect(Collectors.toList());
+    List<Subscription> subscriptions = subscribers.stream().map(Subscription::createFromSubscriber).collect(Collectors.toList());
 
     return this.findResponse(subscriptions, filter, headers);
 
