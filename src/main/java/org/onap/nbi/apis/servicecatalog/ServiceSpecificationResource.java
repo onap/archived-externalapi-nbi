@@ -18,6 +18,7 @@ package org.onap.nbi.apis.servicecatalog;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.commons.JsonRepresentation;
 import org.onap.nbi.commons.ResourceManagement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/serviceSpecification")
+@RequestMapping(OnapComponentsUrlPaths.SERVICE_SPECIFICATION_PATH)
 public class ServiceSpecificationResource extends ResourceManagement {
 
 

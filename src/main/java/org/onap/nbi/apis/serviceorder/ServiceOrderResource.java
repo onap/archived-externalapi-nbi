@@ -15,6 +15,8 @@ package org.onap.nbi.apis.serviceorder;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
+import org.onap.nbi.OnapComponentsUrlPaths;
+import org.onap.nbi.commons.EWInterfaceUtils;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
@@ -41,13 +43,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
-@RequestMapping("/serviceOrder")
+@RequestMapping(OnapComponentsUrlPaths.SERVICE_ORDER_PATH)
 public class ServiceOrderResource extends ResourceManagement {
 
     @Autowired
@@ -72,25 +74,24 @@ public class ServiceOrderResource extends ResourceManagement {
     MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
 
     @Autowired
-    ExtApiClient extApiClient;
+    EWInterfaceUtils eWInterfaceUtils;
 
 
     @GetMapping(value = "/{serviceOrderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getServiceOrder(@PathVariable String serviceOrderId,
-                                                  @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
-
-        if(targetURL != null) {
-            return extApiClient.getServiceOrder(serviceOrderId, targetURL);
-        }else {
+        @RequestParam MultiValueMap<String, String> params,@RequestHeader(value="Target",required = false)String targetUrl) {
+        if (targetUrl != null) {
+            targetUrl = targetUrl + OnapComponentsUrlPaths.SERVICE_ORDER_PATH + "/" + serviceOrderId;
+            return eWInterfaceUtils.callGetRequestTarget(targetUrl);
+        } else {
             Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
             if (!optionalServiceOrder.isPresent()) {
                 return ResponseEntity.notFound().build();
+            } else {
+                JsonRepresentation filter = new JsonRepresentation(params);
+                return this.getResponse(optionalServiceOrder.get(), filter);
             }
-
-            JsonRepresentation filter = new JsonRepresentation(params);
-            return this.getResponse(optionalServiceOrder.get(), filter);
         }
-
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -119,26 +120,26 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createServiceOrder(@Valid @RequestBody ServiceOrder serviceOrder, Errors errors,
-                                                     @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
-
-        if (errors != null && errors.hasErrors()) {
-            throw new ValidationException(errors.getAllErrors());
+        @RequestParam MultiValueMap<String, String> params, @RequestHeader(value="Target",required = false)String targetUrl) {
+        if (targetUrl != null) {
+            targetUrl = targetUrl + OnapComponentsUrlPaths.SERVICE_ORDER_PATH;
+            return eWInterfaceUtils.callPostRequestTarget(serviceOrder, targetUrl);
+        } else {
+            if (errors != null && errors.hasErrors()) {
+                throw new ValidationException(errors.getAllErrors());
+            }
         }
-        if(targetURL != null) {
-            return extApiClient.postServiceOrder(serviceOrder, targetURL);
 
-        }else {
-            ServiceOrder serviceOrderSaved = serviceOrderService.createServiceOrder(serviceOrder);
-            JsonRepresentation filter = new JsonRepresentation(params);
-            return this.createResponse(serviceOrderSaved, filter);
-        }
+        ServiceOrder serviceOrderSaved = serviceOrderService.createServiceOrder(serviceOrder);
+        JsonRepresentation filter = new JsonRepresentation(params);
+        return this.createResponse(serviceOrderSaved, filter);
 
     }
 
 
     @PutMapping(value = "/test/{serviceOrderId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> checkServiceOrderRessource(@PathVariable String serviceOrderId,
-                                                             @RequestParam MultiValueMap<String, String> params) {
+        @RequestParam MultiValueMap<String, String> params) {
         Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
         if (!optionalServiceOrder.isPresent()) {
             return ResponseEntity.notFound().build();

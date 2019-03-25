@@ -359,6 +359,19 @@ Given path 'serviceOrder',serviceOrderId16
 When method delete
 Then status 204
 
+Scenario: testCheckServiceOrderWithTargetHeader
+Given path 'serviceOrder'
+And header Target = 'http://localhost:8080/nbi/api/v4'
+And request data[0]
+When method post
+Then status 201
+And match $.id contains '#notnull'
+And match $.state == 'acknowledged'
+And def serviceOrderId = $.id
+Given path 'serviceOrder',serviceOrderId
+And header Target = 'http://localhost:8080/nbi/api/v4'
+When method get
+Then status 200
 
 Scenario: testCheckServiceOrderWithCustomerAAINotResponding
 * call Context.removeWireMockMapping("/aai/v14/business/customers/customer/new");
@@ -436,17 +449,3 @@ Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
 * call Context.startServers();
-
-Scenario: testCheckServiceOrderWithTargetURLPresent
-Given path 'serviceOrder'
-And header targetURL = '127.0.0.1'
-And request data[0]
-When method post
-Then status 201
-And match $.id contains '#notnull'
-And match $.state == 'acknowledged'
-And def serviceOrderId = $.id
-Given path 'serviceOrder', serviceOrderId
-And header targetURL = '127.0.0.1'
-When method get
-Then status 200

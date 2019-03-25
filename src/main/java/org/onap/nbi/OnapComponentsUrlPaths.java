@@ -23,6 +23,15 @@ public final class OnapComponentsUrlPaths {
 
     private OnapComponentsUrlPaths() {}
 
+    // NBI
+    public static final String SERVICE_ORDER_PATH= "/serviceOrder";
+    public static final String SERVICE_INVENTORY_PATH= "/service";
+    public static final String SERVICE_SPECIFICATION_PATH= "/serviceSpecification";
+    public static final String HUB_PATH= "/hub";
+    public static final String LISTENER_PATH= "/listener";
+
+
+
     // SDC
     public static final String SDC_ROOT_URL = "/sdc/v1/catalog/services";
     public static final String SDC_GET_PATH = "/metadata";
@@ -60,4 +69,5 @@ public final class OnapComponentsUrlPaths {
     // DMaaP Message Router REST Client
     public static final String DMAAP_CONSUME_EVENTS =
             "/events/$topic/$consumergroup/$consumerid?timeout=$timeout";
+
 }
