@@ -40,6 +40,34 @@ And match $.serviceSpecCharacteristic contains
 }
 """
 
+
+Scenario: testServiceCatalogInputSchema
+Given path 'serviceSpecification','462f84e5-f0e5-44c5-ab95-38fb4bf77064'
+When method get
+Then status 200
+Given path 'serviceSpecification','462f84e5-f0e5-44c5-ab95-38fb4bf77064','specificationInputSchema'
+When method get
+Then status 200
+And match $ contains
+"""
+{
+  "ServiceCharacteristics" : {
+    "required" : [ "sdwanconnectivity0_name", "sdwanconnectivity0_topology" ],
+    "properties" : {
+      "sdwanconnectivity0_topology" : {
+        "type" : "string",
+        "description" : "full mesh, hub-spoke"
+      },
+      "sdwanconnectivity0_name" : {
+        "type" : "string",
+        "description" : "the name of this VPM object"
+      }
+    }
+  }
+}
+"""
+
+
 Scenario: findServiceCatalog
 Given path 'serviceSpecification'
 When method get
