@@ -27,6 +27,7 @@ import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
+import org.onap.nbi.exceptions.TechnicalException;
 
 @Aspect
 @Component
@@ -68,6 +69,14 @@ public class NotificationAspect {
 
             processEvent(EventFactory.getEvent(EventType.SERVICE_ORDER_ITEM_STATE_CHANGE, serviceOrder,
                     serviceOrderItem));
+        }
+    }
+
+    public void forwardNotificationToOriginalListener(Event event) {
+        if(event != null) {
+            processEvent(event);
+        }else{
+            throw new TechnicalException("Received null event from external NBI");
         }
     }
 
