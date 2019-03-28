@@ -1,0 +1,13 @@
+[{
+    "eventType": "ServiceOrderStateChangeNotification",
+    "eventDate": "2019-03-27T14:58:32.740Z",
+    "eventId": "12345",
+    "event": {
+      "id": "testEventId",
+      "href": "www.testHref.com",
+      "externalId": "testExternalId",
+      "state": "acknowledged",
+      "orderDate": "2019-03-27T04:58:32.740Z"
+
+  }
+}]

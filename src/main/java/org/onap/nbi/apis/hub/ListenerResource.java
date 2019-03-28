@@ -33,7 +33,6 @@ import org.onap.nbi.apis.hub.model.Event;
 
 @RestController
 @RequestMapping("/listener")
-@EnableScheduling
 public class ListenerResource extends ResourceManagement {
 
     @Autowired

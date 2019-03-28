@@ -72,6 +72,7 @@ public class HubResource extends ResourceManagement {
                                                         @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
     logger.debug("POST request for subscription : {}", subscription);
     if(targetURL != null) {
+      Subscriber subscriber = subscriptionService.createSubscription(subscription);
       return extApiClientForHub.postEventSubscription(subscription,targetURL);
     }else {
       Subscriber subscriber = subscriptionService.createSubscription(subscription);

@@ -9,6 +9,7 @@ Background:
 * call Context.startServers();
 * def data = read('../data/subscriber.json')
 * def serviceOrderData = read('../data/serviceOrder.json')
+* def eventData = read('../data/Event.json')
 * configure retry = { count: 10, interval: 500 }
 * def checkDateFormat =
 """
@@ -247,5 +248,40 @@ Given path 'hub',hubId
 When method delete
 Then status 204
 Given path 'test/listener',eventId
+When method delete
+Then status 204
+
+
+Scenario: testHubAndListenerResourceWhenTargetURLIsPresent
+Given path 'hub'
+And header targetURL = '127.0.0.1'
+And request data[3]
+When method post
+Then status 201
+And def location = responseHeaders['Location'][0]
+Given path "listener"
+And request eventData[0]
+When method post
+Then status 200
+Given path "test/listener/12345"
+When method get
+Then status 200
+And match $ contains
+"""
+{
+    "eventType": "ServiceOrderStateChangeNotification",
+    "eventDate": "2019-03-27T14:58:32.740Z",
+    "eventId": "12345",
+    "event": {
+      "id": "testEventId",
+      "href": "www.testHref.com",
+      "externalId": "testExternalId",
+      "state": "acknowledged",
+      "orderDate": "2019-03-27T04:58:32.740Z"
+
+    }
+}
+"""
+Given url location
 When method delete
 Then status 204
