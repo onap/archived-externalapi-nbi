@@ -143,8 +143,8 @@ are retieved (see Swagger for description)
 
 Example: ``GET /nbi/api/v3/serviceSpecification/{uuid}/specificationInputSchema``
 
-It is use to retrieve one  input schema from the tosca file stored in **NBI** - all available
-information are retieved (see Swagger for description)
+It is use to retrieve one  input schema from the tosca file stored in **NBI**
+- all available information are retieved (see Swagger for description)
 
 ----------------
 serviceInventory
@@ -184,13 +184,13 @@ if no service matches, an empty list is send back.
 
 **GET Service Inventory (id)**
 
-Example: ``GET /nbi/api/v3/service/{id}`` When querying for a specific service 
+Example: ``GET /nbi/api/v3/service/{id}`` When querying for a specific service
 instance id, no additional filters are required.
 
-The Service Inventory API will retrieve the service instance data from A&AI using 
-the nodes query with the service instance id as the key. ``relatedParty.id`` + 
-``serviceSpecification.name`` are added to the response based on the A&AI service 
-instance url.
+The Service Inventory API will retrieve the service instance data from A&AI
+using the nodes query with the service instance id as the key.
+``relatedParty.id`` + ``serviceSpecification.name`` are added to the response
+based on the A&AI service instance url.
 
 ------------
 serviceOrder
@@ -277,7 +277,8 @@ notifications. 3 events are managed:
 • A service order state changes
 • A service order item state changes
 
-It is also possible to subscribe to **AAI** and **SDC** notifications via **NBI**.
+It is also possible to subscribe to **AAI** and **SDC** notifications via
+**NBI**.
 4 events are managed:
 
 • A new service is created in  **AAI***
