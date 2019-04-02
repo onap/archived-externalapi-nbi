@@ -30,7 +30,7 @@ API Version
 ***********
 
 APIs are described with a  state version with “v” following the API Name,
-e.g.:  ``nbi/api/v3/productOrder``.
+e.g.:  ``nbi/api/v4/productOrder``.
 The schema associated with a REST API must have its version number aligned
 with that of the REST API.
 
@@ -121,7 +121,7 @@ Only *basic* service characteristics will be managed in this release. By
 
 **GET serviceSpecification(list)**
 
-Example: ``GET /nbi/api/v3/serviceSpecification/
+Example: ``GET /nbi/api/v4/serviceSpecification/
 ?category=NetworkService&distributionStatus=DISTRIBUTED``
 
 It is possible to retrieve a list of ``serviceSpecification`` (get by list).
@@ -134,14 +134,14 @@ If no ``serviceSpecification`` matches, an empty list is send back.
 
 **GET service Specification (id)**
 
-Example: ``GET /nbi/api/v3/serviceSpecification/{uuid}``
+Example: ``GET /nbi/api/v4/serviceSpecification/{uuid}``
 
 It is use to retrieve one ``serviceSpecification`` - all available information
 are retieved (see Swagger for description)
 
 **GET service Specification Schema (id)**
 
-Example: ``GET /nbi/api/v3/serviceSpecification/{uuid}/specificationInputSchema``
+Example: ``GET /nbi/api/v4/serviceSpecification/{uuid}/specificationInputSchema``
 
 It is use to retrieve one  input schema from the tosca file stored in **NBI** - all available
 information are retieved (see Swagger for description)
@@ -159,7 +159,7 @@ and ``type``
 
 **GET Service Inventory (list)**
 
-Example: ``GET /nbi/api/v3/service/?relatedParty.id=Pontus``
+Example: ``GET /nbi/api/v4/service/?relatedParty.id=Pontus``
 
 GET (by list) allows to request with following criteria (all optional) :
 
@@ -184,7 +184,7 @@ if no service matches, an empty list is send back.
 
 **GET Service Inventory (id)**
 
-Example: ``GET /nbi/api/v3/service/{id}`` When querying for a specific service 
+Example: ``GET /nbi/api/v4/service/{id}`` When querying for a specific service
 instance id, no additional filters are required.
 
 The Service Inventory API will retrieve the service instance data from A&AI using 

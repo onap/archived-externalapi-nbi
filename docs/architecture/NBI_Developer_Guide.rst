@@ -83,7 +83,7 @@ You can view the log output of the application with the following command:
 
 **Testing**
 When the application is running, you can access the API at
-:samp:`http://yourhostname:8080/nbi/api/v3` and fill the URL with the name
+:samp:`http://yourhostname:8080/nbi/api/v4` and fill the URL with the name
 of the resources you asking for (/serviceSpecification, /service,
 /serviceOrder or /status)
 You can run a test by using `VisualStudio RestClient plugin <https://github.com/Huachao/vscode-restclient>`_

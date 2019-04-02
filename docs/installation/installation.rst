@@ -78,14 +78,14 @@ Test
 
 **Healthcheck**
 
-http://localhost:8080/nbi/api/v3/status
+http://localhost:8080/nbi/api/v4/status
 
 You should get::
 
     {
         "name": "nbi",
         "status": "ok",
-        "version": "v3"
+        "version": "v4"
     }
 
 **Play with RESTclient**

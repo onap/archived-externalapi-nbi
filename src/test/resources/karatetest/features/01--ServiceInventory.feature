@@ -20,7 +20,7 @@ And match $.supportingResource == '#[2]'
 
 
 Scenario: testServiceResourceGetInventoryWithStatus
-Given url 'http://localhost:8080/nbi/api/v3/service/405c8c00-44b9-4303-9f27-6797d22ca096'
+Given path 'service','405c8c00-44b9-4303-9f27-6797d22ca096'
 When method get
 Then status 200
 And match $.state == 'Active'

@@ -4,7 +4,7 @@
 Release Notes
 =============
 
-Version: 3.0.1
+Version: 4.0.0
 --------------
 
 :Release Date: 2018-11-30
