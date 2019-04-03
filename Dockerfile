@@ -17,7 +17,7 @@
 FROM openjdk:8-jre-alpine
 
 ARG SERVER_PORT
-ARG PKG_FILENAME=nbi-rest-services-4.0.0.jar
+ARG PKG_FILENAME=nbi-rest-services-4.0.0-SNAPSHOT.jar
 ADD target/$PKG_FILENAME app.jar
 
 RUN addgroup -S appgroup
