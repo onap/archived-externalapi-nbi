@@ -17,14 +17,14 @@
 version: "2.1"
 services:
   mongo:
-    image: mongo:3
+    image: mongo:latest
     restart: always
     volumes:
       - /var/lib/mongo
     command: --smallfiles
 
   mariadb:
-    image: mariadb:10
+    image: mariadb:latest
     restart: always
     volumes:
       - /var/lib/mariadb
@@ -33,11 +33,11 @@ services:
       MYSQL_PASSWORD: toto
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_USER: rene
-# APP  ***************************************************************************************
+  # APP  ***************************************************************************************
   nbi:
     image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:${DOCKER_IMAGE_VERSION:-latest}
     ports:
-    - 8080:8080
+      - 8080:8080
     env_file:
       - .env
     environment:
@@ -50,8 +50,8 @@ services:
       SO_HOST: http://${SO_IP}:8080
     restart: on-failure
     depends_on:
-    - mariadb
-    - mongo
+      - mariadb
+      - mongo
 volumes:
   mariadb:
   mongo:
