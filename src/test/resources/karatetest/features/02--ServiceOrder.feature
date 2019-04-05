@@ -439,7 +439,7 @@ Then status 200
 
 Scenario: testCheckServiceOrderWithTargetURLPresent
 Given path 'serviceOrder'
-And header targetURL = '127.0.0.1'
+And header Target = '127.0.0.1'
 And request data[0]
 When method post
 Then status 201
@@ -447,6 +447,6 @@ And match $.id contains '#notnull'
 And match $.state == 'acknowledged'
 And def serviceOrderId = $.id
 Given path 'serviceOrder', serviceOrderId
-And header targetURL = '127.0.0.1'
+And header Target = '127.0.0.1'
 When method get
 Then status 200

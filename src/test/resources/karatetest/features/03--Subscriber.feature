@@ -254,7 +254,7 @@ Then status 204
 
 Scenario: testHubAndListenerResourceWhenTargetURLIsPresent
 Given path 'hub'
-And header targetURL = '127.0.0.1'
+And header Target = '127.0.0.1'
 And request data[3]
 When method post
 Then status 201

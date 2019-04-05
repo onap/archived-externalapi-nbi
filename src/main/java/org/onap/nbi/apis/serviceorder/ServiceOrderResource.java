@@ -77,7 +77,7 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @GetMapping(value = "/{serviceOrderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getServiceOrder(@PathVariable String serviceOrderId,
-                                                  @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
+                                                  @RequestParam MultiValueMap<String, String> params, @RequestHeader(value = "Target", required = false) String targetURL) {
 
         if(targetURL != null) {
             return extApiClient.getServiceOrder(serviceOrderId, targetURL);
@@ -119,7 +119,7 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createServiceOrder(@Valid @RequestBody ServiceOrder serviceOrder, Errors errors,
-                                                     @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
+                                                     @RequestParam MultiValueMap<String, String> params, @RequestHeader(value = "Target", required = false) String targetURL) {
 
         if (errors != null && errors.hasErrors()) {
             throw new ValidationException(errors.getAllErrors());

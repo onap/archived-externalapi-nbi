@@ -69,7 +69,7 @@ public class HubResource extends ResourceManagement {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> createEventSubscription(@RequestBody Subscription subscription,
-                                                        @RequestParam MultiValueMap<String, String> params, @RequestHeader(required = false) String targetURL) {
+                                                        @RequestParam MultiValueMap<String, String> params, @RequestHeader(value = "Target", required = false) String targetURL) {
     logger.debug("POST request for subscription : {}", subscription);
     if(targetURL != null) {
       Subscriber subscriber = subscriptionService.createSubscription(subscription);
