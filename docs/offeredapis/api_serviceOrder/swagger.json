@@ -57,6 +57,14 @@
     "schema": {
     "$ref": "#/definitions/CreateServiceOrder"
       }
+    },
+    {
+    "name": "Target",
+    "required": false,
+    "in": "header",
+    "description": "",
+    
+    "type": "string"
     }
       ],
     "responses": {
@@ -194,14 +202,24 @@
     {
     "name": "id",
     "required": true,
-    "in": "path",
-    "type" : "string"
-    },
+    "in": "path",   
+    "description": "",
+    "type": "string"
+    }     
+    ,
     {
     "name": "fields",
     "required": false,
     "in": "query",
     "description": "Attribute selection",
+    
+    "type": "string"
+    },
+    {
+    "name": "Target",
+    "required": false,
+    "in": "header",
+    "description": "",
     
     "type": "string"
     }
@@ -243,6 +261,14 @@
     "schema": {
     "$ref": "#/definitions/Notification"
       }
+    },
+    {
+    "name": "Target",
+    "required": false,
+    "in": "header",
+    "description": "",
+    
+    "type": "string"
     }
       ],
     "responses": {
