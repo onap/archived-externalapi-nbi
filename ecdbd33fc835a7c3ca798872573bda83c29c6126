@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "713424a1_a04754d8",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-04-24T13:46:31Z",
+      "side": 1,
+      "message": "Be careful. It generated a duplicated entry in Sphinx. \nVulnerability Report for Dublin release",
+      "revId": "ecdbd33fc835a7c3ca798872573bda83c29c6126",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcdf6be5_29c6a349",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-04-24T13:46:31Z",
+      "side": 1,
+      "message": "Should be 3.0.1 ?",
+      "revId": "ecdbd33fc835a7c3ca798872573bda83c29c6126",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "894db273_ffdd8113",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-04-24T13:46:31Z",
+      "side": 1,
+      "message": "Vulnerability Report fpr Casablanca Maintenanc Release\nto avoid duplication reference in Sphinx",
+      "revId": "ecdbd33fc835a7c3ca798872573bda83c29c6126",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4125b5e0_668798c7",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-04-24T13:46:31Z",
+      "side": 1,
+      "message": "Should be 3.0.0 ?",
+      "revId": "ecdbd33fc835a7c3ca798872573bda83c29c6126",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
