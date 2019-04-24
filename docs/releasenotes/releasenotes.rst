@@ -1,8 +1,40 @@
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright 2018 ORANGE
+.. Copyright 2019 ORANGE
 
 Release Notes
 =============
+
+Version: 4.0.0
+--------------
+
+:Release Date: 2018-05-30
+
+**New Features**
+
+Main features are:
+
+Detail of features described in readTheDoc documentation.
+
+**Known Issues**
+
+
+**Security Notes**
+
+- `Dublin Vulnerability Report <https://wiki.onap.org/pages/viewpage.action?pageId=51282484>`_
+
+Quick Links:
+
+- `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
+
+**Upgrade Notes**
+
+
+**Deprecation Notes**
+
+
+**Other**
+
+===========
 
 Version: 3.0.2
 --------------
@@ -24,13 +56,16 @@ No new issues
 
 **Security Notes**
 
-- `Vulnerability Report <https://wiki.onap.org/pages/viewpage.action?pageId=45310585>`_
+- `Casablanca Vulnerability Report <https://wiki.onap.org/pages/viewpage.action?pageId=45310585>`_
 
 Quick Links:
 
 - `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
 
 
+https://wiki.onap.org/pages/viewpage.action?pageId=51282484
+
+===========
 
 Version: 3.0.1
 --------------
