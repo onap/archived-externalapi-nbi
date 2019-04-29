@@ -301,6 +301,28 @@ The following diagram illustrates such notification flow:
 .. image:: images/notification.jpg
    :width: 800px
 
+**East-west interaction of ONAP instances through External API:**
+
+In this release update flow as-
+ •	Operator’s SO component will talk to service provider’s external API component through its own external API component.
+
+ External API will support two methods of posting a Service Order, registering for Hub.
+
+ •	If the incoming request is per current implementation (no additional headers) then no changes will be made. The request will be serviced per BAU flow.
+ •	If the incoming request has additional header parameters, External API will identify that the request has to be relayed to another ONAP instance and route the request accordingly.
+    o	Proposed header parameter:
+    	Target: The public hostname/IP for target ONAP instance’s External API
+ •	For posting service order and getting service order status, the request will be relayed to target (service provider’s External API) as-is. These are synchronous requests and operator’s External API will wait for response from the target and relay it back to original calling system (operator’s SO).
+ •	For Hub API, there is an additional step required. The listener from calling system (operator’s SO) will be replaced with External APIs own listener. A mapping of registered subscriber and its original listener will be maintained in External API’s DB. Operator’s External API will relay the Hub API call to service provider’s External API.
+    The service provider’s External API will register operator’s External API as a listener.
+ •	After SO processing in service provider’s ONAP is completed (irrespective of status – reject, success, fail etc), service provider’s External API will notify the operator’s External API about request completion. Operator’s External API will look-up for registered subscriber and its original listener (operator’s SO) and relay the message.
+
+Operator’s Service Orchestrator will invoke its own External API component and add SP Partner URL in the header. After receiving an acknowledgement for Service Order request, the SO component will register with External API’s hub and provide its listener for processing callback events.
+
+Technical information about **East-west interaction exercise** design specification and API Flow illustration (with example messages) could be found here:
+
+https://wiki.onap.org/download/attachments/8227019/CCVPN%20Phase%202%20HLD.docx?api=v2
+
 
 ***************
 Developer Guide
