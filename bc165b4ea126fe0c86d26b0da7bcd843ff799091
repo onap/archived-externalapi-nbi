@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4e66a9e_03a548d6",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-02T09:44:34Z",
+      "side": 1,
+      "message": "2019 ;-)",
+      "revId": "bc165b4ea126fe0c86d26b0da7bcd843ff799091",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad2bb510_68c53c64",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-02T09:44:34Z",
+      "side": 1,
+      "message": "Postman",
+      "revId": "bc165b4ea126fe0c86d26b0da7bcd843ff799091",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63e89e2c_ae14621d",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-02T09:44:34Z",
+      "side": 1,
+      "message": "Karate",
+      "revId": "bc165b4ea126fe0c86d26b0da7bcd843ff799091",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c415991_f46152ba",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-02T09:44:34Z",
+      "side": 1,
+      "message": "Provide a link ti the JIRA project",
+      "revId": "bc165b4ea126fe0c86d26b0da7bcd843ff799091",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
