@@ -43,7 +43,25 @@ Will be fixed in the next release El Alto
 
 **Security Notes**
 
-NBI still exposes non TLS API endpoint. TLS will be proposed in next the release, El Alto.
+Warning: NBI exposes non TLS API endpoint on port 30274, meaning full plain text exchange with NBI API. TLS configuration, with ONAP Root CA signed certificate will be proposed in next release, El Alto.
+Nevertheless you can customize nbi and add HTTPS support by configuring SSL and activating strict https.
+
+Presuming you have a valid keystore, here a JKS, with private key and a signed certificate, add these few line in
+
+::
+
+    src/main/resources/application.properties
+
+::
+
+    # tls/ssl
+    server.ssl.key-store-type=JKS
+    server.ssl.key-store=classpath:certificate/yourkeystore.jks
+    server.ssl.key-store-password=password
+    server.ssl.key-alias=youralias
+
+    # disable http and activate https
+    security.require-ssl=true
 
 NBI has been improved to reduce signs of vulnerabilities, especially by migrating from Springboot 1.x to Springboot 2 and using the ONAP Parent pom.xml
 
