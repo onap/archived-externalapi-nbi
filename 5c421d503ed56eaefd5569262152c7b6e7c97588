@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "b09dfbcf_7354f2d9",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-13T11:51:48Z",
+      "side": 1,
+      "message": "Avoid long lines",
+      "revId": "5c421d503ed56eaefd5569262152c7b6e7c97588",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce72743c_39eecffe",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-13T11:51:48Z",
+      "side": 1,
+      "message": "long line",
+      "revId": "5c421d503ed56eaefd5569262152c7b6e7c97588",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33dce6c5_9c931211",
         "filename": "docs/releasenotes/releasenotes.rst",
         "patchSetId": 1
@@ -19,6 +53,47 @@
         "endLine": 49,
         "endChar": 110
       },
+      "revId": "5c421d503ed56eaefd5569262152c7b6e7c97588",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83cd98a7_beace531",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-13T11:51:48Z",
+      "side": 1,
+      "message": "long line",
+      "parentUuid": "33dce6c5_9c931211",
+      "range": {
+        "startLine": 49,
+        "startChar": 106,
+        "endLine": 49,
+        "endChar": 110
+      },
+      "revId": "5c421d503ed56eaefd5569262152c7b6e7c97588",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b2d0dc8_9c1bf30e",
+        "filename": "docs/releasenotes/releasenotes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2019-05-13T11:51:48Z",
+      "side": 1,
+      "message": "long line",
       "revId": "5c421d503ed56eaefd5569262152c7b6e7c97588",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
