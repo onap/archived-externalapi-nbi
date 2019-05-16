@@ -13,7 +13,7 @@
 
   <groupId>org.onap.externalapi-nbi</groupId>
   <artifactId>nbi-rest-services</artifactId>
-  <version>4.0.0</version>
+  <version>4.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>externalapi-nbi</name>
