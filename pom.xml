@@ -447,61 +447,59 @@
         <artifactId>sonar-maven-plugin</artifactId>
         <version>3.2</version>
       </plugin>
-      <!--       <plugin> -->
-      <!--         <groupId>org.jacoco</groupId> -->
-      <!--         <artifactId>jacoco-maven-plugin</artifactId> -->
-      <!--         <version>0.8.1</version> -->
-      <!--         <configuration> -->
-      <!--           <dumpOnExit>true</dumpOnExit> -->
-      <!--           <includes> -->
-      <!--             <include>org.onap.nbi.*</include> -->
-      <!--           </includes> -->
-      <!--           <excludes> -->
-      <!--             <exclude>**/model/**/*</exclude> -->
-      <!--           </excludes> -->
-      <!--         </configuration> -->
-      <!--         <executions> -->
-      <!--           <execution> -->
-      <!--             <id>pre-unit-test</id> -->
-      <!--             <goals> -->
-      <!--               <goal>prepare-agent</goal> -->
-      <!--             </goals> -->
-      <!--             <configuration> -->
-      <!--               <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile> -->
-      <!--               <append>true</append> -->
-      <!--             </configuration> -->
-      <!--           </execution> -->
-      <!--           <execution> -->
-      <!--             <id>pre-integration-test</id> -->
-      <!--             <phase>pre-integration-test</phase> -->
-      <!--             <goals> -->
-      <!--               <goal>prepare-agent</goal> -->
-      <!--             </goals> -->
-      <!--             <configuration> -->
-      <!--               <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile> -->
-      <!--               <append>true</append> -->
-      <!--             </configuration> -->
-      <!--           </execution> -->
-      <!--           <execution> -->
-      <!--             <goals> -->
-      <!--               <goal>merge</goal> -->
-      <!--             </goals> -->
-      <!--             <phase>post-integration-test</phase> -->
-      <!--             <configuration> -->
-      <!--               <fileSets> -->
-      <!--                 <fileSet -->
-      <!--                   implementation="org.apache.maven.shared.model.fileset.FileSet"> -->
-      <!--                   <directory>${project.build.directory}/coverage-reports</directory> -->
-      <!--                   <includes> -->
-      <!--                     <include>*.exec</include> -->
-      <!--                   </includes> -->
-      <!--                 </fileSet> -->
-      <!--               </fileSets> -->
-      <!--               <destFile>${project.build.directory}/jacoco-dev.exec</destFile> -->
-      <!--             </configuration> -->
-      <!--           </execution> -->
-      <!--         </executions> -->
-      <!--       </plugin> -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.1</version>
+        <configuration>
+          <dumpOnExit>true</dumpOnExit>
+          <includes>
+            <include>org.onap.nbi.*</include>
+          </includes>
+          <excludes>
+            <exclude>**/model/**/*</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>pre-unit-test</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>pre-integration-test</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+            <configuration>
+              <fileSets>
+                <fileSet
+                  implementation="org.apache.maven.shared.model.fileset.FileSet">
+                  <directory>${project.build.directory}/coverage-reports</directory>
+                  <includes>
+                    <include>*.exec</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+              <destFile>${project.build.directory}/jacoco-dev.exec</destFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
@@ -516,7 +514,6 @@
       </plugin>
     </plugins>
   </build>
-
 
   <profiles>
     <profile>
