@@ -31,7 +31,8 @@ public class DMaaPEventsScheduler {
         initialDelayString = "${dmaapCheck.initial}")
     private void processDMaaPEvents() {
         checkDMaaPEventsManager.checkForDMaaPAAIEvents();
-        checkDMaaPEventsManager.checkForDMaaPSDCEvents();
+        // Comment out until we discover how to check with Authenticated topic
+        //checkDMaaPEventsManager.checkForDMaaPSDCEvents();
 
     }
 }
