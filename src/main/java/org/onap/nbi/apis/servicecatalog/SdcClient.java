@@ -92,7 +92,6 @@ public class SdcClient {
 
         String callUrl = sdcGetUrl.replace("{id}", id);
         UriComponentsBuilder callURLFormated = UriComponentsBuilder.fromHttpUrl(callUrl);
-
         ResponseEntity<Object> response = callSdc(callURLFormated.build().encode().toUri());
         return (LinkedHashMap) response.getBody();
 
@@ -130,8 +129,12 @@ public class SdcClient {
 
         UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(urlBuilder.toString());
 
+        File directory = new File("temptoscafile");
+        if (! directory.exists()){
+            directory.mkdir();
+        }
 
-        String fileName = System.currentTimeMillis() + "tosca.csar";
+        String fileName = "temptoscafile/"+System.currentTimeMillis() + "tosca.csar";
         ResponseEntity<byte[]> response = callSdcWithAttachment(callURI.build().encode().toUri());
         File toscaFile = new File(fileName);
         try {
@@ -178,6 +181,7 @@ public class SdcClient {
     private ResponseEntity<Object> callSdc(URI callURI) {
         ResponseEntity<Object> response =
                 restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), Object.class);
+
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("response body : {} ",response.getBody().toString());
         }
