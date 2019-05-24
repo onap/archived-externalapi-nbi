@@ -22,6 +22,8 @@ ADD target/$PKG_FILENAME app.jar
 
 RUN addgroup -S appgroup
 RUN adduser -S appuser -G appgroup
+RUN mkdir temptoscafile
+RUN chown appuser:appgroup temptoscafile/
 
 COPY src/main/resources/certificate /certs
 ARG CERT_PASS=changeit
