@@ -42,29 +42,36 @@ Many other changes and improvement are listed in JIRA:
 
 **Security Notes**
 
+*Fixed Security Issues*
+
 NBI has been improved to reduce signs of vulnerabilities,
 especially by migrating from Springboot 1.x to Springboot 2 and using ONAP Parent pom.xml
 
-Warning: NBI exposes non TLS API endpoint on port 30274, meaning full plain text exchange with NBI API.
-TLS configuration, with ONAP Root CA signed certificate will be proposed in El Alto.
+*Known Security Issues*
 
-As a workaround it is quite easy to add HTTPS support to NBI by configuring SSL and activating strict https.
-Presuming you have a valid JKS keystore, with private key and a signed certificate:
+- `OJSI-136 <https://jira.onap.org/browse/OJSI-136>`_ - In default deployment EXTAPI (nbi) exposes HTTP port 30274 outside of cluster.
+   NBI exposes non TLS API endpoint on port 30274, meaning full plain text exchange with NBI API.
+   TLS configuration, with ONAP Root CA signed certificate will be proposed in El Alto.
 
-::
+   As a workaround it is quite easy to add HTTPS support to NBI by configuring SSL and activating strict https.
+   Presuming you have a valid JKS keystore, with private key and a signed certificate:
 
-    src/main/resources/application.properties
+   ::
 
-::
+       src/main/resources/application.properties
 
-    # tls/ssl
-    server.ssl.key-store-type=JKS
-    server.ssl.key-store=classpath:certificate/yourkeystore.jks
-    server.ssl.key-store-password=password
-    server.ssl.key-alias=youralias
+   ::
 
-    # disable http and activate https
-    security.require-ssl=true
+       # tls/ssl
+       server.ssl.key-store-type=JKS
+       server.ssl.key-store=classpath:certificate/yourkeystore.jks
+       server.ssl.key-store-password=password
+       server.ssl.key-alias=youralias
+
+       # disable http and activate https
+       security.require-ssl=true
+
+*Known Vulnerabilities in Used Modules*
 
 - `Dublin Vulnerability Report <https://wiki.onap.org/pages/viewpage.action?pageId=51282484>`_
 
