@@ -37,8 +37,13 @@ Many other changes and improvement are listed in JIRA:
 
 **Known Issues**
 
-- `EXTAPI-197 <https://jira.onap.org/browse/EXTAPI-197>`_ - Bad hostname while registering on MSB`
-- `EXTAPI-222 <https://jira.onap.org/browse/EXTAPI-222>`_ - Add support for HTTPS`
+- `EXTAPI-197 <https://jira.onap.org/browse/EXTAPI-197>`_ - Bad hostname while registering on MSB
+- `EXTAPI-222 <https://jira.onap.org/browse/EXTAPI-222>`_ - Add support for HTTPS
+- `EXTAPI-249 <https://jira.onap.org/browse/EXTAPI-249>`_ - Change to oom dockers causing permissions failing when tosca parsing
+
+EXTAPI-249 has limited impact on BBS use case:
+GET /serviceSpecification{id}
+returns empty serviceSpecCharacteristic.
 
 **Security Notes**
 
