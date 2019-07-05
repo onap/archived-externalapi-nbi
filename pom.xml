@@ -388,6 +388,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <argLine>
+            --illegal-access=permit
+          </argLine>
           <includes>
             <include>org/onap/nbi/test/KarateApiTest.java</include>
             <include>org/onap/nbi/test/ExecutionTaskTest.java</include>
