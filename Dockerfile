@@ -14,16 +14,13 @@
 #     limitations under the License.
 #
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-slim
 
 ARG SERVER_PORT
 ARG PKG_FILENAME=nbi-rest-services-4.0.1-SNAPSHOT.jar
 ADD target/$PKG_FILENAME app.jar
 
-RUN addgroup -S appgroup
-RUN adduser -S appuser -G appgroup
-RUN mkdir temptoscafile
-RUN chown appuser:appgroup temptoscafile/
+RUN addgroup appgroup && useradd -ms /bin/bash appuser && adduser appuser appgroup && mkdir temptoscafile && chown appuser:appgroup temptoscafile/
 
 COPY src/main/resources/certificate /certs
 ARG CERT_PASS=changeit
@@ -43,4 +40,4 @@ ENV SERVER_PORT=${SERVER_PORT:-8080}
 ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 
 EXPOSE $SERVER_PORT
-ENTRYPOINT java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap $JAVA_OPTS -jar /app.jar
+ENTRYPOINT java -XX:+UseContainerSupport $JAVA_OPTS -jar /app.jar
