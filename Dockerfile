@@ -17,7 +17,7 @@
 FROM openjdk:11-jre-slim
 
 ARG SERVER_PORT
-ARG PKG_FILENAME=nbi-rest-services-5.0.0-SNAPSHOT.jar
+ARG PKG_FILENAME=nbi-rest-services-5.0.0.jar
 ADD target/$PKG_FILENAME app.jar
 
 RUN addgroup appgroup && useradd -ms /bin/bash appuser && adduser appuser appgroup && mkdir temptoscafile && chown appuser:appgroup temptoscafile/
