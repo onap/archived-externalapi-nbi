@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: romain gimbert <romain.gimbert@orange.com>
+Code-Review+2: Andy Mayer <am803u@att.com>
+Submitted-by: Andy Mayer <am803u@att.com>
+Submitted-at: Mon, 12 Aug 2019 15:45:14 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/externalapi/nbi/+/93109
+Project: externalapi/nbi
+Branch: refs/heads/master
