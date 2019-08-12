@@ -37,6 +37,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -172,6 +173,7 @@ public class SdcClient {
 
     private HttpEntity<String> buildRequestHeader() {
         HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add(HEADER_ECOMP_INSTANCE_ID, ecompInstanceId);
         httpHeaders.add(HEADER_AUTHORIZATION, sdcHeaderAuthorization);
         return new HttpEntity<>("parameters", httpHeaders);
