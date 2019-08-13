@@ -3,7 +3,7 @@
     "swagger": "2.0",
     "info": {
     "description": "Provides a healthcheck to verify that the NBI component is running fine as a standalone application or can also communicate with other onap modules.\n\n",
-    "version": "4.0.0_inProgress",
+    "version": "4.0.1",
     "title": "API Status",
     "x-logo": {
     "url": "/redoc/logo.png",

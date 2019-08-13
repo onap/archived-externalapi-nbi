@@ -3,7 +3,7 @@
     "swagger": "2.0",
     "info": {
     "description": "Provides the ability to subscribe to and unsubscribe from External API notifications.\n\n**Main operation**\n\n```\nPOST /hub\n```\n\nrequest sample 1\n\n```\n{\n  \"callback\": \"http://mydomain/notification\",\n  \"query\": \"eventType = ServiceOrderCreationNotification\"\n}\n```\n\nrequest sample 2\n\n```\n{\n  \"callback\": \"http://mydomain/notification\",\n  \"query\": \"eventType=ServiceOrderCreationNotification,ServiceOrderStateChangeNotification\"\n}\n```\n\n**EventType for serviceOrdering**\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n- ServiceOrderItemStateChangeNotification\n\n**EventType for serviceInventory**\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n- ServiceRemoveNotification\n\n",
-    "version": "4.0.0_inProgress",
+    "version": "4.0.1",
     "title": "API Hub",
     "x-logo": {
     "url": "/redoc/logo.png",

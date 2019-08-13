@@ -3,7 +3,7 @@
     "swagger": "2.0",
     "info": {
     "description": "serviceCatalog API designed for ONAP Beijing Release.\nThis API is build from TMF open API17.5. \nOnly operation GET (by id & byList) for resource serviceSpecification is available\n\n",
-    "version": "3.0.0_tag",
+    "version": "4.0.1",
     "title": "API ServiceCatalog",
     "x-logo": {
     "url": "/redoc/logo.png",

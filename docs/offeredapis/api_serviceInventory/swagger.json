@@ -3,7 +3,7 @@
     "swagger": "2.0",
     "info": {
     "description": "Query information about instantiated services\n\nList of available subscription for serviceInventory notifications, see /hub resources for more information:\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n- ServiceRemoveNotification\n\n",
-    "version": "4.0.0_inProgress",
+    "version": "4.0.1",
     "title": "API ServiceInventory",
     "x-logo": {
     "url": "/redoc/logo.png",
