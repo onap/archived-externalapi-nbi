@@ -4,6 +4,43 @@
 Release Notes
 =============
 
+Version: 5.0.0
+--------------
+
+:Release Date: 2019-08-16
+
+El Alto Early Drop Release tag - 5.0.0
+
+**Fix**
+
+- `EXTAPI-248 <https://jira.onap.org/browse/EXTAPI-248>`_ - ExtAPI should not be polling SDC-DISTR-NOTIF-TOPIC-AUTO without authenticating
+- `EXTAPI-249 <https://jira.onap.org/browse/EXTAPI-249>`_ - Change to oom dockers causing permissions failing when tosca parsing
+
+Detail of features described in the readTheDoc documentation.
+
+https://onap.readthedocs.io/en/latest/submodules/externalapi/nbi.git/docs/index.html
+
+
+**Known Issues**
+
+No new issues
+
+**Security Notes**
+
+- Same as Dublin 4.0.0
+
+Quick Links:
+
+- `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
+
+**Upgrade Notes**
+
+No major API change. The API Major version is still 4.
+
+/nbi/api/v4
+
+El Alto Early Drop API version is 4.0.1 i.e. Patch only
+
 Version: 4.0.0
 --------------
 
