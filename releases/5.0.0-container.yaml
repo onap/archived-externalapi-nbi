@@ -1,0 +1,11 @@
+---
+distribution_type: 'container'
+container_release_tag: '5.0.1'
+project: 'externalapi-nbi'
+log_dir: 'externalapi-nbi-maven-docker-stage-master/124/'
+ref: ab38dd33bc35ae61fc40d5c4a090a21cb214078c
+containers:
+    - name: 'externalapi/nbi'
+      version: '5.0.1-20190909T014811Z'
+    - name: 'sdc-simulator'
+      version: 'latest'
