@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "Request the instantiation of a service\n\nA Service Order is a type of order which can be used to describe a group of operations on service – one service order item per service. An action at the level of the service order item describe the operation to be done on a service (add, terminate for example). The service order is triggered from the BSS system in charge of the product order management to ONAP that will manage the service fulfillment.\n\nList of available subscription for serviceOrdering notifications, see /hub resources for more information:\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n- ServiceOrderItemStateChangeNotification\n\n",
-    "version": "4.0.0_inProgress",
+    "version": "4.0.1",
     "title": "API ServiceOrder",
     "x-logo": {
       "url": "/redoc/logo.png",
