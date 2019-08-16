@@ -1,0 +1,6 @@
+---
+distribution_type: 'container'
+version: '5.0.0'
+project: 'pomba-aai-context-builder'
+log_dir: 'externalapi-nbi-maven-docker-stage-master/100/'
+
