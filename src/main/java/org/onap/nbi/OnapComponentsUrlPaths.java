@@ -48,7 +48,7 @@ public final class OnapComponentsUrlPaths {
     public static final String AAI_PUT_SERVICE_FOR_CUSTOMER_PATH =
             "/aai/v14/business/customers/customer/$customerId/service-subscriptions/service-subscription/";
     public static final String AAI_HEALTH_CHECK =
-        "aai/util/echo?action=long";
+        "/aai/util/echo?action=long";
     public static final String AAI_GET_SERVICE =
             "/aai/v14/nodes/service-instances/service-instance/$serviceId";
     public static final String AAI_GET_SERVICE_CUSTOMER =
