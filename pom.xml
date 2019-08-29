@@ -106,7 +106,7 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>2.1.4.RELEASE</version>
+        <version>2.1.7.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -129,7 +129,6 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
-      <version>9.0.19</version>
     </dependency>
 
     <dependency>
@@ -205,7 +204,7 @@
     <dependency>
       <groupId>org.onap.sdc.sdc-tosca</groupId>
       <artifactId>sdc-tosca</artifactId>
-      <version>1.4.6</version>
+      <version>1.6.0</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.guava</groupId>
@@ -221,7 +220,7 @@
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.12</version>
+      <version>1.13</version>
     </dependency>
 
     <!-- jolt -->
