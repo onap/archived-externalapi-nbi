@@ -4,17 +4,19 @@
 Release Notes
 =============
 
-Version: 5.0.0
+Version: 5.0.1
 --------------
 
-:Release Date: 2019-08-16
+:Release Date: 2019-09-06
 
-El Alto Early Drop Release tag - 5.0.0
+El Alto Release tag - 5.0.1
 
 **Fix**
 
 - `EXTAPI-248 <https://jira.onap.org/browse/EXTAPI-248>`_ - ExtAPI should not be polling SDC-DISTR-NOTIF-TOPIC-AUTO without authenticating
 - `EXTAPI-249 <https://jira.onap.org/browse/EXTAPI-249>`_ - Change to oom dockers causing permissions failing when tosca parsing
+- `EXTAPI-287 <https://jira.onap.org/browse/EXTAPI-287>`_ - NBI to SDC connectivity health checks fail
+- `EXTAPI-305 <https://jira.onap.org/browse/EXTAPI-305>`_ - No Need for "ReadWriteMany" access on storage when deploying on Kubernetes
 
 Detail of features described in the readTheDoc documentation.
 
@@ -39,7 +41,7 @@ No major API change. The API Major version is still 4.
 
 /nbi/api/v4
 
-El Alto Early Drop API version is 4.0.1 i.e. Patch only
+El Alto API version is 4.0.1 i.e. Patch only
 
 Version: 4.0.0
 --------------
