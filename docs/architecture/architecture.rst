@@ -15,9 +15,9 @@ used by external systems as BSS for example.
 These API are based on **TMF API**.
 
 
-**********************************************
-Global NBI architecture for Dublin release
-**********************************************
+*******************************************
+Global NBI architecture for El Alto release
+*******************************************
 
 Following illustration provides a global view about NBI architecture,
 integration with other ONAP components and API resource/operation provided.
