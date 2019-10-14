@@ -15,9 +15,9 @@ NBI stands for NorthBound Interface. It brings to ONAP a set of API that can
 be used by external systems as BSS for example. These API are based on
 **TMF API**.
 
-**********************************************
-Global NBI architecture for Dublin release
-**********************************************
+*******************************************
+Global NBI architecture for El Alto release
+*******************************************
 
 Following illustration provides a global view about **NBI** architecture,
 integration with other ONAP components and API resource/operation provided.
@@ -141,10 +141,11 @@ are retieved (see Swagger for description)
 
 **GET service Specification Schema (id)**
 
-Example: ``GET /nbi/api/v4/serviceSpecification/{uuid}/specificationInputSchema``
+Example:
+``GET /nbi/api/v4/serviceSpecification/{uuid}/specificationInputSchema``
 
-It is use to retrieve one  input schema from the tosca file stored in **NBI** - all available
-information are retieved (see Swagger for description)
+It is use to retrieve one  input schema from the tosca file stored in **NBI**
+- all available information are retieved (see Swagger for description)
 
 ----------------
 serviceInventory
@@ -187,10 +188,10 @@ if no service matches, an empty list is send back.
 Example: ``GET /nbi/api/v4/service/{id}`` When querying for a specific service
 instance id, no additional filters are required.
 
-The Service Inventory API will retrieve the service instance data from A&AI using 
-the nodes query with the service instance id as the key. ``relatedParty.id`` + 
-``serviceSpecification.name`` are added to the response based on the A&AI service 
-instance url.
+The Service Inventory API will retrieve the service instance data from A&AI
+using the nodes query with the service instance id as the key.
+``relatedParty.id`` + ``serviceSpecification.name`` are added to the response
+based on the A&AI service instance url.
 
 ------------
 serviceOrder
@@ -277,7 +278,8 @@ notifications. 3 events are managed:
 • A service order state changes
 • A service order item state changes
 
-It is also possible to subscribe to **AAI** and **SDC** notifications via **NBI**.
+It is also possible to subscribe to **AAI** and **SDC** notifications via
+**NBI**.
 4 events are managed:
 
 • A new service is created in  **AAI***
@@ -303,23 +305,46 @@ The following diagram illustrates such notification flow:
 
 **East-west interaction of ONAP instances through External API**
 
-Operator’s SO component will talk to service provider’s external API component through its own external API component.
+Operator’s SO component will talk to service provider’s external API component
+through its own external API component.
 
-External API support two methods of posting a Service Order or registering for Hub.
+External API support two methods of posting a Service Order or registering for
+Hub.
 
-1. If the incoming request is per current implementation (no additional headers) then no changes will be made. The request will be serviced per BAU flow.
-2. If the incoming request has additional *Target* header parameters, External API will identify that the request has to be relayed to another ONAP instance and route the request accordingly.
+1. If the incoming request is per current implementation (no additional headers
+) then no changes will be made. The request will be serviced per BAU flow.
+2. If the incoming request has additional *Target* header parameters, External
+API will identify that the request has to be relayed to another ONAP instance
+and route the request accordingly.
 
-Target parameter: The public endpoint url for target ONAP instance’s External API, for instance
+Target parameter: The public endpoint url for target ONAP instance’s External
+API, for instance
 http://externalDomain/nbi/api/vX
 
-• For posting service order and getting service order status, the request will be relayed to target (service provider’s External API) as-is. These are synchronous requests and operator’s External API will wait for response from the target and relay it back to original calling system (operator’s SO).
-• For Hub API, there is an additional step required. The listener from calling system (operator’s SO) will be replaced with External APIs own listener. A mapping of registered subscriber and its original listener will be maintained in External API’s DB. Operator’s External API will relay the Hub API call to service provider’s External API. The service provider’s External API will register operator’s External API as a listener.
-• After SO processing in service provider’s ONAP is completed (irrespective of status – reject, success, fail etc), service provider’s External API will notify the operator’s External API about request completion. Operator’s External API will look-up for registered subscriber and its original listener (operator’s SO) and relay the message.
+• For posting service order and getting service order status, the request will
+  be relayed to target (service provider’s External API) as-is. These are
+  synchronous requests and operator’s External API will wait for response from
+  the target and relay it back to original calling system (operator’s SO).
+• For Hub API, there is an additional step required. The listener from calling
+  system (operator’s SO) will be replaced with External APIs own listener.
+  A mapping of registered subscriber and its original listener will be
+  maintained in External API’s DB. Operator’s External API will relay the Hub
+  API call to service provider’s External API. The service provider’s External
+  API will register operator’s External API as a listener.
+• After SO processing in service provider’s ONAP is completed (irrespective of
+  status – reject, success, fail etc), service provider’s External API will
+  notify the operator’s External API about request completion. Operator’s
+  External API will look-up for registered subscriber and its original listener
+  (operator’s SO) and relay the message.
 
-Operator’s Service Orchestrator will invoke its own External API component and add SP Partner URL in the header. After receiving an acknowledgement for Service Order request, the SO component will register with External API’s hub and provide its listener for processing callback events.
+Operator’s Service Orchestrator will invoke its own External API component and
+add SP Partner URL in the header. After receiving an acknowledgement for
+Service Order request, the SO component will register with External API’s hub
+and provide its listener for processing callback events.
 
-Technical information about **East-west interaction exercise** design specification and API Flow illustration (with example messages) could be found here:
+Technical information about **East-west interaction exercise** design
+specification and API Flow illustration (with example messages) could be found
+here:
 
 https://wiki.onap.org/download/attachments/8227019/CCVPN%20Phase%202%20HLD.docx?api=v2
 
