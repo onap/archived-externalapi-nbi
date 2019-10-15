@@ -12,8 +12,10 @@
  */
 package org.onap.nbi.apis.serviceorder.workflow;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.onap.nbi.apis.serviceorder.SoClient;
@@ -46,6 +48,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Service
 public class PostSoProcessor {
@@ -266,12 +275,46 @@ public class PostSoProcessor {
      */
     private List<UserParams> retrieveUserParamsFromServiceCharacteristics(List<ServiceCharacteristic> characteristics) {
         List<UserParams> userParams = new ArrayList<>();
+        UserParams userParam;
 
         if (!CollectionUtils.isEmpty(characteristics)) {
             for (ServiceCharacteristic characteristic : characteristics) {
-                UserParams userParam = new UserParams(characteristic.getName(),
+            	// Check is the characteristic is of type object, else process as normal for backwards compatibility.
+            	if (characteristic.getValueType() != null && !characteristic.getValueType().isEmpty() && characteristic.getValueType().equals("object"))
+            	{
+            		ObjectMapper mapper = new ObjectMapper();
+            		JsonNode jsonNode = null;
+					try {
+						jsonNode = mapper.readTree(characteristic.getValue().getServiceCharacteristicValue());
+					} catch (IOException e) {
+						LOGGER.error("Failed to read object json {} , exception is ", characteristic.getValue().getServiceCharacteristicValue(), e.getMessage());
+					}
+					ObjectNode objectNode = (ObjectNode) jsonNode;
+			        Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
+			        while (iter.hasNext()) {
+			            Map.Entry<String, JsonNode> entry = iter.next();
+			            if ( !entry.getValue().isArray())
+			            {
+			            userParam = new UserParams(entry.getKey(),
+			                    entry.getValue().asText());
+			            }
+			            else
+			            {
+			            ArrayNode arrayNode = (ArrayNode) entry.getValue();
+			            String arrayNodeValueString = arrayNode.toString();
+			            userParam = new UserParams(entry.getKey(),
+			            		arrayNodeValueString);
+			            }
+						userParams.add(userParam);
+			        }   	
+            	}
+            	// as UserParams for all other types, boolean, string, integer etc
+            	else
+            	{
+                userParam = new UserParams(characteristic.getName(),
                     characteristic.getValue().getServiceCharacteristicValue());
                 userParams.add(userParam);
+            	}
             }
         }
 

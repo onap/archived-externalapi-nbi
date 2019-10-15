@@ -179,14 +179,14 @@ public class ToscaInfosProcessorTest {
     response.put("resourceSpecification", resources);
 
     LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
-    serviceSpecCharacteristicValue.put("valueType","Object");
+    serviceSpecCharacteristicValue.put("valueType","object");
     serviceSpecCharacteristicValue.put("@schemaLocation","/serviceSpecification/7f5e5139-768d-4410-a871-c41430785214/specificationInputSchema");
     serviceSpecCharacteristicValue.put("@type","Service_vMME_ServiceCharacteristic");
 
     LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
     serviceSpecCharacteristic.put("name","Service_vMME_ServiceCharacteristics");
     serviceSpecCharacteristic.put("description", "This object describes all the inputs needed from the client to interact with the Service_vMME Service Topology");
-    serviceSpecCharacteristic.put("valueType","Object");
+    serviceSpecCharacteristic.put("valueType","object");
     serviceSpecCharacteristic.put("@type","ONAPServiceCharacteristic");
     serviceSpecCharacteristic.put("@schemaLocation","null");
     serviceSpecCharacteristic.put("serviceSpecCharacteristicValue",serviceSpecCharacteristicValue);

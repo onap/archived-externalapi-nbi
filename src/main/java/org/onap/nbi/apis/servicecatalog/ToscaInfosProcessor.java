@@ -137,14 +137,14 @@ public class ToscaInfosProcessor {
     serviceSpecificationDBManager.saveSpecificationInputSchema(svcCharacteristicsJson,serviceCatalogResponse);
 
     LinkedHashMap inputSchemaRef = new LinkedHashMap();
-    inputSchemaRef.put("valueType","Object");
+    inputSchemaRef.put("valueType","object");
     inputSchemaRef.put("@schemaLocation","/serviceSpecification/"+serviceCatalogResponse.get("id")+"/specificationInputSchema");
     inputSchemaRef.put("@type",serviceCatalogResponse.get("name") + "_ServiceCharacteristic");
 
     LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
     serviceSpecCharacteristic.put("name",serviceCatalogResponse.get("name") + "_ServiceCharacteristics");
     serviceSpecCharacteristic.put("description","This object describes all the inputs needed from the client to interact with the " + serviceCatalogResponse.get("name") + " Service Topology");
-    serviceSpecCharacteristic.put("valueType", "Object");
+    serviceSpecCharacteristic.put("valueType", "object");
     serviceSpecCharacteristic.put("@type","ONAPServiceCharacteristic");
     serviceSpecCharacteristic.put("@schemaLocation", "null");
     serviceSpecCharacteristic.put("serviceSpecCharacteristicValue",inputSchemaRef);
