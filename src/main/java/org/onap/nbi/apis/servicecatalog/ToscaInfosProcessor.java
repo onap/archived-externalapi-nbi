@@ -14,9 +14,11 @@
 package org.onap.nbi.apis.servicecatalog;
 
 import java.nio.file.Path;
-import java.util.*;
-
-import io.swagger.util.Json;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
@@ -32,6 +34,7 @@ import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.PropertyBuilder;
+import io.swagger.util.Json;
 
 @Service
 public class ToscaInfosProcessor {
@@ -47,7 +50,7 @@ public class ToscaInfosProcessor {
   private static final Logger LOGGER = LoggerFactory.getLogger(ToscaInfosProcessor.class);
 
   public void buildResponseWithSdcToscaParser(Path path, Map serviceCatalogResponse)
-          throws SdcToscaParserException {
+      throws SdcToscaParserException {
 
     SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
     ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(), false);
@@ -66,7 +69,7 @@ public class ToscaInfosProcessor {
         // If this Input has a default value, then put it in serviceSpecCharacteristicValue
         if (input.getDefault() != null) {
           List<LinkedHashMap> serviceSpecCharacteristicValues =
-                  buildServiceSpecCharacteristicsValuesFromSdc(input);
+              buildServiceSpecCharacteristicsValuesFromSdc(input);
           mapParameter.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValues);
         }
         serviceSpecCharacteristic.add(mapParameter);
@@ -76,7 +79,7 @@ public class ToscaInfosProcessor {
     List<NodeTemplate> nodeTemplates = sdcCsarHelper.getServiceNodeTemplates();
 
     List<LinkedHashMap> resourceSpecifications =
-            (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
+        (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
     for (LinkedHashMap resourceSpecification : resourceSpecifications) {
       if (resourceSpecification.get("id") != null) {
         String id = (String) resourceSpecification.get("id");
@@ -91,7 +94,7 @@ public class ToscaInfosProcessor {
         if (nodeTemplate == null)
           continue;
         resourceSpecification.put("modelCustomizationId",
-                sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
+            sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
       }
     }
   }
@@ -109,13 +112,14 @@ public class ToscaInfosProcessor {
     return serviceSpecCharacteristicValues;
   }
 
-  public void buildAndSaveResponseWithSdcToscaParser(Path path, Map serviceCatalogResponse) throws SdcToscaParserException {
+  public void buildAndSaveResponseWithSdcToscaParser(Path path, Map serviceCatalogResponse)
+      throws SdcToscaParserException {
 
     SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
     ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(), false);
     List<Input> inputs = sdcCsarHelper.getServiceInputs();
 
-    Map<String, Model> definitions = new HashMap<String,Model>();
+    Map<String, Model> definitions = new HashMap<String, Model>();
     Model model = new ModelImpl();
 
     if (inputs != null && inputs.size() > 0) {
@@ -134,26 +138,32 @@ public class ToscaInfosProcessor {
     }
 
     String svcCharacteristicsJson = Json.pretty(definitions);
-    serviceSpecificationDBManager.saveSpecificationInputSchema(svcCharacteristicsJson,serviceCatalogResponse);
+    serviceSpecificationDBManager.saveSpecificationInputSchema(svcCharacteristicsJson,
+        serviceCatalogResponse);
 
     LinkedHashMap inputSchemaRef = new LinkedHashMap();
-    inputSchemaRef.put("valueType","Object");
-    inputSchemaRef.put("@schemaLocation","/serviceSpecification/"+serviceCatalogResponse.get("id")+"/specificationInputSchema");
-    inputSchemaRef.put("@type",serviceCatalogResponse.get("name") + "_ServiceCharacteristic");
+    // use object to match examples in Specifications
+    inputSchemaRef.put("valueType", "object");
+    inputSchemaRef.put("@schemaLocation",
+        "/serviceSpecification/" + serviceCatalogResponse.get("id") + "/specificationInputSchema");
+    inputSchemaRef.put("@type", serviceCatalogResponse.get("name") + "_ServiceCharacteristic");
 
     LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
-    serviceSpecCharacteristic.put("name",serviceCatalogResponse.get("name") + "_ServiceCharacteristics");
-    serviceSpecCharacteristic.put("description","This object describes all the inputs needed from the client to interact with the " + serviceCatalogResponse.get("name") + " Service Topology");
-    serviceSpecCharacteristic.put("valueType", "Object");
-    serviceSpecCharacteristic.put("@type","ONAPServiceCharacteristic");
+    serviceSpecCharacteristic.put("name",
+        serviceCatalogResponse.get("name") + "_ServiceCharacteristics");
+    serviceSpecCharacteristic.put("description",
+        "This object describes all the inputs needed from the client to interact with the "
+            + serviceCatalogResponse.get("name") + " Service Topology");
+    serviceSpecCharacteristic.put("valueType", "object");
+    serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
     serviceSpecCharacteristic.put("@schemaLocation", "null");
-    serviceSpecCharacteristic.put("serviceSpecCharacteristicValue",inputSchemaRef);
+    serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", inputSchemaRef);
 
-    serviceCatalogResponse.put("serviceSpecCharacteristic",serviceSpecCharacteristic);
+    serviceCatalogResponse.put("serviceSpecCharacteristic", serviceSpecCharacteristic);
 
     List<NodeTemplate> nodeTemplates = sdcCsarHelper.getServiceNodeTemplates();
     List<LinkedHashMap> resourceSpecifications =
-            (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
+        (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
     for (LinkedHashMap resourceSpecification : resourceSpecifications) {
       if (resourceSpecification.get("id") != null) {
         String id = (String) resourceSpecification.get("id");
@@ -167,7 +177,8 @@ public class ToscaInfosProcessor {
         }
         if (nodeTemplate == null)
           continue;
-        resourceSpecification.put("modelCustomizationId", sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
+        resourceSpecification.put("modelCustomizationId",
+            sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
       }
     }
   }
