@@ -42,12 +42,12 @@ And match $.serviceSpecCharacteristic contains
 {
     name : 'vFW_ServiceCharacteristics',
     description : 'This object describes all the inputs needed from the client to interact with the vFW Service Topology',
-    valueType : 'Object',
+    valueType : 'object',
     @type : 'ONAPServiceCharacteristic',
     @schemaLocation : 'null',
     serviceSpecCharacteristicValue :
     {
-       valueType : 'Object',
+       valueType : 'object',
        @schemaLocation : '/serviceSpecification/462f84e5-f0e5-44c5-ab95-38fb4bf77064/specificationInputSchema',
        @type : 'vFW_ServiceCharacteristic',
     }
