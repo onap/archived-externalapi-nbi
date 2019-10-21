@@ -43,6 +43,8 @@ public final class OnapComponentsUrlPaths {
     public static final String AAI_GET_TENANTS_PATH =
             "/aai/v14/cloud-infrastructure/cloud-regions/cloud-region/$onap.cloudOwner/$onap.lcpCloudRegionId/tenants";
     public static final String AAI_GET_CUSTOMER_PATH = "/aai/v14/business/customers/customer/";
+
+
     public static final String AAI_GET_SERVICES_FOR_CUSTOMER_PATH =
             "/aai/v14/business/customers/customer/$customerId/service-subscriptions";
     public static final String AAI_PUT_SERVICE_FOR_CUSTOMER_PATH =
