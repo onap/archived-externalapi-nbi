@@ -19,8 +19,6 @@ public class RequestInfo {
 
     private String instanceName;
 
-    private String productFamilyId;
-
     private String source;
 
     private boolean suppressRollback;
@@ -33,14 +31,6 @@ public class RequestInfo {
 
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
-    }
-
-    public String getProductFamilyId() {
-        return productFamilyId;
-    }
-
-    public void setProductFamilyId(String productFamilyId) {
-        this.productFamilyId = productFamilyId;
     }
 
     public String getSource() {
@@ -71,7 +61,6 @@ public class RequestInfo {
     public String toString() {
         return "RequestInfo{" +
             "instanceName='" + instanceName + '\'' +
-            ", productFamilyId='" + productFamilyId + '\'' +
             ", source='" + source + '\'' +
             ", suppressRollback=" + suppressRollback +
             ", requestorId='" + requestorId + '\'' +
