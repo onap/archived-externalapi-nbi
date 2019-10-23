@@ -50,14 +50,14 @@ public class SoClient {
   @Value("${so.host}")
   private String soHostname;
 
-  @Value("${so.api.id}")
-  private String soApiId;
+  @Value("${so.onap.partner.name}")
+  private String soOnapPartnerName;
 
   @Value("${so.header.authorization}")
   private String soHeaderAuthorization;
 
   private static final String HEADER_AUTHORIZATION = "Authorization";
-  private static final String X_FROM_APP_ID = "X-FromAppId";
+  private static final String X_ONAP_PARTNER_HEADER = "X-ONAP-PartnerName";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SoClient.class);
 
@@ -334,7 +334,7 @@ public class SoClient {
   private HttpHeaders buildRequestHeader() {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.add(HEADER_AUTHORIZATION, soHeaderAuthorization);
-    httpHeaders.add(X_FROM_APP_ID, soApiId);
+    httpHeaders.add(X_ONAP_PARTNER_HEADER, soOnapPartnerName);
     httpHeaders.add("Accept", "application/json");
     httpHeaders.add("Content-Type", "application/json");
     return httpHeaders;
