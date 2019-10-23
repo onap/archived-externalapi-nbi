@@ -74,6 +74,8 @@ public class PostSoProcessor {
   @Value("${so.project.name}")
   private String soProjectName;
 
+  @Value("${onap.cloudOwner}")
+  private String cloudOwner;
 
   @Autowired
   private ServiceOrderService serviceOrderService;
@@ -217,7 +219,7 @@ public class PostSoProcessor {
     requestParameters.setaLaCarte(true);
     requestDetails.setRequestParameters(requestParameters);
 
-    CloudConfiguration cloudConfiguration = new CloudConfiguration(lcpCloudRegionId, tenantId);
+    CloudConfiguration cloudConfiguration = new CloudConfiguration(lcpCloudRegionId, tenantId, cloudOwner);
     requestDetails.setCloudConfiguration(cloudConfiguration);
 
     OwningEntity owningEntity = new OwningEntity();

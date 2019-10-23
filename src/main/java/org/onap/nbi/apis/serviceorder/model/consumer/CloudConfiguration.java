@@ -21,9 +21,12 @@ public class CloudConfiguration {
 
     private String tenantId;
 
-    public CloudConfiguration(String lcpCloudRegionId, String tenantId) {
+    private String cloudOwner;
+
+    public CloudConfiguration(String lcpCloudRegionId, String tenantId, String cloudOwner) {
         this.lcpCloudRegionId = lcpCloudRegionId;
         this.tenantId = tenantId;
+        this.cloudOwner = cloudOwner;
     }
 
     public String getLcpCloudRegionId() {
@@ -42,9 +45,20 @@ public class CloudConfiguration {
         this.tenantId = tenantId;
     }
 
+    public String getCloudOwner() {
+        return cloudOwner;
+    }
+
+    public void setCloudOwner(String cloudOwner) {
+        this.cloudOwner = cloudOwner;
+    }
+
     @Override
     public String toString() {
-        return "CloudConfiguration{" + "lcpCloudRegionId='" + lcpCloudRegionId + '\'' + ", tenantId='" + tenantId + '\''
-                + '}';
+        return "CloudConfiguration{" +
+            "lcpCloudRegionId='" + lcpCloudRegionId + '\'' +
+            ", tenantId='" + tenantId + '\'' +
+            ", cloudOwner='" + cloudOwner + '\'' +
+            '}';
     }
 }
