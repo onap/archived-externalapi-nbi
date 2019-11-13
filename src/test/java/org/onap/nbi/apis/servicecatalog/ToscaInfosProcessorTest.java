@@ -202,4 +202,52 @@ public class ToscaInfosProcessorTest {
     }
     assertThat(response.get("serviceSpecCharacteristic")).isEqualTo(serviceSpecCharacteristic);
   }
+  
+  
+  @Test
+  public void testBuildAndSaveResponseWithSdcToscaParserWithInputListType() {
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    Path path = new File(
+        classLoader.getResource("toscafile/service-MscmEvplService-csar.csar").getFile())
+            .toPath().toAbsolutePath();
+
+    LinkedHashMap response = new LinkedHashMap();
+    response.put("version", "1.0");
+    response.put("name", "MSCM-EVPL-Service");
+    response.put("description", "MSCM EVPL Service");
+    response.put("id", "66a66cc3-178c-45fd-82c2-494336cb3665");
+
+    List<LinkedHashMap> resources = new ArrayList<>();
+    LinkedHashMap resource1 = new LinkedHashMap();
+    resource1.put("id", "f5f487df-8c02-4485-81d4-695c50e24b22");
+    resources.add(resource1);
+    LinkedHashMap resource2 = new LinkedHashMap();
+    resource2.put("id", "65c34b35-e8ab-426a-b048-d707467f68b2");
+    resources.add(resource2);
+
+    response.put("resourceSpecification", resources);
+
+    LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
+    serviceSpecCharacteristicValue.put("valueType", "object");
+    serviceSpecCharacteristicValue.put("@schemaLocation",
+        "/serviceSpecification/66a66cc3-178c-45fd-82c2-494336cb3665/specificationInputSchema");
+    serviceSpecCharacteristicValue.put("@type", "MSCM-EVPL-Service_ServiceCharacteristic");
+
+    LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
+    serviceSpecCharacteristic.put("name", "MSCM-EVPL-Service_ServiceCharacteristics");
+    serviceSpecCharacteristic.put("description",
+        "This object describes all the inputs needed from the client to interact with the MSCM-EVPL-Service Service Topology");
+    // using object to match examples in specifications
+    serviceSpecCharacteristic.put("valueType", "object");
+    serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
+    serviceSpecCharacteristic.put("@schemaLocation", "null");
+    serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValue);
+    try {
+      toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
+    } catch (SdcToscaParserException ex) {
+      throw new TechnicalException("unable to build response " + ex.getMessage());
+    }
+    assertThat(response.get("serviceSpecCharacteristic")).isEqualTo(serviceSpecCharacteristic);
+  }
 }
