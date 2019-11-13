@@ -124,8 +124,13 @@ public class ToscaInfosProcessor {
 
     if (inputs != null && inputs.size() > 0) {
       for (Input input : inputs) {
-        Property property = PropertyBuilder.build(input.getType(), null, null);
-        property.setDescription(input.getDescription());
+    	Property property = null;
+    	if (input.getType().equals("list") ||  input.getType().equals("map"))
+    		property = PropertyBuilder.build("array", null, null); 
+    	else
+    		property = PropertyBuilder.build(input.getType(), null, null);
+
+    	property.setDescription(input.getDescription());
         property.setRequired(input.isRequired());
 
         if (input.getDefault() != null) {
