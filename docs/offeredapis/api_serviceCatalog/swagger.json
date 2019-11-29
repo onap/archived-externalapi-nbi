@@ -1,5 +1,4 @@
-
-    {
+{
     "swagger": "2.0",
     "info": {
     "description": "serviceCatalog API designed for ONAP Beijing Release.\nThis API is build from TMF open API17.5. \nOnly operation GET (by id & byList) for resource serviceSpecification is available\n\n",
@@ -12,7 +11,7 @@
     },
     
       "host": "serverRoot",
-      "basePath":	"/nbi/api/v1",
+      "basePath":	"/nbi/api/v4",
       "schemes": [
       "https"
       ],
@@ -233,6 +232,103 @@
       }
     }
     }
+      },
+      "/serviceSpecification/{id}/specificationInputSchema": {
+    "get": {
+    "tags": [
+    "ServiceSpecification", "specificationInputSchema"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "specificationInputSchemaGet",
+    "summary": "Retrieve a service specification Input Schema",
+    "description": "This operation returns a service specification Input Schema by its id from a catalog. Attribute selection is enabled using the fields attribute.",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "id",
+    "required": true,
+    "in": "path",
+    "type" : "string"
+    },
+    {
+    "name": "fields",
+    "required": false,
+    "in": "query",
+    "description": "Attribute selection",
+    
+    "type": "string"
+    }
+      ],
+    "responses": {
+    "200": {
+    "description": "Ok",
+    "schema": {
+    "$ref": "#/definitions/SpecificationInputSchema"
+    }
+    
+    },
+      "400": {
+      
+          "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+      "schema": {
+      
+    "$ref": "#/definitions/ErrorRepresentation"
+      }
+      },
+      "401": {
+      
+          "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+      "schema": {
+      
+    "$ref": "#/definitions/ErrorRepresentation"
+      }
+      },
+      "403": {
+      
+          "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+      "schema": {
+      
+    "$ref": "#/definitions/ErrorRepresentation"
+      }
+      },
+      "404": {
+      
+          "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+      "schema": {
+      
+    "$ref": "#/definitions/ErrorRepresentation"
+      }
+      },
+      "422": {
+      
+          "description": "Unprocessable entity\n\nFunctional error",
+      "schema": {
+      
+    "$ref": "#/definitions/ErrorRepresentation"
+      }
+      },
+      "500": {
+      
+          "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+      "schema": {
+      
+    "$ref": "#/definitions/ErrorRepresentation"
+      }
+      },
+      "503": {
+      
+          "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+      "schema": {
+      
+    "$ref": "#/definitions/ErrorRepresentation"
+      }
+      }
+    }
+    }
       }
     },
     "definitions": {
@@ -380,11 +476,11 @@
       "default": "ONAPservice"
     },
     "@schemaLocation": {
-    "description": "Not used for Beijing release",
+    "description": "Not used",
     "type": "string"
     },
     "@baseType": {
-    "description": "Not used for Beijing release",
+    "description": "Not used",
     "type": "string"
     },
     "invariantUUID": {
@@ -470,15 +566,15 @@
     "type": "string"
     },
     "valueType": {
-    "description": "A kind of value that the characteristic can take on, such as numeric, text and so forth - Filled with parameter_type",
+    "description": "A kind of value that the characteristic can take on, from Dublin we use the object type to describe the service characteristic values",
     "type": "string"
     },
     "@type": {
-    "description": "This attribute allows to dynamically extends TMF class. Valued with: 'ONAPserviceCharacteristic'. We do not used this features in nbi Beijing release.",
+    "description": "This attribute allows to dynamically extends TMF class. Valued with: 'ONAPserviceCharacteristic'. We do not use this feature in nbi.",
     "type": "string"
     },
     "@schemaLocation": {
-    "description": "An url pointing to type description - we do not use it in nbi Beijing release",
+    "description": "An url pointing to type description - we do not use it",
     "type": "string"
     },
     "required": {
@@ -568,22 +664,50 @@
     
     "type": "object",
     "properties": {
-    "valueType": {
-    "description": "A kind of value that the characteristic can take on, such as numeric, text, and so forth\nRetrieved in the Tosca in the topology_template section in the inputs section - parameter_type. \nWe do not manage parameter_type= list or map for Beijing release",
+    "@type": {
+    "description": "This attribute allows to dynamically extends TMF classes. Valued with: ServiceSpecName_ServiceCharacteristic",
     "type": "string"
     },
-    "isDefault": {
-    "description": "Information calculated from parameter default in the Tosca file",
-    "type": "boolean"
+    "@schemaLocation": {
+    "description": "An url pointing to type description - we use this in nbi for specifying the specificationInputSchema url",
+    "type": "string"
     },
-    "value": {
-    "description": "A discrete value that the characteristic can take on",
+    "valueType": {
+    "description": "A kind of value that the characteristic can take on, from Dublin release we use an object valueType to group the Tosca Model Inputs, the object schema is described by the specificationInputSchema url",
     "type": "string"
     }
     }
     
     },    
 
+    "SpecificationInputSchema": {
+    "description": "A json schema of the service specification input characteristics.\nThe Inputs in the schema files are obtained the service Tosca file Inputs",
+    "type": "object",
+    "properties": {
+    "ServiceCharacteristics": {
+         "$ref": "#/definitions/SchemaForServiceCharacteristics"
+    }
+    }
+    },
+    
+    "SchemaForServiceCharacteristics": {
+    "description": "The object describing the schema of the service specification input characteristics.\nThe Inputs in the schema files are obtained the service Tosca file Inputs",    
+    "type": "object",
+    "properties": {
+    "required": {
+         "description": "defines the parameter key names that are mandatory to send",
+         "type": "array",
+          "items": {
+            "type": "string"
+          }
+          },
+         "properties": {
+             "description": "defines all the input key names and types for the Service Instantiation",
+             "type": "object"
+         }
+    }
+    },
+    
     "ResourceSpecificationRef": {
     "description": "A list of resourceSpec identified to deliver the service.\nfor nbi we retrieve resource information available in service description (through SDC api) bu as well information retrieved in the TOSCA file.",
 
