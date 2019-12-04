@@ -38,14 +38,12 @@
   <parent>
     <groupId>org.onap.oparent</groupId>
     <artifactId>oparent</artifactId>
-    <version>2.1.0</version>
+      <version>3.0.0-SNAPSHOT</version>
   </parent>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.source>1.8</maven.compiler.source>
     <start-class>org.onap.nbi.Application</start-class>
     <onap.nexus.url>https://nexus.onap.org</onap.nexus.url>
     <nexusproxy>https://nexus.onap.org</nexusproxy>
@@ -395,6 +393,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.2.1.RELEASE</version>
         <executions>
           <execution>
             <goals>
@@ -483,7 +482,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.5</version>
         <configuration>
           <dumpOnExit>true</dumpOnExit>
           <includes>
@@ -535,6 +534,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
