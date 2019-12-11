@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.onap.nbi.OnapComponentsUrlPaths;
+import org.onap.nbi.apis.serviceorder.workflow.CreateAAIOwningEntityManager;
 import org.onap.nbi.commons.EWInterfaceUtils;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.StateType;
@@ -60,6 +61,9 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @Autowired
     CreateAAICustomerManager createAAICustomer;
+
+    @Autowired
+    CreateAAIOwningEntityManager createAAIOwningEntityManager;
 
     @Autowired
     CreateAAIServiceTypeManager createAAIServiceType;
@@ -158,10 +162,13 @@ public class ServiceOrderResource extends ResourceManagement {
             serviceOrderService.updateOrderState(serviceOrder, StateType.COMPLETED);
         } else {
             createAAICustomer.createAAICustomer(serviceOrder, serviceOrderInfo);
+            createAAIOwningEntityManager.createAAIOwningEntity(serviceOrder, serviceOrderInfo);
+
             if (StateType.ACKNOWLEDGED == serviceOrder.getState()) {
                 createAAIServiceType.createAAIServiceType(serviceOrder, serviceOrderInfo);
                 if (StateType.ACKNOWLEDGED == serviceOrder.getState()) {
                     serviceOrchestratorManager.registerServiceOrder(serviceOrder, serviceOrderInfo);
+                    serviceOrderService.updateOrderState(serviceOrder, StateType.INPROGRESS_TASK_CREATED);
                 }
             }
 

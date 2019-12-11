@@ -40,6 +40,8 @@ package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -63,6 +65,8 @@ public enum StateType {
     FAILED("failed"),
 
     PARTIAL("partial"),
+
+    INPROGRESS_TASK_CREATED("inProgressTaskCreated"),
 
     INPROGRESS_MODIFY_REQUEST_DELETE_SEND("inProgressModifyRequestDeleteSend"),
 
@@ -92,10 +96,27 @@ public enum StateType {
         return null;
     }
 
+    public static List<StateType> fromValueSearch(String text){
+        List<StateType> values = new ArrayList<>();
+        for (StateType b : StateType.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                if(b.equals(StateType.INPROGRESS)) {
+                    values.add(INPROGRESS_TASK_CREATED);
+                    values.add(INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
+                    values.add(INPROGRESS_MODIFY_ITEM_TO_CREATE);
+                    values.add(INPROGRESS_MODIFY_REQUEST_CREATE_SEND);
+                }
+                values.add(b);
+            }
+        }
+        return values;
+    }
+
     @JsonValue
     public String value()
     {
         if("inProgressModifyRequestDeleteSend".equalsIgnoreCase(this.value) || "inProgressModifyItemToCreate".equalsIgnoreCase(this.value)
+            || "inProgressTaskCreated".equalsIgnoreCase(this.value)
             || "inProgressModifyRequestCreateSend".equalsIgnoreCase(this.value)) {
             return INPROGRESS.value;
         }

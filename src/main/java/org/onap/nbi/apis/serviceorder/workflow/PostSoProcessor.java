@@ -117,10 +117,7 @@ public class PostSoProcessor {
   private ResponseEntity<CreateServiceInstanceResponse> postSORequest(
       ServiceOrderItem serviceOrderItem, ServiceOrderInfo serviceOrderInfo) {
     RequestDetails requestDetails =
-        buildSoRequest(
-            serviceOrderItem, serviceOrderInfo.getServiceOrderItemInfos()
-                .get(serviceOrderItem.getId()).getCatalogResponse(),
-            serviceOrderInfo.getSubscriberInfo());
+        buildSoRequest(serviceOrderItem,serviceOrderInfo);
     MSOPayload msoPayload = new MSOPayload(requestDetails);
     ResponseEntity<CreateServiceInstanceResponse> response = null;
 
@@ -186,16 +183,15 @@ public class PostSoProcessor {
    * Build SO CREATE request from the ServiceOrder and catalog informations from SDC
    *
    * @param orderItem
-   * @param sdcInfos
-   * @param subscriberInfo
+   * @param serviceOrderInfo
    * @return
    */
-  private RequestDetails buildSoRequest(ServiceOrderItem orderItem, Map<String, Object> sdcInfos,
-      SubscriberInfo subscriberInfo) {
+  private RequestDetails buildSoRequest(ServiceOrderItem orderItem,ServiceOrderInfo serviceOrderInfo) {
     RequestDetails requestDetails = new RequestDetails();
 
-    requestDetails.setSubscriberInfo(subscriberInfo);
-
+    requestDetails.setSubscriberInfo( serviceOrderInfo.getSubscriberInfo());
+    Map<String, Object> sdcInfos=serviceOrderInfo.getServiceOrderItemInfos()
+        .get(orderItem.getId()).getCatalogResponse();
     ModelInfo modelInfo = new ModelInfo();
     modelInfo.setModelType("service");
     modelInfo.setModelInvariantId((String) sdcInfos.get("invariantUUID"));
@@ -217,13 +213,14 @@ public class PostSoProcessor {
     requestParameters.setUserParams(retrieveUserParamsFromServiceCharacteristics(
         orderItem.getService().getServiceCharacteristic()));
     requestParameters.setaLaCarte(true);
+    requestParameters.setTestApi("GR_API");
     requestDetails.setRequestParameters(requestParameters);
 
     CloudConfiguration cloudConfiguration = new CloudConfiguration(lcpCloudRegionId, tenantId, cloudOwner);
     requestDetails.setCloudConfiguration(cloudConfiguration);
 
     OwningEntity owningEntity = new OwningEntity();
-    owningEntity.setOwningEntityId(soOwningEntityId);
+    owningEntity.setOwningEntityId(serviceOrderInfo.getOwningEntityId());
     owningEntity.setOwningEntityName(soOwningEntityName);
     requestDetails.setOwningEntity(owningEntity);
 

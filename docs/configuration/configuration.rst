@@ -68,7 +68,7 @@ Default values
     so.host                              = http://10.0.5.1:8080
     so.header.authorization              = Basic SW5mcmFQb3J0YWxDbGllbnQ6cGFzc3dvcmQxJA==
     so.api.id                            = SO
-    so.owning.entity.id                  = 6b5b6b70-4e9a-4f6f-8b7b-cbd7cf990c6e
+    so.owning.entity.id                  = OE-generic
     so.owning.entity.name                = OE-generic
     so.project.name                      = Project-generic
 

@@ -1,0 +1,755 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aai/v14/business/owning-entities"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "owning-entity": [
+        {
+          "owning-entity-id": "6b5b6b70-4e9a-4f6f-8b7b-cbd7cf990c6e",
+          "owning-entity-name": "OE-generic",
+          "resource-version": "1575866094429",
+          "relationship-list": {
+            "relationship": [
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/5f3f73b0-b201-43ef-a73d-06d5daa09931",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "5f3f73b0-b201-43ef-a73d-06d5daa09931"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-R3DO1R"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/df22c42b-324e-46d7-8f39-1fda8d0d9ee7",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "df22c42b-324e-46d7-8f39-1fda8d0d9ee7"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-7AK9OI"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/60dd8ce5-50ff-4b12-a1e9-f3dc8772c8c3",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "60dd8ce5-50ff-4b12-a1e9-f3dc8772c8c3"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-PEYTTI"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/0ae53dd4-b2af-4045-ad79-4f760bf310fe",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "0ae53dd4-b2af-4045-ad79-4f760bf310fe"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_1GAQ20"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ims/service-instances/service-instance/20c18875-421c-48cb-958f-c3f82cbe098b",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ims"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "20c18875-421c-48cb-958f-c3f82cbe098b"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ims-service-instance-JGI9UO"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/414dffcd-e56b-41a6-92bc-5e22e2db69a7",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "414dffcd-e56b-41a6-92bc-5e22e2db69a7"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-C36GKE"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/a9c601e3-0bb5-442c-99fc-93919b3dd12d",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "a9c601e3-0bb5-442c-99fc-93919b3dd12d"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-8N74GT"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/46815952-077d-40d1-9e1a-2af87a18c428",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "46815952-077d-40d1-9e1a-2af87a18c428"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_7NXRH7"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/affe8f55-4dba-442d-b71c-4a2c49c80fff",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "affe8f55-4dba-442d-b71c-4a2c49c80fff"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-KOWHS7"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/8937b9c4-2946-4324-a895-fb16ca1cda9d",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "8937b9c4-2946-4324-a895-fb16ca1cda9d"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-OJYKB6"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/59ca1615-773b-47d9-b18f-fd96c8004bcf",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "59ca1615-773b-47d9-b18f-fd96c8004bcf"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-E4W08X"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/386c9480-aff9-4202-8313-aec93b5b745a",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "386c9480-aff9-4202-8313-aec93b5b745a"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-HR2N83"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/910ac412-f5c4-4772-be53-3768b790a533",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "910ac412-f5c4-4772-be53-3768b790a533"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-RWVWR1"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/5b155fba-d315-4416-97f7-1fa0c98a4290",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "5b155fba-d315-4416-97f7-1fa0c98a4290"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-CI2FTJ"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/7ac1cb0d-4230-4485-8d6b-be74c357ce19",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "7ac1cb0d-4230-4485-8d6b-be74c357ce19"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_5M03I5"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/c8136ff7-cdbc-40bd-af24-bbfece01d4ed",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "c8136ff7-cdbc-40bd-af24-bbfece01d4ed"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_KG5IZ6"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/d6609346-b569-490b-80f1-4aab943c925a",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "d6609346-b569-490b-80f1-4aab943c925a"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_OXEQ33"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/e356b833-2580-41ea-bdd2-02334027f1ef",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "e356b833-2580-41ea-bdd2-02334027f1ef"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_YE6EMY"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/cbcefc28-4b8b-4b1c-b20b-292c09b8c8cd",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "cbcefc28-4b8b-4b1c-b20b-292c09b8c8cd"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-1DGLAN"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/a6ac6000-a715-4de7-bce0-909b2c0f9981",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "a6ac6000-a715-4de7-bce0-909b2c0f9981"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_YRKEYG"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/143a5ce0-630b-4be6-85cd-386f35a137c3",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "143a5ce0-630b-4be6-85cd-386f35a137c3"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_I6Z0M7"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ims/service-instances/service-instance/95eaf6bb-c3d8-43d8-98c3-9e0276445a49",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ims"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "95eaf6bb-c3d8-43d8-98c3-9e0276445a49"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ims-service-instance-6FJ4KX"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/b1a1ca78-ccc6-4fc6-9bff-5576d0365c82",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "b1a1ca78-ccc6-4fc6-9bff-5576d0365c82"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-DO2AKT"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/e4869f42-812b-4475-b9cd-9e50df2be0b1",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "e4869f42-812b-4475-b9cd-9e50df2be0b1"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_01M7L1"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/ad9ccfc3-afe2-4802-9d6f-0dc420a1c4a7",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "ad9ccfc3-afe2-4802-9d6f-0dc420a1c4a7"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_6NSUMS"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/bb9e6588-e37d-4848-b311-6fe688afd52d",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "bb9e6588-e37d-4848-b311-6fe688afd52d"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-AT6CPC"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/ef43cc8f-3b6f-4f6c-8d5b-f2f26cab7f28",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "ef43cc8f-3b6f-4f6c-8d5b-f2f26cab7f28"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_4EIEQA"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/freeradius/service-instances/service-instance/9af7ae2e-5c32-4dc3-a5eb-8898d49da97e",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "freeradius"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "9af7ae2e-5c32-4dc3-a5eb-8898d49da97e"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "test_freeradius_5Z6N24"
+                  }
+                ]
+              },
+              {
+                "related-to": "service-instance",
+                "relationship-label": "org.onap.relationships.inventory.BelongsTo",
+                "related-link": "/aai/v13/business/customers/customer/generic/service-subscriptions/service-subscription/ubuntu16/service-instances/service-instance/042ccff3-f0c8-4a52-96ad-6516541702b5",
+                "relationship-data": [
+                  {
+                    "relationship-key": "customer.global-customer-id",
+                    "relationship-value": "generic"
+                  },
+                  {
+                    "relationship-key": "service-subscription.service-type",
+                    "relationship-value": "ubuntu16"
+                  },
+                  {
+                    "relationship-key": "service-instance.service-instance-id",
+                    "relationship-value": "042ccff3-f0c8-4a52-96ad-6516541702b5"
+                  }
+                ],
+                "related-to-property": [
+                  {
+                    "property-key": "service-instance.service-instance-name",
+                    "property-value": "ubuntu16-service-instance-A0CZXY"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "owning-entity-id": "Useless_But_Mandatory",
+          "owning-entity-name": "Useless_But_Mandatory",
+          "resource-version": "1575382554324"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
