@@ -51,8 +51,7 @@ public class MultiCriteriaRequestBuilder {
         if (!CollectionUtils.isEmpty(states)) {
             String state = states.get(0);
             LOGGER.debug("add criterion state {}", state);
-            query.addCriteria(Criteria.where("state").is(StateType.fromValue(state)));
-
+            query.addCriteria(Criteria.where("state").in(StateType.fromValueSearch(state)));
         }
         List<String> descriptions = params.get("description");
         if (!CollectionUtils.isEmpty(descriptions)) {

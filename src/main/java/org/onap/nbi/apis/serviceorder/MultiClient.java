@@ -69,6 +69,12 @@ public class MultiClient {
     @Value("${onap.cloudOwner}")
     private String cloudOwner;
 
+    @Value("${so.owning.entity.id}")
+    private String owningEntityId;
+
+    @Value("${so.owning.entity.name}")
+    private String owningEntityName;
+
     @Autowired
     private ServiceCatalogUrl serviceCatalogUrl;
 
@@ -148,6 +154,27 @@ public class MultiClient {
         return false;
     }
 
+
+    public String getOwningEntityIdInAAI(ServiceOrder serviceOrder) {
+        StringBuilder callURL = new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_OWNING_ENTITIES);
+        String callUrlFormated = callURL.toString();
+
+        ResponseEntity<Object> response = callApiGet(callUrlFormated, buildRequestHeaderForAAI(), null);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            LinkedHashMap body = (LinkedHashMap) response.getBody();
+            List<LinkedHashMap> owningEntities = (List<LinkedHashMap>) body.get("owning-entity");
+            for (LinkedHashMap owningEntity : owningEntities) {
+                if (owningEntityName.equalsIgnoreCase((String) owningEntity.get("owning-entity-name"))) {
+                    return owningEntity.get("owning-entity-id").toString();
+                }
+            }
+        } else {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
+        }
+        return null;
+    }
+
+
     public boolean isCustomerPresentInAAI(String customerId,
         ServiceOrder serviceOrder) {
         StringBuilder callURL = new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_CUSTOMER_PATH)
@@ -158,6 +185,22 @@ public class MultiClient {
             return false;
         }
         return response.getStatusCode().equals(HttpStatus.OK);
+    }
+
+
+    public boolean putOwningEntity(ServiceOrder serviceOrder) {
+        Map<String, String> param = new HashMap<>();
+        param.put("owning-entity-id", owningEntityId);
+        param.put("owning-entity-name", owningEntityName);
+        String callURL =
+            aaiHost + OnapComponentsUrlPaths.AAI_PUT_OWNING_ENTITIES;
+        String callUrlFormated = callURL.replace("$onap.owning.entity.id", owningEntityId);
+        ResponseEntity<Object> response = putRequest(param, callUrlFormated, buildRequestHeaderForAAI());
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            serviceOrderService.addOrderMessage(serviceOrder, "501");
+            return false;
+        }
+        return response.getStatusCode().equals(HttpStatus.CREATED);
     }
 
 

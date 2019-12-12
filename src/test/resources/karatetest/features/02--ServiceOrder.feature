@@ -48,7 +48,7 @@ And request $
 When method put
 Then status 201
 And match $.id == serviceOrderId
-And match $.state == 'acknowledged'
+And match $.state == 'inProgress'
 Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
@@ -88,7 +88,7 @@ Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.state == 'acknowledged'
+And match $.state == 'inProgress'
 Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
@@ -106,7 +106,7 @@ Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.state == 'acknowledged'
+And match $.state == 'inProgress'
 Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
@@ -125,7 +125,7 @@ Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.state == 'acknowledged'
+And match $.state == 'inProgress'
 Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
@@ -226,7 +226,7 @@ Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.state == 'acknowledged'
+And match $.state == 'inProgress'
 Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
@@ -284,7 +284,7 @@ Given path 'serviceOrder','test',serviceOrderId
 And request $
 When method put
 Then status 201
-And match $.state == 'acknowledged'
+And match $.state == 'inProgress'
 And match $.orderItem[0].state == 'completed'
 Given path 'serviceOrder',serviceOrderId
 When method get
@@ -358,9 +358,10 @@ When method get
 Then status 200
 And match $ == '#[2]'
 Given path 'serviceOrder'
-And params {externalId : 'extid1' , state : 'acknowledged'}
+And params {externalId : 'extid1' , state : 'inProgress'}
 When method get
 Then status 200
+And print response
 And match $ == '#[1]'
 Given path 'serviceOrder',serviceOrderId15
 When method get
@@ -426,6 +427,8 @@ When method get
 Then status 200
 * call Context.startServers();
 
+
+
 Scenario: testCheckServiceOrderWithSDCNotResponding
 * call Context.removeWireMockMapping("/sdc/v1/catalog/services/1e3feeb0-8e36-46c6-862c-236d9c626439/metadata");
 Given path 'serviceOrder'
@@ -462,4 +465,24 @@ And match $.orderMessage[0] contains { code : '500'  , messageInformation : 'Pro
 Given path 'serviceOrder',serviceOrderId
 When method get
 Then status 200
+* call Context.startServers();
+
+Scenario: testCheckServiceOrderNoOwningEntities
+* call Context.removeWireMockMapping("/aai/v14/business/owning-entities");
+Given path 'serviceOrder'
+And request data[9]
+When method post
+Then status 201
+And def serviceOrderId = $.id
+Given path 'serviceOrder','test',serviceOrderId
+And request $
+When method put
+Then status 201
+And match $.state == 'inProgress'
+Given path 'serviceOrder',serviceOrderId
+When method get
+Then status 200
+Given path 'serviceOrder',serviceOrderId
+When method delete
+Then status 204
 * call Context.startServers();

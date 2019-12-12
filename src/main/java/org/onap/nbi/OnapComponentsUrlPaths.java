@@ -55,7 +55,10 @@ public final class OnapComponentsUrlPaths {
             "/aai/v14/nodes/service-instances/service-instance/$serviceId?format=resource_and_url";
     public static final String AAI_GET_SERVICE_INSTANCES_PATH =
             "/aai/v14/business/customers/customer/$customerId/service-subscriptions/service-subscription/$serviceSpecName/service-instances/";
-
+    public static final String AAI_GET_OWNING_ENTITIES =
+        "/aai/v14/business/owning-entities";
+    public static final String AAI_PUT_OWNING_ENTITIES =
+        "/aai/v14/business/owning-entities/owning-entity/$onap.owning.entity.id";
 
     // MSO
     public static final String MSO_CREATE_SERVICE_INSTANCE_PATH = "/onap/so/infra/serviceInstantiation/v7/serviceInstances/";

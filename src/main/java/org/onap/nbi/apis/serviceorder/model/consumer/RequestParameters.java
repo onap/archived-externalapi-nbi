@@ -26,6 +26,15 @@ public class RequestParameters {
 
     private boolean aLaCarte;
 
+    private String testApi;
+
+    public String getTestApi() {
+        return testApi;
+    }
+
+    public void setTestApi(String testApi) {
+        this.testApi = testApi;
+    }
 
     public String getSubscriptionServiceType() {
         return subscriptionServiceType;
@@ -69,7 +78,11 @@ public class RequestParameters {
 
     @Override
     public String toString() {
-        return "RequestParameters{" + "subscriptionServiceType='" + subscriptionServiceType + '\'' + ", userParams="
-                + userParams + ", aLaCarte=" + aLaCarte + '}';
+        return "RequestParameters{" +
+            "subscriptionServiceType='" + subscriptionServiceType + '\'' +
+            ", userParams=" + userParams +
+            ", aLaCarte=" + aLaCarte +
+            ", testApi='" + testApi + '\'' +
+            '}';
     }
 }

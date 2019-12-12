@@ -29,6 +29,15 @@ public class ServiceOrderInfo {
     private boolean allItemsCompleted;
     private boolean serviceOrderRejected= false;
     private String serviceOrderId;
+    private String owningEntityId;
+
+    public String getOwningEntityId() {
+        return owningEntityId;
+    }
+
+    public void setOwningEntityId(String owningEntityId) {
+        this.owningEntityId = owningEntityId;
+    }
 
     public String getServiceOrderId() {
         return serviceOrderId;
