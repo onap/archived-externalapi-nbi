@@ -12,7 +12,7 @@ Build
 
 Requirements
 
-* Java 8
+* Java 11
 * Maven
 * port 8080 should be free, used by tests
 
@@ -28,7 +28,7 @@ Run
 
 Requirements
 
-* Java 8
+* Java 11
 * Maven
 * MongoDB
 * MariaDB
