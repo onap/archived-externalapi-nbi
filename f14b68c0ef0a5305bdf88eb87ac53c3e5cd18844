@@ -22,6 +22,30 @@
       "revId": "f14b68c0ef0a5305bdf88eb87ac53c3e5cd18844",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de65c420_81a03904",
+        "filename": "src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 3569
+      },
+      "writtenOn": "2019-12-12T15:07:39Z",
+      "side": 1,
+      "message": "Check, no impact",
+      "parentUuid": "6fc9ae25_41cd4ada",
+      "range": {
+        "startLine": 71,
+        "startChar": 42,
+        "endLine": 71,
+        "endChar": 49
+      },
+      "revId": "f14b68c0ef0a5305bdf88eb87ac53c3e5cd18844",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
