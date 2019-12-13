@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.api.listener;
 
 import java.net.URI;
@@ -40,91 +41,88 @@ import com.fasterxml.jackson.databind.JsonNode;
 @RequestMapping("/test/listener")
 public class ListenerResourceTest extends ResourceManagement {
 
-  Logger logger = LoggerFactory.getLogger(ListenerResourceTest.class);
+    Logger logger = LoggerFactory.getLogger(ListenerResourceTest.class);
 
-  static Map<String, JsonNode> events = new ConcurrentHashMap<>();
+    static Map<String, JsonNode> events = new ConcurrentHashMap<>();
 
-  /*
-   * listener resource test for hub resource
-   */
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<JsonNode> postListener(@RequestBody JsonNode event) {
-    if (logger.isDebugEnabled()) {
-      logger.debug("POST event from nbi : {}", event.toString());
-    }
-    String eventId = event.get("eventId").asText();
-    logger.info("putting eventId {} in the events map", eventId);
-    events.put(eventId, event);
-
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-        .buildAndExpand(eventId).toUri();
-
-    return ResponseEntity.created(location).body(event);
-  }
-
-
-  @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Collection<JsonNode>> findEvents(
-      @RequestParam MultiValueMap<String, String> params) {
-    logger.info("called listener get with params {} : " + params.toString());
-    Collection<JsonNode> values = new ArrayList<>();
-    String serviceOrderId = params.getFirst("serviceOrderId");
-    String serviceInstanceId = params.getFirst("serviceInstanceId");
-    if (StringUtils.isNotEmpty(serviceOrderId)) {
-      for (JsonNode jsonNode : events.values()) {
-        String id = jsonNode.get("event").get("id").asText();
-        logger.info("found event with service order id : " + id);
-        if (id.equals(serviceOrderId)) {
-          values.add(jsonNode);
+    /*
+     * listener resource test for hub resource
+     */
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JsonNode> postListener(@RequestBody JsonNode event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("POST event from nbi : {}", event.toString());
         }
-      }
-      if (!values.isEmpty()) {
-        return ResponseEntity.ok(values);
-      } else {
-        logger.error("cannot found events with service order id : " + serviceOrderId);
-        return ResponseEntity.notFound().build();
-      }
-    } else if (StringUtils.isNotEmpty(serviceInstanceId)) {
-      for (JsonNode jsonNode : events.values()) {
-        String id = jsonNode.get("event").get("id").asText();
-        logger.info("found event with service Instance id : " + id);
-        if (id.equals(serviceInstanceId)) {
-          values.add(jsonNode);
-        }
-      }
-      if (!values.isEmpty()) {
-        return ResponseEntity.ok(values);
-      } else {
-        logger.error("cannot found events with service instance id : " + serviceInstanceId);
-        return ResponseEntity.notFound().build();
-      }
-    } else {
-      values = events.values();
+        String eventId = event.get("eventId").asText();
+        logger.info("putting eventId {} in the events map", eventId);
+        events.put(eventId, event);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(eventId).toUri();
+
+        return ResponseEntity.created(location).body(event);
     }
-    return ResponseEntity.ok(values);
-  }
 
-  @GetMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> getEvent(@PathVariable String eventId) {
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<JsonNode>> findEvents(@RequestParam MultiValueMap<String, String> params) {
+        logger.info("called listener get with params {} : " + params.toString());
+        Collection<JsonNode> values = new ArrayList<>();
+        String serviceOrderId = params.getFirst("serviceOrderId");
+        String serviceInstanceId = params.getFirst("serviceInstanceId");
+        if (StringUtils.isNotEmpty(serviceOrderId)) {
+            for (JsonNode jsonNode : events.values()) {
+                String id = jsonNode.get("event").get("id").asText();
+                logger.info("found event with service order id : " + id);
+                if (id.equals(serviceOrderId)) {
+                    values.add(jsonNode);
+                }
+            }
+            if (!values.isEmpty()) {
+                return ResponseEntity.ok(values);
+            } else {
+                logger.error("cannot found events with service order id : " + serviceOrderId);
+                return ResponseEntity.notFound().build();
+            }
+        } else if (StringUtils.isNotEmpty(serviceInstanceId)) {
+            for (JsonNode jsonNode : events.values()) {
+                String id = jsonNode.get("event").get("id").asText();
+                logger.info("found event with service Instance id : " + id);
+                if (id.equals(serviceInstanceId)) {
+                    values.add(jsonNode);
+                }
+            }
+            if (!values.isEmpty()) {
+                return ResponseEntity.ok(values);
+            } else {
+                logger.error("cannot found events with service instance id : " + serviceInstanceId);
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            values = events.values();
+        }
+        return ResponseEntity.ok(values);
+    }
 
-    return ResponseEntity.ok(events.get(eventId));
+    @GetMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getEvent(@PathVariable String eventId) {
 
-  }
+        return ResponseEntity.ok(events.get(eventId));
 
-  @DeleteMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> deleteEvent(@PathVariable String eventId) {
+    }
 
-    events.remove(eventId);
-    return ResponseEntity.noContent().build();
+    @DeleteMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteEvent(@PathVariable String eventId) {
 
-  }
+        events.remove(eventId);
+        return ResponseEntity.noContent().build();
 
-  @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> deleteEvents() {
+    }
 
-    events.clear();
-    return ResponseEntity.noContent().build();
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteEvents() {
 
-  }
+        events.clear();
+        return ResponseEntity.noContent().build();
+
+    }
 
 }

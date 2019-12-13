@@ -34,9 +34,7 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
-
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -74,7 +72,6 @@ public enum StateType {
 
     INPROGRESS_MODIFY_REQUEST_CREATE_SEND("inProgressModifyRequestCreateSend");
 
-
     private String value;
 
     StateType(String value) {
@@ -96,11 +93,11 @@ public enum StateType {
         return null;
     }
 
-    public static List<StateType> fromValueSearch(String text){
+    public static List<StateType> fromValueSearch(String text) {
         List<StateType> values = new ArrayList<>();
         for (StateType b : StateType.values()) {
             if (String.valueOf(b.value).equals(text)) {
-                if(b.equals(StateType.INPROGRESS)) {
+                if (b.equals(StateType.INPROGRESS)) {
                     values.add(INPROGRESS_TASK_CREATED);
                     values.add(INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
                     values.add(INPROGRESS_MODIFY_ITEM_TO_CREATE);
@@ -113,15 +110,14 @@ public enum StateType {
     }
 
     @JsonValue
-    public String value()
-    {
-        if("inProgressModifyRequestDeleteSend".equalsIgnoreCase(this.value) || "inProgressModifyItemToCreate".equalsIgnoreCase(this.value)
-            || "inProgressTaskCreated".equalsIgnoreCase(this.value)
-            || "inProgressModifyRequestCreateSend".equalsIgnoreCase(this.value)) {
+    public String value() {
+        if ("inProgressModifyRequestDeleteSend".equalsIgnoreCase(this.value)
+                || "inProgressModifyItemToCreate".equalsIgnoreCase(this.value)
+                || "inProgressTaskCreated".equalsIgnoreCase(this.value)
+                || "inProgressModifyRequestCreateSend".equalsIgnoreCase(this.value)) {
             return INPROGRESS.value;
         }
         return this.value;
     }
 
 }
-

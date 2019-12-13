@@ -14,8 +14,8 @@
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class ServiceResponse {
-	
-	private String operationId = null;
+
+    private String operationId = null;
     private String serviceId = null;
 
     public String getOperationId() {
@@ -33,7 +33,7 @@ public class ServiceResponse {
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }
-    
+
     @Override
     public String toString() {
         return "service{" + "operationId='" + operationId + '\'' + ", serviceId='" + serviceId + '\'' + '}';

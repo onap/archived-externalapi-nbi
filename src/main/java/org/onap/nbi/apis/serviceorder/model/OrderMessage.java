@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -47,10 +46,10 @@ import javax.validation.constraints.NotNull;
  * An optional array of messages associated with the Order
  */
 @ApiModel(description = "An optional array of messages associated with the Order")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-07-12T11:46:30.345Z")
 public class OrderMessage {
-
 
     @JsonProperty("code")
     private String code = null;
@@ -66,9 +65,6 @@ public class OrderMessage {
 
     @JsonProperty("correctionRequired")
     private boolean correctionRequired;
-
-
-
 
     /**
      * A code associated to this message
@@ -90,7 +86,6 @@ public class OrderMessage {
         return this;
     }
 
-
     /**
      * Service Order attribute related to this error message
      *
@@ -110,7 +105,6 @@ public class OrderMessage {
         this.field = field;
         return this;
     }
-
 
     /**
      * Message related to this order
@@ -132,14 +126,13 @@ public class OrderMessage {
         return this;
     }
 
-
     /**
      * Gravity of this message
      *
      * @return severity
      **/
     @JsonProperty("severity")
-    @ApiModelProperty(required = true,value = "Gravity of this message")
+    @ApiModelProperty(required = true, value = "Gravity of this message")
     @NotNull(message = "OrderMessage severity cannot be null")
     public SeverityMessage getSeverity() {
         return severity;
@@ -154,14 +147,15 @@ public class OrderMessage {
         return this;
     }
 
-
     /**
      * Indicator that an action is required to allow service order fullfilment to follow up
      *
      * @return correctionRequired
      **/
     @JsonProperty("correctionRequired")
-    @ApiModelProperty(required = true,value = "Indicator that an action is required to allow service order fullfilment to follow up")
+    @ApiModelProperty(
+            required = true,
+            value = "Indicator that an action is required to allow service order fullfilment to follow up")
     @NotNull(message = "OrderMessage correctionRequired cannot be null")
     public boolean getCorrectionRequired() {
         return correctionRequired;
@@ -176,7 +170,6 @@ public class OrderMessage {
         return this;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -186,19 +179,16 @@ public class OrderMessage {
             return false;
         }
         OrderMessage orderMessage = (OrderMessage) o;
-        return Objects.equals(this.code, orderMessage.code)
-            && Objects.equals(this.field, orderMessage.field)
-            && Objects.equals(this.messageInformation, orderMessage.messageInformation)
-            && Objects.equals(this.severity, orderMessage.severity)
-            && Objects.equals(this.correctionRequired, orderMessage.correctionRequired);
+        return Objects.equals(this.code, orderMessage.code) && Objects.equals(this.field, orderMessage.field)
+                && Objects.equals(this.messageInformation, orderMessage.messageInformation)
+                && Objects.equals(this.severity, orderMessage.severity)
+                && Objects.equals(this.correctionRequired, orderMessage.correctionRequired);
     }
-
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, field, messageInformation,severity);
+        return Objects.hash(code, field, messageInformation, severity);
     }
-
 
     @Override
     public String toString() {
@@ -224,4 +214,3 @@ public class OrderMessage {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class CreateServiceInstanceResponse {
@@ -29,8 +30,6 @@ public class CreateServiceInstanceResponse {
 
     @Override
     public String toString() {
-        return "CreateServiceInstanceResponse{" +
-            "requestReferences=" + requestReferences +
-            '}';
+        return "CreateServiceInstanceResponse{" + "requestReferences=" + requestReferences + '}';
     }
 }

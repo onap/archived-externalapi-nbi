@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.status.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -20,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum OnapModuleType {
 
-    SDC("sdc"), AAI("aai"),SO("so"), DMAAP("dmaap");
+    SDC("sdc"), AAI("aai"), SO("so"), DMAAP("dmaap");
 
     private final String value;
 

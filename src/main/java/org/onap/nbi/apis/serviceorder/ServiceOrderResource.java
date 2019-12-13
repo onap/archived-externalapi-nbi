@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder;
 
 import java.util.List;
@@ -80,10 +81,10 @@ public class ServiceOrderResource extends ResourceManagement {
     @Autowired
     EWInterfaceUtils eWInterfaceUtils;
 
-
     @GetMapping(value = "/{serviceOrderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getServiceOrder(@PathVariable String serviceOrderId,
-        @RequestParam MultiValueMap<String, String> params,@RequestHeader(value="Target",required = false)String targetUrl) {
+            @RequestParam MultiValueMap<String, String> params,
+            @RequestHeader(value = "Target", required = false) String targetUrl) {
         if (targetUrl != null) {
             targetUrl = targetUrl + OnapComponentsUrlPaths.SERVICE_ORDER_PATH + "/" + serviceOrderId;
             return eWInterfaceUtils.callGetRequestTarget(targetUrl);
@@ -124,7 +125,8 @@ public class ServiceOrderResource extends ResourceManagement {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createServiceOrder(@Valid @RequestBody ServiceOrder serviceOrder, Errors errors,
-        @RequestParam MultiValueMap<String, String> params, @RequestHeader(value="Target",required = false)String targetUrl) {
+            @RequestParam MultiValueMap<String, String> params,
+            @RequestHeader(value = "Target", required = false) String targetUrl) {
         if (targetUrl != null) {
             targetUrl = targetUrl + OnapComponentsUrlPaths.SERVICE_ORDER_PATH;
             return eWInterfaceUtils.callPostRequestTarget(serviceOrder, targetUrl);
@@ -140,10 +142,9 @@ public class ServiceOrderResource extends ResourceManagement {
 
     }
 
-
     @PutMapping(value = "/test/{serviceOrderId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> checkServiceOrderRessource(@PathVariable String serviceOrderId,
-        @RequestParam MultiValueMap<String, String> params) {
+            @RequestParam MultiValueMap<String, String> params) {
         Optional<ServiceOrder> optionalServiceOrder = serviceOrderService.findServiceOrderById(serviceOrderId);
         if (!optionalServiceOrder.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -152,7 +153,6 @@ public class ServiceOrderResource extends ResourceManagement {
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.createResponse(serviceOrder, filter);
     }
-
 
     public ServiceOrder checkServiceOrder(ServiceOrder serviceOrder) {
         ServiceOrderInfo serviceOrderInfo = checkOrderConsistenceManager.checkServiceOrder(serviceOrder);

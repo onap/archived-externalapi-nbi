@@ -13,8 +13,8 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis.serviceorder.serviceordervalidator;
 
+package org.onap.nbi.apis.serviceorder.serviceordervalidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -24,7 +24,6 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.springframework.util.StringUtils;
 
 public class ServiceOrderValidator implements ConstraintValidator<ValidServiceOrder, ServiceOrder> {
-
 
     @Override
     public boolean isValid(ServiceOrder serviceOrder, ConstraintValidatorContext context) {

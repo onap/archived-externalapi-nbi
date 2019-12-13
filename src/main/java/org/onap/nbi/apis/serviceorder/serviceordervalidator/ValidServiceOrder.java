@@ -13,12 +13,12 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.serviceordervalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
-
 
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

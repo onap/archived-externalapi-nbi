@@ -6,6 +6,7 @@
  * either express or implied. See the License for the specific language governing permissions and limitations under the
  * License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import java.util.Map;
@@ -28,13 +29,11 @@ import org.springframework.util.StringUtils;
 @Service
 public class CheckOrderConsistenceManager {
 
-
     @Autowired
     private MultiClient serviceOrderConsumerService;
 
     @Autowired
     private ServiceOrderService serviceOrderService;
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckOrderConsistenceManager.class);
 
@@ -46,25 +45,25 @@ public class CheckOrderConsistenceManager {
 
         for (ServiceOrderItem serviceOrderItem : serviceOrder.getOrderItem()) {
             ServiceOrderItemInfo serviceOrderItemInfo = new ServiceOrderItemInfo();
-            handleServiceFromCatalog(serviceOrderItem,serviceOrder, serviceOrderItemInfo);
+            handleServiceFromCatalog(serviceOrderItem, serviceOrder, serviceOrderItemInfo);
             if (!existServiceInCatalog(serviceOrderItemInfo)) {
                 serviceOrderInfo.setIsServiceOrderRejected(true);
                 serviceOrderService.updateOrderItemState(serviceOrder, serviceOrderItem, StateType.REJECTED);
                 LOGGER.warn(
-                    "service order item {} of service order {} rejected cause no service catalog found for id {}",
-                    serviceOrderItem.getId(), serviceOrder.getId(),
-                    serviceOrderItem.getService().getServiceSpecification().getId());
-                serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "102");
+                        "service order item {} of service order {} rejected cause no service catalog found for id {}",
+                        serviceOrderItem.getId(), serviceOrder.getId(),
+                        serviceOrderItem.getService().getServiceSpecification().getId());
+                serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "102");
             } else {
                 switch (serviceOrderItem.getAction()) {
                     case ADD:
                         handleServiceOrderItemInAdd(serviceOrderInfo, serviceOrder, serviceOrderItem,
-                            serviceOrderItemInfo);
+                                serviceOrderItemInfo);
                         break;
                     case MODIFY:
                     case DELETE:
                         handleServiceOrderItemInChange(serviceOrderInfo, serviceOrder, serviceOrderItem,
-                            serviceOrderItemInfo);
+                                serviceOrderItemInfo);
                         break;
                     case NOCHANGE:
                         serviceOrderInfo.setAllItemsInAdd(false);
@@ -86,12 +85,11 @@ public class CheckOrderConsistenceManager {
 
     }
 
-    private void handleServiceOrderItemInChange(ServiceOrderInfo serviceOrderInfo,
-        ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
-        ServiceOrderItemInfo serviceOrderItemInfo) {
+    private void handleServiceOrderItemInChange(ServiceOrderInfo serviceOrderInfo, ServiceOrder serviceOrder,
+            ServiceOrderItem serviceOrderItem, ServiceOrderItemInfo serviceOrderItemInfo) {
         serviceOrderInfo.setAllItemsInAdd(false);
         if (shouldAcceptServiceOrderItemToChange(serviceOrderInfo, serviceOrder, serviceOrderItem,
-            serviceOrderItemInfo)) {
+                serviceOrderItemInfo)) {
             serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
         } else {
             serviceOrderInfo.setIsServiceOrderRejected(true);
@@ -99,11 +97,11 @@ public class CheckOrderConsistenceManager {
         }
     }
 
-    private void handleServiceOrderItemInAdd(ServiceOrderInfo serviceOrderInfo,
-        ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
-        ServiceOrderItemInfo serviceOrderItemInfo) {
-    	boolean e2eService= E2EServiceUtils.isE2EService(serviceOrderItemInfo);
-        if (shouldAcceptServiceOrderItemToAdd(serviceOrderItem, serviceOrder, serviceOrderInfo.getServiceOrderId(), e2eService)) {
+    private void handleServiceOrderItemInAdd(ServiceOrderInfo serviceOrderInfo, ServiceOrder serviceOrder,
+            ServiceOrderItem serviceOrderItem, ServiceOrderItemInfo serviceOrderItemInfo) {
+        boolean e2eService = E2EServiceUtils.isE2EService(serviceOrderItemInfo);
+        if (shouldAcceptServiceOrderItemToAdd(serviceOrderItem, serviceOrder, serviceOrderInfo.getServiceOrderId(),
+                e2eService)) {
             serviceOrderInfo.addServiceOrderItemInfos(serviceOrderItem.getId(), serviceOrderItemInfo);
         } else {
             serviceOrderInfo.setIsServiceOrderRejected(true);
@@ -111,47 +109,43 @@ public class CheckOrderConsistenceManager {
         }
     }
 
-    private boolean shouldAcceptServiceOrderItemToAdd(ServiceOrderItem serviceOrderItem,
-        ServiceOrder serviceOrder, String serviceOrderId, Boolean e2eService) {
+    private boolean shouldAcceptServiceOrderItemToAdd(ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder,
+            String serviceOrderId, Boolean e2eService) {
         if (!StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
-            LOGGER
-                .warn("serviceOrderItem {} for serviceorder {} rejected cause service.id must be empty in add action",
+            LOGGER.warn("serviceOrderItem {} for serviceorder {} rejected cause service.id must be empty in add action",
                     serviceOrderItem.getId(), serviceOrderId);
-            serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "103");
+            serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "103");
             return false;
         } else if (!e2eService && !serviceOrderConsumerService.isTenantIdPresentInAAI(serviceOrder)) {
             LOGGER.warn("serviceOrderItem {}  for serviceOrder {} rejected cause tenantId not found in AAI",
-                serviceOrderItem.getId(), serviceOrderId);
-            serviceOrderService.addOrderMessage(serviceOrder,"503");
+                    serviceOrderItem.getId(), serviceOrderId);
+            serviceOrderService.addOrderMessage(serviceOrder, "503");
 
             return false;
         }
         return true;
     }
 
-    private boolean shouldAcceptServiceOrderItemToChange(ServiceOrderInfo serviceOrderInfo,
-        ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
-        ServiceOrderItemInfo serviceOrderItemInfo) {
+    private boolean shouldAcceptServiceOrderItemToChange(ServiceOrderInfo serviceOrderInfo, ServiceOrder serviceOrder,
+            ServiceOrderItem serviceOrderItem, ServiceOrderItemInfo serviceOrderItemInfo) {
 
         if (StringUtils.isEmpty(serviceOrderItem.getService().getId())) {
             LOGGER.warn(
-                "serviceOrderItem {} for serviceOrder {} rejected cause service.id is mandatory in delete/change action",
-                serviceOrderItem.getId(), serviceOrderInfo.getServiceOrderId());
-            serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "101");
+                    "serviceOrderItem {} for serviceOrder {} rejected cause service.id is mandatory in delete/change action",
+                    serviceOrderItem.getId(), serviceOrderInfo.getServiceOrderId());
+            serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "101");
             return false;
-        } else if (!isCustomerFromServiceOrderPresentInInventory(serviceOrderInfo,serviceOrder)) {
-            LOGGER
-                .warn("serviceOrderItem {} for serviceOrder {} rejected cause customer not found in inventory",
+        } else if (!isCustomerFromServiceOrderPresentInInventory(serviceOrderInfo, serviceOrder)) {
+            LOGGER.warn("serviceOrderItem {} for serviceOrder {} rejected cause customer not found in inventory",
                     serviceOrderItem.getId(), serviceOrderInfo.getServiceOrderId());
             serviceOrderService.addOrderMessage(serviceOrder, "104");
             return false;
         } else if (!existServiceInInventory(serviceOrderItem, serviceOrder, serviceOrderItemInfo,
-            serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
-            LOGGER
-                .warn("serviceOrderItem {} for serviceOrder {} rejected cause service id {} not found in inventory",
+                serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId())) {
+            LOGGER.warn("serviceOrderItem {} for serviceOrder {} rejected cause service id {} not found in inventory",
                     serviceOrderItem.getId(), serviceOrderInfo.getServiceOrderId(),
                     serviceOrderItem.getService().getId());
-            serviceOrderService.addOrderItemMessage(serviceOrder,serviceOrderItem, "106");
+            serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "106");
             return false;
         }
         return true;
@@ -173,7 +167,6 @@ public class CheckOrderConsistenceManager {
 
     }
 
-
     private RelatedParty getCustomerFromServiceOrder(ServiceOrder serviceOrder) {
         if (serviceOrder.getRelatedParty() != null) {
             for (RelatedParty relatedParty : serviceOrder.getRelatedParty()) {
@@ -186,31 +179,30 @@ public class CheckOrderConsistenceManager {
     }
 
     private boolean isCustomerFromServiceOrderPresentInInventory(ServiceOrderInfo serviceOrderInfo,
-        ServiceOrder serviceOrder) {
+            ServiceOrder serviceOrder) {
 
         if (serviceOrderInfo.isUseServiceOrderCustomer()) {
             return serviceOrderConsumerService
-                .isCustomerPresentInAAI(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(),serviceOrder);
+                    .isCustomerPresentInAAI(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceOrder);
         }
         return true;
     }
 
-    private boolean existServiceInInventory(ServiceOrderItem serviceOrderItem,
-        ServiceOrder serviceOrder, ServiceOrderItemInfo serviceOrderItemInfo,
-        String globalSubscriberId) {
+    private boolean existServiceInInventory(ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder,
+            ServiceOrderItemInfo serviceOrderItemInfo, String globalSubscriberId) {
         String serviceName = (String) serviceOrderItemInfo.getCatalogResponse().get("name");
-        return serviceOrderConsumerService.doesServiceExistInServiceInventory(
-            serviceOrderItem.getService().getId(), serviceName, globalSubscriberId,serviceOrder);
+        return serviceOrderConsumerService.doesServiceExistInServiceInventory(serviceOrderItem.getService().getId(),
+                serviceName, globalSubscriberId, serviceOrder);
     }
 
     private boolean existServiceInCatalog(ServiceOrderItemInfo serviceOrderItemInfo) {
         return serviceOrderItemInfo.getCatalogResponse() != null;
     }
 
-    private void handleServiceFromCatalog(ServiceOrderItem serviceOrderItem,
-        ServiceOrder serviceOrder, ServiceOrderItemInfo serviceOrderItemInfo) {
-        Map body = serviceOrderConsumerService
-            .getServiceCatalog(serviceOrderItem.getService().getServiceSpecification().getId(),serviceOrder,serviceOrderItem);
+    private void handleServiceFromCatalog(ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder,
+            ServiceOrderItemInfo serviceOrderItemInfo) {
+        Map body = serviceOrderConsumerService.getServiceCatalog(
+                serviceOrderItem.getService().getServiceSpecification().getId(), serviceOrder, serviceOrderItem);
         serviceOrderItemInfo.setCatalogResponse(body);
 
     }

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.hub.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,19 +33,15 @@ public class CriteriaBuilderServiceOrder implements CriteriaBuilder {
             case "ServiceOrderStateChangeNotification":
                 JsonNode stateNode = event.getEvent().path("state");
                 if (stateNode.isValueNode())
-                    return base.orOperator(
-                            Criteria.where("query.serviceOrder__state").exists(false),
-                            Criteria.where("query.serviceOrder__state").in(stateNode.textValue())
-                    );
+                    return base.orOperator(Criteria.where("query.serviceOrder__state").exists(false),
+                            Criteria.where("query.serviceOrder__state").in(stateNode.textValue()));
                 break;
 
             case "ServiceOrderItemStateChangeNotification":
                 Object[] states = getStates(event);
                 if (states.length > 0)
-                    return base.orOperator(
-                            Criteria.where("query.serviceOrder__serviceOrderItem__state").exists(false),
-                            Criteria.where("query.serviceOrder__serviceOrderItem__state").in(states)
-                    );
+                    return base.orOperator(Criteria.where("query.serviceOrder__serviceOrderItem__state").exists(false),
+                            Criteria.where("query.serviceOrder__serviceOrderItem__state").in(states));
                 break;
         }
 

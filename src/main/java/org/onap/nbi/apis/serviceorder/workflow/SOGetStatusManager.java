@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import org.onap.nbi.apis.serviceorder.SoClient;
@@ -37,8 +38,6 @@ public class SOGetStatusManager {
     @Autowired
     private SoClient soClient;
 
-
-
     public void pollRequestStatus(ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem, boolean e2eService) {
         if (e2eService) {
             pollE2ESoRequestStatus(serviceOrder, serviceOrderItem);
@@ -51,8 +50,7 @@ public class SOGetStatusManager {
     /**
      * * @param orderItem
      */
-    private void pollSoRequestStatus(ServiceOrder serviceOrder,
-        ServiceOrderItem orderItem) {
+    private void pollSoRequestStatus(ServiceOrder serviceOrder, ServiceOrderItem orderItem) {
         String requestId = orderItem.getRequestId();
         GetRequestStatusResponse response = null;
 
@@ -64,7 +62,7 @@ public class SOGetStatusManager {
             } else if (RequestState.COMPLETE != response.getRequest().getRequestStatus().getRequestState()) {
                 serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
                 LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
-                    response.getRequest().getRequestStatus().getRequestState());
+                        response.getRequest().getRequestStatus().getRequestState());
             } else {
                 updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
                 LOGGER.debug("orderitem id {} completed");
@@ -76,13 +74,14 @@ public class SOGetStatusManager {
     }
 
     private void updateOrderItemIfStatusCompleted(ServiceOrder serviceOrder, ServiceOrderItem orderItem) {
-        if(orderItem.getAction()!= ActionType.MODIFY){
+        if (orderItem.getAction() != ActionType.MODIFY) {
             serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.COMPLETED);
         } else {
-            if(StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND ==orderItem.getState()){
+            if (StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND == orderItem.getState()) {
                 serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.COMPLETED);
             } else {
-                serviceOrderService.updateOrderItemState(serviceOrder,orderItem,StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE);
+                serviceOrderService.updateOrderItemState(serviceOrder, orderItem,
+                        StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE);
             }
         }
     }
@@ -104,7 +103,7 @@ public class SOGetStatusManager {
             } else if (ERROR.equals(result)) {
                 serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
                 LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
-                    response.getOperation().getResult());
+                        response.getOperation().getResult());
             } else if (FINISHED.equals(result)) {
                 updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
                 LOGGER.debug("orderitem id {} completed");

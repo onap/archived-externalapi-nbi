@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.serviceinventory;
 
 import java.util.ArrayList;
@@ -32,182 +33,169 @@ import org.springframework.util.StringUtils;
 @Service
 public class ServiceInventoryService {
 
-  @Autowired
-  NbiClient nbiClient;
+    @Autowired
+    NbiClient nbiClient;
 
-  @Autowired
-  AaiClient aaiClient;
+    @Autowired
+    AaiClient aaiClient;
 
-  @Autowired
-  GetServiceInventoryJsonTransformer getServiceInventoryJsonTransformer;
+    @Autowired
+    GetServiceInventoryJsonTransformer getServiceInventoryJsonTransformer;
 
-  @Autowired
-  FindServiceInventoryJsonTransformer findServiceInventoryJsonTransformer;
+    @Autowired
+    FindServiceInventoryJsonTransformer findServiceInventoryJsonTransformer;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ServiceInventoryService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceInventoryService.class);
 
+    public Map get(String serviceId, MultiValueMap<String, String> params) {
 
-  public Map get(String serviceId, MultiValueMap<String, String> params) {
-
-    Map serviceResponse = aaiClient.getService(serviceId);
-    if (serviceResponse != null) {
-      addVnfsToResponse(serviceResponse);
-      LinkedHashMap serviceInventoryResponse =
-          (LinkedHashMap) getServiceInventoryJsonTransformer.transform(serviceResponse);
-      addrelatedPartyIdIdandSpecName(serviceId, serviceInventoryResponse);
-      String href = "service/" + serviceId;
-      serviceInventoryResponse.put("href", href );
-      return serviceInventoryResponse;
-    } else {
-      throw new BackendFunctionalException(HttpStatus.NOT_FOUND, "no catalog service found",
-          "no catalog service found");
-    }
-
-  }
-
-
-  private String getCustomerId(String clientId) {
-
-    if (StringUtils.isEmpty(clientId)) {
-      return "generic";
-    } else {
-      return clientId;
-    }
-
-  }
-
-  private String getServiceName(String serviceSpecificationName, String serviceSpecificationId) {
-
-    if (StringUtils.isEmpty(serviceSpecificationName)) {
-      Map serviceSpecification = nbiClient.getServiceSpecification(serviceSpecificationId);
-      return (String) serviceSpecification.get("name");
-    } else {
-      return serviceSpecificationName;
-    }
-
-  }
-
-  private void addrelatedPartyIdIdandSpecName(String serviceId,
-      LinkedHashMap serviceInventoryResponse) {
-
-    String customerId;
-    String serviceSpecName;
-    LinkedHashMap relatedParty = (LinkedHashMap) serviceInventoryResponse.get("relatedParty");
-    LinkedHashMap serviceSpecification =
-        (LinkedHashMap) serviceInventoryResponse.get("serviceSpecification");
-    Map servicecustomerResponse = aaiClient.getServiceCustomer(serviceId);
-    if (servicecustomerResponse != null) {
-      List<LinkedHashMap> serviceCustomerResults =
-          (List<LinkedHashMap>) servicecustomerResponse.get("results");
-
-      if (!CollectionUtils.isEmpty(serviceCustomerResults)) {
-        for (LinkedHashMap serviceCustomerResult : serviceCustomerResults) {
-          String url = (String) serviceCustomerResult.get("url");
-          String[] pathObjects = url.split("/");
-          customerId = pathObjects[6];
-          serviceSpecName = pathObjects[9];
-          relatedParty.put("id", customerId);
-          serviceSpecification.put("name", serviceSpecName);
+        Map serviceResponse = aaiClient.getService(serviceId);
+        if (serviceResponse != null) {
+            addVnfsToResponse(serviceResponse);
+            LinkedHashMap serviceInventoryResponse =
+                    (LinkedHashMap) getServiceInventoryJsonTransformer.transform(serviceResponse);
+            addrelatedPartyIdIdandSpecName(serviceId, serviceInventoryResponse);
+            String href = "service/" + serviceId;
+            serviceInventoryResponse.put("href", href);
+            return serviceInventoryResponse;
+        } else {
+            throw new BackendFunctionalException(HttpStatus.NOT_FOUND, "no catalog service found",
+                    "no catalog service found");
         }
-      } else {
-        LOGGER.warn("no service instance found for serviceId {}", serviceId);
-      }
-    } else {
-      LOGGER.warn("no service instance found for serviceId {}", serviceId);
+
     }
-  }
 
-  private void addVnfsToResponse(Map serviceResponse) {
+    private String getCustomerId(String clientId) {
 
-    List<Map> vnfs = new ArrayList<>();
-    LinkedHashMap relationShip = (LinkedHashMap) serviceResponse.get("relationship-list");
-    if (relationShip != null) {
-      List<LinkedHashMap> relationsList = (List<LinkedHashMap>) relationShip.get("relationship");
-      if (relationsList != null) {
-        for (LinkedHashMap relation : relationsList) {
-          String relatedLink = (String) relation.get("related-link");
-          Map vnf = aaiClient.getVNF(relatedLink);
-          if (vnf != null) {
-            vnfs.add(vnf);
-          }
+        if (StringUtils.isEmpty(clientId)) {
+            return "generic";
+        } else {
+            return clientId;
         }
-        serviceResponse.put("vnfs", vnfs);
-      }
+
     }
-  }
 
+    private String getServiceName(String serviceSpecificationName, String serviceSpecificationId) {
 
-  public List<LinkedHashMap> find(MultiValueMap<String, String> params) {
-
-    String clientId = params.getFirst("relatedParty.id");
-    String serviceSpecId = params.getFirst("serviceSpecification.id");
-    String serviceSpecName = params.getFirst("serviceSpecification.name");
-    String customerId = getCustomerId(clientId);
-    String serviceName;
-    List<LinkedHashMap> serviceInstances = new ArrayList<>();
-    if (StringUtils.isEmpty(serviceSpecId) && StringUtils.isEmpty(serviceSpecName)) {
-      handleFindWithNoServiceParam(customerId, serviceInstances);
-    } else {
-      serviceName = getServiceName(serviceSpecName, serviceSpecId);
-      buildServiceInstances(serviceInstances, customerId, serviceName);
-    }
-    List<LinkedHashMap> serviceInventoryResponse = new ArrayList<>();
-    if (!CollectionUtils.isEmpty(serviceInstances)) {
-      serviceInventoryResponse = findServiceInventoryJsonTransformer.transform(serviceInstances);
-      for (LinkedHashMap serviceInventory : serviceInventoryResponse) {
-    	String href = "service/" + serviceInventory.get("id");
-    	serviceInventory.put("href", href);
-        LinkedHashMap party = (LinkedHashMap) serviceInventory.get("relatedParty");
-        party.put("id", customerId);
-      }
-    } else {
-      LOGGER.warn("no service instance found for customer {} ", customerId);
-    }
-    return serviceInventoryResponse;
-
-
-  }
-
-  private void handleFindWithNoServiceParam(String customerId,
-      List<LinkedHashMap> serviceInstances) {
-    Map servicesInAaiForCustomer = aaiClient.getServicesInAaiForCustomer(customerId);
-    if (servicesInAaiForCustomer != null) {
-      List<LinkedHashMap> servicesInAAI =
-          (List<LinkedHashMap>) servicesInAaiForCustomer.get("service-subscription");
-      for (LinkedHashMap service : servicesInAAI) {
-        String serviceType = (String) service.get("service-type");
-        buildServiceInstances(serviceInstances, customerId, serviceType);
-      }
-    } else {
-      LOGGER.warn("no service instance found for customer {} ", customerId);
-    }
-  }
-
-  private void buildServiceInstances(List<LinkedHashMap> serviceInstances, String customerId,
-      String serviceType) {
-
-    Map serviceInstancesInAaiForCustomer =
-        aaiClient.getServiceInstancesInAaiForCustomer(customerId, serviceType);
-    if (serviceInstancesInAaiForCustomer != null) {
-      List<LinkedHashMap> serviceInstancesForServiceType =
-          (List<LinkedHashMap>) serviceInstancesInAaiForCustomer.get("service-instance");
-
-      if (!CollectionUtils.isEmpty(serviceInstancesForServiceType)) {
-        // add service type for jolt
-        for (LinkedHashMap serviceInstanceForServiceType : serviceInstancesForServiceType) {
-          serviceInstanceForServiceType.put("service-type", serviceType);
+        if (StringUtils.isEmpty(serviceSpecificationName)) {
+            Map serviceSpecification = nbiClient.getServiceSpecification(serviceSpecificationId);
+            return (String) serviceSpecification.get("name");
+        } else {
+            return serviceSpecificationName;
         }
-        serviceInstances.addAll(serviceInstancesForServiceType);
-      } else {
-        LOGGER.warn("no service instance found for customer {} and service type {}", customerId,
-            serviceType);
-      }
-    } else {
-      LOGGER.warn("no service instance found for customer {} and service type {}", customerId,
-          serviceType);
+
     }
 
+    private void addrelatedPartyIdIdandSpecName(String serviceId, LinkedHashMap serviceInventoryResponse) {
 
-  }
+        String customerId;
+        String serviceSpecName;
+        LinkedHashMap relatedParty = (LinkedHashMap) serviceInventoryResponse.get("relatedParty");
+        LinkedHashMap serviceSpecification = (LinkedHashMap) serviceInventoryResponse.get("serviceSpecification");
+        Map servicecustomerResponse = aaiClient.getServiceCustomer(serviceId);
+        if (servicecustomerResponse != null) {
+            List<LinkedHashMap> serviceCustomerResults = (List<LinkedHashMap>) servicecustomerResponse.get("results");
+
+            if (!CollectionUtils.isEmpty(serviceCustomerResults)) {
+                for (LinkedHashMap serviceCustomerResult : serviceCustomerResults) {
+                    String url = (String) serviceCustomerResult.get("url");
+                    String[] pathObjects = url.split("/");
+                    customerId = pathObjects[6];
+                    serviceSpecName = pathObjects[9];
+                    relatedParty.put("id", customerId);
+                    serviceSpecification.put("name", serviceSpecName);
+                }
+            } else {
+                LOGGER.warn("no service instance found for serviceId {}", serviceId);
+            }
+        } else {
+            LOGGER.warn("no service instance found for serviceId {}", serviceId);
+        }
+    }
+
+    private void addVnfsToResponse(Map serviceResponse) {
+
+        List<Map> vnfs = new ArrayList<>();
+        LinkedHashMap relationShip = (LinkedHashMap) serviceResponse.get("relationship-list");
+        if (relationShip != null) {
+            List<LinkedHashMap> relationsList = (List<LinkedHashMap>) relationShip.get("relationship");
+            if (relationsList != null) {
+                for (LinkedHashMap relation : relationsList) {
+                    String relatedLink = (String) relation.get("related-link");
+                    Map vnf = aaiClient.getVNF(relatedLink);
+                    if (vnf != null) {
+                        vnfs.add(vnf);
+                    }
+                }
+                serviceResponse.put("vnfs", vnfs);
+            }
+        }
+    }
+
+    public List<LinkedHashMap> find(MultiValueMap<String, String> params) {
+
+        String clientId = params.getFirst("relatedParty.id");
+        String serviceSpecId = params.getFirst("serviceSpecification.id");
+        String serviceSpecName = params.getFirst("serviceSpecification.name");
+        String customerId = getCustomerId(clientId);
+        String serviceName;
+        List<LinkedHashMap> serviceInstances = new ArrayList<>();
+        if (StringUtils.isEmpty(serviceSpecId) && StringUtils.isEmpty(serviceSpecName)) {
+            handleFindWithNoServiceParam(customerId, serviceInstances);
+        } else {
+            serviceName = getServiceName(serviceSpecName, serviceSpecId);
+            buildServiceInstances(serviceInstances, customerId, serviceName);
+        }
+        List<LinkedHashMap> serviceInventoryResponse = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(serviceInstances)) {
+            serviceInventoryResponse = findServiceInventoryJsonTransformer.transform(serviceInstances);
+            for (LinkedHashMap serviceInventory : serviceInventoryResponse) {
+                String href = "service/" + serviceInventory.get("id");
+                serviceInventory.put("href", href);
+                LinkedHashMap party = (LinkedHashMap) serviceInventory.get("relatedParty");
+                party.put("id", customerId);
+            }
+        } else {
+            LOGGER.warn("no service instance found for customer {} ", customerId);
+        }
+        return serviceInventoryResponse;
+
+    }
+
+    private void handleFindWithNoServiceParam(String customerId, List<LinkedHashMap> serviceInstances) {
+        Map servicesInAaiForCustomer = aaiClient.getServicesInAaiForCustomer(customerId);
+        if (servicesInAaiForCustomer != null) {
+            List<LinkedHashMap> servicesInAAI =
+                    (List<LinkedHashMap>) servicesInAaiForCustomer.get("service-subscription");
+            for (LinkedHashMap service : servicesInAAI) {
+                String serviceType = (String) service.get("service-type");
+                buildServiceInstances(serviceInstances, customerId, serviceType);
+            }
+        } else {
+            LOGGER.warn("no service instance found for customer {} ", customerId);
+        }
+    }
+
+    private void buildServiceInstances(List<LinkedHashMap> serviceInstances, String customerId, String serviceType) {
+
+        Map serviceInstancesInAaiForCustomer = aaiClient.getServiceInstancesInAaiForCustomer(customerId, serviceType);
+        if (serviceInstancesInAaiForCustomer != null) {
+            List<LinkedHashMap> serviceInstancesForServiceType =
+                    (List<LinkedHashMap>) serviceInstancesInAaiForCustomer.get("service-instance");
+
+            if (!CollectionUtils.isEmpty(serviceInstancesForServiceType)) {
+                // add service type for jolt
+                for (LinkedHashMap serviceInstanceForServiceType : serviceInstancesForServiceType) {
+                    serviceInstanceForServiceType.put("service-type", serviceType);
+                }
+                serviceInstances.addAll(serviceInstancesForServiceType);
+            } else {
+                LOGGER.warn("no service instance found for customer {} and service type {}", customerId, serviceType);
+            }
+        } else {
+            LOGGER.warn("no service instance found for customer {} and service type {}", customerId, serviceType);
+        }
+
+    }
 
 }

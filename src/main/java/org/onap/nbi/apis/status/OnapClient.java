@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.status;
 
 import java.text.MessageFormat;
@@ -44,7 +45,6 @@ public class OnapClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OnapClient.class);
 
-
     public ApplicationStatus checkConnectivity(OnapModuleType onapModuleType) {
         try {
 
@@ -63,19 +63,17 @@ public class OnapClient {
                     break;
             }
         } catch (BackendFunctionalException e) {
-            String message = MessageFormat
-                .format("backend exception for {0}, status code {1}, body response {2}", onapModuleType,
-                    e.getHttpStatus(), e.getBodyResponse());
+            String message = MessageFormat.format("backend exception for {0}, status code {1}, body response {2}",
+                    onapModuleType, e.getHttpStatus(), e.getBodyResponse());
             LOGGER.error(message);
             return new ApplicationStatus(onapModuleType.getValue() + " connectivity", StatusType.KO, null);
         } catch (ResourceAccessException e) {
-            String message = MessageFormat
-                .format("resource access exception for {0}, response {1}", onapModuleType, e.getMessage());
+            String message = MessageFormat.format("resource access exception for {0}, response {1}", onapModuleType,
+                    e.getMessage());
             LOGGER.error(message);
             return new ApplicationStatus(onapModuleType.getValue() + " connectivity", StatusType.KO, null);
         }
         return new ApplicationStatus(onapModuleType.getValue() + " connectivity", StatusType.OK, null);
     }
-
 
 }

@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.test;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -25,81 +26,80 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class Context {
 
+    public static ConfigurableApplicationContext nbiServer;
 
-  public static ConfigurableApplicationContext nbiServer;
+    public static WireMockServer wireMockServer;
 
-  public static WireMockServer wireMockServer;
+    public static void startServers() throws Exception {
+        startWiremock();
 
-  public static void startServers() throws Exception {
-    startWiremock();
+        // NBI
+        if (nbiServer == null) {
+            String[] args = new String[1];
+            args[0] = "--spring.profiles.active=test";
+            nbiServer = Application.run(args);
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        }
 
-    // NBI
-    if (nbiServer == null) {
-      String[] args = new String[1];
-      args[0] = "--spring.profiles.active=test";
-      nbiServer = Application.run(args);
-      MockHttpServletRequest request = new MockHttpServletRequest();
-      RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
 
-  }
+    public static void startWiremock() {
+        // Wiremock
+        // If wireMockServer was previously created
+        if (wireMockServer != null) {
+            wireMockServer.stop();
+            wireMockServer.resetToDefaultMappings();
+        } else {
+            wireMockServer =
+                    new WireMockServer(WireMockConfiguration.wireMockConfig().port(8091).jettyStopTimeout(1000L));
+        }
 
-  public static void startWiremock() {
-    // Wiremock
-    // If wireMockServer was previously created
-    if (wireMockServer != null) {
-      wireMockServer.stop();
-      wireMockServer.resetToDefaultMappings();
-    } else {
-      wireMockServer =
-          new WireMockServer(
-              WireMockConfiguration.wireMockConfig().port(8091).jettyStopTimeout(1000L));
+        wireMockServer.start();
     }
 
-    wireMockServer.start();
-  }
+    public static void removeWireMockMapping(String mappingToBeRemoved) {
 
-  public static void removeWireMockMapping(String mappingToBeRemoved) {
+        if (mappingToBeRemoved == null) {
+            return;
+        }
 
-    if (mappingToBeRemoved == null) {
-      return;
+        // Get current mappings
+        List<StubMapping> mappings = wireMockServer.listAllStubMappings().getMappings();
+
+        StubMapping mappingToDelete = null;
+        for (StubMapping mapping : mappings) {
+            if (mapping.getRequest().getUrl().equals(mappingToBeRemoved)) {
+                mappingToDelete = mapping;
+            }
+        }
+
+        if (mappingToDelete != null) {
+            wireMockServer.removeStubMapping(mappingToDelete);
+        }
     }
 
-    // Get current mappings
-    List<StubMapping> mappings = wireMockServer.listAllStubMappings().getMappings();
+    public static void stopServers() throws Exception {
 
-    StubMapping mappingToDelete = null;
-    for (StubMapping mapping : mappings) {
-      if (mapping.getRequest().getUrl().equals(mappingToBeRemoved)) {
-        mappingToDelete = mapping;
-      }
+        // NBI
+        if (nbiServer != null) { // keep spring boot side alive for all tests including package
+            // 'mock'
+            nbiServer.close();
+        }
+
+        // Wiremock
+        if (wireMockServer != null) {
+            wireMockServer.stop();
+        }
+
     }
 
-    if (mappingToDelete != null) {
-      wireMockServer.removeStubMapping(mappingToDelete);
+    public static void stopWiremock() throws Exception {
+
+        // Wiremock
+        if (wireMockServer != null) {
+            wireMockServer.stop();
+        }
+
     }
-  }
-
-  public static void stopServers() throws Exception {
-
-    // NBI
-    if (nbiServer != null) { // keep spring boot side alive for all tests including package
-      // 'mock'
-      nbiServer.close();
-    }
-
-    // Wiremock
-    if (wireMockServer != null) {
-      wireMockServer.stop();
-    }
-
-  }
-  public static void stopWiremock() throws Exception {
-
-    // Wiremock
-    if (wireMockServer != null) {
-      wireMockServer.stop();
-    }
-
-  }
 }

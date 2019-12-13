@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import org.onap.nbi.apis.serviceorder.model.OrderItemRelationship;
@@ -44,8 +45,7 @@ public class SOTaskManager {
      * @param orderItems
      * @param serviceOrderInfoJson
      */
-    private void registerOrderItemExecutionPlan(List<ServiceOrderItem> orderItems,
-        String serviceOrderInfoJson) {
+    private void registerOrderItemExecutionPlan(List<ServiceOrderItem> orderItems, String serviceOrderInfoJson) {
         List<ExecutionTask> executionTasksSaved = new ArrayList<>();
         Map<String, Long> internalIdOrderItemsMap = new HashMap<>();
         if (orderItems != null) {
@@ -67,17 +67,20 @@ public class SOTaskManager {
             }
             // then we replace all orderitem ids in reliedtasks field with internalid of the tasks
             for (ExecutionTask executionTask : executionTasksSaved) {
-                List<String> reliedOrderItemsIds = new ArrayList<String>(Arrays.asList(executionTask.getReliedTasks().split(" ")));
+                List<String> reliedOrderItemsIds =
+                        new ArrayList<String>(Arrays.asList(executionTask.getReliedTasks().split(" ")));
                 List<String> reliedTasksInternalIds = new ArrayList<String>();
-                for (Entry<String, Long> entry : internalIdOrderItemsMap.entrySet()){
-                   if(reliedOrderItemsIds.contains(entry.getKey())) {
-                       reliedTasksInternalIds.add(entry.getValue().toString());
+                for (Entry<String, Long> entry : internalIdOrderItemsMap.entrySet()) {
+                    if (reliedOrderItemsIds.contains(entry.getKey())) {
+                        reliedTasksInternalIds.add(entry.getValue().toString());
                     }
                 }
-            String reliedTasksString = String.join(" ", reliedTasksInternalIds);
-            executionTask.setReliedTasks(reliedTasksString);
-                if(LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("saving task with id {} , orderItemId {} , reliedtasks {}", executionTask.getInternalId(), executionTask.getOrderItemId(), executionTask.getReliedTasks());
+                String reliedTasksString = String.join(" ", reliedTasksInternalIds);
+                executionTask.setReliedTasks(reliedTasksString);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("saving task with id {} , orderItemId {} , reliedtasks {}",
+                            executionTask.getInternalId(), executionTask.getOrderItemId(),
+                            executionTask.getReliedTasks());
                 }
                 executionTaskRepository.save(executionTask);
             }
@@ -93,6 +96,5 @@ public class SOTaskManager {
         String serviceOrderInfoJson = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
         registerOrderItemExecutionPlan(serviceOrder.getOrderItem(), serviceOrderInfoJson);
     }
-
 
 }

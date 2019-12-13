@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,7 +47,8 @@ import javax.validation.constraints.Pattern;
  * A related party defines party which are involved in this order and the role they are playing
  */
 @ApiModel(description = "A related party defines party which are involved in this order and the role they are playing")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class RelatedParty {
     @JsonProperty("id")
@@ -79,7 +79,7 @@ public class RelatedParty {
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "Unique identifier of a related party")
     @NotNull(message = "RelatedParty Id cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="RelatedParty Id cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "RelatedParty Id cannot be empty")
     public String getId() {
         return id;
     }
@@ -121,7 +121,7 @@ public class RelatedParty {
     @JsonProperty("role")
     @ApiModelProperty(required = true, value = "The role of the related party (e.g. Owner, requester, fullfiller etc)")
     @NotNull(message = "RelatedParty role cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="RelatedParty role cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "RelatedParty role cannot be empty")
     public String getRole() {
         return role;
     }
@@ -168,7 +168,6 @@ public class RelatedParty {
         this.referredType = referredType;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -187,7 +186,6 @@ public class RelatedParty {
     public int hashCode() {
         return Objects.hash(id, href, role, name, referredType);
     }
-
 
     @Override
     public String toString() {
@@ -214,4 +212,3 @@ public class RelatedParty {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

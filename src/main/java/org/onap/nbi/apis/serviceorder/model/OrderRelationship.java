@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,7 +48,8 @@ import javax.validation.constraints.Pattern;
  * Linked order to the one containing this attribute
  */
 @ApiModel(description = "Linked order to the one containing this attribute")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class OrderRelationship {
     @JsonProperty("type")
@@ -100,7 +100,7 @@ public class OrderRelationship {
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "The id of the related order")
     @NotNull(message = "OrderRelationship id cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="OrderRelationship id cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "OrderRelationship id cannot be empty")
     public String getId() {
         return id;
     }
@@ -147,7 +147,6 @@ public class OrderRelationship {
         this.referredType = referredType;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -166,7 +165,6 @@ public class OrderRelationship {
     public int hashCode() {
         return Objects.hash(type, id, href, referredType);
     }
-
 
     @Override
     public String toString() {
@@ -192,4 +190,3 @@ public class OrderRelationship {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

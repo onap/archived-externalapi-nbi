@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.hub.service;
 
 import org.aspectj.lang.JoinPoint;
@@ -39,46 +40,49 @@ public class NotificationAspect {
     @Autowired
     private NotifierService notifier;
 
-    @AfterReturning(value = "execution(* org.onap.nbi.apis.serviceorder.service.ServiceOrderService" +
-            ".createServiceOrder(..))", returning = "serviceOrderCreated")
+    @AfterReturning(
+            value = "execution(* org.onap.nbi.apis.serviceorder.service.ServiceOrderService"
+                    + ".createServiceOrder(..))",
+            returning = "serviceOrderCreated")
     public void whenCreateServiceOrder(ServiceOrder serviceOrderCreated) {
-        if(StateType.ACKNOWLEDGED.equals(serviceOrderCreated.getState())) {
+        if (StateType.ACKNOWLEDGED.equals(serviceOrderCreated.getState())) {
             processEvent(EventFactory.getEvent(EventType.SERVICE_ORDER_CREATION, serviceOrderCreated, null));
         }
     }
 
-    @AfterReturning(value = "execution(* org.onap.nbi.apis.serviceorder.service.ServiceOrderService" +
-            ".updateOrderState(..))", returning = "serviceOrderUpdated")
+    @AfterReturning(
+            value = "execution(* org.onap.nbi.apis.serviceorder.service.ServiceOrderService" + ".updateOrderState(..))",
+            returning = "serviceOrderUpdated")
     public void whenUpdateServiceOrderState(ServiceOrder serviceOrderUpdated) {
-        if(StateType.COMPLETED.equals(serviceOrderUpdated.getState())||
-                StateType.FAILED.equals(serviceOrderUpdated.getState())) {
+        if (StateType.COMPLETED.equals(serviceOrderUpdated.getState())
+                || StateType.FAILED.equals(serviceOrderUpdated.getState())) {
             processEvent(EventFactory.getEvent(EventType.SERVICE_ORDER_STATE_CHANGE, serviceOrderUpdated, null));
         }
     }
 
-    @AfterReturning(value = "execution(* org.onap.nbi.apis.serviceorder.service.ServiceOrderService" +
-            ".updateOrderItemState(..))")
+    @AfterReturning(
+            value = "execution(* org.onap.nbi.apis.serviceorder.service.ServiceOrderService"
+                    + ".updateOrderItemState(..))")
     public void whenUpdateServiceOrderItemState(JoinPoint joinPoint) {
         Object[] signatureArgs = joinPoint.getArgs();
 
-        if(signatureArgs != null && signatureArgs.length == 3) {
+        if (signatureArgs != null && signatureArgs.length == 3) {
             ServiceOrder serviceOrder = (ServiceOrder) signatureArgs[0];
             ServiceOrderItem serviceOrderItem = (ServiceOrderItem) signatureArgs[1];
             StateType serviceOrderItemState = (StateType) signatureArgs[2];
 
-            processEvent(EventFactory.getEvent(EventType.SERVICE_ORDER_ITEM_STATE_CHANGE, serviceOrder,
-                    serviceOrderItem));
+            processEvent(
+                    EventFactory.getEvent(EventType.SERVICE_ORDER_ITEM_STATE_CHANGE, serviceOrder, serviceOrderItem));
         }
     }
 
     /**
      * Retreive subscribers that match an event and fire notification
      * asynchronously
+     * 
      * @param event
      */
     private void processEvent(Event event) {
-        subscriberRepository
-                .findSubscribersUsingEvent(event)
-                .forEach(sub -> notifier.run(sub, event));
+        subscriberRepository.findSubscribersUsingEvent(event).forEach(sub -> notifier.run(sub, event));
     }
 }

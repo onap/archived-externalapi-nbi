@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class CloudConfiguration {
@@ -55,10 +56,7 @@ public class CloudConfiguration {
 
     @Override
     public String toString() {
-        return "CloudConfiguration{" +
-            "lcpCloudRegionId='" + lcpCloudRegionId + '\'' +
-            ", tenantId='" + tenantId + '\'' +
-            ", cloudOwner='" + cloudOwner + '\'' +
-            '}';
+        return "CloudConfiguration{" + "lcpCloudRegionId='" + lcpCloudRegionId + '\'' + ", tenantId='" + tenantId + '\''
+                + ", cloudOwner='" + cloudOwner + '\'' + '}';
     }
 }

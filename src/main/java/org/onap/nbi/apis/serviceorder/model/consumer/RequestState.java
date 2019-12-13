@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -49,7 +50,5 @@ public enum RequestState {
     public String value() {
         return this.value;
     }
-
-
 
 }

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 import java.util.Objects;
@@ -28,7 +29,8 @@ public class RequestStatus {
         this.percentProgress = percentProgress;
     }
 
-    public RequestStatus() {}
+    public RequestStatus() {
+    }
 
     public RequestState getRequestState() {
         return requestState;

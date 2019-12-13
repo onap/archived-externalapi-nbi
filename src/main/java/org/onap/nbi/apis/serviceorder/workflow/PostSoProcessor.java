@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import java.io.IOException;
@@ -57,281 +58,264 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Service
 public class PostSoProcessor {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PostSoProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostSoProcessor.class);
 
-  @Value("${onap.lcpCloudRegionId}")
-  private String lcpCloudRegionId;
+    @Value("${onap.lcpCloudRegionId}")
+    private String lcpCloudRegionId;
 
-  @Value("${onap.tenantId}")
-  private String tenantId;
+    @Value("${onap.tenantId}")
+    private String tenantId;
 
-  @Value("${so.owning.entity.id}")
-  private String soOwningEntityId;
+    @Value("${so.owning.entity.id}")
+    private String soOwningEntityId;
 
-  @Value("${so.owning.entity.name}")
-  private String soOwningEntityName;
+    @Value("${so.owning.entity.name}")
+    private String soOwningEntityName;
 
-  @Value("${so.project.name}")
-  private String soProjectName;
+    @Value("${so.project.name}")
+    private String soProjectName;
 
-  @Value("${onap.cloudOwner}")
-  private String cloudOwner;
+    @Value("${onap.cloudOwner}")
+    private String cloudOwner;
 
-  @Autowired
-  private ServiceOrderService serviceOrderService;
+    @Autowired
+    private ServiceOrderService serviceOrderService;
 
-  @Autowired
-  private SoClient soClient;
+    @Autowired
+    private SoClient soClient;
 
-
-
-  public ResponseEntity<CreateServiceInstanceResponse> postServiceOrderItem(
-      ServiceOrderInfo serviceOrderInfo, ServiceOrderItem serviceOrderItem) {
-    ResponseEntity<CreateServiceInstanceResponse> response = null;
-    try {
-      response = postSORequest(serviceOrderItem, serviceOrderInfo);
-    } catch (NullPointerException e) {
-      LOGGER.error(
-          "Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(),
-          e);
-      response = null;
-    }
-    return response;
-  }
-
-  public ResponseEntity<CreateE2EServiceInstanceResponse> postE2EServiceOrderItem(
-      ServiceOrderInfo serviceOrderInfo, ServiceOrderItem serviceOrderItem,
-      ServiceOrder serviceOrder) {
-    ResponseEntity<CreateE2EServiceInstanceResponse> response;
-    try {
-      response = postE2ESORequest(serviceOrderItem, serviceOrderInfo, serviceOrder);
-    } catch (NullPointerException e) {
-      LOGGER.error(
-          "Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(),
-          e);
-      response = null;
-    }
-    return response;
-  }
-
-  private ResponseEntity<CreateServiceInstanceResponse> postSORequest(
-      ServiceOrderItem serviceOrderItem, ServiceOrderInfo serviceOrderInfo) {
-    RequestDetails requestDetails =
-        buildSoRequest(serviceOrderItem,serviceOrderInfo);
-    MSOPayload msoPayload = new MSOPayload(requestDetails);
-    ResponseEntity<CreateServiceInstanceResponse> response = null;
-
-    switch (serviceOrderItem.getAction()) {
-      case ADD:
-        response = soClient.callCreateServiceInstance(msoPayload);
-        break;
-      case DELETE:
-        response =
-            soClient.callDeleteServiceInstance(msoPayload, serviceOrderItem.getService().getId());
-        break;
-      case MODIFY:
-        if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
-          response = soClient.callCreateServiceInstance(msoPayload);
+    public ResponseEntity<CreateServiceInstanceResponse> postServiceOrderItem(ServiceOrderInfo serviceOrderInfo,
+            ServiceOrderItem serviceOrderItem) {
+        ResponseEntity<CreateServiceInstanceResponse> response = null;
+        try {
+            response = postSORequest(serviceOrderItem, serviceOrderInfo);
+        } catch (NullPointerException e) {
+            LOGGER.error("Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
+            response = null;
         }
-        if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
-          response =
-              soClient.callDeleteServiceInstance(msoPayload, serviceOrderItem.getService().getId());
+        return response;
+    }
+
+    public ResponseEntity<CreateE2EServiceInstanceResponse> postE2EServiceOrderItem(ServiceOrderInfo serviceOrderInfo,
+            ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder) {
+        ResponseEntity<CreateE2EServiceInstanceResponse> response;
+        try {
+            response = postE2ESORequest(serviceOrderItem, serviceOrderInfo, serviceOrder);
+        } catch (NullPointerException e) {
+            LOGGER.error("Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
+            response = null;
         }
-        break;
-      default:
-        break;
+        return response;
     }
-    return response;
-  }
 
-  private ResponseEntity<CreateE2EServiceInstanceResponse> postE2ESORequest(
-      ServiceOrderItem serviceOrderItem, ServiceOrderInfo serviceOrderInfo,
-      ServiceOrder serviceOrder) {
-    ServiceModel service =
-        buildE2ESoRequest(
-            serviceOrderItem, serviceOrderInfo.getServiceOrderItemInfos()
-                .get(serviceOrderItem.getId()).getCatalogResponse(),
-            serviceOrderInfo.getSubscriberInfo(), serviceOrder);
-    MSOE2EPayload msoE2EPayload = new MSOE2EPayload(service);
-    ResponseEntity<CreateE2EServiceInstanceResponse> response = null;
-    switch (serviceOrderItem.getAction()) {
-      case ADD:
-        response = soClient.callE2ECreateServiceInstance(msoE2EPayload);
-        break;
-      case DELETE:
-        response = soClient.callE2EDeleteServiceInstance(service.getGlobalSubscriberId(),
-            service.getServiceType(), serviceOrderItem.getService().getId());
-        break;
-      case MODIFY:
-        if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
-          response = soClient.callE2ECreateServiceInstance(msoE2EPayload);
+    private ResponseEntity<CreateServiceInstanceResponse> postSORequest(ServiceOrderItem serviceOrderItem,
+            ServiceOrderInfo serviceOrderInfo) {
+        RequestDetails requestDetails = buildSoRequest(serviceOrderItem, serviceOrderInfo);
+        MSOPayload msoPayload = new MSOPayload(requestDetails);
+        ResponseEntity<CreateServiceInstanceResponse> response = null;
+
+        switch (serviceOrderItem.getAction()) {
+            case ADD:
+                response = soClient.callCreateServiceInstance(msoPayload);
+                break;
+            case DELETE:
+                response = soClient.callDeleteServiceInstance(msoPayload, serviceOrderItem.getService().getId());
+                break;
+            case MODIFY:
+                if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
+                    response = soClient.callCreateServiceInstance(msoPayload);
+                }
+                if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+                    response = soClient.callDeleteServiceInstance(msoPayload, serviceOrderItem.getService().getId());
+                }
+                break;
+            default:
+                break;
         }
-        if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
-          response = soClient.callE2EDeleteServiceInstance(service.getGlobalSubscriberId(),
-              service.getServiceType(), serviceOrderItem.getService().getId());
+        return response;
+    }
+
+    private ResponseEntity<CreateE2EServiceInstanceResponse> postE2ESORequest(ServiceOrderItem serviceOrderItem,
+            ServiceOrderInfo serviceOrderInfo, ServiceOrder serviceOrder) {
+        ServiceModel service = buildE2ESoRequest(serviceOrderItem,
+                serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()).getCatalogResponse(),
+                serviceOrderInfo.getSubscriberInfo(), serviceOrder);
+        MSOE2EPayload msoE2EPayload = new MSOE2EPayload(service);
+        ResponseEntity<CreateE2EServiceInstanceResponse> response = null;
+        switch (serviceOrderItem.getAction()) {
+            case ADD:
+                response = soClient.callE2ECreateServiceInstance(msoE2EPayload);
+                break;
+            case DELETE:
+                response = soClient.callE2EDeleteServiceInstance(service.getGlobalSubscriberId(),
+                        service.getServiceType(), serviceOrderItem.getService().getId());
+                break;
+            case MODIFY:
+                if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
+                    response = soClient.callE2ECreateServiceInstance(msoE2EPayload);
+                }
+                if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+                    response = soClient.callE2EDeleteServiceInstance(service.getGlobalSubscriberId(),
+                            service.getServiceType(), serviceOrderItem.getService().getId());
+                }
+                break;
+            default:
+                break;
         }
-        break;
-      default:
-        break;
+        return response;
     }
-    return response;
-  }
 
+    /**
+     * Build SO CREATE request from the ServiceOrder and catalog informations from SDC
+     *
+     * @param orderItem
+     * @param serviceOrderInfo
+     * @return
+     */
+    private RequestDetails buildSoRequest(ServiceOrderItem orderItem, ServiceOrderInfo serviceOrderInfo) {
+        RequestDetails requestDetails = new RequestDetails();
 
+        requestDetails.setSubscriberInfo(serviceOrderInfo.getSubscriberInfo());
+        Map<String, Object> sdcInfos =
+                serviceOrderInfo.getServiceOrderItemInfos().get(orderItem.getId()).getCatalogResponse();
+        ModelInfo modelInfo = new ModelInfo();
+        modelInfo.setModelType("service");
+        modelInfo.setModelInvariantId((String) sdcInfos.get("invariantUUID"));
+        modelInfo.setModelNameVersionId(orderItem.getService().getServiceSpecification().getId());
+        modelInfo.setModelVersionId(orderItem.getService().getServiceSpecification().getId());
+        modelInfo.setModelName((String) sdcInfos.get("name"));
+        modelInfo.setModelVersion((String) sdcInfos.get("version"));
+        requestDetails.setModelInfo(modelInfo);
 
-  /**
-   * Build SO CREATE request from the ServiceOrder and catalog informations from SDC
-   *
-   * @param orderItem
-   * @param serviceOrderInfo
-   * @return
-   */
-  private RequestDetails buildSoRequest(ServiceOrderItem orderItem,ServiceOrderInfo serviceOrderInfo) {
-    RequestDetails requestDetails = new RequestDetails();
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.setInstanceName(orderItem.getService().getName());
+        requestInfo.setSource("VID");
+        requestInfo.setSuppressRollback(false);
+        requestInfo.setRequestorId("NBI");
+        requestDetails.setRequestInfo(requestInfo);
 
-    requestDetails.setSubscriberInfo( serviceOrderInfo.getSubscriberInfo());
-    Map<String, Object> sdcInfos=serviceOrderInfo.getServiceOrderItemInfos()
-        .get(orderItem.getId()).getCatalogResponse();
-    ModelInfo modelInfo = new ModelInfo();
-    modelInfo.setModelType("service");
-    modelInfo.setModelInvariantId((String) sdcInfos.get("invariantUUID"));
-    modelInfo.setModelNameVersionId(orderItem.getService().getServiceSpecification().getId());
-    modelInfo.setModelVersionId(orderItem.getService().getServiceSpecification().getId());
-    modelInfo.setModelName((String) sdcInfos.get("name"));
-    modelInfo.setModelVersion((String) sdcInfos.get("version"));
-    requestDetails.setModelInfo(modelInfo);
+        RequestParameters requestParameters = new RequestParameters();
+        requestParameters.setSubscriptionServiceType((String) sdcInfos.get("name"));
+        requestParameters.setUserParams(
+                retrieveUserParamsFromServiceCharacteristics(orderItem.getService().getServiceCharacteristic()));
+        requestParameters.setaLaCarte(true);
+        requestParameters.setTestApi("GR_API");
+        requestDetails.setRequestParameters(requestParameters);
 
-    RequestInfo requestInfo = new RequestInfo();
-    requestInfo.setInstanceName(orderItem.getService().getName());
-    requestInfo.setSource("VID");
-    requestInfo.setSuppressRollback(false);
-    requestInfo.setRequestorId("NBI");
-    requestDetails.setRequestInfo(requestInfo);
+        CloudConfiguration cloudConfiguration = new CloudConfiguration(lcpCloudRegionId, tenantId, cloudOwner);
+        requestDetails.setCloudConfiguration(cloudConfiguration);
 
-    RequestParameters requestParameters = new RequestParameters();
-    requestParameters.setSubscriptionServiceType((String) sdcInfos.get("name"));
-    requestParameters.setUserParams(retrieveUserParamsFromServiceCharacteristics(
-        orderItem.getService().getServiceCharacteristic()));
-    requestParameters.setaLaCarte(true);
-    requestParameters.setTestApi("GR_API");
-    requestDetails.setRequestParameters(requestParameters);
+        OwningEntity owningEntity = new OwningEntity();
+        owningEntity.setOwningEntityId(serviceOrderInfo.getOwningEntityId());
+        owningEntity.setOwningEntityName(soOwningEntityName);
+        requestDetails.setOwningEntity(owningEntity);
 
-    CloudConfiguration cloudConfiguration = new CloudConfiguration(lcpCloudRegionId, tenantId, cloudOwner);
-    requestDetails.setCloudConfiguration(cloudConfiguration);
+        Project project = new Project();
+        project.setProjectName(soProjectName);
 
-    OwningEntity owningEntity = new OwningEntity();
-    owningEntity.setOwningEntityId(serviceOrderInfo.getOwningEntityId());
-    owningEntity.setOwningEntityName(soOwningEntityName);
-    requestDetails.setOwningEntity(owningEntity);
+        requestDetails.setProject(project);
 
-    Project project = new Project();
-    project.setProjectName(soProjectName);
-
-    requestDetails.setProject(project);
-
-    return requestDetails;
-  }
-
-  /**
-   * Build E2E SO CREATE request from the ServiceOrder and catalog informations from SDC
-   *
-   * @param serviceOrderItem
-   * @param serviceOrder
-   * @param sdcInfos
-   * @return
-   */
-  // ServiceOrderItem serviceOrderItem --> orderItem?
-  private ServiceModel buildE2ESoRequest(ServiceOrderItem serviceOrderItem,
-      Map<String, Object> sdcInfos, SubscriberInfo subscriberInfo, ServiceOrder serviceOrder) {
-
-    subscriberInfo.getGlobalSubscriberId();
-    ServiceModel service = new ServiceModel();
-    service.setName(serviceOrderItem.getService().getName());
-    service.setDescription(serviceOrder.getDescription());
-    service.setServiceUuid(serviceOrderItem.getService().getServiceSpecification().getId());
-    service.setServiceInvariantUuid((String) sdcInfos.get("invariantUUID"));
-    service.setGlobalSubscriberId(subscriberInfo.getGlobalSubscriberId());
-    service.setServiceType((String) sdcInfos.get("name"));
-
-    ParametersModel parameters = new ParametersModel();
-    ArrayList<ResourceModel> resources = new ArrayList();
-
-    ArrayList<Object> resourceObjects = (ArrayList<Object>) sdcInfos.get("resourceSpecification");
-
-    for (int i = 0; i < resourceObjects.size(); i++) {
-
-      ResourceModel resourceModel = new ResourceModel((Map<String, Object>) resourceObjects.get(i));
-      ParametersModel resourceParameters = new ParametersModel();
-      resourceModel.setParameters(resourceParameters);
-      resources.add(resourceModel);
-
+        return requestDetails;
     }
-    parameters.setResources(resources);
-    List<UserParams> userParams = retrieveUserParamsFromServiceCharacteristics(
-        serviceOrderItem.getService().getServiceCharacteristic());
 
-    // If there are ServiceCharacteristics add them to requestInputs
-    if (!userParams.isEmpty()) {
-      Map<String, String> requestInputs = new HashMap<String, String>();
-      for (int i = 0; i < userParams.size(); i++) {
-        requestInputs.put(userParams.get(i).getName(), userParams.get(i).getValue());
-      }
+    /**
+     * Build E2E SO CREATE request from the ServiceOrder and catalog informations from SDC
+     *
+     * @param serviceOrderItem
+     * @param serviceOrder
+     * @param sdcInfos
+     * @return
+     */
+    // ServiceOrderItem serviceOrderItem --> orderItem?
+    private ServiceModel buildE2ESoRequest(ServiceOrderItem serviceOrderItem, Map<String, Object> sdcInfos,
+            SubscriberInfo subscriberInfo, ServiceOrder serviceOrder) {
 
-      parameters.setRequestInputs(requestInputs);
-    }
-    service.setParameters(parameters);
+        subscriberInfo.getGlobalSubscriberId();
+        ServiceModel service = new ServiceModel();
+        service.setName(serviceOrderItem.getService().getName());
+        service.setDescription(serviceOrder.getDescription());
+        service.setServiceUuid(serviceOrderItem.getService().getServiceSpecification().getId());
+        service.setServiceInvariantUuid((String) sdcInfos.get("invariantUUID"));
+        service.setGlobalSubscriberId(subscriberInfo.getGlobalSubscriberId());
+        service.setServiceType((String) sdcInfos.get("name"));
 
-    return service;
-  }
+        ParametersModel parameters = new ParametersModel();
+        ArrayList<ResourceModel> resources = new ArrayList();
 
-  /**
-   * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics from
-   * SDC
-   */
-  private List<UserParams> retrieveUserParamsFromServiceCharacteristics(
-      List<ServiceCharacteristic> characteristics) {
-    List<UserParams> userParams = new ArrayList<>();
-    UserParams userParam;
+        ArrayList<Object> resourceObjects = (ArrayList<Object>) sdcInfos.get("resourceSpecification");
 
-    if (!CollectionUtils.isEmpty(characteristics)) {
-      for (ServiceCharacteristic characteristic : characteristics) {
-        // Check is the characteristic is of type object, if proceed as before to allow for
-        // backwards compatibility.
-        if (characteristic.getValueType() != null && !characteristic.getValueType().isEmpty()
-            && characteristic.getValueType().equals("object")) {
-          ObjectMapper mapper = new ObjectMapper();
-          JsonNode jsonNode = null;
-          try {
-            jsonNode = mapper.readTree(characteristic.getValue().getServiceCharacteristicValue());
-          } catch (IOException e) {
-            LOGGER.error("Failed to read object json {} , exception is ",
-                characteristic.getValue().getServiceCharacteristicValue(), e.getMessage());
-          }
-          ObjectNode objectNode = (ObjectNode) jsonNode;
-          Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
-          while (iter.hasNext()) {
-            Map.Entry<String, JsonNode> entry = iter.next();
-            if (!entry.getValue().isArray()) {
-              userParam = new UserParams(entry.getKey(), entry.getValue().asText());
-            } else {
-              ArrayNode arrayNode = (ArrayNode) entry.getValue();
-              String arrayNodeValueString = arrayNode.toString();
-              userParam = new UserParams(entry.getKey(), arrayNodeValueString);
+        for (int i = 0; i < resourceObjects.size(); i++) {
+
+            ResourceModel resourceModel = new ResourceModel((Map<String, Object>) resourceObjects.get(i));
+            ParametersModel resourceParameters = new ParametersModel();
+            resourceModel.setParameters(resourceParameters);
+            resources.add(resourceModel);
+
+        }
+        parameters.setResources(resources);
+        List<UserParams> userParams =
+                retrieveUserParamsFromServiceCharacteristics(serviceOrderItem.getService().getServiceCharacteristic());
+
+        // If there are ServiceCharacteristics add them to requestInputs
+        if (!userParams.isEmpty()) {
+            Map<String, String> requestInputs = new HashMap<String, String>();
+            for (int i = 0; i < userParams.size(); i++) {
+                requestInputs.put(userParams.get(i).getName(), userParams.get(i).getValue());
             }
-            userParams.add(userParam);
-          }
+
+            parameters.setRequestInputs(requestInputs);
         }
-        // as UserParams for all other types, boolean, string, integer etc
-        else {
-          userParam = new UserParams(characteristic.getName(),
-              characteristic.getValue().getServiceCharacteristicValue());
-          userParams.add(userParam);
-        }
-      }
+        service.setParameters(parameters);
+
+        return service;
     }
 
-    return userParams;
-  }
+    /**
+     * Build a list of UserParams for the SO request by browsing a list of ServiceCharacteristics from
+     * SDC
+     */
+    private List<UserParams> retrieveUserParamsFromServiceCharacteristics(List<ServiceCharacteristic> characteristics) {
+        List<UserParams> userParams = new ArrayList<>();
+        UserParams userParam;
 
+        if (!CollectionUtils.isEmpty(characteristics)) {
+            for (ServiceCharacteristic characteristic : characteristics) {
+                // Check is the characteristic is of type object, if proceed as before to allow for
+                // backwards compatibility.
+                if (characteristic.getValueType() != null && !characteristic.getValueType().isEmpty()
+                        && characteristic.getValueType().equals("object")) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonNode jsonNode = null;
+                    try {
+                        jsonNode = mapper.readTree(characteristic.getValue().getServiceCharacteristicValue());
+                    } catch (IOException e) {
+                        LOGGER.error("Failed to read object json {} , exception is ",
+                                characteristic.getValue().getServiceCharacteristicValue(), e.getMessage());
+                    }
+                    ObjectNode objectNode = (ObjectNode) jsonNode;
+                    Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
+                    while (iter.hasNext()) {
+                        Map.Entry<String, JsonNode> entry = iter.next();
+                        if (!entry.getValue().isArray()) {
+                            userParam = new UserParams(entry.getKey(), entry.getValue().asText());
+                        } else {
+                            ArrayNode arrayNode = (ArrayNode) entry.getValue();
+                            String arrayNodeValueString = arrayNode.toString();
+                            userParam = new UserParams(entry.getKey(), arrayNodeValueString);
+                        }
+                        userParams.add(userParam);
+                    }
+                }
+                // as UserParams for all other types, boolean, string, integer etc
+                else {
+                    userParam = new UserParams(characteristic.getName(),
+                            characteristic.getValue().getServiceCharacteristicValue());
+                    userParams.add(userParam);
+                }
+            }
+        }
+
+        return userParams;
+    }
 
 }

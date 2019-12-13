@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,7 +48,8 @@ import javax.validation.constraints.Pattern;
  * ServiceCharacteristic
  */
 @ApiModel(description = "ServiceCharacteristic")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class ServiceCharacteristic {
     @JsonProperty("name")
@@ -74,7 +74,7 @@ public class ServiceCharacteristic {
     @JsonProperty("name")
     @ApiModelProperty(required = true, value = "Name of characteristic")
     @NotNull(message = "ServiceCharacteristic name cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="ServiceCharacteristic name cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "ServiceCharacteristic name cannot be empty")
     public String getName() {
         return name;
     }
@@ -120,7 +120,6 @@ public class ServiceCharacteristic {
         this.value = value;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -139,7 +138,6 @@ public class ServiceCharacteristic {
     public int hashCode() {
         return Objects.hash(name, valueType, value);
     }
-
 
     @Override
     public String toString() {
@@ -164,4 +162,3 @@ public class ServiceCharacteristic {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

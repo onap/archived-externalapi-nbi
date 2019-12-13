@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 import java.io.Serializable;
@@ -47,107 +48,85 @@ public class OperationStatus implements Serializable {
 
     private Timestamp finishedAt = null;
 
-
     public String getServiceId() {
         return serviceId;
     }
-
 
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }
 
-
     public String getOperationId() {
         return operationId;
     }
-
 
     public void setOperationId(String operationId) {
         this.operationId = operationId;
     }
 
-
     public String getOperation() {
         return operation;
     }
-
 
     public void setOperation(String operation) {
         this.operation = operation;
     }
 
-
     public String getUserId() {
         return userId;
     }
-
 
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
-
     public String getResult() {
         return result;
     }
-
 
     public void setResult(String result) {
         this.result = result;
     }
 
-
     public String getOperationContent() {
         return operationContent;
     }
-
 
     public void setOperationContent(String operationContent) {
         this.operationContent = operationContent;
     }
 
-
     public String getProgress() {
         return progress;
     }
-
 
     public void setProgress(String progress) {
         this.progress = progress;
     }
 
-
     public String getReason() {
         return reason;
     }
-
 
     public void setReason(String reason) {
         this.reason = reason;
     }
 
-
     public Timestamp getOperateAt() {
         return operateAt;
     }
-
 
     public void setOperateAt(Timestamp operateAt) {
         this.operateAt = operateAt;
     }
 
-
     public Timestamp getFinishedAt() {
         return finishedAt;
     }
 
-
     public void setFinishedAt(Timestamp finishedAt) {
         this.finishedAt = finishedAt;
     }
-
-
 
     /**
      * @return Returns the serviceName.
@@ -156,15 +135,12 @@ public class OperationStatus implements Serializable {
         return serviceName;
     }
 
-
-
     /**
      * @param serviceName The serviceName to set.
      */
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
-
 
     /**
      * <br>
@@ -180,7 +156,6 @@ public class OperationStatus implements Serializable {
         return result;
     }
 
-
     /**
      * <br>
      *
@@ -189,40 +164,32 @@ public class OperationStatus implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if(this == obj)
+        if (this == obj)
             return true;
-        if(obj == null)
+        if (obj == null)
             return false;
-        if(getClass() != obj.getClass())
+        if (getClass() != obj.getClass())
             return false;
-        OperationStatus other = (OperationStatus)obj;
-        if(operationId == null) {
-            if(other.operationId != null)
+        OperationStatus other = (OperationStatus) obj;
+        if (operationId == null) {
+            if (other.operationId != null)
                 return false;
-        } else if(!operationId.equals(other.operationId))
+        } else if (!operationId.equals(other.operationId))
             return false;
-        if(serviceId == null) {
-            if(other.serviceId != null)
+        if (serviceId == null) {
+            if (other.serviceId != null)
                 return false;
-        } else if(!serviceId.equals(other.serviceId))
+        } else if (!serviceId.equals(other.serviceId))
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "OperationStatus{" +
-            "serviceId='" + serviceId + '\'' +
-            ", operationId='" + operationId + '\'' +
-            ", serviceName='" + serviceName + '\'' +
-            ", operation='" + operation + '\'' +
-            ", userId='" + userId + '\'' +
-            ", result='" + result + '\'' +
-            ", operationContent='" + operationContent + '\'' +
-            ", progress='" + progress + '\'' +
-            ", reason='" + reason + '\'' +
-            ", operateAt=" + operateAt +
-            ", finishedAt=" + finishedAt +
-            '}';
+        return "OperationStatus{" + "serviceId='" + serviceId + '\'' + ", operationId='" + operationId + '\''
+                + ", serviceName='" + serviceName + '\'' + ", operation='" + operation + '\'' + ", userId='" + userId
+                + '\'' + ", result='" + result + '\'' + ", operationContent='" + operationContent + '\''
+                + ", progress='" + progress + '\'' + ", reason='" + reason + '\'' + ", operateAt=" + operateAt
+                + ", finishedAt=" + finishedAt + '}';
     }
 }

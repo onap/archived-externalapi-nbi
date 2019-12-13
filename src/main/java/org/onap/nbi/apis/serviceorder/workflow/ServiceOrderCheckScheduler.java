@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import java.util.List;
@@ -29,20 +30,18 @@ import org.springframework.stereotype.Service;
 @EnableScheduling
 public class ServiceOrderCheckScheduler {
 
-  @Autowired
-  ServiceOrderService serviceOrderService;
+    @Autowired
+    ServiceOrderService serviceOrderService;
 
-  @Autowired
-  ServiceOrderResource serviceOrderResource;
+    @Autowired
+    ServiceOrderResource serviceOrderResource;
 
-
-  @Scheduled(fixedDelayString = "${serviceOrder.schedule}", initialDelayString = "${serviceOrder.initial}")
-  public void scheduleCheckServiceOrders() {
-    List<ServiceOrder> acknowledgedOrders = serviceOrderService
-        .findServiceOrdersByState(StateType.ACKNOWLEDGED);
-    for (ServiceOrder serviceOrder : acknowledgedOrders) {
-      serviceOrderResource.checkServiceOrder(serviceOrder);
+    @Scheduled(fixedDelayString = "${serviceOrder.schedule}", initialDelayString = "${serviceOrder.initial}")
+    public void scheduleCheckServiceOrders() {
+        List<ServiceOrder> acknowledgedOrders = serviceOrderService.findServiceOrdersByState(StateType.ACKNOWLEDGED);
+        for (ServiceOrder serviceOrder : acknowledgedOrders) {
+            serviceOrderResource.checkServiceOrder(serviceOrder);
+        }
     }
-  }
 
 }

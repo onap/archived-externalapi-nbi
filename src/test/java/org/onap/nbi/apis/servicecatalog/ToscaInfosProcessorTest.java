@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.servicecatalog;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,223 +32,209 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
 public class ToscaInfosProcessorTest {
 
-  @Autowired
-  ToscaInfosProcessor toscaInfosProcessor;
-  final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
+    @Autowired
+    ToscaInfosProcessor toscaInfosProcessor;
+    final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
 
+    @Test
+    public void buildResponseWithSdcToscaParser() {
 
-  @Test
-  public void buildResponseWithSdcToscaParser() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        Path path = new File(classLoader.getResource("toscafile/service-Sdwanvpninfraservice-csar.csar").getFile())
+                .toPath().toAbsolutePath();
+        List<LinkedHashMap> resources = new ArrayList<>();
+        LinkedHashMap resource1 = new LinkedHashMap();
+        resource1.put("id", "7baa7742-3a13-4288-8330-868015adc340");
+        resources.add(resource1);
+        LinkedHashMap resource2 = new LinkedHashMap();
+        resource2.put("id", "81b9430b-8abe-45d6-8bf9-f41a8f5c735f");
+        resources.add(resource2);
+        LinkedHashMap response = new LinkedHashMap();
+        response.put("resourceSpecification", resources);
 
-    ClassLoader classLoader = getClass().getClassLoader();
-    Path path = new File(
-        classLoader.getResource("toscafile/service-Sdwanvpninfraservice-csar.csar").getFile())
-            .toPath().toAbsolutePath();
-    List<LinkedHashMap> resources = new ArrayList<>();
-    LinkedHashMap resource1 = new LinkedHashMap();
-    resource1.put("id", "7baa7742-3a13-4288-8330-868015adc340");
-    resources.add(resource1);
-    LinkedHashMap resource2 = new LinkedHashMap();
-    resource2.put("id", "81b9430b-8abe-45d6-8bf9-f41a8f5c735f");
-    resources.add(resource2);
-    LinkedHashMap response = new LinkedHashMap();
-    response.put("resourceSpecification", resources);
+        try {
+            toscaInfosProcessor.buildResponseWithSdcToscaParser(path, response);
+        } catch (SdcToscaParserException e) {
+            throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
+                    + path.toString() + " " + e.getMessage());
+        }
+        resources = (List<LinkedHashMap>) response.get("resourceSpecification");
+        List<LinkedHashMap> serviceSpecCharacteristic = new ArrayList<>();
+        serviceSpecCharacteristic = (List<LinkedHashMap>) response.get("serviceSpecCharacteristic");
+        assertThat(serviceSpecCharacteristic.get(0).get("name")).isEqualTo("sdwanconnectivity0_topology");
+        assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
+        assertThat(serviceSpecCharacteristic.get(0).get("required")).isEqualTo(true);
+        assertThat(serviceSpecCharacteristic.get(1).get("name")).isEqualTo("sdwanconnectivity0_name");
+        assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
+        assertThat(serviceSpecCharacteristic.get(1).get("required")).isEqualTo(true);
+        assertThat(resources.get(0).get("modelCustomizationId")).isEqualTo("94ec574b-2306-4cbd-8214-09662b040f73");
+        assertThat(resources.get(1).get("modelCustomizationId")).isEqualTo("a7baba5d-6ac3-42b5-b47d-070841303ab1");
 
-    try {
-      toscaInfosProcessor.buildResponseWithSdcToscaParser(path, response);
-    } catch (SdcToscaParserException e) {
-      throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
-          + path.toString() + " " + e.getMessage());
     }
-    resources = (List<LinkedHashMap>) response.get("resourceSpecification");
-    List<LinkedHashMap> serviceSpecCharacteristic = new ArrayList<>();
-    serviceSpecCharacteristic = (List<LinkedHashMap>) response.get("serviceSpecCharacteristic");
-    assertThat(serviceSpecCharacteristic.get(0).get("name"))
-        .isEqualTo("sdwanconnectivity0_topology");
-    assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
-    assertThat(serviceSpecCharacteristic.get(0).get("required")).isEqualTo(true);
-    assertThat(serviceSpecCharacteristic.get(1).get("name")).isEqualTo("sdwanconnectivity0_name");
-    assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
-    assertThat(serviceSpecCharacteristic.get(1).get("required")).isEqualTo(true);
-    assertThat(resources.get(0).get("modelCustomizationId"))
-        .isEqualTo("94ec574b-2306-4cbd-8214-09662b040f73");
-    assertThat(resources.get(1).get("modelCustomizationId"))
-        .isEqualTo("a7baba5d-6ac3-42b5-b47d-070841303ab1");
 
-  }
+    @Test
+    public void buildResponseWithSdcToscaParserWithDefaultInputs() {
 
-  @Test
-  public void buildResponseWithSdcToscaParserWithDefaultInputs() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        Path path = new File(classLoader.getResource("toscafile/service-Sotnvpninfraservice-csar.csar").getFile())
+                .toPath().toAbsolutePath();
+        List<LinkedHashMap> resources = new ArrayList<>();
+        LinkedHashMap resource1 = new LinkedHashMap();
+        resource1.put("id", "218df3c3-50dd-4c26-9e36-4771387bb771");
+        resources.add(resource1);
+        LinkedHashMap resource2 = new LinkedHashMap();
+        resource2.put("id", "81b9430b-8abe-45d6-8bf9-f41a8f5c735f");
+        resources.add(resource2);
+        LinkedHashMap response = new LinkedHashMap();
+        response.put("resourceSpecification", resources);
 
-    ClassLoader classLoader = getClass().getClassLoader();
-    Path path = new File(
-        classLoader.getResource("toscafile/service-Sotnvpninfraservice-csar.csar").getFile())
-            .toPath().toAbsolutePath();
-    List<LinkedHashMap> resources = new ArrayList<>();
-    LinkedHashMap resource1 = new LinkedHashMap();
-    resource1.put("id", "218df3c3-50dd-4c26-9e36-4771387bb771");
-    resources.add(resource1);
-    LinkedHashMap resource2 = new LinkedHashMap();
-    resource2.put("id", "81b9430b-8abe-45d6-8bf9-f41a8f5c735f");
-    resources.add(resource2);
-    LinkedHashMap response = new LinkedHashMap();
-    response.put("resourceSpecification", resources);
-
-    try {
-      toscaInfosProcessor.buildResponseWithSdcToscaParser(path, response);
-    } catch (SdcToscaParserException e) {
-      throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
-          + path.toString() + " " + e.getMessage());
+        try {
+            toscaInfosProcessor.buildResponseWithSdcToscaParser(path, response);
+        } catch (SdcToscaParserException e) {
+            throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
+                    + path.toString() + " " + e.getMessage());
+        }
+        resources = (List<LinkedHashMap>) response.get("resourceSpecification");
+        List<LinkedHashMap> serviceSpecCharacteristic = new ArrayList<>();
+        serviceSpecCharacteristic = (List<LinkedHashMap>) response.get("serviceSpecCharacteristic");
+        assertThat(resources.get(0).get("modelCustomizationId")).isEqualTo("b44071c8-04fd-4d6b-b6af-772cbfaa1129");
+        assertThat(resources.get(1).get("modelCustomizationId")).isEqualTo("c3612284-6c67-4d8c-8b41-b699cc90e76d");
+        assertThat(serviceSpecCharacteristic.get(12).get("serviceSpecCharacteristicValue")).isNull();
+        assertThat(serviceSpecCharacteristic.get(13).get("serviceSpecCharacteristicValue")).isNotNull();
     }
-    resources = (List<LinkedHashMap>) response.get("resourceSpecification");
-    List<LinkedHashMap> serviceSpecCharacteristic = new ArrayList<>();
-    serviceSpecCharacteristic = (List<LinkedHashMap>) response.get("serviceSpecCharacteristic");
-    assertThat(resources.get(0).get("modelCustomizationId"))
-        .isEqualTo("b44071c8-04fd-4d6b-b6af-772cbfaa1129");
-    assertThat(resources.get(1).get("modelCustomizationId"))
-        .isEqualTo("c3612284-6c67-4d8c-8b41-b699cc90e76d");
-    assertThat(serviceSpecCharacteristic.get(12).get("serviceSpecCharacteristicValue")).isNull();
-    assertThat(serviceSpecCharacteristic.get(13).get("serviceSpecCharacteristicValue")).isNotNull();
-  }
 
-  @Test
-  public void buildResponseWithSdcToscaParserwithMetaDataMisMatch() {
+    @Test
+    public void buildResponseWithSdcToscaParserwithMetaDataMisMatch() {
 
-    ClassLoader classLoader = getClass().getClassLoader();
-    Path path = new File(
-        classLoader.getResource("toscafile/service-Sdwanvpninfraservice-csar.csar").getFile())
-            .toPath().toAbsolutePath();
-    List<LinkedHashMap> resources = new ArrayList<>();
-    LinkedHashMap resource1 = new LinkedHashMap();
-    resource1.put("id", "some bad resource id no in TOSCA CSAR");
-    resources.add(resource1);
-    LinkedHashMap resource2 = new LinkedHashMap();
-    resource2.put("id", "some bad resource id no in TOSCA CSAR");
-    resources.add(resource2);
-    LinkedHashMap response = new LinkedHashMap();
-    response.put("resourceSpecification", resources);
+        ClassLoader classLoader = getClass().getClassLoader();
+        Path path = new File(classLoader.getResource("toscafile/service-Sdwanvpninfraservice-csar.csar").getFile())
+                .toPath().toAbsolutePath();
+        List<LinkedHashMap> resources = new ArrayList<>();
+        LinkedHashMap resource1 = new LinkedHashMap();
+        resource1.put("id", "some bad resource id no in TOSCA CSAR");
+        resources.add(resource1);
+        LinkedHashMap resource2 = new LinkedHashMap();
+        resource2.put("id", "some bad resource id no in TOSCA CSAR");
+        resources.add(resource2);
+        LinkedHashMap response = new LinkedHashMap();
+        response.put("resourceSpecification", resources);
 
-    try {
-      toscaInfosProcessor.buildResponseWithSdcToscaParser(path, response);
-    } catch (SdcToscaParserException e) {
-      throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
-          + path.toString() + " " + e.getMessage());
+        try {
+            toscaInfosProcessor.buildResponseWithSdcToscaParser(path, response);
+        } catch (SdcToscaParserException e) {
+            throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
+                    + path.toString() + " " + e.getMessage());
+        }
+        resources = (List<LinkedHashMap>) response.get("resourceSpecification");
+        List<LinkedHashMap> serviceSpecCharacteristic = new ArrayList<>();
+        serviceSpecCharacteristic = (List<LinkedHashMap>) response.get("serviceSpecCharacteristic");
+        assertThat(serviceSpecCharacteristic.get(0).get("name")).isEqualTo("sdwanconnectivity0_topology");
+        assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
+        assertThat(serviceSpecCharacteristic.get(0).get("required")).isEqualTo(true);
+        assertThat(serviceSpecCharacteristic.get(1).get("name")).isEqualTo("sdwanconnectivity0_name");
+        assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
+        assertThat(serviceSpecCharacteristic.get(1).get("required")).isEqualTo(true);
+        // Check that resources cannot be found in the TOSCA template
+        assertThat(resources.get(0).get("modelCustomizationId")).isNull();
+        assertThat(resources.get(1).get("modelCustomizationId")).isNull();
+
     }
-    resources = (List<LinkedHashMap>) response.get("resourceSpecification");
-    List<LinkedHashMap> serviceSpecCharacteristic = new ArrayList<>();
-    serviceSpecCharacteristic = (List<LinkedHashMap>) response.get("serviceSpecCharacteristic");
-    assertThat(serviceSpecCharacteristic.get(0).get("name"))
-        .isEqualTo("sdwanconnectivity0_topology");
-    assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
-    assertThat(serviceSpecCharacteristic.get(0).get("required")).isEqualTo(true);
-    assertThat(serviceSpecCharacteristic.get(1).get("name")).isEqualTo("sdwanconnectivity0_name");
-    assertThat(serviceSpecCharacteristic.get(1).get("valueType")).isEqualTo("string");
-    assertThat(serviceSpecCharacteristic.get(1).get("required")).isEqualTo(true);
-    // Check that resources cannot be found in the TOSCA template
-    assertThat(resources.get(0).get("modelCustomizationId")).isNull();
-    assertThat(resources.get(1).get("modelCustomizationId")).isNull();
 
-  }
+    @Test
+    public void testBuildAndSaveResponseWithSdcToscaParser() {
 
-  @Test
-  public void testBuildAndSaveResponseWithSdcToscaParser() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        Path path = new File(classLoader.getResource("toscafile/service-Sotnvpninfraservice-csar.csar").getFile())
+                .toPath().toAbsolutePath();
 
-    ClassLoader classLoader = getClass().getClassLoader();
-    Path path = new File(
-        classLoader.getResource("toscafile/service-Sotnvpninfraservice-csar.csar").getFile())
-            .toPath().toAbsolutePath();
+        LinkedHashMap response = new LinkedHashMap();
+        response.put("version", "1.0");
+        response.put("name", "Service_vMME");
+        response.put("description", "some service characteristics schema");
+        response.put("id", "7f5e5139-768d-4410-a871-c41430785214");
 
-    LinkedHashMap response = new LinkedHashMap();
-    response.put("version", "1.0");
-    response.put("name", "Service_vMME");
-    response.put("description", "some service characteristics schema");
-    response.put("id", "7f5e5139-768d-4410-a871-c41430785214");
+        List<LinkedHashMap> resources = new ArrayList<>();
+        LinkedHashMap resource1 = new LinkedHashMap();
+        resource1.put("id", "7baa7742-3a13-4288-8330-868015adc340");
+        resources.add(resource1);
+        LinkedHashMap resource2 = new LinkedHashMap();
+        resource2.put("id", "81b9430b-8abe-45d6-8bf9-f41a8f5c735f");
+        resources.add(resource2);
 
-    List<LinkedHashMap> resources = new ArrayList<>();
-    LinkedHashMap resource1 = new LinkedHashMap();
-    resource1.put("id", "7baa7742-3a13-4288-8330-868015adc340");
-    resources.add(resource1);
-    LinkedHashMap resource2 = new LinkedHashMap();
-    resource2.put("id", "81b9430b-8abe-45d6-8bf9-f41a8f5c735f");
-    resources.add(resource2);
+        response.put("resourceSpecification", resources);
 
-    response.put("resourceSpecification", resources);
+        LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
+        serviceSpecCharacteristicValue.put("valueType", "object");
+        serviceSpecCharacteristicValue.put("@schemaLocation",
+                "/serviceSpecification/7f5e5139-768d-4410-a871-c41430785214/specificationInputSchema");
+        serviceSpecCharacteristicValue.put("@type", "Service_vMME_ServiceCharacteristic");
 
-    LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
-    serviceSpecCharacteristicValue.put("valueType", "object");
-    serviceSpecCharacteristicValue.put("@schemaLocation",
-        "/serviceSpecification/7f5e5139-768d-4410-a871-c41430785214/specificationInputSchema");
-    serviceSpecCharacteristicValue.put("@type", "Service_vMME_ServiceCharacteristic");
-
-    LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
-    serviceSpecCharacteristic.put("name", "Service_vMME_ServiceCharacteristics");
-    serviceSpecCharacteristic.put("description",
-        "This object describes all the inputs needed from the client to interact with the Service_vMME Service Topology");
-    // using object to match examples in specifications
-    serviceSpecCharacteristic.put("valueType", "object");
-    serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
-    serviceSpecCharacteristic.put("@schemaLocation", "null");
-    serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValue);
-    try {
-      toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
-    } catch (SdcToscaParserException ex) {
-      throw new TechnicalException("unable to build response " + ex.getMessage());
+        LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
+        serviceSpecCharacteristic.put("name", "Service_vMME_ServiceCharacteristics");
+        serviceSpecCharacteristic.put("description",
+                "This object describes all the inputs needed from the client to interact with the Service_vMME Service Topology");
+        // using object to match examples in specifications
+        serviceSpecCharacteristic.put("valueType", "object");
+        serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
+        serviceSpecCharacteristic.put("@schemaLocation", "null");
+        serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValue);
+        try {
+            toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
+        } catch (SdcToscaParserException ex) {
+            throw new TechnicalException("unable to build response " + ex.getMessage());
+        }
+        assertThat(response.get("serviceSpecCharacteristic")).isEqualTo(serviceSpecCharacteristic);
     }
-    assertThat(response.get("serviceSpecCharacteristic")).isEqualTo(serviceSpecCharacteristic);
-  }
-  
-  
-  @Test
-  public void testBuildAndSaveResponseWithSdcToscaParserWithInputListType() {
 
-    ClassLoader classLoader = getClass().getClassLoader();
-    Path path = new File(
-        classLoader.getResource("toscafile/service-MscmEvplService-csar.csar").getFile())
-            .toPath().toAbsolutePath();
+    @Test
+    public void testBuildAndSaveResponseWithSdcToscaParserWithInputListType() {
 
-    LinkedHashMap response = new LinkedHashMap();
-    response.put("version", "1.0");
-    response.put("name", "MSCM-EVPL-Service");
-    response.put("description", "MSCM EVPL Service");
-    response.put("id", "66a66cc3-178c-45fd-82c2-494336cb3665");
+        ClassLoader classLoader = getClass().getClassLoader();
+        Path path = new File(classLoader.getResource("toscafile/service-MscmEvplService-csar.csar").getFile()).toPath()
+                .toAbsolutePath();
 
-    List<LinkedHashMap> resources = new ArrayList<>();
-    LinkedHashMap resource1 = new LinkedHashMap();
-    resource1.put("id", "f5f487df-8c02-4485-81d4-695c50e24b22");
-    resources.add(resource1);
-    LinkedHashMap resource2 = new LinkedHashMap();
-    resource2.put("id", "65c34b35-e8ab-426a-b048-d707467f68b2");
-    resources.add(resource2);
+        LinkedHashMap response = new LinkedHashMap();
+        response.put("version", "1.0");
+        response.put("name", "MSCM-EVPL-Service");
+        response.put("description", "MSCM EVPL Service");
+        response.put("id", "66a66cc3-178c-45fd-82c2-494336cb3665");
 
-    response.put("resourceSpecification", resources);
+        List<LinkedHashMap> resources = new ArrayList<>();
+        LinkedHashMap resource1 = new LinkedHashMap();
+        resource1.put("id", "f5f487df-8c02-4485-81d4-695c50e24b22");
+        resources.add(resource1);
+        LinkedHashMap resource2 = new LinkedHashMap();
+        resource2.put("id", "65c34b35-e8ab-426a-b048-d707467f68b2");
+        resources.add(resource2);
 
-    LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
-    serviceSpecCharacteristicValue.put("valueType", "object");
-    serviceSpecCharacteristicValue.put("@schemaLocation",
-        "/serviceSpecification/66a66cc3-178c-45fd-82c2-494336cb3665/specificationInputSchema");
-    serviceSpecCharacteristicValue.put("@type", "MSCM-EVPL-Service_ServiceCharacteristic");
+        response.put("resourceSpecification", resources);
 
-    LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
-    serviceSpecCharacteristic.put("name", "MSCM-EVPL-Service_ServiceCharacteristics");
-    serviceSpecCharacteristic.put("description",
-        "This object describes all the inputs needed from the client to interact with the MSCM-EVPL-Service Service Topology");
-    // using object to match examples in specifications
-    serviceSpecCharacteristic.put("valueType", "object");
-    serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
-    serviceSpecCharacteristic.put("@schemaLocation", "null");
-    serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValue);
-    try {
-      toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
-    } catch (SdcToscaParserException ex) {
-      throw new TechnicalException("unable to build response " + ex.getMessage());
+        LinkedHashMap serviceSpecCharacteristicValue = new LinkedHashMap();
+        serviceSpecCharacteristicValue.put("valueType", "object");
+        serviceSpecCharacteristicValue.put("@schemaLocation",
+                "/serviceSpecification/66a66cc3-178c-45fd-82c2-494336cb3665/specificationInputSchema");
+        serviceSpecCharacteristicValue.put("@type", "MSCM-EVPL-Service_ServiceCharacteristic");
+
+        LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
+        serviceSpecCharacteristic.put("name", "MSCM-EVPL-Service_ServiceCharacteristics");
+        serviceSpecCharacteristic.put("description",
+                "This object describes all the inputs needed from the client to interact with the MSCM-EVPL-Service Service Topology");
+        // using object to match examples in specifications
+        serviceSpecCharacteristic.put("valueType", "object");
+        serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
+        serviceSpecCharacteristic.put("@schemaLocation", "null");
+        serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", serviceSpecCharacteristicValue);
+        try {
+            toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
+        } catch (SdcToscaParserException ex) {
+            throw new TechnicalException("unable to build response " + ex.getMessage());
+        }
+        assertThat(response.get("serviceSpecCharacteristic")).isEqualTo(serviceSpecCharacteristic);
     }
-    assertThat(response.get("serviceSpecCharacteristic")).isEqualTo(serviceSpecCharacteristic);
-  }
 }

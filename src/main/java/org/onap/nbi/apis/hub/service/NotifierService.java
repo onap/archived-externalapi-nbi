@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.hub.service;
 
 import javax.validation.Valid;
@@ -27,19 +28,19 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class NotifierService {
 
-  private final Logger logger = LoggerFactory.getLogger(NotifierService.class);
+    private final Logger logger = LoggerFactory.getLogger(NotifierService.class);
 
-  @Autowired
-  RestTemplate restTemplate;
+    @Autowired
+    RestTemplate restTemplate;
 
-  @Async
-  public void run(Subscriber subscriber, @Valid Event event) {
-    try {
-      restTemplate.postForEntity(subscriber.getCallback(), event, Object.class);
-    } catch (BackendFunctionalException e) {
-      logger.error(" unable to post event to {} , receive {}, {}", subscriber.getCallback(),
-          e.getHttpStatus(), e.getBodyResponse());
+    @Async
+    public void run(Subscriber subscriber, @Valid Event event) {
+        try {
+            restTemplate.postForEntity(subscriber.getCallback(), event, Object.class);
+        } catch (BackendFunctionalException e) {
+            logger.error(" unable to post event to {} , receive {}, {}", subscriber.getCallback(), e.getHttpStatus(),
+                    e.getBodyResponse());
+        }
+
     }
-
-  }
 }

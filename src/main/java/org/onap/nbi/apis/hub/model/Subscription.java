@@ -13,13 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.hub.model;
 
 import java.util.stream.Collectors;
 import org.onap.nbi.commons.Resource;
 
-public class Subscription implements Resource{
-
+public class Subscription implements Resource {
 
     private String id;
 
@@ -41,13 +41,11 @@ public class Subscription implements Resource{
         this.ewId = ewId;
     }
 
-
-
     public String getEwHost() {
         return ewHost;
     }
 
-    public Subscription(){
+    public Subscription() {
 
     }
 
@@ -85,14 +83,11 @@ public class Subscription implements Resource{
         Subscription sub = new Subscription();
         sub.setId(subscriber.getId());
         sub.setCallback(subscriber.getCallback());
-        sub.setEwId( subscriber.getEwId());
-        sub.setEwHost( subscriber.getEwHost());
+        sub.setEwId(subscriber.getEwId());
+        sub.setEwHost(subscriber.getEwHost());
 
-
-        String query = subscriber.getQuery().entrySet()
-                .stream()
-                .map(entry -> entry.getKey()+ "=" + String.join(" ",entry.getValue()))
-                .collect(Collectors.joining());
+        String query = subscriber.getQuery().entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + String.join(" ", entry.getValue())).collect(Collectors.joining());
 
         sub.setQuery(query);
         return sub;

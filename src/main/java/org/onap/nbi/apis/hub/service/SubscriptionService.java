@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.hub.service;
 
 import com.google.common.collect.Lists;
@@ -39,9 +40,8 @@ public class SubscriptionService {
         subscription.setId(null);
         Subscriber subscriber = Subscriber.createFromSubscription(subscription);
         if (isSubscriberAlreadyExisting(subscriber)) {
-            String message = MessageFormat
-                .format("subscription with callback {0} and query {1} already exists", subscription.getCallback(),
-                    subscription.getQuery());
+            String message = MessageFormat.format("subscription with callback {0} and query {1} already exists",
+                    subscription.getCallback(), subscription.getQuery());
             ObjectError error = new ObjectError("subscription", message);
             List<ObjectError> errors = Lists.newArrayList(error);
             throw new ValidationException(errors);

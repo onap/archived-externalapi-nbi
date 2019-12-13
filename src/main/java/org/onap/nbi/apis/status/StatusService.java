@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.status;
 
 import org.onap.nbi.apis.status.model.ApplicationStatus;
@@ -22,8 +23,6 @@ public interface StatusService {
 
     ApplicationStatus get(String serviceName, String serviceVersion);
 
-
     ApplicationStatus getOnapConnectivity(OnapModuleType onapModuleType);
-
 
 }

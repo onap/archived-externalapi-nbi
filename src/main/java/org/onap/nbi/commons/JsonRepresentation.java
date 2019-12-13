@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.commons;
 
 import java.util.LinkedHashSet;
@@ -23,7 +24,8 @@ public class JsonRepresentation {
 
     private Set<String> attributes = new LinkedHashSet<>();
 
-    public JsonRepresentation() {}
+    public JsonRepresentation() {
+    }
 
     public JsonRepresentation(MultiValueMap<String, String> queryParameters) {
         this.attributes = QueryParserUtils.getFields(queryParameters);

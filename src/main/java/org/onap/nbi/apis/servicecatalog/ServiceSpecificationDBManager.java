@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.servicecatalog;
 
 import org.onap.nbi.apis.servicecatalog.model.ServiceSpecification;
@@ -47,7 +48,7 @@ public class ServiceSpecificationDBManager {
         serviceSpecification.setCatalogResponse(serviceCatalogResponse);
         serviceSpecificationRepository.save(serviceSpecification);
 
-   }
+    }
 
     public boolean checkServiceSpecExistence(String serviceSpecId) {
 
@@ -56,32 +57,34 @@ public class ServiceSpecificationDBManager {
 
     public Map getServiceSpecification(String serviceSpecId) {
 
-       Optional<ServiceSpecification> optionalServiceSpecification = serviceSpecificationRepository.findById(serviceSpecId);
-       if(!optionalServiceSpecification.isPresent()) {
-           throw new TechnicalException("Unable get service specification");
-       }else {
-           return  optionalServiceSpecification.get().getCatalogResponse();
-       }
+        Optional<ServiceSpecification> optionalServiceSpecification =
+                serviceSpecificationRepository.findById(serviceSpecId);
+        if (!optionalServiceSpecification.isPresent()) {
+            throw new TechnicalException("Unable get service specification");
+        } else {
+            return optionalServiceSpecification.get().getCatalogResponse();
+        }
     }
 
     public boolean checkInputSchemaExistence(String serviceSpecId) {
-        return  specificationInputSchemaRepository.existsById(serviceSpecId);
+        return specificationInputSchemaRepository.existsById(serviceSpecId);
     }
 
     public String getInputSchema(String serviceSpecId) {
-        Optional<SpecificationInputSchema> optionalSpecificationInputSchema = specificationInputSchemaRepository.findById(serviceSpecId);
-        if(!optionalSpecificationInputSchema.isPresent()) {
+        Optional<SpecificationInputSchema> optionalSpecificationInputSchema =
+                specificationInputSchemaRepository.findById(serviceSpecId);
+        if (!optionalSpecificationInputSchema.isPresent()) {
             throw new TechnicalException("Unable get specification input schema");
-        }else {
-            return  optionalSpecificationInputSchema.get().getSpecificationSchemaJson();
+        } else {
+            return optionalSpecificationInputSchema.get().getSpecificationSchemaJson();
         }
     }
 
     public void saveSpecificationInputSchema(String svcCharacteristicsJson, Map serviceCatalogResponse) {
-            SpecificationInputSchema specificationInputSchema = new SpecificationInputSchema();
-            specificationInputSchema.setId((String) serviceCatalogResponse.get("id"));
-            specificationInputSchema.setSpecificationSchemaJson(svcCharacteristicsJson);
-            specificationInputSchemaRepository.save(specificationInputSchema);
+        SpecificationInputSchema specificationInputSchema = new SpecificationInputSchema();
+        specificationInputSchema.setId((String) serviceCatalogResponse.get("id"));
+        specificationInputSchema.setSpecificationSchemaJson(svcCharacteristicsJson);
+        specificationInputSchemaRepository.save(specificationInputSchema);
 
     }
 }

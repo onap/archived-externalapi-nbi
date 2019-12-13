@@ -13,15 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis.serviceorder;
 
+package org.onap.nbi.apis.serviceorder;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ServiceCatalogUrl {
-
 
     @Value("${nbi.url}")
     private String nbiUrl;
@@ -31,6 +30,5 @@ public class ServiceCatalogUrl {
         return new StringBuilder().append(nbiUrl).append("/serviceSpecification/").toString();
 
     }
-
 
 }

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.commons;
 
 /**
@@ -28,6 +29,7 @@ public class ReservedKeys {
 
     public static final String QUERY_KEY_FIELD_ESCAPE = ":";
 
-    private ReservedKeys() {}
+    private ReservedKeys() {
+    }
 
 }

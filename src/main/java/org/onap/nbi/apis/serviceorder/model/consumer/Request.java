@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 import java.util.Objects;
@@ -21,7 +22,8 @@ public class Request {
 
     private RequestStatus requestStatus;
 
-    public Request() {}
+    public Request() {
+    }
 
     public Request(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;

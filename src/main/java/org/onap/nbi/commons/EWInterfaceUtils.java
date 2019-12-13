@@ -15,6 +15,7 @@
  */
 
 package org.onap.nbi.commons;
+
 import org.onap.nbi.exceptions.BackendFunctionalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-
 @Service
 public class EWInterfaceUtils {
 
     public static final String RESPONSE_STATUS = "response status : ";
     public static final String RETURNS = " returns ";
     public static final String ERROR_ON_CALLING = "error on calling ";
-    private static final Logger LOGGER = LoggerFactory.getLogger( EWInterfaceUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EWInterfaceUtils.class);
     @Autowired
     private RestTemplate restTemplate;
     @Value("${so.host}")
@@ -46,7 +46,6 @@ public class EWInterfaceUtils {
 
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String X_FROM_APP_ID = "X-FromAppId";
-
 
     public ResponseEntity<Object> callPostRequestTarget(Object obj, String targetUrl) {
 
@@ -62,11 +61,10 @@ public class EWInterfaceUtils {
             }
 
         } catch (BackendFunctionalException | ResourceAccessException e) {
-            LOGGER.error(ERROR_ON_CALLING  + " ," + e.getMessage());
+            LOGGER.error(ERROR_ON_CALLING + " ," + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public ResponseEntity<Object> callGetRequestTarget(String targetUrl) {
         try {
@@ -103,12 +101,13 @@ public class EWInterfaceUtils {
             return null;
         }
     }
+
     private void logResponseGet(String url, ResponseEntity<Object> response) {
         if (response != null) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("response body : {}", response.getBody().toString());
             }
-            if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals( HttpStatus.OK)) {
+            if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
                 LOGGER.warn("HTTP call EWInterface on {} returns {} , {}", url, response.getStatusCodeValue(),
                         response.getBody().toString());
             }

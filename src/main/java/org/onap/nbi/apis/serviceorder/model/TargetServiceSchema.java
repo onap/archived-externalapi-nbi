@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,7 +47,8 @@ import javax.validation.constraints.Pattern;
  *
  */
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class TargetServiceSchema {
     @JsonProperty("@type")
@@ -68,7 +68,7 @@ public class TargetServiceSchema {
     @JsonProperty("@type")
     @ApiModelProperty(required = true, value = "")
     @NotNull(message = "TargetServiceSchema @type cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="TargetServiceSchema @type cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "TargetServiceSchema @type cannot be empty")
     public String getType() {
         return type;
     }
@@ -88,7 +88,7 @@ public class TargetServiceSchema {
     @JsonProperty("@schemaLocation")
     @ApiModelProperty(required = true, value = "")
     @NotNull(message = "TargetServiceSchema @schemaLocation cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="TargetServiceSchema @schemaLocation cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "TargetServiceSchema @schemaLocation cannot be empty")
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -96,7 +96,6 @@ public class TargetServiceSchema {
     public void setSchemaLocation(String schemaLocation) {
         this.schemaLocation = schemaLocation;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -115,7 +114,6 @@ public class TargetServiceSchema {
     public int hashCode() {
         return Objects.hash(type, schemaLocation);
     }
-
 
     @Override
     public String toString() {
@@ -139,4 +137,3 @@ public class TargetServiceSchema {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.exceptions;
 
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,6 @@ import org.springframework.web.client.RestClientException;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
-
 
     @ExceptionHandler(BackendFunctionalException.class)
     @ResponseBody

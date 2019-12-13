@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class ModelInfo {
@@ -99,15 +100,10 @@ public class ModelInfo {
 
     @Override
     public String toString() {
-        return "ModelInfo{" +
-            "modelType='" + modelType + '\'' +
-            ", modelInvariantId='" + modelInvariantId + '\'' +
-            ", modelVersionId='" + modelVersionId + '\'' +
-            ", modelNameVersionId='" + modelNameVersionId + '\'' +
-            ", modelName='" + modelName + '\'' +
-            ", modelVersion='" + modelVersion + '\'' +
-            ", modelCustomizationName='" + modelCustomizationName + '\'' +
-            ", modelCustomizationId='" + modelCustomizationId + '\'' +
-            '}';
+        return "ModelInfo{" + "modelType='" + modelType + '\'' + ", modelInvariantId='" + modelInvariantId + '\''
+                + ", modelVersionId='" + modelVersionId + '\'' + ", modelNameVersionId='" + modelNameVersionId + '\''
+                + ", modelName='" + modelName + '\'' + ", modelVersion='" + modelVersion + '\''
+                + ", modelCustomizationName='" + modelCustomizationName + '\'' + ", modelCustomizationId='"
+                + modelCustomizationId + '\'' + '}';
     }
 }

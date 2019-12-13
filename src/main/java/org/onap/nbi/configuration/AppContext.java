@@ -24,8 +24,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 @EnableAsync
 public class AppContext extends WebMvcConfigurationSupport {
-  @Bean
-  public Executor taskExecutor() {
-    return new SimpleAsyncTaskExecutor();
-  }
+    @Bean
+    public Executor taskExecutor() {
+        return new SimpleAsyncTaskExecutor();
+    }
 }

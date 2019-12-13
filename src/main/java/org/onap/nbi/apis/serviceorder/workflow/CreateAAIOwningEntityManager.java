@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import org.onap.nbi.apis.serviceorder.MultiClient;
@@ -26,7 +27,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateAAIOwningEntityManager {
 
-
     @Autowired
     private MultiClient serviceOrderConsumerService;
 
@@ -36,16 +36,13 @@ public class CreateAAIOwningEntityManager {
     @Value("${so.owning.entity.id}")
     private String owningEntityId;
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAIOwningEntityManager.class);
 
+    public void createAAIOwningEntity(ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
 
-    public void createAAIOwningEntity(ServiceOrder serviceOrder,
-        ServiceOrderInfo serviceOrderInfo) {
-
-        String owningEntityIdToSo=serviceOrderConsumerService.getOwningEntityIdInAAI(serviceOrder);
-        if (owningEntityIdToSo==null) {
-            owningEntityIdToSo=owningEntityId;
+        String owningEntityIdToSo = serviceOrderConsumerService.getOwningEntityIdInAAI(serviceOrder);
+        if (owningEntityIdToSo == null) {
+            owningEntityIdToSo = owningEntityId;
             boolean owningEntity = serviceOrderConsumerService.putOwningEntity(serviceOrder);
             if (!owningEntity) {
                 serviceOrderService.updateOrderState(serviceOrder, StateType.REJECTED);
@@ -56,7 +53,4 @@ public class CreateAAIOwningEntityManager {
         serviceOrderInfo.setOwningEntityId(owningEntityIdToSo);
     }
 
-
 }
-
-

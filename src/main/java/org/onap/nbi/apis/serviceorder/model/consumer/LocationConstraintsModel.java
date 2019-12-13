@@ -10,36 +10,34 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class LocationConstraintsModel {
 
-	private String vnfProfileId;
-	
-	private VnfLocationConstraintsModel locationConstraints;
-	
-	
-	public String getVnfProfileId() {
-		return vnfProfileId;
-	}
-	
-	public void setVnfProfileId(String vnfProfileId) {
-		this.vnfProfileId = vnfProfileId;
-	}
-	
-	public VnfLocationConstraintsModel getLocationConstraints() {
-		return locationConstraints;
-	}
-	
-	public void setLocationConstraints(VnfLocationConstraintsModel locationConstraints) {
-		this.locationConstraints = locationConstraints;
-	}
+    private String vnfProfileId;
 
-	@Override
+    private VnfLocationConstraintsModel locationConstraints;
+
+    public String getVnfProfileId() {
+        return vnfProfileId;
+    }
+
+    public void setVnfProfileId(String vnfProfileId) {
+        this.vnfProfileId = vnfProfileId;
+    }
+
+    public VnfLocationConstraintsModel getLocationConstraints() {
+        return locationConstraints;
+    }
+
+    public void setLocationConstraints(VnfLocationConstraintsModel locationConstraints) {
+        this.locationConstraints = locationConstraints;
+    }
+
+    @Override
     public String toString() {
-        return "LocationConstraintsModel{" +
-            "vnfProfileId='" + vnfProfileId + '\'' +
-            locationConstraints + '}';
+        return "LocationConstraintsModel{" + "vnfProfileId='" + vnfProfileId + '\'' + locationConstraints + '}';
     }
 
 }

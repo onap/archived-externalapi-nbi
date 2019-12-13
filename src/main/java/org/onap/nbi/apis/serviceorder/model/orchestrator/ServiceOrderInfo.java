@@ -13,8 +13,8 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.onap.nbi.apis.serviceorder.model.orchestrator;
 
+package org.onap.nbi.apis.serviceorder.model.orchestrator;
 
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import java.util.HashMap;
@@ -25,9 +25,9 @@ public class ServiceOrderInfo {
     private boolean useServiceOrderCustomer;
     private SubscriberInfo subscriberInfo;
     private Map<String, ServiceOrderItemInfo> serviceOrderItemInfos = new HashMap<>();
-    private boolean allItemsInAdd= true;
+    private boolean allItemsInAdd = true;
     private boolean allItemsCompleted;
-    private boolean serviceOrderRejected= false;
+    private boolean serviceOrderRejected = false;
     private String serviceOrderId;
     private String owningEntityId;
 
@@ -87,7 +87,6 @@ public class ServiceOrderInfo {
         this.subscriberInfo = subscriberInfo;
     }
 
-
     public boolean isUseServiceOrderCustomer() {
         return useServiceOrderCustomer;
     }
@@ -95,6 +94,5 @@ public class ServiceOrderInfo {
     public void setUseServiceOrderCustomer(boolean useServiceOrderCustomer) {
         this.useServiceOrderCustomer = useServiceOrderCustomer;
     }
-
 
 }

@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -52,7 +51,8 @@ import javax.validation.constraints.Pattern;
  * An identified part of the order. A service order is decomposed into one or more order items.
  */
 @ApiModel(description = "An identified part of the order. A service order is decomposed into one or more order items.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class ServiceOrderItem {
     @JsonProperty("id")
@@ -85,10 +85,8 @@ public class ServiceOrderItem {
     @JsonProperty("service")
     private Service service = null;
 
-
     @JsonProperty("orderMessage")
     private List<OrderMessage> orderItemMessage = new ArrayList<>();
-
 
     public ServiceOrderItem id(String id) {
         this.id = id;
@@ -101,10 +99,9 @@ public class ServiceOrderItem {
      * @return id
      **/
     @JsonProperty("id")
-    @ApiModelProperty(
-            value = "Identifier of the line item (generally it is a sequence number 01, 02, 03, …)")
+    @ApiModelProperty(value = "Identifier of the line item (generally it is a sequence number 01, 02, 03, …)")
     @NotNull(message = "order item id cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="order item id cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "order item id cannot be empty")
     public String getId() {
         return id;
     }
@@ -277,7 +274,6 @@ public class ServiceOrderItem {
         this.service = service;
     }
 
-
     public String getRequestId() {
         return requestId;
     }
@@ -285,7 +281,6 @@ public class ServiceOrderItem {
     public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
-
 
     public ServiceOrderItem orderItemMessage(List<OrderMessage> orderItemMessage) {
         this.orderItemMessage = orderItemMessage;
@@ -296,14 +291,14 @@ public class ServiceOrderItem {
         if (this.orderItemMessage == null) {
             this.orderItemMessage = new ArrayList<OrderMessage>();
         }
-        boolean mesageAlreadyExist=false;
+        boolean mesageAlreadyExist = false;
         for (OrderMessage message : this.orderItemMessage) {
-            if(message.getCode().equals(orderItemMessageItem.getCode())){
-                mesageAlreadyExist=true;
+            if (message.getCode().equals(orderItemMessageItem.getCode())) {
+                mesageAlreadyExist = true;
 
             }
         }
-        if(!mesageAlreadyExist) {
+        if (!mesageAlreadyExist) {
             this.orderItemMessage.add(orderItemMessageItem);
         }
         return this;
@@ -323,9 +318,6 @@ public class ServiceOrderItem {
     public void setOrderMessage(List<OrderMessage> orderItemMessage) {
         this.orderItemMessage = orderItemMessage;
     }
-
-
-
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -351,10 +343,9 @@ public class ServiceOrderItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, action, state, percentProgress, type, schemaLocation, baseType, orderItemRelationship, service,
-                requestId,orderItemMessage);
+        return Objects.hash(id, action, state, percentProgress, type, schemaLocation, baseType, orderItemRelationship,
+                service, requestId, orderItemMessage);
     }
-
 
     @Override
     public String toString() {
@@ -386,4 +377,3 @@ public class ServiceOrderItem {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

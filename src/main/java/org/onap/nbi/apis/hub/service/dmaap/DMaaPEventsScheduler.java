@@ -27,13 +27,11 @@ public class DMaaPEventsScheduler {
     @Autowired
     CheckDMaaPEventsManager checkDMaaPEventsManager;
 
-    @Scheduled(fixedDelayString = "${dmaapCheck.schedule}",
-        initialDelayString = "${dmaapCheck.initial}")
+    @Scheduled(fixedDelayString = "${dmaapCheck.schedule}", initialDelayString = "${dmaapCheck.initial}")
     private void processDMaaPEvents() {
         checkDMaaPEventsManager.checkForDMaaPAAIEvents();
         // Comment out until we discover how to check with Authenticated topic
-        //checkDMaaPEventsManager.checkForDMaaPSDCEvents();
+        // checkDMaaPEventsManager.checkForDMaaPSDCEvents();
 
     }
 }
-

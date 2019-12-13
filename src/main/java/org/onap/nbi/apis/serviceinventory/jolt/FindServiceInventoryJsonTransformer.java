@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.serviceinventory.jolt;
 
 import com.bazaarvoice.jolt.Chainr;
@@ -37,7 +38,7 @@ public class FindServiceInventoryJsonTransformer {
 
     public List<LinkedHashMap> transform(List<LinkedHashMap> serviceSpec) {
         try {
-            return (List<LinkedHashMap>)chainr.transform(serviceSpec);
+            return (List<LinkedHashMap>) chainr.transform(serviceSpec);
         } catch (JoltException joE) {
             LOGGER.error("Unable to transform SDC response with JOLT Transformer", joE);
             throw new TechnicalException("Error while parsing ONAP response");

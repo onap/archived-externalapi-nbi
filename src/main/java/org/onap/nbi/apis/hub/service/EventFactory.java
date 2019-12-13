@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.hub.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,8 +37,7 @@ public class EventFactory {
     private static final ObjectMapper mapper = new ObjectMapper(new MappingJsonFactory());
     private static final Logger logger = LoggerFactory.getLogger(EventFactory.class);
 
-    public static Event getEvent(EventType eventType, ServiceOrder serviceOrder,
-        ServiceOrderItem serviceOrderItem) {
+    public static Event getEvent(EventType eventType, ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem) {
         Event event = new Event();
         event.setEventId(UUID.randomUUID().toString());
         event.setEventDate(new Date());
@@ -87,12 +87,10 @@ public class EventFactory {
             event.setEvent(serviceInstanceJson);
             return event;
         } catch (IOException e) {
-            logger.error("IO Error when parsing Event JSON String {} ", eventString,
-                e.getMessage());
+            logger.error("IO Error when parsing Event JSON String {} ", eventString, e.getMessage());
         }
         return null;
     }
-
 
     /**
      * Filter ServiceOrderObject to produce a lightweight object that fit the eventBody specification
@@ -107,7 +105,7 @@ public class EventFactory {
         if (serviceOrder != null) {
             JsonRepresentation jsonRepresentation = new JsonRepresentation();
             jsonRepresentation.add("id").add("href").add("externalId").add("state").add("orderDate")
-                .add("completionDateTime").add("orderItem");
+                    .add("completionDateTime").add("orderItem");
 
             filteredServiceOrder = JacksonFilter.createNode(serviceOrder, jsonRepresentation);
         }

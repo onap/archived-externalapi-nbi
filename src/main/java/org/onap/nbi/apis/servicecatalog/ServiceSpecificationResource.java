@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.servicecatalog;
 
 import java.util.LinkedHashMap;
@@ -35,13 +36,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(OnapComponentsUrlPaths.SERVICE_SPECIFICATION_PATH)
 public class ServiceSpecificationResource extends ResourceManagement {
 
-
     @Autowired
     ServiceSpecificationService serviceSpecificationService;
 
     @GetMapping(value = "/{serviceSpecId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getServiceSpecification(@PathVariable String serviceSpecId,
-                                                          @RequestParam MultiValueMap<String, String> params) {
+            @RequestParam MultiValueMap<String, String> params) {
         Map response = serviceSpecificationService.get(serviceSpecId);
         JsonRepresentation filter = new JsonRepresentation(params);
         if (response.get("serviceSpecCharacteristic") != null) {
@@ -59,9 +59,9 @@ public class ServiceSpecificationResource extends ResourceManagement {
         return this.findResponse(response, filter, null);
     }
 
-    @GetMapping(value = "/{serviceSpecId}/specificationInputSchema", produces =  MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{serviceSpecId}/specificationInputSchema", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findSpecificationInputSchema(@PathVariable String serviceSpecId,
-                                                               @RequestParam MultiValueMap<String,String> params) {
+            @RequestParam MultiValueMap<String, String> params) {
         String response = serviceSpecificationService.getInputSchema(serviceSpecId);
         JsonRepresentation filter = new JsonRepresentation(params);
         return this.getResponse(response, filter);

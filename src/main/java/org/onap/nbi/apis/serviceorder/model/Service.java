@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -52,7 +51,8 @@ import java.util.Objects;
  */
 @ApiModel(
         description = "Service attributes description (these are as per the Service ODE model as used in the Service Inventory specification)")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class Service {
     @JsonProperty("id")
@@ -317,7 +317,6 @@ public class Service {
         this.serviceSpecification = serviceSpecification;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -342,7 +341,6 @@ public class Service {
         return Objects.hash(id, href, name, serviceState, type, schemaLocation, serviceCharacteristic,
                 serviceRelationship, relatedParty, serviceSpecification);
     }
-
 
     @Override
     public String toString() {
@@ -374,4 +372,3 @@ public class Service {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

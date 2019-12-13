@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,7 +48,8 @@ import javax.validation.constraints.Pattern;
  * The service specification (default values, etc. are fetched from the catalogue).
  */
 @ApiModel(description = "The service specification (default values, etc. are fetched from the catalogue).")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class ServiceSpecificationRef {
     @JsonProperty("id")
@@ -89,7 +89,7 @@ public class ServiceSpecificationRef {
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "Unique identifier of the service specification")
     @NotNull(message = "ServiceSpecification id cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="ServiceSpecification id cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "ServiceSpecification id cannot be empty")
     public String getId() {
         return id;
     }
@@ -227,7 +227,6 @@ public class ServiceSpecificationRef {
         this.baseType = baseType;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -251,7 +250,6 @@ public class ServiceSpecificationRef {
     public int hashCode() {
         return Objects.hash(id, href, name, version, targetServiceSchema, type, schemaLocation, baseType);
     }
-
 
     @Override
     public String toString() {
@@ -281,4 +279,3 @@ public class ServiceSpecificationRef {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

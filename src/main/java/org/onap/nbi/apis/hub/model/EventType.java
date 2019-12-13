@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.hub.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -18,44 +19,44 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EventType {
 
-  SERVICE_ORDER_CREATION("ServiceOrderCreationNotification"),
+    SERVICE_ORDER_CREATION("ServiceOrderCreationNotification"),
 
-  SERVICE_ORDER_STATE_CHANGE("ServiceOrderStateChangeNotification"),
+    SERVICE_ORDER_STATE_CHANGE("ServiceOrderStateChangeNotification"),
 
-  SERVICE_ORDER_ITEM_STATE_CHANGE("ServiceOrderItemStateChangeNotification"),
+    SERVICE_ORDER_ITEM_STATE_CHANGE("ServiceOrderItemStateChangeNotification"),
 
-  SERVICE_CREATION("ServiceCreationNotification"),
+    SERVICE_CREATION("ServiceCreationNotification"),
 
-  SERVICE_ATTRIBUTE_VALUE_CHANGE("ServiceAttributeValueChangeNotification"),
+    SERVICE_ATTRIBUTE_VALUE_CHANGE("ServiceAttributeValueChangeNotification"),
 
-  SERVICE_REMOVE("ServiceRemoveNotification"),
+    SERVICE_REMOVE("ServiceRemoveNotification"),
 
-  SDC_DISTRIBUTION("SdcDistributionNotification");
+    SDC_DISTRIBUTION("SdcDistributionNotification");
 
-  private String value;
+    private String value;
 
-  EventType(String value) {
-    this.value = value;
-  }
-
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
-
-  @JsonCreator
-  public static EventType fromValue(String text) {
-    for (EventType b : EventType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
+    EventType(String value) {
+        this.value = value;
     }
-    return null;
-  }
 
-  @JsonValue
-  public String value() {
-    return this.value;
-  }
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static EventType fromValue(String text) {
+        for (EventType b : EventType.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
+
+    @JsonValue
+    public String value() {
+        return this.value;
+    }
 
 }

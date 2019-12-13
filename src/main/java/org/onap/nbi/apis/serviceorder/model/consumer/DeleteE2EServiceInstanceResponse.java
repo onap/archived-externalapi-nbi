@@ -14,22 +14,20 @@
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class DeleteE2EServiceInstanceResponse {
-	
-	private String operationId;
 
-	public String getOperationId() {
-		return operationId;
-	}
+    private String operationId;
 
-	public void setOperationId(String operationId) {
-		this.operationId = operationId;
-	}
-	
-	@Override
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId;
+    }
+
+    @Override
     public String toString() {
-        return "DeleteE2EServiceInstanceResponse{" +
-            "operationId='" + operationId + '\'' +
-            '}';
+        return "DeleteE2EServiceInstanceResponse{" + "operationId='" + operationId + '\'' + '}';
     }
 
 }

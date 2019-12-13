@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import java.io.IOException;
@@ -43,7 +44,6 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class SOTaskProcessor {
 
-
     @Autowired
     private ServiceOrderService serviceOrderService;
 
@@ -71,34 +71,32 @@ public class SOTaskProcessor {
 
         ServiceOrderInfo serviceOrderInfo = getServiceOrderInfo(executionTask);
 
-        Optional<ServiceOrder> optionalServiceOrder = serviceOrderService
-            .findServiceOrderById(serviceOrderInfo.getServiceOrderId());
+        Optional<ServiceOrder> optionalServiceOrder =
+                serviceOrderService.findServiceOrderById(serviceOrderInfo.getServiceOrderId());
         if (!optionalServiceOrder.isPresent()) {
             throw new TechnicalException(
-                "Unable to retrieve service order for id " + serviceOrderInfo.getServiceOrderId());
+                    "Unable to retrieve service order for id " + serviceOrderInfo.getServiceOrderId());
         }
         ServiceOrder serviceOrder = optionalServiceOrder.get();
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
-        boolean e2eService = E2EServiceUtils
-            .isE2EService(serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()));
+        boolean e2eService =
+                E2EServiceUtils.isE2EService(serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()));
 
         if (shouldPostSo(serviceOrderItem)) {
             if (e2eService) {
-                ResponseEntity<CreateE2EServiceInstanceResponse> response = postSoProcessor
-                    .postE2EServiceOrderItem(serviceOrderInfo,
-                        serviceOrderItem, serviceOrder);
+                ResponseEntity<CreateE2EServiceInstanceResponse> response =
+                        postSoProcessor.postE2EServiceOrderItem(serviceOrderInfo, serviceOrderItem, serviceOrder);
                 updateE2EServiceOrderItem(response, serviceOrderItem, serviceOrder);
             } else {
 
-                ResponseEntity<CreateServiceInstanceResponse> response = postSoProcessor
-                    .postServiceOrderItem(serviceOrderInfo, serviceOrderItem);
+                ResponseEntity<CreateServiceInstanceResponse> response =
+                        postSoProcessor.postServiceOrderItem(serviceOrderInfo, serviceOrderItem);
                 updateServiceOrderItem(response, serviceOrderItem, serviceOrder);
             }
         }
 
         boolean shouldStopPolling = shouldStopPolling(executionTask);
-        if (!shouldStopPolling && StateType.FAILED != serviceOrderItem.getState()
-            ) {
+        if (!shouldStopPolling && StateType.FAILED != serviceOrderItem.getState()) {
             // TODO lancer en asynchrone
             sOGetStatusManager.pollRequestStatus(serviceOrder, serviceOrderItem, e2eService);
 
@@ -117,7 +115,7 @@ public class SOTaskProcessor {
 
     private boolean shouldPostSo(ServiceOrderItem serviceOrderItem) {
         return StateType.ACKNOWLEDGED == serviceOrderItem.getState()
-            || StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState();
+                || StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState();
     }
 
     private ServiceOrderItem getServiceOrderItem(ExecutionTask executionTask, ServiceOrder serviceOrder) {
@@ -127,24 +125,22 @@ public class SOTaskProcessor {
             }
         }
         throw new TechnicalException(
-            "Unable to retrieve serviceOrderItem for executionTaskId " + executionTask.getInternalId());
+                "Unable to retrieve serviceOrderItem for executionTaskId " + executionTask.getInternalId());
     }
 
     private ServiceOrderInfo getServiceOrderInfo(ExecutionTask executionTask) {
         String serviceOrderInfoJson = executionTask.getServiceOrderInfoJson();
         ServiceOrderInfo serviceOrderInfo = null;
         try {
-            serviceOrderInfo =
-                JsonEntityConverter.convertJsonToServiceOrderInfo(serviceOrderInfoJson);
+            serviceOrderInfo = JsonEntityConverter.convertJsonToServiceOrderInfo(serviceOrderInfoJson);
         } catch (IOException e) {
-            LOGGER
-                .error("Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId(), e);
+            LOGGER.error("Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId(),
+                    e);
             throw new TechnicalException(
-                "Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId());
+                    "Unable to read ServiceOrderInfo Json for executionTaskId " + executionTask.getInternalId());
         }
         return serviceOrderInfo;
     }
-
 
     private void updateServiceOrder(ServiceOrder serviceOrder) {
         boolean atLeastOneCompleted = false;
@@ -185,12 +181,11 @@ public class SOTaskProcessor {
         }
     }
 
-
     /**
      * Update ServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
      */
     private void updateServiceOrderItem(ResponseEntity<CreateServiceInstanceResponse> response,
-        ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
+            ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
 
         if (response == null || !response.getStatusCode().is2xxSuccessful()) {
             LOGGER.warn("response ko for serviceOrderItem.id=" + orderItem.getId());
@@ -204,17 +199,15 @@ public class SOTaskProcessor {
             }
 
             if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null
-                || response.getBody().getRequestReferences() == null) {
+                    || response.getBody().getRequestReferences() == null) {
                 serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
-                LOGGER
-                    .warn("order item {} failed , status {} , response {}", orderItem.getId(), response.getStatusCode(),
-                        response.getBody());
+                LOGGER.warn("order item {} failed , status {} , response {}", orderItem.getId(),
+                        response.getStatusCode(), response.getBody());
             } else {
                 updateOrderItemToInProgress(serviceOrder, orderItem);
             }
         }
     }
-
 
     private void updateOrderItemToInProgress(ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem) {
         if (serviceOrderItem.getAction() != ActionType.MODIFY) {
@@ -222,17 +215,16 @@ public class SOTaskProcessor {
         } else {
             if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
                 serviceOrderService.updateOrderItemState(serviceOrder, serviceOrderItem,
-                    StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
+                        StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
             } else {
                 serviceOrderService.updateOrderItemState(serviceOrder, serviceOrderItem,
-                    StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND);
+                        StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND);
             }
         }
     }
 
-
     private void buildOrderMessageIfNeeded(ServiceOrderItem serviceOrderItem, ServiceOrder serviceOrder,
-        ResponseEntity<?> response) {
+            ResponseEntity<?> response) {
         if (response != null) {
             if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
                 serviceOrderService.addOrderMessage(serviceOrder, "502");
@@ -242,7 +234,7 @@ public class SOTaskProcessor {
                     serviceOrderService.addOrderItemMessage(serviceOrder, serviceOrderItem, "105");
                 } else {
                     serviceOrderService.addOrderItemMessageRequestSo(serviceOrder, serviceOrderItem,
-                        messageError.getBody().toString());
+                            messageError.getBody().toString());
                 }
             }
         }
@@ -252,7 +244,7 @@ public class SOTaskProcessor {
      * Update E2EServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
      */
     private void updateE2EServiceOrderItem(ResponseEntity<CreateE2EServiceInstanceResponse> response,
-        ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
+            ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
 
         if (response == null || !response.getStatusCode().is2xxSuccessful()) {
             LOGGER.warn("response ko for serviceOrderItem.id=" + orderItem.getId());
@@ -265,12 +257,11 @@ public class SOTaskProcessor {
             }
 
             if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null
-                || response.getBody().getService().getOperationId() == null
-                || response.getBody().getService().getServiceId() == null) {
+                    || response.getBody().getService().getOperationId() == null
+                    || response.getBody().getService().getServiceId() == null) {
                 serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
-                LOGGER
-                    .warn("order item {} failed , status {} , response {}", orderItem.getId(), response.getStatusCode(),
-                        response.getBody());
+                LOGGER.warn("order item {} failed , status {} , response {}", orderItem.getId(),
+                        response.getStatusCode(), response.getBody());
             } else {
                 serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.INPROGRESS);
             }
@@ -295,14 +286,15 @@ public class SOTaskProcessor {
         for (ExecutionTask taskId : executionTasksToDelete) {
             executionTaskRepository.delete(taskId);
             LOGGER.warn("task {} with orderitem id {} deleted cause orderitem id {} failed ", taskId.getInternalId(),
-                taskId.getOrderItemId(), executionTask.getOrderItemId());
+                    taskId.getOrderItemId(), executionTask.getOrderItemId());
         }
         for (ServiceOrderItem item : serviceOrder.getOrderItem()) {
             for (ExecutionTask taskToDelete : executionTasksToDelete) {
                 if (taskToDelete.getOrderItemId().equals(item.getId())) {
                     serviceOrderService.updateOrderItemState(serviceOrder, item, StateType.FAILED);
                     LOGGER.warn("task {} with orderitem id {} failed cause orderitem id {} failed ",
-                        taskToDelete.getInternalId(), taskToDelete.getOrderItemId(), executionTask.getOrderItemId());
+                            taskToDelete.getInternalId(), taskToDelete.getOrderItemId(),
+                            executionTask.getOrderItemId());
 
                 }
             }
@@ -318,7 +310,7 @@ public class SOTaskProcessor {
         List<ExecutionTask> executionTasks = new ArrayList<>();
 
         List<ExecutionTask> tasksReliedToAnOrderItemId =
-            executionTaskRepository.findTasksReliedToAnOrderItemId(executionTask.getInternalId());
+                executionTaskRepository.findTasksReliedToAnOrderItemId(executionTask.getInternalId());
 
         if (CollectionUtils.isEmpty(tasksReliedToAnOrderItemId)) {
             return Arrays.asList(executionTask);
@@ -337,10 +329,9 @@ public class SOTaskProcessor {
         long differenceInMillis = lastAttemptTimeInMillis - createTimeinMillis;
         float pollingDurationInMillis = pollingDurationInMins * 60000;
         LOGGER.debug("Task {} with orderitem id {}: Task create date: {} Task last attempt date: {}",
-            executionTask.getInternalId(), executionTask.getOrderItemId(), createTimeinMillis,
-            lastAttemptTimeInMillis);
-        LOGGER.debug("Difference {} and Polling Duration {}",
-            differenceInMillis, pollingDurationInMins);
+                executionTask.getInternalId(), executionTask.getOrderItemId(), createTimeinMillis,
+                lastAttemptTimeInMillis);
+        LOGGER.debug("Difference {} and Polling Duration {}", differenceInMillis, pollingDurationInMins);
         return (differenceInMillis > pollingDurationInMillis);
     }
 }

@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,7 +47,8 @@ import javax.validation.constraints.Pattern;
  * Linked order item to the one containing this attribute
  */
 @ApiModel(description = "Linked order item to the one containing this attribute")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class OrderItemRelationship {
     @JsonProperty("type")
@@ -69,7 +69,8 @@ public class OrderItemRelationship {
      * @return type
      **/
     @JsonProperty("type")
-    @ApiModelProperty(required = true,
+    @ApiModelProperty(
+            required = true,
             value = "The type of related order item, can be : dependancy if the order item needs to be “not started” until another order item is complete")
     @NotNull(message = "RelationshipType type cannot be null")
     public RelationshipType getType() {
@@ -93,7 +94,7 @@ public class OrderItemRelationship {
     @JsonProperty("id")
     @ApiModelProperty(required = true, value = "Unique identifier of an order item")
     @NotNull(message = "RelationshipType id cannot be null")
-    @Pattern(regexp="^(?!\\s*$).+", message="RelationshipType id  cannot be empty")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "RelationshipType id  cannot be empty")
     public String getId() {
         return id;
     }
@@ -101,7 +102,6 @@ public class OrderItemRelationship {
     public void setId(String id) {
         this.id = id;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -120,7 +120,6 @@ public class OrderItemRelationship {
     public int hashCode() {
         return Objects.hash(type, id);
     }
-
 
     @Override
     public String toString() {
@@ -144,4 +143,3 @@ public class OrderItemRelationship {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

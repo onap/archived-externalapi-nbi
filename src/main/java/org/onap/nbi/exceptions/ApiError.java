@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.exceptions;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,7 +33,8 @@ public class ApiError {
     @XmlElement(required = true)
     protected String infoURL;
 
-    public ApiError() {}
+    public ApiError() {
+    }
 
     public ApiError(String code, String message, String description, String infoURL) {
         this.code = code;
@@ -73,4 +75,3 @@ public class ApiError {
         this.infoURL = infoURL;
     }
 }
-

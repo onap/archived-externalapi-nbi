@@ -17,71 +17,68 @@ import java.util.*;
 
 public class ResourceModel {
 
-	private String resourceName;
-	
-	private String resourceInvariantUuid;
-	
-	private String resourceUuid;
-	
-	private String resourceCustomizationUuid;
-	
-	private ParametersModel parameters;
+    private String resourceName;
 
+    private String resourceInvariantUuid;
 
-	public ResourceModel (Map<String, Object> info) {
-		setResourceName((String)info.get("name"));
-		setResourceInvariantUuid((String)info.get("resourceInvariantUUID"));
-		setResourceUuid((String)info.get("id"));
-		setResourceCustomizationUuid((String)info.get("modelCustomizationId"));
-	}
+    private String resourceUuid;
 
-	public String getResourceName() {
-		return resourceName;
-	}
-	
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
-	
-	public String getResourceInvariantUuid() {
-		return resourceInvariantUuid;
-	}
-	
-	public void setResourceInvariantUuid(String resourceInvariantUuid) {
-		this.resourceInvariantUuid = resourceInvariantUuid;
-	}
-	
-	public String getResourceUuid() {
-		return resourceUuid;
-	}
-	
-	public void setResourceUuid(String resourceUuid) {
-		this.resourceUuid = resourceUuid;
-	}
-	
-	public String getResourceCustomizationUuid() {
-		return resourceCustomizationUuid;
-	}
-	
-	public void setResourceCustomizationUuid(String resourceCustomizationUuid) {
-		this.resourceCustomizationUuid = resourceCustomizationUuid;
-	}
-	
-	public ParametersModel getParameters() {
-		return parameters;
-	}
-	
-	public void setParameters(ParametersModel parameters) {
-		this.parameters = parameters;
-	}
+    private String resourceCustomizationUuid;
 
-	@Override
-	public String toString() {
-	        return "ResourceModel{" +
-	            "resourceName='" + resourceName + '\'' +
-	            ", resourceInvariantUuid='" + resourceInvariantUuid + '\'' +
-	            ", resourceUuid='" + resourceUuid + '\'' +
-	            ", resourceCustomizationUuid='" + resourceCustomizationUuid + '\'' +
-	            ", parameters='" + parameters + '}';
-	 }
+    private ParametersModel parameters;
+
+    public ResourceModel(Map<String, Object> info) {
+        setResourceName((String) info.get("name"));
+        setResourceInvariantUuid((String) info.get("resourceInvariantUUID"));
+        setResourceUuid((String) info.get("id"));
+        setResourceCustomizationUuid((String) info.get("modelCustomizationId"));
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
+
+    public String getResourceInvariantUuid() {
+        return resourceInvariantUuid;
+    }
+
+    public void setResourceInvariantUuid(String resourceInvariantUuid) {
+        this.resourceInvariantUuid = resourceInvariantUuid;
+    }
+
+    public String getResourceUuid() {
+        return resourceUuid;
+    }
+
+    public void setResourceUuid(String resourceUuid) {
+        this.resourceUuid = resourceUuid;
+    }
+
+    public String getResourceCustomizationUuid() {
+        return resourceCustomizationUuid;
+    }
+
+    public void setResourceCustomizationUuid(String resourceCustomizationUuid) {
+        this.resourceCustomizationUuid = resourceCustomizationUuid;
+    }
+
+    public ParametersModel getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(ParametersModel parameters) {
+        this.parameters = parameters;
+    }
+
+    @Override
+    public String toString() {
+        return "ResourceModel{" + "resourceName='" + resourceName + '\'' + ", resourceInvariantUuid='"
+                + resourceInvariantUuid + '\'' + ", resourceUuid='" + resourceUuid + '\''
+                + ", resourceCustomizationUuid='" + resourceCustomizationUuid + '\'' + ", parameters='" + parameters
+                + '}';
+    }
 }

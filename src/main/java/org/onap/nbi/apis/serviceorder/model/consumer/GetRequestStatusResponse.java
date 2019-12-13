@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 import java.util.Objects;
@@ -20,7 +21,6 @@ import java.util.Objects;
 public class GetRequestStatusResponse {
 
     private Request request;
-
 
     public Request getRequest() {
 
@@ -36,7 +36,8 @@ public class GetRequestStatusResponse {
         this.request = request;
     }
 
-    public GetRequestStatusResponse() {}
+    public GetRequestStatusResponse() {
+    }
 
     @Override
     public boolean equals(Object o) {

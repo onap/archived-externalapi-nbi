@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceinventory;
 
 import org.slf4j.Logger;
@@ -30,51 +31,47 @@ public abstract class BaseClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseClient.class);
 
-
     @Autowired
     private RestTemplate restTemplate;
 
-
-
     protected ResponseEntity<Object> callApiGet(String callURL, HttpHeaders httpHeaders) {
 
-
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("log request : "+callURL+ " "+httpHeaders);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("log request : " + callURL + " " + httpHeaders);
         }
 
         ResponseEntity<Object> response = null;
-            response = restTemplate.exchange(callURL, HttpMethod.GET,
-                    new HttpEntity<>("parameters", httpHeaders), Object.class);
+        response = restTemplate.exchange(callURL, HttpMethod.GET, new HttpEntity<>("parameters", httpHeaders),
+                Object.class);
 
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("response body : {}",response.getBody().toString());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("response body : {}", response.getBody().toString());
         }
         LOGGER.info("response status : {}", response.getStatusCodeValue());
         if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn("HTTP call on {} returns {}, {}", callURL , response.getStatusCodeValue() ,response.getBody().toString());
+            LOGGER.warn("HTTP call on {} returns {}, {}", callURL, response.getStatusCodeValue(),
+                    response.getBody().toString());
         }
         return response;
     }
 
-
     protected ResponseEntity<String> callApiGetHealthCheck(String callURL, HttpHeaders httpHeaders) {
 
-
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("log request : "+callURL+ " "+httpHeaders);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("log request : " + callURL + " " + httpHeaders);
         }
 
         ResponseEntity<String> response = null;
-        response = restTemplate.exchange(callURL, HttpMethod.GET,
-            new HttpEntity<>("parameters", httpHeaders), String.class);
+        response = restTemplate.exchange(callURL, HttpMethod.GET, new HttpEntity<>("parameters", httpHeaders),
+                String.class);
 
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("response body : {}",response.getBody().toString());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("response body : {}", response.getBody().toString());
         }
         LOGGER.info("response status : {}", response.getStatusCodeValue());
         if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn("HTTP call on {} returns {}, {}", callURL , response.getStatusCodeValue() ,response.getBody().toString());
+            LOGGER.warn("HTTP call on {} returns {}, {}", callURL, response.getStatusCodeValue(),
+                    response.getBody().toString());
         }
         return response;
     }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.onap.nbi;
 
 import com.google.common.base.Strings;
@@ -99,38 +100,34 @@ public class ServiceRegisterRunner implements CommandLineRunner {
 
         Set<Node> nodes = new HashSet<>();
         Node thisNode = new Node();
-        thisNode.setIp(Strings.isNullOrEmpty(SERVICE_HOST) ? InetAddress.getLocalHost().getHostAddress() : SERVICE_HOST);
+        thisNode.setIp(
+                Strings.isNullOrEmpty(SERVICE_HOST) ? InetAddress.getLocalHost().getHostAddress() : SERVICE_HOST);
         thisNode.setPort(SERVICE_PORT);
         thisNode.setCheckType("HTTP");
         thisNode.setCheckUrl(SERVICE_URL + "/status");
         nodes.add(thisNode);
         msinfo.setNodes(nodes);
 
-        logger.info(
-                "Registering with msb discovery (" + DISCOVERY_HOST + ":" + DISCOVERY_PORT + "):\n"
-                        + " - host: [" + thisNode.getIp() + "]\n"
-                        + " - port: [" + thisNode.getPort() + "]\n"
-                        + " - name: [" + msinfo.getServiceName() + "]\n"
-                        + " - version: [" + msinfo.getVersion() + "]\n"
-                        + " - url: [" + msinfo.getUrl() + "]\n"
-                        + " - path: [" + msinfo.getPath() + "]\n"
-                        + " - protocol: [" + msinfo.getProtocol() + "]g\n"
-                        + " - visualRange: [" + msinfo.getVisualRange() + "]\n"
-                        + " - enableSSL: [" + SERVICE_ENABLE_SSL + "]\n"
-        );
+        logger.info("Registering with msb discovery (" + DISCOVERY_HOST + ":" + DISCOVERY_PORT + "):\n" + " - host: ["
+                + thisNode.getIp() + "]\n" + " - port: [" + thisNode.getPort() + "]\n" + " - name: ["
+                + msinfo.getServiceName() + "]\n" + " - version: [" + msinfo.getVersion() + "]\n" + " - url: ["
+                + msinfo.getUrl() + "]\n" + " - path: [" + msinfo.getPath() + "]\n" + " - protocol: ["
+                + msinfo.getProtocol() + "]g\n" + " - visualRange: [" + msinfo.getVisualRange() + "]\n"
+                + " - enableSSL: [" + SERVICE_ENABLE_SSL + "]\n");
 
         int attempt = 1;
-        while (attempt<=RETRY) {
+        while (attempt <= RETRY) {
             try {
                 logger.info("Registration with msb discovery (attempt {}/{})", attempt, RETRY);
                 MSBServiceClient msbClient = new MSBServiceClient(DISCOVERY_HOST, DISCOVERY_PORT);
                 MicroServiceFullInfo microServiceFullInfo = msbClient.registerMicroServiceInfo(msinfo);
-                logger.debug("Registration with msb discovery done, microServiceFullInfo = {}", microServiceFullInfo.toString());
+                logger.debug("Registration with msb discovery done, microServiceFullInfo = {}",
+                        microServiceFullInfo.toString());
                 break;
             } catch (Exception ex) {
                 logger.warn("Registration with msb discovery (attempt {}/{}) FAILED.", attempt, RETRY);
                 attempt += 1;
-                if(attempt<=RETRY) {
+                if (attempt <= RETRY) {
                     logger.warn("Sleep {}ms", RETRY_INTERVAL);
                     Thread.sleep(RETRY_INTERVAL);
                 }

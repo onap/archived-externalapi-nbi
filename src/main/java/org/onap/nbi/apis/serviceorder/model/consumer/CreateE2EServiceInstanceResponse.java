@@ -13,24 +13,23 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class CreateE2EServiceInstanceResponse {
 
-	private ServiceResponse service;
+    private ServiceResponse service;
 
-	public ServiceResponse getService() {
-		return service;
-	}
+    public ServiceResponse getService() {
+        return service;
+    }
 
-	public void setService(ServiceResponse service) {
-		this.service = service;
-	}
+    public void setService(ServiceResponse service) {
+        this.service = service;
+    }
 
-	@Override
-	public String toString() {
-		return "CreateE2EServiceInstanceResponse{" +
-			"service=" + service +
-			'}';
-	}
+    @Override
+    public String toString() {
+        return "CreateE2EServiceInstanceResponse{" + "service=" + service + '}';
+    }
 }

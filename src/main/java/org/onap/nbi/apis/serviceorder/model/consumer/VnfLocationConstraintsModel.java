@@ -15,21 +15,18 @@ package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class VnfLocationConstraintsModel {
 
-	private String vimId;
-	
-	
-	public String getVimId() {
-		return vimId;
-	}
-	
-	public void setVimId(String vimId) {
-		this.vimId = vimId;
-	}
+    private String vimId;
 
-	@Override
+    public String getVimId() {
+        return vimId;
+    }
+
+    public void setVimId(String vimId) {
+        this.vimId = vimId;
+    }
+
+    @Override
     public String toString() {
-        return "VnfLocationConstraintsModel{" +
-            "vimId='" + vimId + '\'' +
-            '}';
+        return "VnfLocationConstraintsModel{" + "vimId='" + vimId + '\'' + '}';
     }
 }

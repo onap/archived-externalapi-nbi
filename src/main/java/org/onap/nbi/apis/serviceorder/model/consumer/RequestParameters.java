@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 import java.util.List;
@@ -78,11 +79,7 @@ public class RequestParameters {
 
     @Override
     public String toString() {
-        return "RequestParameters{" +
-            "subscriptionServiceType='" + subscriptionServiceType + '\'' +
-            ", userParams=" + userParams +
-            ", aLaCarte=" + aLaCarte +
-            ", testApi='" + testApi + '\'' +
-            '}';
+        return "RequestParameters{" + "subscriptionServiceType='" + subscriptionServiceType + '\'' + ", userParams="
+                + userParams + ", aLaCarte=" + aLaCarte + ", testApi='" + testApi + '\'' + '}';
     }
 }

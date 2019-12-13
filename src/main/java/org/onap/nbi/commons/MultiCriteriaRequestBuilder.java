@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.commons;
 
 import org.onap.nbi.apis.serviceorder.model.StateType;
@@ -35,7 +36,6 @@ import java.util.List;
 public class MultiCriteriaRequestBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiCriteriaRequestBuilder.class);
-
 
     public Query buildRequest(MultiValueMap<String, String> params) {
         Query query = new Query();
@@ -62,7 +62,7 @@ public class MultiCriteriaRequestBuilder {
         }
         List<String> eventTypes = params.get("query.eventType");
         if (!CollectionUtils.isEmpty(eventTypes)) {
-            Object[] eventType = new String[]{eventTypes.get(0)};
+            Object[] eventType = new String[] {eventTypes.get(0)};
             LOGGER.debug("add criterion query.eventType {}", eventType);
             query.addCriteria(Criteria.where("query.eventType").in(eventType));
 

@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import org.onap.nbi.apis.serviceorder.MultiClient;
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateAAICustomerManager {
 
-
     @Autowired
     private MultiClient serviceOrderConsumerService;
 
@@ -34,25 +34,20 @@ public class CreateAAICustomerManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAICustomerManager.class);
 
-
-
-    public void createAAICustomer(ServiceOrder serviceOrder,
-        ServiceOrderInfo serviceOrderInfo) {
+    public void createAAICustomer(ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
 
         if (serviceOrderInfo.isUseServiceOrderCustomer() && serviceOrderInfo.isAllItemsInAdd()
-            && !serviceOrderConsumerService
-            .isCustomerPresentInAAI(serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceOrder)) {
+                && !serviceOrderConsumerService.isCustomerPresentInAAI(
+                        serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceOrder)) {
 
-            boolean customerCreated = serviceOrderConsumerService.putCustomer(serviceOrderInfo.getSubscriberInfo(), serviceOrder);
+            boolean customerCreated =
+                    serviceOrderConsumerService.putCustomer(serviceOrderInfo.getSubscriberInfo(), serviceOrder);
             if (!customerCreated) {
-                serviceOrderService.updateOrderState(serviceOrder,StateType.REJECTED);
+                serviceOrderService.updateOrderState(serviceOrder, StateType.REJECTED);
                 LOGGER.warn("serviceOrder {} rejected : cannot create customer", serviceOrder.getId());
                 serviceOrderService.addOrderMessage(serviceOrder, "501");
             }
         }
     }
 
-
 }
-
-

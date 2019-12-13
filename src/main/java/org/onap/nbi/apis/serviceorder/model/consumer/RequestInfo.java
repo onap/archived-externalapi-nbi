@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class RequestInfo {
@@ -59,11 +60,7 @@ public class RequestInfo {
 
     @Override
     public String toString() {
-        return "RequestInfo{" +
-            "instanceName='" + instanceName + '\'' +
-            ", source='" + source + '\'' +
-            ", suppressRollback=" + suppressRollback +
-            ", requestorId='" + requestorId + '\'' +
-            '}';
+        return "RequestInfo{" + "instanceName='" + instanceName + '\'' + ", source='" + source + '\''
+                + ", suppressRollback=" + suppressRollback + ", requestorId='" + requestorId + '\'' + '}';
     }
 }

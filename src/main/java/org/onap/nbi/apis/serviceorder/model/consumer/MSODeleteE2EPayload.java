@@ -14,32 +14,30 @@
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class MSODeleteE2EPayload {
-	
-	private String globalSubscriberId;
 
-	private String serviceType;
+    private String globalSubscriberId;
 
-	public String getGlobalSubscriberId() {
-		return globalSubscriberId;
-	}
-	
-	public void setGlobalSubscriberId(String globalSubscriberId) {
-		this.globalSubscriberId = globalSubscriberId;
-	}
-	
-	public String getServiceType() {
-		return serviceType;
-	}
+    private String serviceType;
 
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
-	}
+    public String getGlobalSubscriberId() {
+        return globalSubscriberId;
+    }
 
-	@Override
+    public void setGlobalSubscriberId(String globalSubscriberId) {
+        this.globalSubscriberId = globalSubscriberId;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    @Override
     public String toString() {
-        return "MSODeleteE2EPayload{" +
-            "globalSubscriberId='" + globalSubscriberId+ '\'' +
-            ", serviceType='" + serviceType + '\'' +
-            '}';
+        return "MSODeleteE2EPayload{" + "globalSubscriberId='" + globalSubscriberId + '\'' + ", serviceType='"
+                + serviceType + '\'' + '}';
     }
 }

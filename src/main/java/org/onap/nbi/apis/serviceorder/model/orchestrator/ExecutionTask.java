@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.orchestrator;
 
 import java.util.Date;
@@ -22,7 +23,6 @@ import javax.persistence.Lob;
 
 @Entity
 public class ExecutionTask {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -96,12 +96,10 @@ public class ExecutionTask {
             return false;
         }
         ExecutionTask that = (ExecutionTask) o;
-        return Objects.equals(internalId, that.internalId) &&
-            Objects.equals(orderItemId, that.orderItemId) &&
-            Objects.equals(reliedTasks, that.reliedTasks) &&
-            Objects.equals(createDate, that.createDate) &&
-            Objects.equals(lastAttemptDate, that.lastAttemptDate) &&
-            Objects.equals(serviceOrderInfoJson, that.serviceOrderInfoJson);
+        return Objects.equals(internalId, that.internalId) && Objects.equals(orderItemId, that.orderItemId)
+                && Objects.equals(reliedTasks, that.reliedTasks) && Objects.equals(createDate, that.createDate)
+                && Objects.equals(lastAttemptDate, that.lastAttemptDate)
+                && Objects.equals(serviceOrderInfoJson, that.serviceOrderInfoJson);
     }
 
     @Override
@@ -111,13 +109,8 @@ public class ExecutionTask {
 
     @Override
     public String toString() {
-        return "ExecutionTask{" +
-            "internalId=" + internalId +
-            ", orderItemId='" + orderItemId + '\'' +
-            ", reliedTasks='" + reliedTasks + '\'' +
-            ", createDate=" + createDate +
-            ", lastAttemptDate=" + lastAttemptDate +
-            ", serviceOrderInfoJson='" + serviceOrderInfoJson + '\'' +
-            '}';
+        return "ExecutionTask{" + "internalId=" + internalId + ", orderItemId='" + orderItemId + '\''
+                + ", reliedTasks='" + reliedTasks + '\'' + ", createDate=" + createDate + ", lastAttemptDate="
+                + lastAttemptDate + ", serviceOrderInfoJson='" + serviceOrderInfoJson + '\'' + '}';
     }
 }

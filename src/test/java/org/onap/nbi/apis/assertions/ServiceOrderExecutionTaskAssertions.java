@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.assertions;
 
 import java.util.ArrayList;
@@ -38,407 +39,402 @@ import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
 import org.onap.nbi.apis.serviceorder.repositories.ServiceOrderRepository;
 import org.onap.nbi.apis.serviceorder.utils.JsonEntityConverter;
 
-
 public class ServiceOrderExecutionTaskAssertions {
 
-  public static ServiceOrder createTestServiceOrderRejected() {
-    ServiceOrder serviceOrder = new ServiceOrder();
-    serviceOrder.setExternalId("LudONAP001");
-    serviceOrder.setPriority("1");
-    serviceOrder.setDescription("Ludo first ONAP Order");
-    serviceOrder.setCategory("Consumer");
-    serviceOrder.setRequestedStartDate(new Date());
-    serviceOrder.setRequestedCompletionDate(new Date());
+    public static ServiceOrder createTestServiceOrderRejected() {
+        ServiceOrder serviceOrder = new ServiceOrder();
+        serviceOrder.setExternalId("LudONAP001");
+        serviceOrder.setPriority("1");
+        serviceOrder.setDescription("Ludo first ONAP Order");
+        serviceOrder.setCategory("Consumer");
+        serviceOrder.setRequestedStartDate(new Date());
+        serviceOrder.setRequestedCompletionDate(new Date());
 
-    RelatedParty party = new RelatedParty();
-    party.setId("6490");
-    party.setRole("ONAPcustomer");
-    party.setReferredType("individual");
-    party.setName("Jean Pontus");
-    List<RelatedParty> relatedPartyList = new ArrayList<>();
-    relatedPartyList.add(party);
-    serviceOrder.setRelatedParty(relatedPartyList);
+        RelatedParty party = new RelatedParty();
+        party.setId("6490");
+        party.setRole("ONAPcustomer");
+        party.setReferredType("individual");
+        party.setName("Jean Pontus");
+        List<RelatedParty> relatedPartyList = new ArrayList<>();
+        relatedPartyList.add(party);
+        serviceOrder.setRelatedParty(relatedPartyList);
 
-    List<ServiceOrderItem> items = new ArrayList<>();
+        List<ServiceOrderItem> items = new ArrayList<>();
 
-    ServiceOrderItem itemA = new ServiceOrderItem();
-    itemA.id("A");
-    itemA.action(ActionType.ADD);
-    Service serviceA = new Service();
-    serviceA.setServiceState("active");
-    ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
-    serviceSpecificationRefA.setId("333");
-    serviceA.setServiceSpecification(serviceSpecificationRefA);
-    itemA.setService(serviceA);
-    items.add(itemA);
+        ServiceOrderItem itemA = new ServiceOrderItem();
+        itemA.id("A");
+        itemA.action(ActionType.ADD);
+        Service serviceA = new Service();
+        serviceA.setServiceState("active");
+        ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
+        serviceSpecificationRefA.setId("333");
+        serviceA.setServiceSpecification(serviceSpecificationRefA);
+        itemA.setService(serviceA);
+        items.add(itemA);
 
-    ServiceOrderItem itemB = new ServiceOrderItem();
-    itemB.id("B");
-    itemB.action(ActionType.ADD);
-    Service serviceB = new Service();
-    serviceB.setServiceState("active");
-    ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
-    serviceSpecificationRefB.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
-    serviceB.setServiceSpecification(serviceSpecificationRefB);
-    itemB.setService(serviceB);
-    List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
-    OrderItemRelationship orderItemRelationship = new OrderItemRelationship();
-    orderItemRelationship.setId("A");
-    orderItemRelationships.add(orderItemRelationship);
-    itemB.setOrderItemRelationship(orderItemRelationships);
-    items.add(itemB);
-    serviceOrder.setOrderItem(items);
-    return serviceOrder;
+        ServiceOrderItem itemB = new ServiceOrderItem();
+        itemB.id("B");
+        itemB.action(ActionType.ADD);
+        Service serviceB = new Service();
+        serviceB.setServiceState("active");
+        ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
+        serviceSpecificationRefB.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
+        serviceB.setServiceSpecification(serviceSpecificationRefB);
+        itemB.setService(serviceB);
+        List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
+        OrderItemRelationship orderItemRelationship = new OrderItemRelationship();
+        orderItemRelationship.setId("A");
+        orderItemRelationships.add(orderItemRelationship);
+        itemB.setOrderItemRelationship(orderItemRelationships);
+        items.add(itemB);
+        serviceOrder.setOrderItem(items);
+        return serviceOrder;
 
-  }
-
-
-  public static ServiceOrder createTestServiceOrder(ActionType actionType) {
-    ServiceOrder serviceOrder = new ServiceOrder();
-    serviceOrder.setExternalId("LudONAP001");
-    serviceOrder.setPriority("1");
-    serviceOrder.setDescription("Ludo first ONAP Order");
-    serviceOrder.setCategory("Consumer");
-    serviceOrder.setRequestedStartDate(new Date());
-    serviceOrder.setRequestedCompletionDate(new Date());
-    serviceOrder.setBaseType("toto");
-    serviceOrder.setCompletionDateTime(new Date());
-    serviceOrder.setExpectedCompletionDate(new Date());
-    serviceOrder.setSchemaLocation("/tutu");
-
-    OrderRelationship orderRelationship = new OrderRelationship();
-    orderRelationship.setId("test");
-    orderRelationship.setHref("test");
-    orderRelationship.setReferredType("test");
-    orderRelationship.setType("type");
-    List<OrderRelationship> relationships = new ArrayList<>();
-    serviceOrder.setOrderRelationship(relationships);
-
-    RelatedParty party = new RelatedParty();
-    party.setId("6490");
-    party.setRole("ONAPcustomer");
-    party.setReferredType("individual");
-    party.setName("Jean Pontus");
-    List<RelatedParty> relatedPartyList = new ArrayList<>();
-    relatedPartyList.add(party);
-    serviceOrder.setRelatedParty(relatedPartyList);
-
-    List<ServiceOrderItem> items = new ArrayList<>();
-
-    ServiceOrderItem itemA = new ServiceOrderItem();
-    itemA.id("A");
-    itemA.action(actionType);
-    Service serviceA = new Service();
-    if (actionType != ActionType.ADD) {
-      serviceA.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
-    }
-    serviceA.setServiceState("active");
-    ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
-    serviceSpecificationRefA.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
-    serviceA.setServiceSpecification(serviceSpecificationRefA);
-    itemA.setService(serviceA);
-    items.add(itemA);
-
-    ServiceOrderItem itemB = new ServiceOrderItem();
-    itemB.id("B");
-    itemB.action(actionType);
-    Service serviceB = new Service();
-    if (actionType != ActionType.ADD) {
-      serviceB.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
-    }
-    serviceB.setServiceState("active");
-    ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
-    serviceSpecificationRefB.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
-    serviceB.setServiceSpecification(serviceSpecificationRefB);
-    itemB.setService(serviceB);
-    List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
-    OrderItemRelationship orderItemRelationship = new OrderItemRelationship();
-    orderItemRelationship.setId("A");
-    orderItemRelationship.setType(RelationshipType.RELIESON);
-    orderItemRelationships.add(orderItemRelationship);
-    itemB.setOrderItemRelationship(orderItemRelationships);
-    items.add(itemB);
-    serviceOrder.setOrderItem(items);
-    return serviceOrder;
-
-  }
-
-
-  public static ExecutionTask setUpBddForExecutionTaskSucess(
-      ServiceOrderRepository serviceOrderRepository,
-      ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
-    ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
-
-    for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
-      serviceOrderItem.setState(StateType.ACKNOWLEDGED);
     }
 
-    testServiceOrder.setState(StateType.ACKNOWLEDGED);
-    testServiceOrder.setId("test");
-    serviceOrderRepository.save(testServiceOrder);
+    public static ServiceOrder createTestServiceOrder(ActionType actionType) {
+        ServiceOrder serviceOrder = new ServiceOrder();
+        serviceOrder.setExternalId("LudONAP001");
+        serviceOrder.setPriority("1");
+        serviceOrder.setDescription("Ludo first ONAP Order");
+        serviceOrder.setCategory("Consumer");
+        serviceOrder.setRequestedStartDate(new Date());
+        serviceOrder.setRequestedCompletionDate(new Date());
+        serviceOrder.setBaseType("toto");
+        serviceOrder.setCompletionDateTime(new Date());
+        serviceOrder.setExpectedCompletionDate(new Date());
+        serviceOrder.setSchemaLocation("/tutu");
 
-    LinkedHashMap<String, String> sdcResponse = new LinkedHashMap<>();
-    sdcResponse.put("invariantUUID", "uuid");
-    sdcResponse.put("name", "vFW");
-    sdcResponse.put("version", "v1");
-    sdcResponse.put("category", "NonE2E");
+        OrderRelationship orderRelationship = new OrderRelationship();
+        orderRelationship.setId("test");
+        orderRelationship.setHref("test");
+        orderRelationship.setReferredType("test");
+        orderRelationship.setType("type");
+        List<OrderRelationship> relationships = new ArrayList<>();
+        serviceOrder.setOrderRelationship(relationships);
 
-    ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
-    serviceOrderInfo.setServiceOrderId("test");
-    SubscriberInfo subscriberInfo = new SubscriberInfo();
-    subscriberInfo.setGlobalSubscriberId("6490");
-    subscriberInfo.setSubscriberName("edgar");
-    serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+        RelatedParty party = new RelatedParty();
+        party.setId("6490");
+        party.setRole("ONAPcustomer");
+        party.setReferredType("individual");
+        party.setName("Jean Pontus");
+        List<RelatedParty> relatedPartyList = new ArrayList<>();
+        relatedPartyList.add(party);
+        serviceOrder.setRelatedParty(relatedPartyList);
 
-    ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
-    serviceOrderItemInfoA.setId("A");
-    serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+        List<ServiceOrderItem> items = new ArrayList<>();
 
-    ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
-    serviceOrderItemInfoB.setId("B");
-    serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
-    serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
-    serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+        ServiceOrderItem itemA = new ServiceOrderItem();
+        itemA.id("A");
+        itemA.action(actionType);
+        Service serviceA = new Service();
+        if (actionType != ActionType.ADD) {
+            serviceA.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
+        }
+        serviceA.setServiceState("active");
+        ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
+        serviceSpecificationRefA.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
+        serviceA.setServiceSpecification(serviceSpecificationRefA);
+        itemA.setService(serviceA);
+        items.add(itemA);
 
-    String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+        ServiceOrderItem itemB = new ServiceOrderItem();
+        itemB.id("B");
+        itemB.action(actionType);
+        Service serviceB = new Service();
+        if (actionType != ActionType.ADD) {
+            serviceB.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
+        }
+        serviceB.setServiceState("active");
+        ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
+        serviceSpecificationRefB.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
+        serviceB.setServiceSpecification(serviceSpecificationRefB);
+        itemB.setService(serviceB);
+        List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
+        OrderItemRelationship orderItemRelationship = new OrderItemRelationship();
+        orderItemRelationship.setId("A");
+        orderItemRelationship.setType(RelationshipType.RELIESON);
+        orderItemRelationships.add(orderItemRelationship);
+        itemB.setOrderItemRelationship(orderItemRelationships);
+        items.add(itemB);
+        serviceOrder.setOrderItem(items);
+        return serviceOrder;
 
-    ExecutionTask executionTaskA = new ExecutionTask();
-    executionTaskA.setCreateDate(new Date());
-    executionTaskA.setOrderItemId("A");
-    executionTaskA.setServiceOrderInfoJson(json);
-    executionTaskA = executionTaskRepository.save(executionTaskA);
-    ExecutionTask executionTaskB = new ExecutionTask();
-    executionTaskB.setCreateDate(new Date());
-    executionTaskB.setOrderItemId("B");
-    executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
-    executionTaskB.setServiceOrderInfoJson(json);
-    executionTaskRepository.save(executionTaskB);
-    return executionTaskA;
-  }
-
-  public static ExecutionTask setUpBddForE2EExecutionTaskSucess(
-      ServiceOrderRepository serviceOrderRepository,
-      ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
-    ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
-
-    for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
-      serviceOrderItem.setState(StateType.ACKNOWLEDGED);
-      List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
-      ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
-      serviceCharacteristic1.setName("access-site-id");
-      Value value1 = new Value();
-      value1.setServiceCharacteristicValue("1234765");
-      serviceCharacteristic1.setValue(value1);
-      serviceCharacteristics.add(serviceCharacteristic1);
-      ServiceCharacteristic serviceCharacteristic2 = new ServiceCharacteristic();
-      serviceCharacteristic2.setName("provider-site-id");
-      Value value2 = new Value();
-      value2.setServiceCharacteristicValue("654321");
-      serviceCharacteristic2.setValue(value2);
-      serviceCharacteristics.add(serviceCharacteristic2);
-      serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
     }
 
-    testServiceOrder.setState(StateType.ACKNOWLEDGED);
-    testServiceOrder.setId("test");
-    serviceOrderRepository.save(testServiceOrder);
+    public static ExecutionTask setUpBddForExecutionTaskSucess(ServiceOrderRepository serviceOrderRepository,
+            ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
+        ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
 
-    LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
-    sdcResponse.put("invariantUUID", "uuid");
-    sdcResponse.put("name", "vFW");
-    sdcResponse.put("version", "v1");
-    sdcResponse.put("category", "E2E Service");
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.setState(StateType.ACKNOWLEDGED);
+        }
 
-    List<ResourceSpecification> resourceSpecs = new ArrayList<>();
-    ResourceSpecification resourceSpecificationA = new ResourceSpecification();
-    resourceSpecificationA.setId("2e3feeb0-8e36-46c6-862c-236d9c626438");
-    resourceSpecificationA.setInstanceName("vFW-vSINK");
-    resourceSpecificationA.setName("vFW-SINK");
-    resourceSpecificationA.setType("ONAPresource");
-    resourceSpecificationA.setVersion("2.0");
-    resourceSpecificationA.setResourceInvariantUUID("6e3feeb0-8e36-46c6-862c-236d9c626438");
-    resourceSpecs.add(resourceSpecificationA);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
 
-    sdcResponse.put("resourceSpecification", resourceSpecs);
+        LinkedHashMap<String, String> sdcResponse = new LinkedHashMap<>();
+        sdcResponse.put("invariantUUID", "uuid");
+        sdcResponse.put("name", "vFW");
+        sdcResponse.put("version", "v1");
+        sdcResponse.put("category", "NonE2E");
 
-    ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
-    serviceOrderInfo.setServiceOrderId("test");
-    SubscriberInfo subscriberInfo = new SubscriberInfo();
-    subscriberInfo.setGlobalSubscriberId("6490");
-    subscriberInfo.setSubscriberName("edgar");
-    serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+        ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+        serviceOrderInfo.setServiceOrderId("test");
+        SubscriberInfo subscriberInfo = new SubscriberInfo();
+        subscriberInfo.setGlobalSubscriberId("6490");
+        subscriberInfo.setSubscriberName("edgar");
+        serviceOrderInfo.setSubscriberInfo(subscriberInfo);
 
-    ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
-    serviceOrderItemInfoA.setId("A");
-    serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+        ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
+        serviceOrderItemInfoA.setId("A");
+        serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
 
-    ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
-    serviceOrderItemInfoB.setId("B");
-    serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
-    serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
-    serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+        ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
+        serviceOrderItemInfoB.setId("B");
+        serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
+        serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
+        serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
 
-    String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+        String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
 
-    ExecutionTask executionTaskA = new ExecutionTask();
-    executionTaskA.setCreateDate(new Date());
-    executionTaskA.setOrderItemId("A");
-    executionTaskA.setServiceOrderInfoJson(json);
-    executionTaskA = executionTaskRepository.save(executionTaskA);
-    ExecutionTask executionTaskB = new ExecutionTask();
-    executionTaskB.setCreateDate(new Date());
-    executionTaskB.setOrderItemId("B");
-    executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
-    executionTaskB.setServiceOrderInfoJson(json);
-    executionTaskRepository.save(executionTaskB);
-    return executionTaskA;
-  }
-
-  public static ExecutionTask setUpBddForE2EExecutionTaskSucessWithObject(
-      ServiceOrderRepository serviceOrderRepository,
-      ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
-    ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
-
-    for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
-      serviceOrderItem.setState(StateType.ACKNOWLEDGED);
-      List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
-      ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
-      serviceCharacteristic1.setName("EPL_ServiceCharacteristics");
-      serviceCharacteristic1.setValueType("object");
-      Value value1 = new Value();
-      value1.setServiceCharacteristicValue("{ \"key1\":\"value1\", \"key2\":\"value2\"}");
-      serviceCharacteristic1.setValue(value1);
-      serviceCharacteristics.add(serviceCharacteristic1);
-      serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+        ExecutionTask executionTaskA = new ExecutionTask();
+        executionTaskA.setCreateDate(new Date());
+        executionTaskA.setOrderItemId("A");
+        executionTaskA.setServiceOrderInfoJson(json);
+        executionTaskA = executionTaskRepository.save(executionTaskA);
+        ExecutionTask executionTaskB = new ExecutionTask();
+        executionTaskB.setCreateDate(new Date());
+        executionTaskB.setOrderItemId("B");
+        executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
+        executionTaskB.setServiceOrderInfoJson(json);
+        executionTaskRepository.save(executionTaskB);
+        return executionTaskA;
     }
 
-    testServiceOrder.setState(StateType.ACKNOWLEDGED);
-    testServiceOrder.setId("test");
-    serviceOrderRepository.save(testServiceOrder);
+    public static ExecutionTask setUpBddForE2EExecutionTaskSucess(ServiceOrderRepository serviceOrderRepository,
+            ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
+        ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
 
-    LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
-    sdcResponse.put("invariantUUID", "uuid");
-    sdcResponse.put("name", "vFW");
-    sdcResponse.put("version", "v1");
-    sdcResponse.put("category", "E2E Service");
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.setState(StateType.ACKNOWLEDGED);
+            List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
+            ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
+            serviceCharacteristic1.setName("access-site-id");
+            Value value1 = new Value();
+            value1.setServiceCharacteristicValue("1234765");
+            serviceCharacteristic1.setValue(value1);
+            serviceCharacteristics.add(serviceCharacteristic1);
+            ServiceCharacteristic serviceCharacteristic2 = new ServiceCharacteristic();
+            serviceCharacteristic2.setName("provider-site-id");
+            Value value2 = new Value();
+            value2.setServiceCharacteristicValue("654321");
+            serviceCharacteristic2.setValue(value2);
+            serviceCharacteristics.add(serviceCharacteristic2);
+            serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+        }
 
-    List<ResourceSpecification> resourceSpecs = new ArrayList<>();
-    ResourceSpecification resourceSpecificationA = new ResourceSpecification();
-    resourceSpecificationA.setId("2e3feeb0-8e36-46c6-862c-236d9c626438");
-    resourceSpecificationA.setInstanceName("vFW-vSINK");
-    resourceSpecificationA.setName("vFW-SINK");
-    resourceSpecificationA.setType("ONAPresource");
-    resourceSpecificationA.setVersion("2.0");
-    resourceSpecificationA.setResourceInvariantUUID("6e3feeb0-8e36-46c6-862c-236d9c626438");
-    resourceSpecs.add(resourceSpecificationA);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
 
-    sdcResponse.put("resourceSpecification", resourceSpecs);
+        LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
+        sdcResponse.put("invariantUUID", "uuid");
+        sdcResponse.put("name", "vFW");
+        sdcResponse.put("version", "v1");
+        sdcResponse.put("category", "E2E Service");
 
-    ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
-    serviceOrderInfo.setServiceOrderId("test");
-    SubscriberInfo subscriberInfo = new SubscriberInfo();
-    subscriberInfo.setGlobalSubscriberId("6490");
-    subscriberInfo.setSubscriberName("edgar");
-    serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+        List<ResourceSpecification> resourceSpecs = new ArrayList<>();
+        ResourceSpecification resourceSpecificationA = new ResourceSpecification();
+        resourceSpecificationA.setId("2e3feeb0-8e36-46c6-862c-236d9c626438");
+        resourceSpecificationA.setInstanceName("vFW-vSINK");
+        resourceSpecificationA.setName("vFW-SINK");
+        resourceSpecificationA.setType("ONAPresource");
+        resourceSpecificationA.setVersion("2.0");
+        resourceSpecificationA.setResourceInvariantUUID("6e3feeb0-8e36-46c6-862c-236d9c626438");
+        resourceSpecs.add(resourceSpecificationA);
 
-    ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
-    serviceOrderItemInfoA.setId("A");
-    serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+        sdcResponse.put("resourceSpecification", resourceSpecs);
 
-    ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
-    serviceOrderItemInfoB.setId("B");
-    serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
-    serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
-    serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+        ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+        serviceOrderInfo.setServiceOrderId("test");
+        SubscriberInfo subscriberInfo = new SubscriberInfo();
+        subscriberInfo.setGlobalSubscriberId("6490");
+        subscriberInfo.setSubscriberName("edgar");
+        serviceOrderInfo.setSubscriberInfo(subscriberInfo);
 
-    String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+        ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
+        serviceOrderItemInfoA.setId("A");
+        serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
 
-    ExecutionTask executionTaskA = new ExecutionTask();
-    executionTaskA.setCreateDate(new Date());
-    executionTaskA.setOrderItemId("A");
-    executionTaskA.setServiceOrderInfoJson(json);
-    executionTaskA = executionTaskRepository.save(executionTaskA);
-    ExecutionTask executionTaskB = new ExecutionTask();
-    executionTaskB.setCreateDate(new Date());
-    executionTaskB.setOrderItemId("B");
-    executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
-    executionTaskB.setServiceOrderInfoJson(json);
-    executionTaskRepository.save(executionTaskB);
-    return executionTaskA;
-  }
+        ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
+        serviceOrderItemInfoB.setId("B");
+        serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
+        serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
+        serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
 
-  public static ExecutionTask setUpBddForE2EExecutionTaskSucessWithComplexObject(
-      ServiceOrderRepository serviceOrderRepository,
-      ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
-    ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
+        String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
 
-    for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
-      serviceOrderItem.setState(StateType.ACKNOWLEDGED);
-      List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
-      ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
-      serviceCharacteristic1.setName("EPL_ServiceCharacteristics");
-      serviceCharacteristic1.setValueType("object");
-      Value value1 = new Value();
-      // Three parameters , one is an array of child objects
-      value1.setServiceCharacteristicValue(
-          "{\"key1\":\"value1\", \"key2\":\"value2\", \"key3\":[ {\"lat1\":\"value1\",\"lon1\":\"value1\"}, { \"lat2\":\"value2\", \"lon2\":\"value2\"}]}");
-      serviceCharacteristic1.setValue(value1);
-      serviceCharacteristics.add(serviceCharacteristic1);
-      serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+        ExecutionTask executionTaskA = new ExecutionTask();
+        executionTaskA.setCreateDate(new Date());
+        executionTaskA.setOrderItemId("A");
+        executionTaskA.setServiceOrderInfoJson(json);
+        executionTaskA = executionTaskRepository.save(executionTaskA);
+        ExecutionTask executionTaskB = new ExecutionTask();
+        executionTaskB.setCreateDate(new Date());
+        executionTaskB.setOrderItemId("B");
+        executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
+        executionTaskB.setServiceOrderInfoJson(json);
+        executionTaskRepository.save(executionTaskB);
+        return executionTaskA;
     }
 
-    testServiceOrder.setState(StateType.ACKNOWLEDGED);
-    testServiceOrder.setId("test");
-    serviceOrderRepository.save(testServiceOrder);
+    public static ExecutionTask setUpBddForE2EExecutionTaskSucessWithObject(
+            ServiceOrderRepository serviceOrderRepository, ExecutionTaskRepository executionTaskRepository,
+            ActionType actionType) {
+        ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
 
-    LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
-    sdcResponse.put("invariantUUID", "uuid");
-    sdcResponse.put("name", "vFW");
-    sdcResponse.put("version", "v1");
-    sdcResponse.put("category", "E2E Service");
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.setState(StateType.ACKNOWLEDGED);
+            List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
+            ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
+            serviceCharacteristic1.setName("EPL_ServiceCharacteristics");
+            serviceCharacteristic1.setValueType("object");
+            Value value1 = new Value();
+            value1.setServiceCharacteristicValue("{ \"key1\":\"value1\", \"key2\":\"value2\"}");
+            serviceCharacteristic1.setValue(value1);
+            serviceCharacteristics.add(serviceCharacteristic1);
+            serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+        }
 
-    List<ResourceSpecification> resourceSpecs = new ArrayList<>();
-    ResourceSpecification resourceSpecificationA = new ResourceSpecification();
-    resourceSpecificationA.setId("2e3feeb0-8e36-46c6-862c-236d9c626438");
-    resourceSpecificationA.setInstanceName("vFW-vSINK");
-    resourceSpecificationA.setName("vFW-SINK");
-    resourceSpecificationA.setType("ONAPresource");
-    resourceSpecificationA.setVersion("2.0");
-    resourceSpecificationA.setResourceInvariantUUID("6e3feeb0-8e36-46c6-862c-236d9c626438");
-    resourceSpecs.add(resourceSpecificationA);
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
 
-    sdcResponse.put("resourceSpecification", resourceSpecs);
+        LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
+        sdcResponse.put("invariantUUID", "uuid");
+        sdcResponse.put("name", "vFW");
+        sdcResponse.put("version", "v1");
+        sdcResponse.put("category", "E2E Service");
 
-    ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
-    serviceOrderInfo.setServiceOrderId("test");
-    SubscriberInfo subscriberInfo = new SubscriberInfo();
-    subscriberInfo.setGlobalSubscriberId("6490");
-    subscriberInfo.setSubscriberName("edgar");
-    serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+        List<ResourceSpecification> resourceSpecs = new ArrayList<>();
+        ResourceSpecification resourceSpecificationA = new ResourceSpecification();
+        resourceSpecificationA.setId("2e3feeb0-8e36-46c6-862c-236d9c626438");
+        resourceSpecificationA.setInstanceName("vFW-vSINK");
+        resourceSpecificationA.setName("vFW-SINK");
+        resourceSpecificationA.setType("ONAPresource");
+        resourceSpecificationA.setVersion("2.0");
+        resourceSpecificationA.setResourceInvariantUUID("6e3feeb0-8e36-46c6-862c-236d9c626438");
+        resourceSpecs.add(resourceSpecificationA);
 
-    ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
-    serviceOrderItemInfoA.setId("A");
-    serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+        sdcResponse.put("resourceSpecification", resourceSpecs);
 
-    ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
-    serviceOrderItemInfoB.setId("B");
-    serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
-    serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
-    serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+        ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+        serviceOrderInfo.setServiceOrderId("test");
+        SubscriberInfo subscriberInfo = new SubscriberInfo();
+        subscriberInfo.setGlobalSubscriberId("6490");
+        subscriberInfo.setSubscriberName("edgar");
+        serviceOrderInfo.setSubscriberInfo(subscriberInfo);
 
-    String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+        ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
+        serviceOrderItemInfoA.setId("A");
+        serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
 
-    ExecutionTask executionTaskA = new ExecutionTask();
-    executionTaskA.setCreateDate(new Date());
-    executionTaskA.setOrderItemId("A");
-    executionTaskA.setServiceOrderInfoJson(json);
-    executionTaskA = executionTaskRepository.save(executionTaskA);
-    ExecutionTask executionTaskB = new ExecutionTask();
-    executionTaskB.setCreateDate(new Date());
-    executionTaskB.setOrderItemId("B");
-    executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
-    executionTaskB.setServiceOrderInfoJson(json);
-    executionTaskRepository.save(executionTaskB);
-    return executionTaskA;
-  }
+        ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
+        serviceOrderItemInfoB.setId("B");
+        serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
+        serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
+        serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+
+        String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+
+        ExecutionTask executionTaskA = new ExecutionTask();
+        executionTaskA.setCreateDate(new Date());
+        executionTaskA.setOrderItemId("A");
+        executionTaskA.setServiceOrderInfoJson(json);
+        executionTaskA = executionTaskRepository.save(executionTaskA);
+        ExecutionTask executionTaskB = new ExecutionTask();
+        executionTaskB.setCreateDate(new Date());
+        executionTaskB.setOrderItemId("B");
+        executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
+        executionTaskB.setServiceOrderInfoJson(json);
+        executionTaskRepository.save(executionTaskB);
+        return executionTaskA;
+    }
+
+    public static ExecutionTask setUpBddForE2EExecutionTaskSucessWithComplexObject(
+            ServiceOrderRepository serviceOrderRepository, ExecutionTaskRepository executionTaskRepository,
+            ActionType actionType) {
+        ServiceOrder testServiceOrder = createTestServiceOrder(actionType);
+
+        for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+            serviceOrderItem.setState(StateType.ACKNOWLEDGED);
+            List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
+            ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
+            serviceCharacteristic1.setName("EPL_ServiceCharacteristics");
+            serviceCharacteristic1.setValueType("object");
+            Value value1 = new Value();
+            // Three parameters , one is an array of child objects
+            value1.setServiceCharacteristicValue(
+                    "{\"key1\":\"value1\", \"key2\":\"value2\", \"key3\":[ {\"lat1\":\"value1\",\"lon1\":\"value1\"}, { \"lat2\":\"value2\", \"lon2\":\"value2\"}]}");
+            serviceCharacteristic1.setValue(value1);
+            serviceCharacteristics.add(serviceCharacteristic1);
+            serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+        }
+
+        testServiceOrder.setState(StateType.ACKNOWLEDGED);
+        testServiceOrder.setId("test");
+        serviceOrderRepository.save(testServiceOrder);
+
+        LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
+        sdcResponse.put("invariantUUID", "uuid");
+        sdcResponse.put("name", "vFW");
+        sdcResponse.put("version", "v1");
+        sdcResponse.put("category", "E2E Service");
+
+        List<ResourceSpecification> resourceSpecs = new ArrayList<>();
+        ResourceSpecification resourceSpecificationA = new ResourceSpecification();
+        resourceSpecificationA.setId("2e3feeb0-8e36-46c6-862c-236d9c626438");
+        resourceSpecificationA.setInstanceName("vFW-vSINK");
+        resourceSpecificationA.setName("vFW-SINK");
+        resourceSpecificationA.setType("ONAPresource");
+        resourceSpecificationA.setVersion("2.0");
+        resourceSpecificationA.setResourceInvariantUUID("6e3feeb0-8e36-46c6-862c-236d9c626438");
+        resourceSpecs.add(resourceSpecificationA);
+
+        sdcResponse.put("resourceSpecification", resourceSpecs);
+
+        ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+        serviceOrderInfo.setServiceOrderId("test");
+        SubscriberInfo subscriberInfo = new SubscriberInfo();
+        subscriberInfo.setGlobalSubscriberId("6490");
+        subscriberInfo.setSubscriberName("edgar");
+        serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+
+        ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
+        serviceOrderItemInfoA.setId("A");
+        serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+
+        ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
+        serviceOrderItemInfoB.setId("B");
+        serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
+        serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
+        serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+
+        String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+
+        ExecutionTask executionTaskA = new ExecutionTask();
+        executionTaskA.setCreateDate(new Date());
+        executionTaskA.setOrderItemId("A");
+        executionTaskA.setServiceOrderInfoJson(json);
+        executionTaskA = executionTaskRepository.save(executionTaskA);
+        ExecutionTask executionTaskB = new ExecutionTask();
+        executionTaskB.setCreateDate(new Date());
+        executionTaskB.setOrderItemId("B");
+        executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
+        executionTaskB.setServiceOrderInfoJson(json);
+        executionTaskRepository.save(executionTaskB);
+        return executionTaskA;
+    }
 }

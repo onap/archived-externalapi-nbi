@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceinventory;
 
 import java.util.LinkedHashMap;
@@ -48,26 +49,23 @@ public class AaiClient extends BaseClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiClient.class);
     private static final String X_TRANSACTION_ID = "X-TransactionId";
 
-
     private String aaiServiceUrl;
     private String aaiServiceCustomerUrl;
     private String aaiServicesUrl;
     private String aaiServicesInstancesUrl;
     private String aaiHealthCheckUrl;
 
-
     @PostConstruct
     private void setUpAndlogAAIUrl() {
-        aaiServiceUrl = new StringBuilder().append(aaiHost)
-            .append(OnapComponentsUrlPaths.AAI_GET_SERVICE).toString();
-        aaiServiceCustomerUrl = new StringBuilder().append(aaiHost)
-            .append(OnapComponentsUrlPaths.AAI_GET_SERVICE_CUSTOMER).toString();
+        aaiServiceUrl = new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE).toString();
+        aaiServiceCustomerUrl =
+                new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_GET_SERVICE_CUSTOMER).toString();
         aaiServicesUrl = new StringBuilder().append(aaiHost)
-            .append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH).toString();
+                .append(OnapComponentsUrlPaths.AAI_GET_SERVICES_FOR_CUSTOMER_PATH).toString();
         aaiServicesInstancesUrl = new StringBuilder().append(aaiHost)
-            .append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH).toString();
-        aaiHealthCheckUrl = new StringBuilder().append(aaiHost)
-            .append(OnapComponentsUrlPaths.AAI_HEALTH_CHECK).toString();
+                .append(OnapComponentsUrlPaths.AAI_GET_SERVICE_INSTANCES_PATH).toString();
+        aaiHealthCheckUrl =
+                new StringBuilder().append(aaiHost).append(OnapComponentsUrlPaths.AAI_HEALTH_CHECK).toString();
 
         LOGGER.info("AAI service url :  " + aaiServiceUrl);
         LOGGER.info("AAI services url :  " + aaiServicesUrl);
@@ -75,7 +73,6 @@ public class AaiClient extends BaseClient {
         LOGGER.info("AAI aaiHealthCheckUrl :  " + aaiHealthCheckUrl);
 
     }
-
 
     private HttpHeaders buildRequestHeaderForAAI() {
 

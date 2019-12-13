@@ -20,71 +20,71 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ServiceInstanceEvent {
 
-  @Id
-  @JsonProperty("id")
-  private String id = null;
+    @Id
+    @JsonProperty("id")
+    private String id = null;
 
-  @JsonProperty("href")
-  private String href = null;
+    @JsonProperty("href")
+    private String href = null;
 
-  @JsonProperty("name")
-  private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-  @JsonProperty("type")
-  private String type = "service-instance";
+    @JsonProperty("type")
+    private String type = "service-instance";
 
-  @JsonProperty("state")
-  private String state = null;
+    @JsonProperty("state")
+    private String state = null;
 
-  @JsonProperty("relatedParty")
-  private RelatedParty relatedParty = null;
+    @JsonProperty("relatedParty")
+    private RelatedParty relatedParty = null;
 
-  public String getId() {
-    return id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public void setId(String id) {
-    this.id = id;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public String getHref() {
-    return href;
-  }
+    public String getHref() {
+        return href;
+    }
 
-  public void setHref(String href) {
-    this.href = href;
-  }
+    public void setHref(String href) {
+        this.href = href;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getType() {
-    return type;
-  }
+    public String getType() {
+        return type;
+    }
 
-  public void setType(String type) {
-    this.type = type;
-  }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-  public String getState() {
-    return state;
-  }
+    public String getState() {
+        return state;
+    }
 
-  public void setState(String state) {
-    this.state = state;
-  }
+    public void setState(String state) {
+        this.state = state;
+    }
 
-  public RelatedParty getRelatedParty() {
-    return relatedParty;
-  }
+    public RelatedParty getRelatedParty() {
+        return relatedParty;
+    }
 
-  public void setRelatedParty(RelatedParty relatedParty) {
-    this.relatedParty = relatedParty;
-  }
+    public void setRelatedParty(RelatedParty relatedParty) {
+        this.relatedParty = relatedParty;
+    }
 
 }

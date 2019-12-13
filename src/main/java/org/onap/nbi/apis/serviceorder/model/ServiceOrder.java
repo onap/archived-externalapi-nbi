@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import java.util.ArrayList;
@@ -59,7 +58,8 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(
         description = "A Service Order is a type of order which can be used to place an order between a customer and a service provider or between a service provider and a partner and vice versa")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 @Document
 @ValidServiceOrder
@@ -130,7 +130,6 @@ public class ServiceOrder implements Resource {
         this.id = id;
         return this;
     }
-
 
     /**
      * ID created on repository side
@@ -311,7 +310,6 @@ public class ServiceOrder implements Resource {
     public void setCompletionDateTime(Date completionDateTime) {
         this.completionDateTime = completionDateTime;
     }
-
 
     /**
      * @return expectedCompletionDate
@@ -533,7 +531,6 @@ public class ServiceOrder implements Resource {
         this.orderItem = orderItem;
     }
 
-
     public ServiceOrder orderMessage(List<OrderMessage> orderMessage) {
         this.orderMessage = orderMessage;
         return this;
@@ -543,14 +540,14 @@ public class ServiceOrder implements Resource {
         if (this.orderMessage == null) {
             this.orderMessage = new ArrayList<OrderMessage>();
         }
-        boolean mesageAlreadyExist=false;
+        boolean mesageAlreadyExist = false;
         for (OrderMessage message : this.orderMessage) {
-            if(message.getCode().equals(orderMessageItem.getCode())){
-                mesageAlreadyExist=true;
+            if (message.getCode().equals(orderMessageItem.getCode())) {
+                mesageAlreadyExist = true;
 
             }
         }
-        if(!mesageAlreadyExist) {
+        if (!mesageAlreadyExist) {
             this.orderMessage.add(orderMessageItem);
         }
         return this;
@@ -570,10 +567,6 @@ public class ServiceOrder implements Resource {
     public void setOrderMessage(List<OrderMessage> orderMessage) {
         this.orderMessage = orderMessage;
     }
-
-
-
-
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -604,14 +597,12 @@ public class ServiceOrder implements Resource {
                 && Objects.equals(this.orderMessage, serviceOrder.orderMessage);
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(id, href, externalId, priority, description, category, state, orderDate, completionDateTime,
                 expectedCompletionDate, requestedStartDate, requestedCompletionDate, startDate, baseType, type,
                 schemaLocation, relatedParty, orderRelationship, orderItem, orderMessage);
     }
-
 
     @Override
     public String toString() {
@@ -653,4 +644,3 @@ public class ServiceOrder implements Resource {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

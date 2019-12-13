@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.hub.model;
 
 import org.onap.nbi.commons.Resource;
@@ -24,7 +25,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-
 
 @Document
 public class Subscriber implements Resource {
@@ -79,12 +79,10 @@ public class Subscriber implements Resource {
     public static Subscriber createFromSubscription(Subscription request) {
         Subscriber sub = new Subscriber();
         sub.setCallback(request.getCallback());
-        sub.setEwId( request.getEwId());
-        sub.setEwHost( request.getEwHost());
+        sub.setEwId(request.getEwId());
+        sub.setEwHost(request.getEwHost());
 
-        Stream.of(request.getQuery().split("&"))
-                .map(q -> q.split("="))
-                .filter(q -> q.length == 2)
+        Stream.of(request.getQuery().split("&")).map(q -> q.split("=")).filter(q -> q.length == 2)
                 .forEach(q -> sub.getQuery().put(q[0].trim(), q[1].trim().split(",")));
 
         return sub;

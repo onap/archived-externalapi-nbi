@@ -18,39 +18,39 @@ import java.util.Map;
 
 public class ParametersModel {
 
-	private List<LocationConstraintsModel> locationConstraints;
-	
-	private List<ResourceModel> resources;
-	
-	private Map<String, String> requestInputs;
-	
-	public List<LocationConstraintsModel> getLocationConstraints(){
-		return locationConstraints;
-	}
-	
-	public void setLocationConstraints(List<LocationConstraintsModel> locationConstraints) {
-		this.locationConstraints = locationConstraints;
-	}
-	
-	public List<ResourceModel> getResources(){
-		return resources;
-	}
-	
-	public void setResources(List<ResourceModel> resources) {
-		this.resources = resources;
-	}
-	
-	public Map<String, String> getRequestInputs() {
-		return requestInputs;
-	}
+    private List<LocationConstraintsModel> locationConstraints;
 
-	public void setRequestInputs(Map<String, String> requestInputs) {
-		this.requestInputs = requestInputs;
-	}
+    private List<ResourceModel> resources;
 
-	@Override
+    private Map<String, String> requestInputs;
+
+    public List<LocationConstraintsModel> getLocationConstraints() {
+        return locationConstraints;
+    }
+
+    public void setLocationConstraints(List<LocationConstraintsModel> locationConstraints) {
+        this.locationConstraints = locationConstraints;
+    }
+
+    public List<ResourceModel> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<ResourceModel> resources) {
+        this.resources = resources;
+    }
+
+    public Map<String, String> getRequestInputs() {
+        return requestInputs;
+    }
+
+    public void setRequestInputs(Map<String, String> requestInputs) {
+        this.requestInputs = requestInputs;
+    }
+
+    @Override
     public String toString() {
-        return "ParametersModel{" + "locationConstraints=" + locationConstraints + ", resources=" + resources + ", requestInputs="
-                + requestInputs +  '}';
+        return "ParametersModel{" + "locationConstraints=" + locationConstraints + ", resources=" + resources
+                + ", requestInputs=" + requestInputs + '}';
     }
 }

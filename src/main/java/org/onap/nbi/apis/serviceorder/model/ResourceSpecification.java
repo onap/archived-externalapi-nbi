@@ -16,8 +16,8 @@ package org.onap.nbi.apis.serviceorder.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ResourceSpecification {
-	
-	@JsonProperty("id")
+
+    @JsonProperty("id")
     private String id = null;
 
     @JsonProperty("name")
@@ -28,74 +28,70 @@ public class ResourceSpecification {
 
     @JsonProperty("instanceName")
     private String instanceName = null;
-    
+
     @JsonProperty("resourceInvariantUUID")
     private String resourceInvariantUUID = null;
-    
-	@JsonProperty("resourceType")
+
+    @JsonProperty("resourceType")
     private String resourceType = null;
-    
+
     @JsonProperty("@type")
     private String type = null;
-    
+
     public String getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public String getInstanceName() {
-		return instanceName;
-	}
+    public String getInstanceName() {
+        return instanceName;
+    }
 
-	public void setInstanceName(String instanceName) {
-		this.instanceName = instanceName;
-	}
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
 
-	public String getResourceInvariantUUID() {
-		return resourceInvariantUUID;
-	}
+    public String getResourceInvariantUUID() {
+        return resourceInvariantUUID;
+    }
 
-	public void setResourceInvariantUUID(String resourceInvariantUUID) {
-		this.resourceInvariantUUID = resourceInvariantUUID;
-	}
+    public void setResourceInvariantUUID(String resourceInvariantUUID) {
+        this.resourceInvariantUUID = resourceInvariantUUID;
+    }
 
-	public String getResourceType() {
-		return resourceType;
-	}
+    public String getResourceType() {
+        return resourceType;
+    }
 
-	public void setResourceType(String resourceType) {
-		this.resourceType = resourceType;
-	}
+    public void setResourceType(String resourceType) {
+        this.resourceType = resourceType;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-
-
-	
+    public void setType(String type) {
+        this.type = type;
+    }
 
 }

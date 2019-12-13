@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,7 +47,8 @@ import java.util.Objects;
  * Linked Services to the one instantiate
  */
 @ApiModel(description = "Linked Services to the one instantiate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class ServiceRelationship {
     @JsonProperty("type")
@@ -71,7 +71,8 @@ public class ServiceRelationship {
      * @return type
      **/
     @JsonProperty("type")
-    @ApiModelProperty(required = true,
+    @ApiModelProperty(
+            required = true,
             value = "Relationship type. It can be : “reliesOn” if the Service needs another already owned Service to rely on (e.g. an option on an already owned mobile access Service) or “targets” or “isTargeted” (depending on the way of expressing the link) for any other kind of links that may be useful")
     @NotNull(message = "Relationship type cannot be null")
     @Valid
@@ -105,7 +106,6 @@ public class ServiceRelationship {
         this.service = service;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -123,7 +123,6 @@ public class ServiceRelationship {
     public int hashCode() {
         return Objects.hash(type, service);
     }
-
 
     @Override
     public String toString() {
@@ -147,4 +146,3 @@ public class ServiceRelationship {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.servicecatalog.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,33 +23,33 @@ import org.onap.nbi.commons.Resource;
 import org.springframework.data.annotation.Id;
 
 @ApiModel
- public class SpecificationInputSchema implements Resource {
+public class SpecificationInputSchema implements Resource {
 
+    @Id
+    @JsonProperty("id")
+    private String id = null;
 
-        @Id
-        @JsonProperty("id")
-        private String id = null;
+    @JsonProperty("schema")
+    private String specificationSchemaJson = null;
 
-        @JsonProperty("schema")
-        private String specificationSchemaJson = null;
+    @Override
+    @JsonProperty("id")
+    @ApiModelProperty(required = true, value = "uuid for the specification input schema")
+    public String getId() {
+        return id;
+    }
 
-        @Override
-        @JsonProperty("id")
-        @ApiModelProperty(required = true, value = "uuid for the specification input schema")
-        public String getId() {
-            return id;
-        }
-        public void setId(String id) {
-            this.id = id;
-        }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-        @JsonProperty("schema")
-        @ApiModelProperty(required = true, value = "Input schema for the service")
-        public String getSpecificationSchemaJson() {
-            return specificationSchemaJson;
-        }
+    @JsonProperty("schema")
+    @ApiModelProperty(required = true, value = "Input schema for the service")
+    public String getSpecificationSchemaJson() {
+        return specificationSchemaJson;
+    }
 
-        public void setSpecificationSchemaJson(String specificationSchemaJson) {
-            this.specificationSchemaJson = specificationSchemaJson;
-        }
+    public void setSpecificationSchemaJson(String specificationSchemaJson) {
+        this.specificationSchemaJson = specificationSchemaJson;
+    }
 }

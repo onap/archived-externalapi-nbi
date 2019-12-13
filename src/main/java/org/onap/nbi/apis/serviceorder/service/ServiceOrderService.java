@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.service;
 
 import java.util.Date;
@@ -73,7 +74,6 @@ public class ServiceOrderService {
         return serviceOrderRepository.count();
     }
 
-
     public void addOrderMessage(ServiceOrder serviceOrder, String code) {
         OrderMessage orderMessage = new OrderMessage();
         orderMessage.setCode(code);
@@ -118,13 +118,13 @@ public class ServiceOrderService {
         if ("102".equalsIgnoreCase(code)) {
             orderMessage.setField("serviceSpecification.id");
             orderMessage
-                .setMessageInformation("Incorrect serviceSpecification.id provided – not found in Catalog (SDC");
+                    .setMessageInformation("Incorrect serviceSpecification.id provided – not found in Catalog (SDC");
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
         if ("103".equalsIgnoreCase(code)) {
             orderMessage.setField(SERVICE_ID);
             orderMessage.setMessageInformation(
-                "Inconsistence information provided. service.id must not be provided for add action");
+                    "Inconsistence information provided. service.id must not be provided for add action");
             serviceOrderItem.addOrderItemMessageItem(orderMessage);
         }
         if ("105".equalsIgnoreCase(code)) {
@@ -144,9 +144,8 @@ public class ServiceOrderService {
         serviceOrderRepository.save(serviceOrder);
     }
 
-
     public void addOrderItemMessageRequestSo(ServiceOrder serviceOrder, ServiceOrderItem serviceOrderItem,
-        String message) {
+            String message) {
         OrderMessage orderMessage = new OrderMessage();
         orderMessage.setCode("105");
         orderMessage.setSeverity(SeverityMessage.ERROR);

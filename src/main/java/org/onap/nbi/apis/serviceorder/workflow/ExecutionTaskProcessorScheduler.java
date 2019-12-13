@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.serviceorder.workflow;
 
 import java.util.List;
@@ -27,18 +28,18 @@ import org.springframework.stereotype.Service;
 @EnableScheduling
 public class ExecutionTaskProcessorScheduler {
 
-  @Autowired
-  ExecutionTaskRepository executionTaskRepository;
+    @Autowired
+    ExecutionTaskRepository executionTaskRepository;
 
-  @Autowired
-  SOTaskProcessor soTaskProcessor;
+    @Autowired
+    SOTaskProcessor soTaskProcessor;
 
-  // Using fixedDelay to mitigate against Scheduler queue backlog with fixedRate
-  @Scheduled(fixedDelayString = "${executionTask.schedule}", initialDelayString = "${executionTask.initial}")
-  private void processExecutionPlan() throws InterruptedException {
-    List<ExecutionTask> taskToExecute = executionTaskRepository.findByReliedTasksIsEmpty();
-    for (ExecutionTask executionTask : taskToExecute) {
-      soTaskProcessor.processOrderItem(executionTask);
+    // Using fixedDelay to mitigate against Scheduler queue backlog with fixedRate
+    @Scheduled(fixedDelayString = "${executionTask.schedule}", initialDelayString = "${executionTask.initial}")
+    private void processExecutionPlan() throws InterruptedException {
+        List<ExecutionTask> taskToExecute = executionTaskRepository.findByReliedTasksIsEmpty();
+        for (ExecutionTask executionTask : taskToExecute) {
+            soTaskProcessor.processOrderItem(executionTask);
+        }
     }
-  }
 }

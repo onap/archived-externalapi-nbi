@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 package org.onap.nbi.apis.status;
 
 import org.onap.nbi.apis.status.model.ApplicationStatus;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
-
 @RestController
 @RequestMapping("/status")
 public class StatusResource extends ResourceManagement {
@@ -41,17 +41,18 @@ public class StatusResource extends ResourceManagement {
     private String version;
 
     private JsonRepresentation fullRepresentation = new JsonRepresentation().add("name").add("status").add("version")
-        .add("components.name").add("components.status");
+            .add("components.name").add("components.status");
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> status(HttpServletRequest request, @RequestParam MultiValueMap<String, String> params) {
+    public ResponseEntity<Object> status(HttpServletRequest request,
+            @RequestParam MultiValueMap<String, String> params) {
 
         ResponseEntity<Object> responseEntity = null;
         final String[] splitPath = request.getRequestURI().split("/");
 
         final String applicationName = splitPath[1];
         boolean fullStatus = Boolean.valueOf(params.getFirst("fullStatus"));
-        final ApplicationStatus applicationStatus = buildNbiStatus(applicationName,fullStatus);
+        final ApplicationStatus applicationStatus = buildNbiStatus(applicationName, fullStatus);
 
         // filter object
         Object response = this.getEntity(applicationStatus, fullRepresentation);
@@ -64,13 +65,14 @@ public class StatusResource extends ResourceManagement {
     private ApplicationStatus buildNbiStatus(String applicationName, boolean fullStatus) {
         final ApplicationStatus applicationStatus = this.statusService.get(applicationName, version);
 
-        if(fullStatus) {
+        if (fullStatus) {
             final ApplicationStatus sdcConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.SDC);
             final ApplicationStatus aaiConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.AAI);
             final ApplicationStatus soConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.SO);
-            final ApplicationStatus dmaapConnectivityStatus = this.statusService.getOnapConnectivity(OnapModuleType.DMAAP);
+            final ApplicationStatus dmaapConnectivityStatus =
+                    this.statusService.getOnapConnectivity(OnapModuleType.DMAAP);
             applicationStatus.addComponent(sdcConnectivityStatus).addComponent(aaiConnectivityStatus)
-                .addComponent(soConnectivityStatus).addComponent(dmaapConnectivityStatus);
+                    .addComponent(soConnectivityStatus).addComponent(dmaapConnectivityStatus);
         }
 
         return applicationStatus;

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.status;
 
 import org.onap.nbi.apis.status.model.ApplicationStatus;
@@ -27,7 +28,6 @@ public class StatusServiceImpl implements StatusService {
     @Autowired
     private OnapClient onapClient;
 
-
     @Override
     public ApplicationStatus get(final String serviceName, final String serviceVersion) {
 
@@ -40,6 +40,5 @@ public class StatusServiceImpl implements StatusService {
 
         return onapClient.checkConnectivity(onapModuleType);
     }
-
 
 }

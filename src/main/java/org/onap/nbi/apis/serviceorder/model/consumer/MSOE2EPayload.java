@@ -28,11 +28,9 @@ public class MSOE2EPayload {
     public void setService(ServiceModel service) {
         this.service = service;
     }
-    
+
     @Override
     public String toString() {
-        return "MSOPayloadE2E{" +
-                "service=" + service +
-                '}';
+        return "MSOPayloadE2E{" + "service=" + service + '}';
     }
 }

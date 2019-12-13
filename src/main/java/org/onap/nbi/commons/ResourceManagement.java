@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.commons;
 
 import java.net.URI;
@@ -44,7 +45,6 @@ public class ResourceManagement {
             location = URI.create("/");
         }
 
-
         // Get entity representation
         final Object entity = this.getEntity(resource, jsonRepresentation);
 
@@ -68,8 +68,6 @@ public class ResourceManagement {
 
     }
 
-
-
     /**
      * Build default 206 filtered partial response for resource
      *
@@ -86,7 +84,6 @@ public class ResourceManagement {
         return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(entity);
 
     }
-
 
     /**
      * Build default 200 filtered response for resource collection
@@ -105,7 +102,6 @@ public class ResourceManagement {
         return ResponseEntity.ok().headers(headers).body(entities);
 
     }
-
 
     /**
      * Build 204 Empty response

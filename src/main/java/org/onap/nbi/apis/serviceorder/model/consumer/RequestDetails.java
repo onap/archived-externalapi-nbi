@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class RequestDetails {
@@ -89,14 +90,8 @@ public class RequestDetails {
 
     @Override
     public String toString() {
-        return "RequestDetails{" +
-            "modelInfo=" + modelInfo +
-            ", subscriberInfo=" + subscriberInfo +
-            ", requestInfo=" + requestInfo +
-            ", requestParameters=" + requestParameters +
-            ", cloudConfiguration=" + cloudConfiguration +
-            ", owningEntity=" + owningEntity +
-            ", project=" + project +
-            '}';
+        return "RequestDetails{" + "modelInfo=" + modelInfo + ", subscriberInfo=" + subscriberInfo + ", requestInfo="
+                + requestInfo + ", requestParameters=" + requestParameters + ", cloudConfiguration="
+                + cloudConfiguration + ", owningEntity=" + owningEntity + ", project=" + project + '}';
     }
 }

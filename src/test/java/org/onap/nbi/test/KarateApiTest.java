@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.test;
 
 import com.intuit.karate.junit4.Karate;
@@ -22,9 +23,9 @@ import org.junit.runner.RunWith;
 @CucumberOptions(features = "src/test/resources/karatetest/features")
 public class KarateApiTest {
 
-  @AfterClass
-  public static void stop() throws Exception {
-    Context.stopServers();
-  }
+    @AfterClass
+    public static void stop() throws Exception {
+        Context.stopServers();
+    }
 
 }

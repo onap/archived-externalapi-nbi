@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.hub;
 
 import java.util.LinkedHashMap;
@@ -54,105 +55,102 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableScheduling
 public class HubResource extends ResourceManagement {
 
-  Logger logger = LoggerFactory.getLogger(HubResource.class);
+    Logger logger = LoggerFactory.getLogger(HubResource.class);
 
-  @Autowired
-  MongoTemplate mongoTemplate;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
-  @Autowired
-  SubscriptionService subscriptionService;
+    @Autowired
+    SubscriptionService subscriptionService;
 
-  @Autowired
-  MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
+    @Autowired
+    MultiCriteriaRequestBuilder multiCriteriaRequestBuilder;
 
-  @Autowired
-  CheckDMaaPEventsManager checkDMaaPEventMAnager;
+    @Autowired
+    CheckDMaaPEventsManager checkDMaaPEventMAnager;
 
-  @Autowired
-  EWInterfaceUtils ewInterfaceUtils;
+    @Autowired
+    EWInterfaceUtils ewInterfaceUtils;
 
-  @Value("${nbi.public.url}")
-  private String nbiPublicUrl;
+    @Value("${nbi.public.url}")
+    private String nbiPublicUrl;
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> createEventSubscription(@RequestBody Subscription subscription,
-      @RequestParam MultiValueMap<String, String> params, @RequestHeader(value="Target",required = false)String targetUrl) {
-    logger.debug("POST request for subscription : {}", subscription);
-    if (targetUrl != null) {
-      targetUrl = targetUrl + OnapComponentsUrlPaths.HUB_PATH;
-      String originalCallback = subscription.getCallback();
-      subscription.setCallback(nbiPublicUrl + OnapComponentsUrlPaths.LISTENER_PATH);
-      ResponseEntity ewResponse = ewInterfaceUtils.callPostRequestTarget(subscription, targetUrl);
-      if (ewResponse.getStatusCode() == HttpStatus.CREATED) {
-        subscription.setCallback(originalCallback);
-       subscription.setEwHost(targetUrl);
-       subscription.setEwId(((LinkedHashMap)ewResponse.getBody()).get( "id" ).toString());
-      } else {
-        return ewResponse;
-      }
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> createEventSubscription(@RequestBody Subscription subscription,
+            @RequestParam MultiValueMap<String, String> params,
+            @RequestHeader(value = "Target", required = false) String targetUrl) {
+        logger.debug("POST request for subscription : {}", subscription);
+        if (targetUrl != null) {
+            targetUrl = targetUrl + OnapComponentsUrlPaths.HUB_PATH;
+            String originalCallback = subscription.getCallback();
+            subscription.setCallback(nbiPublicUrl + OnapComponentsUrlPaths.LISTENER_PATH);
+            ResponseEntity ewResponse = ewInterfaceUtils.callPostRequestTarget(subscription, targetUrl);
+            if (ewResponse.getStatusCode() == HttpStatus.CREATED) {
+                subscription.setCallback(originalCallback);
+                subscription.setEwHost(targetUrl);
+                subscription.setEwId(((LinkedHashMap) ewResponse.getBody()).get("id").toString());
+            } else {
+                return ewResponse;
+            }
+        }
+        Subscriber subscriber = subscriptionService.createSubscription(subscription);
+        JsonRepresentation filter = new JsonRepresentation(params);
+        return this.createResponse(Subscription.createFromSubscriber(subscriber), filter);
+
     }
-    Subscriber subscriber = subscriptionService.createSubscription(subscription);
-    JsonRepresentation filter = new JsonRepresentation(params);
-    return this.createResponse(Subscription.createFromSubscriber(subscriber), filter);
 
-  }
+    @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Subscription> getSubscription(@PathVariable String subscriptionId) {
 
-  @GetMapping(value = "/{subscriptionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Subscription> getSubscription(@PathVariable String subscriptionId) {
-
-
-    Optional<Subscriber> optionalSubscriber =
-        subscriptionService.findSubscriptionById(subscriptionId);
-    if (!optionalSubscriber.isPresent()) {
-      return ResponseEntity.notFound().build();
+        Optional<Subscriber> optionalSubscriber = subscriptionService.findSubscriptionById(subscriptionId);
+        if (!optionalSubscriber.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(Subscription.createFromSubscriber(optionalSubscriber.get()));
     }
-    return ResponseEntity.ok(Subscription.createFromSubscriber(optionalSubscriber.get()));
-  }
 
-  @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> findSubscribers(
-      @RequestParam MultiValueMap<String, String> params) {
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> findSubscribers(@RequestParam MultiValueMap<String, String> params) {
 
-    Query query = multiCriteriaRequestBuilder.buildRequest(params);
-    List<Subscriber> subscribers = mongoTemplate.find(query, Subscriber.class);
-    JsonRepresentation filter = new JsonRepresentation(params);
-    long totalCount = subscriptionService.countSubscription();
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Total-Count", String.valueOf(totalCount));
-    headers.add("X-Result-Count", String.valueOf(subscribers.size()));
-    List<Subscription> subscriptions =
-        subscribers.stream().map(Subscription::createFromSubscriber).collect(Collectors.toList());
+        Query query = multiCriteriaRequestBuilder.buildRequest(params);
+        List<Subscriber> subscribers = mongoTemplate.find(query, Subscriber.class);
+        JsonRepresentation filter = new JsonRepresentation(params);
+        long totalCount = subscriptionService.countSubscription();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Total-Count", String.valueOf(totalCount));
+        headers.add("X-Result-Count", String.valueOf(subscribers.size()));
+        List<Subscription> subscriptions =
+                subscribers.stream().map(Subscription::createFromSubscriber).collect(Collectors.toList());
 
-    return this.findResponse(subscriptions, filter, headers);
+        return this.findResponse(subscriptions, filter, headers);
 
-  }
-
-  /*
-   * Resource to test for DMaaP Integration for subscribing to AAI-EVENTs
-   */
-  @GetMapping("/testaaievents")
-  @ResponseStatus(HttpStatus.OK)
-  public void testAAIEventListener() {
-    checkDMaaPEventMAnager.checkForDMaaPAAIEvents();
-  }
-
-  @DeleteMapping("/{subscriptionId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteSubscription(@PathVariable String subscriptionId) {
-    logger.debug("DELETE request for subscription id #{}", subscriptionId);
-    Optional<Subscriber> optionalSubscriber= subscriptionService.findSubscriptionById(subscriptionId);
-    subscriptionService.deleteSubscription(subscriptionId);
-    String ewHost=optionalSubscriber.get().getEwHost();
-    String ewId=optionalSubscriber.get().getEwId();
-    logger.info("POST delete for ewHost : {}", ewHost);
-    logger.info("POST delete for ewId : {}", ewId);
-    if ( ewHost !=null && ewId !=null )
-    {
-      logger.info("POST deleteIF for ewHost : {}", ewHost);
-      String targetUrl = ewHost+ "/" + ewId;
-      ewInterfaceUtils.callDeleteRequestTarget(targetUrl);
-      logger.info("POST deleteIF for ewHost is : {}", targetUrl);
     }
-  }
+
+    /*
+     * Resource to test for DMaaP Integration for subscribing to AAI-EVENTs
+     */
+    @GetMapping("/testaaievents")
+    @ResponseStatus(HttpStatus.OK)
+    public void testAAIEventListener() {
+        checkDMaaPEventMAnager.checkForDMaaPAAIEvents();
+    }
+
+    @DeleteMapping("/{subscriptionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSubscription(@PathVariable String subscriptionId) {
+        logger.debug("DELETE request for subscription id #{}", subscriptionId);
+        Optional<Subscriber> optionalSubscriber = subscriptionService.findSubscriptionById(subscriptionId);
+        subscriptionService.deleteSubscription(subscriptionId);
+        String ewHost = optionalSubscriber.get().getEwHost();
+        String ewId = optionalSubscriber.get().getEwId();
+        logger.info("POST delete for ewHost : {}", ewHost);
+        logger.info("POST delete for ewId : {}", ewId);
+        if (ewHost != null && ewId != null) {
+            logger.info("POST deleteIF for ewHost : {}", ewHost);
+            String targetUrl = ewHost + "/" + ewId;
+            ewInterfaceUtils.callDeleteRequestTarget(targetUrl);
+            logger.info("POST deleteIF for ewHost is : {}", targetUrl);
+        }
+    }
 
 }

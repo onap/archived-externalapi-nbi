@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
 public class GetE2ERequestStatusResponse {
@@ -29,8 +30,6 @@ public class GetE2ERequestStatusResponse {
 
     @Override
     public String toString() {
-        return "GetE2ERequestStatusResponse{" +
-            "operation=" + operation +
-            '}';
+        return "GetE2ERequestStatusResponse{" + "operation=" + operation + '}';
     }
 }

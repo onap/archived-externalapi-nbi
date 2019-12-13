@@ -46,7 +46,7 @@ public class ListenerResourceTarget {
     static Map<String, JsonNode> events = new ConcurrentHashMap<>();
 
     /*
-        listener resource test for hub resource
+     * listener resource test for hub resource
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> postListenerResource(@RequestBody JsonNode event) {
@@ -56,11 +56,9 @@ public class ListenerResourceTarget {
         }
         try {
             Event eventListener = mapper.treeToValue(event, Event.class);
-            subscriberRepository
-                    .findSubscribersUsingEvent(eventListener)
+            subscriberRepository.findSubscribersUsingEvent(eventListener)
                     .forEach(sub -> notifier.run(sub, eventListener));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             logger.error("listener not called " + " ," + e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -68,4 +66,3 @@ public class ListenerResourceTarget {
         return ResponseEntity.ok().build();
     }
 }
-

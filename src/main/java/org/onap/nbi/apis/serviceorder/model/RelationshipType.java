@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.apis.serviceorder.model;
 
 /*
@@ -35,7 +36,6 @@ package org.onap.nbi.apis.serviceorder.model;
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -73,5 +73,3 @@ public enum RelationshipType {
         return this.value;
     }
 }
-
-

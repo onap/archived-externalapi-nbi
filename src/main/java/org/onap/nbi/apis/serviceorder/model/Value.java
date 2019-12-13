@@ -34,7 +34,6 @@
  * the License.
  */
 
-
 package org.onap.nbi.apis.serviceorder.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,7 +45,8 @@ import java.util.Objects;
  * Value is a descriptive structure for service characteristic
  */
 @ApiModel(description = "Value is a descriptive structure for service characteristic")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
+@javax.annotation.Generated(
+        value = "io.swagger.codegen.languages.JavaJerseyServerCodegen",
         date = "2018-02-19T14:00:30.767Z")
 public class Value {
     @JsonProperty("@type")
@@ -112,7 +112,6 @@ public class Value {
         this.serviceCharacteristicValue = serviceCharacteristicValue;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -130,7 +129,6 @@ public class Value {
     public int hashCode() {
         return Objects.hash(type, schemaLocation, serviceCharacteristicValue);
     }
-
 
     @Override
     public String toString() {
@@ -155,4 +153,3 @@ public class Value {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

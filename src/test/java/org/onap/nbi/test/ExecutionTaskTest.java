@@ -11,8 +11,8 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.onap.nbi.test;
 
+package org.onap.nbi.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Calendar;
@@ -56,615 +56,550 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ExecutionTaskTest {
 
-  @Autowired
-  ServiceOrderRepository serviceOrderRepository;
+    @Autowired
+    ServiceOrderRepository serviceOrderRepository;
 
-  @Autowired
-  ExecutionTaskRepository executionTaskRepository;
+    @Autowired
+    ExecutionTaskRepository executionTaskRepository;
 
-  @Autowired
-  SOTaskProcessor SoTaskProcessor;
+    @Autowired
+    SOTaskProcessor SoTaskProcessor;
 
+    static Validator validator;
 
-  static Validator validator;
-
-  @Before
-  public void before() {
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-  }
-
-  @BeforeClass
-  public static void setUp() throws Exception {
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    validator = factory.getValidator();
-    Context.startWiremock();
-  }
-
-  @AfterClass
-  public static void tearsDown() throws Exception {
-    Context.stopServers();
-
-  }
-
-  @After
-  public void tearsDownUpPort() throws Exception {
-    executionTaskRepository.deleteAll();
-    serviceOrderRepository.deleteAll();
-    Context.wireMockServer.resetToDefaultMappings();
-
-  }
-
-
-  public ExecutionTask getExecutionTask(String orderItemId) {
-    for (ExecutionTask executionTask : executionTaskRepository.findAll()) {
-      if (executionTask.getOrderItemId().equalsIgnoreCase(orderItemId)) {
-        return executionTask;
-      }
-
-    }
-    return null;
-  }
-
-  private void changeWireMockResponse(String s, int statusCode, String bodyContent) {
-    ListStubMappingsResult listStubMappingsResult = Context.wireMockServer.listAllStubMappings();
-    ResponseDefinition responseDefinition = new ResponseDefinition(statusCode, bodyContent);
-    List<StubMapping> mappings = listStubMappingsResult.getMappings();
-    for (StubMapping mapping : mappings) {
-      if (mapping.getRequest().getUrl().equals(s)) {
-        mapping.setResponse(responseDefinition);
-      }
-    }
-  }
-
-
-  private ServiceOrder getServiceOrder(String serviceOrderId) {
-    Optional<ServiceOrder> serviceOrderChecked = serviceOrderRepository.findById(serviceOrderId);
-    return serviceOrderChecked.get();
-  }
-
-
-
-  @Test
-  public void testExecutionTaskSuccess() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.ADD);
-    ExecutionTask executionTaskB;
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
+    @Before
+    public void before() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
 
-    executionTaskB = getExecutionTask("B");
-    assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-    executionTaskA = getExecutionTask("A");
-    assertThat(executionTaskA).isNull();
+    @BeforeClass
+    public static void setUp() throws Exception {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+        Context.startWiremock();
+    }
 
-    SoTaskProcessor.processOrderItem(executionTaskB);
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+    @AfterClass
+    public static void tearsDown() throws Exception {
+        Context.stopServers();
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-
-
-
-  }
-
-  @Test
-  public void testE2EExecutionTaskSuccess() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucess(
-            serviceOrderRepository, executionTaskRepository, ActionType.ADD);
-    ExecutionTask executionTaskB;
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-
-    executionTaskB = getExecutionTask("B");
-    assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-    executionTaskA = getExecutionTask("A");
-    assertThat(executionTaskA).isNull();
-
-    SoTaskProcessor.processOrderItem(executionTaskB);
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+    @After
+    public void tearsDownUpPort() throws Exception {
+        executionTaskRepository.deleteAll();
+        serviceOrderRepository.deleteAll();
+        Context.wireMockServer.resetToDefaultMappings();
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
+    public ExecutionTask getExecutionTask(String orderItemId) {
+        for (ExecutionTask executionTask : executionTaskRepository.findAll()) {
+            if (executionTask.getOrderItemId().equalsIgnoreCase(orderItemId)) {
+                return executionTask;
+            }
 
-
-
-  }
-
-  @Test
-  public void testE2EExecutionTaskSuccessWithObject() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucessWithObject(
-            serviceOrderRepository, executionTaskRepository, ActionType.ADD);
-    ExecutionTask executionTaskB;
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
+        }
+        return null;
     }
 
-    executionTaskB = getExecutionTask("B");
-    assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-    executionTaskA = getExecutionTask("A");
-    assertThat(executionTaskA).isNull();
-
-    SoTaskProcessor.processOrderItem(executionTaskB);
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-
+    private void changeWireMockResponse(String s, int statusCode, String bodyContent) {
+        ListStubMappingsResult listStubMappingsResult = Context.wireMockServer.listAllStubMappings();
+        ResponseDefinition responseDefinition = new ResponseDefinition(statusCode, bodyContent);
+        List<StubMapping> mappings = listStubMappingsResult.getMappings();
+        for (StubMapping mapping : mappings) {
+            if (mapping.getRequest().getUrl().equals(s)) {
+                mapping.setResponse(responseDefinition);
+            }
+        }
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-
-
-
-  }
-
-  @Test
-  public void testE2EExecutionTaskSuccessWithComplexObject() throws Exception {
-    // A Service Order with complex object including arrays
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucessWithComplexObject(
-            serviceOrderRepository, executionTaskRepository, ActionType.ADD);
-    ExecutionTask executionTaskB;
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
+    private ServiceOrder getServiceOrder(String serviceOrderId) {
+        Optional<ServiceOrder> serviceOrderChecked = serviceOrderRepository.findById(serviceOrderId);
+        return serviceOrderChecked.get();
     }
 
-    executionTaskB = getExecutionTask("B");
-    assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-    executionTaskA = getExecutionTask("A");
-    assertThat(executionTaskA).isNull();
+    @Test
+    public void testExecutionTaskSuccess() throws Exception {
 
-    SoTaskProcessor.processOrderItem(executionTaskB);
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
+    @Test
+    public void testE2EExecutionTaskSuccess() throws Exception {
 
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForE2EExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
 
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
 
-  }
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
 
-  @Test
-  public void testExecutionTaskDeleteSuccess() throws Exception {
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
 
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.DELETE);
-    ExecutionTask executionTaskB;
+        }
 
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-
-    executionTaskB = getExecutionTask("B");
-    assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-    executionTaskA = getExecutionTask("A");
-    assertThat(executionTaskA).isNull();
-
-    SoTaskProcessor.processOrderItem(executionTaskB);
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
+    @Test
+    public void testE2EExecutionTaskSuccessWithObject() throws Exception {
 
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucessWithObject(
+                serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
 
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
 
-  }
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
 
-  @Test
-  public void testE2EExecutionTaskDeleteSuccess() throws Exception {
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
 
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucess(
-            serviceOrderRepository, executionTaskRepository, ActionType.DELETE);
-    ExecutionTask executionTaskB;
+        }
 
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-
-    executionTaskB = getExecutionTask("B");
-    assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-    executionTaskA = getExecutionTask("A");
-    assertThat(executionTaskA).isNull();
-
-    SoTaskProcessor.processOrderItem(executionTaskB);
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
+    @Test
+    public void testE2EExecutionTaskSuccessWithComplexObject() throws Exception {
+        // A Service Order with complex object including arrays
+        ExecutionTask executionTaskA =
+                ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucessWithComplexObject(
+                        serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
 
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
 
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
 
-  }
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
 
+        }
 
-  @Test
-  public void testExecutionTaskFailed() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.ADD);
-
-    Context.removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-    executionTaskA = getExecutionTask("A");
-    Date createDate = executionTaskA.getCreateDate();
-    assertThat(executionTaskA.getLastAttemptDate().getTime() > createDate.getTime()).isTrue();
-
-    changeCreationDate(executionTaskA);
-    SoTaskProcessor.processOrderItem(executionTaskA);
-
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
+    @Test
+    public void testExecutionTaskDeleteSuccess() throws Exception {
 
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.DELETE);
+        ExecutionTask executionTaskB;
 
-  }
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
 
-  private void changeCreationDate(ExecutionTask executionTaskA) {
-    Calendar cal = Calendar.getInstance();
-    cal.setTime(executionTaskA.getCreateDate());
-    cal.add(Calendar.SECOND, -30);
-    executionTaskA.setCreateDate(cal.getTime());
-  }
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
 
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
 
-  @Test
-  public void testE2EExecutionTaskFailed() throws Exception {
+        }
 
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucess(
-            serviceOrderRepository, executionTaskRepository, ActionType.ADD);
-
-    Context.removeWireMockMapping(
-        "/onap/so/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-    executionTaskA = getExecutionTask("A");
-    assertThat(
-        executionTaskA.getLastAttemptDate().getTime() > executionTaskA.getCreateDate().getTime())
-            .isTrue();
-    changeCreationDate(executionTaskA);
-    SoTaskProcessor.processOrderItem(executionTaskA);
-
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
+    @Test
+    public void testE2EExecutionTaskDeleteSuccess() throws Exception {
 
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForE2EExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.DELETE);
+        ExecutionTask executionTaskB;
 
-  }
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
 
-  @Test
-  public void testExecutionTaskFailedNoSoResponse() throws Exception {
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
 
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.ADD);
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
 
-    Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
+        }
 
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
-    }
-
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-
-
-
-  }
-
-  @Test
-  public void testExecutionTaskFailedNoSoAndStatusResponse() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.ADD);
-
-    Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
-    Context.removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
-    }
-
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-
-  }
-
-  @Test
-  public void testE2EExecutionTaskFailedNoSoAndStatusResponse() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForE2EExecutionTaskSucess(
-            serviceOrderRepository, executionTaskRepository, ActionType.ADD);
-
-    Context.removeWireMockMapping("/onap/so/infra/e2eServiceInstances/v3");
-    Context.removeWireMockMapping(
-        "/onap/so/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
-    }
-
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-
-  }
-
-
-  @Test
-  public void testExecutionTaskFailedBadRequestSo() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.ADD);
-
-
-    changeWireMockResponse("/onap/so/infra/serviceInstantiation/v7/serviceInstances/", 400,
-        "\"serviceException\": {\n" + "        \"messageId\": \"SVC0002\",\n"
-            + "        \"text\": \"Error parsing request.  org.openecomp.mso.apihandler.common.ValidationException: serviceInstance already existsd\"\n"
-            + "    }");
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
-    }
-
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
-        assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("105");
-        assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField())
-            .isEqualTo("service.name");
-      }
-    }
-
-  }
-
-
-  @Test
-  public void testExecutionTaskModifySuccess() throws Exception {
-
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.MODIFY);
-    ExecutionTask executionTaskB;
-
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        // assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
-        assertThat(serviceOrderItem.getState())
-            .isEqualTo(StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-
-    executionTaskB = getExecutionTask("B");
-    assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-    executionTaskA = getExecutionTask("A");
-    assertThat(executionTaskA).isNull();
-
-    SoTaskProcessor.processOrderItem(executionTaskB);
-    SoTaskProcessor.processOrderItem(executionTaskB);
-
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
+    @Test
+    public void testExecutionTaskFailed() throws Exception {
 
-  }
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
 
+        Context.removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
 
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+        executionTaskA = getExecutionTask("A");
+        Date createDate = executionTaskA.getCreateDate();
+        assertThat(executionTaskA.getLastAttemptDate().getTime() > createDate.getTime()).isTrue();
 
-  @Test
-  public void testExecutionTaskModifyFailed() throws Exception {
+        changeCreationDate(executionTaskA);
+        SoTaskProcessor.processOrderItem(executionTaskA);
 
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.MODIFY);
-    ExecutionTask executionTaskB;
-    Context.removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
 
+        }
 
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      if (serviceOrderItem.getId().equals("A")) {
-        // assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
-        assertThat(serviceOrderItem.getState())
-            .isEqualTo(StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
-      } else {
-        assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-      }
-    }
-    executionTaskA = getExecutionTask("A");
-    assertThat(
-        executionTaskA.getLastAttemptDate().getTime() > executionTaskA.getCreateDate().getTime())
-            .isTrue();
-    changeCreationDate(executionTaskA);
-    SoTaskProcessor.processOrderItem(executionTaskA);
-
-    serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-
-  }
-
-  @Test
-  public void testExecutionTaskWithoutOnap() throws Exception {
-    Context.stopWiremock();
-    ExecutionTask executionTaskA =
-        ServiceOrderExecutionTaskAssertions.setUpBddForExecutionTaskSucess(serviceOrderRepository,
-            executionTaskRepository, ActionType.ADD);
-
-    SoTaskProcessor.processOrderItem(executionTaskA);
-    ServiceOrder serviceOrderChecked = getServiceOrder("test");
-    assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
-    for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-      assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+    private void changeCreationDate(ExecutionTask executionTaskA) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(executionTaskA.getCreateDate());
+        cal.add(Calendar.SECOND, -30);
+        executionTaskA.setCreateDate(cal.getTime());
     }
-    assertThat(serviceOrderChecked.getOrderMessage().size()).isGreaterThan(0);
-    assertThat(serviceOrderChecked.getOrderMessage().get(0).getCode()).isEqualTo("502");
-    assertThat(serviceOrderChecked.getOrderMessage().get(0).getMessageInformation())
-        .isEqualTo("Problem with SO API");
 
-    assertThat(executionTaskRepository.count()).isEqualTo(0);
-    Context.startWiremock();
+    @Test
+    public void testE2EExecutionTaskFailed() throws Exception {
 
-  }
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForE2EExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+
+        Context.removeWireMockMapping("/onap/so/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA.getLastAttemptDate().getTime() > executionTaskA.getCreateDate().getTime()).isTrue();
+        changeCreationDate(executionTaskA);
+        SoTaskProcessor.processOrderItem(executionTaskA);
+
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
+    @Test
+    public void testExecutionTaskFailedNoSoResponse() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+
+        Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
+    @Test
+    public void testExecutionTaskFailedNoSoAndStatusResponse() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+
+        Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
+        Context.removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
+    @Test
+    public void testE2EExecutionTaskFailedNoSoAndStatusResponse() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForE2EExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+
+        Context.removeWireMockMapping("/onap/so/infra/e2eServiceInstances/v3");
+        Context.removeWireMockMapping("/onap/so/infra/e2eServiceInstances/v3/serviceId/operations/operationId");
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
+    @Test
+    public void testExecutionTaskFailedBadRequestSo() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+
+        changeWireMockResponse("/onap/so/infra/serviceInstantiation/v7/serviceInstances/", 400,
+                "\"serviceException\": {\n" + "        \"messageId\": \"SVC0002\",\n"
+                        + "        \"text\": \"Error parsing request.  org.openecomp.mso.apihandler.common.ValidationException: serviceInstance already existsd\"\n"
+                        + "    }");
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getOrderItemMessage().size()).isEqualTo(1);
+                assertThat(serviceOrderItem.getOrderItemMessage().get(0).getCode()).isEqualTo("105");
+                assertThat(serviceOrderItem.getOrderItemMessage().get(0).getField()).isEqualTo("service.name");
+            }
+        }
+
+    }
+
+    @Test
+    public void testExecutionTaskModifySuccess() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.MODIFY);
+        ExecutionTask executionTaskB;
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                // assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        SoTaskProcessor.processOrderItem(executionTaskB);
+
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
+    @Test
+    public void testExecutionTaskModifyFailed() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.MODIFY);
+        ExecutionTask executionTaskB;
+        Context.removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                // assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS);
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.INPROGRESS_MODIFY_REQUEST_DELETE_SEND);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA.getLastAttemptDate().getTime() > executionTaskA.getCreateDate().getTime()).isTrue();
+        changeCreationDate(executionTaskA);
+        SoTaskProcessor.processOrderItem(executionTaskA);
+
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
+    @Test
+    public void testExecutionTaskWithoutOnap() throws Exception {
+        Context.stopWiremock();
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.FAILED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.FAILED);
+        }
+        assertThat(serviceOrderChecked.getOrderMessage().size()).isGreaterThan(0);
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getCode()).isEqualTo("502");
+        assertThat(serviceOrderChecked.getOrderMessage().get(0).getMessageInformation())
+                .isEqualTo("Problem with SO API");
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+        Context.startWiremock();
+
+    }
 
 }

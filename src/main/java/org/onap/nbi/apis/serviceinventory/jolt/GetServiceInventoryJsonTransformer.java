@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.serviceinventory.jolt;
 
 import java.util.List;
@@ -28,7 +29,6 @@ public class GetServiceInventoryJsonTransformer {
     private Chainr chainr;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GetServiceInventoryJsonTransformer.class);
-
 
     public GetServiceInventoryJsonTransformer() {
         List<Object> specs = JsonUtils.classpathToList("/jolt/getServiceInventory.json");

@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package org.onap.nbi.exceptions;
 
 import java.io.IOException;
@@ -34,12 +35,12 @@ public class BackendErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
         if (response.getStatusCode() != null) {
-            String body=null;
-            if(response.getBody()!=null) {
+            String body = null;
+            if (response.getBody() != null) {
                 body = IOUtils.toString(response.getBody(), StandardCharsets.UTF_8.name());
             }
 
-            throw new BackendFunctionalException(response.getStatusCode(), response.getStatusText(),body);
+            throw new BackendFunctionalException(response.getStatusCode(), response.getStatusText(), body);
         }
     }
 }

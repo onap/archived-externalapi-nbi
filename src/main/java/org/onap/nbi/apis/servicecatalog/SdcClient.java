@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.onap.nbi.apis.servicecatalog;
 
 import java.io.File;
@@ -68,26 +69,22 @@ public class SdcClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SdcClient.class);
 
-
-
     private String sdcGetUrl;
     private String sdcFindUrl;
     private String sdcHealthCheck;
 
     @PostConstruct
     private void setUpAndLogSDCUrl() {
-        sdcGetUrl= new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL+"/{id}"+OnapComponentsUrlPaths.SDC_GET_PATH).toString();
+        sdcGetUrl = new StringBuilder().append(sdcHost)
+                .append(OnapComponentsUrlPaths.SDC_ROOT_URL + "/{id}" + OnapComponentsUrlPaths.SDC_GET_PATH).toString();
         sdcFindUrl = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL).toString();
         sdcHealthCheck = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_HEALTH_CHECK).toString();
 
-
-
-        LOGGER.info("SDC GET url :  "+sdcGetUrl);
-        LOGGER.info("SDC FIND url :  "+ sdcFindUrl);
-        LOGGER.info("SDC HealthCheck :  "+ sdcHealthCheck);
+        LOGGER.info("SDC GET url :  " + sdcGetUrl);
+        LOGGER.info("SDC FIND url :  " + sdcFindUrl);
+        LOGGER.info("SDC HealthCheck :  " + sdcHealthCheck);
 
     }
-
 
     public Map callGet(String id) {
 
@@ -123,19 +120,17 @@ public class SdcClient {
 
     }
 
-
-
     public File callGetWithAttachment(String toscaModelUrl) {
         StringBuilder urlBuilder = new StringBuilder().append(sdcHost).append(toscaModelUrl);
 
         UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(urlBuilder.toString());
 
         File directory = new File("temptoscafile");
-        if (! directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
 
-        String fileName = "temptoscafile/"+System.currentTimeMillis() + "tosca.csar";
+        String fileName = "temptoscafile/" + System.currentTimeMillis() + "tosca.csar";
         ResponseEntity<byte[]> response = callSdcWithAttachment(callURI.build().encode().toUri());
         File toscaFile = new File(fileName);
         try {
@@ -150,7 +145,7 @@ public class SdcClient {
         return toscaFile;
 
     }
-    
+
     public Path getServiceToscaModel(String uuid) throws IOException {
         StringBuilder urlBuilder = new StringBuilder().append(sdcHost).append(OnapComponentsUrlPaths.SDC_ROOT_URL)
                 .append("/").append(uuid).append(OnapComponentsUrlPaths.SDC_TOSCA_PATH);
@@ -161,7 +156,7 @@ public class SdcClient {
 
         return createTmpFile(inputStream);
     }
-    
+
     private Path createTmpFile(InputStream csarInputStream) throws IOException {
         Path csarFile = Files.createTempFile("csar", ".zip");
         Files.copy(csarInputStream, csarFile, StandardCopyOption.REPLACE_EXISTING);
@@ -179,19 +174,17 @@ public class SdcClient {
         return new HttpEntity<>("parameters", httpHeaders);
     }
 
-
     private ResponseEntity<Object> callSdc(URI callURI) {
         ResponseEntity<Object> response =
                 restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), Object.class);
 
-        if(LOGGER.isDebugEnabled()) {
-            LOGGER.debug("response body : {} ",response.getBody().toString());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("response body : {} ", response.getBody().toString());
         }
         LOGGER.info("response status : {}", response.getStatusCodeValue());
         loggDebugIfResponseKo(callURI.toString(), response);
         return response;
     }
-
 
     private ResponseEntity<byte[]> callSdcWithAttachment(URI callURI) {
         try {
@@ -199,22 +192,20 @@ public class SdcClient {
                     restTemplate.exchange(callURI, HttpMethod.GET, buildRequestHeader(), byte[].class);
             LOGGER.info("response status : " + response.getStatusCodeValue());
             if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.warn("HTTP call SDC on {} returns {} ", callURI.toString() , response.getStatusCodeValue());
+                LOGGER.warn("HTTP call SDC on {} returns {} ", callURI.toString(), response.getStatusCodeValue());
             }
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error("HTTP call SDC on {} error : {}", callURI.toString() , e);
+            LOGGER.error("HTTP call SDC on {} error : {}", callURI.toString(), e);
             return null;
         }
     }
 
-
     private void loggDebugIfResponseKo(String callURI, ResponseEntity<Object> response) {
         if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
-            LOGGER.warn("HTTP call SDC on {} returns {} , {}", callURI , response.getStatusCodeValue() , response.getBody().toString());
+            LOGGER.warn("HTTP call SDC on {} returns {} , {}", callURI, response.getStatusCodeValue(),
+                    response.getBody().toString());
         }
     }
 }
-
-
