@@ -1,19 +1,30 @@
 {
     "swagger": "2.0",
     "info": {
-    "description": "serviceCatalog API designed for ONAP Beijing Release.\nThis API is build from TMF open API17.5. \nOnly operation GET (by id & byList) for resource serviceSpecification is available\n\n",
+    "description": "ServiceCatalog API to retrieve Service Specifications that are available from ONAP.\nThis API is build from TMF open API version 17.5. \nOnly operation GET (by id & byList) for serviceSpecification resource is available.\n To view this swagger file import it into https://editor.swagger.io/ \n\n",
     "version": "4.0.1",
-    "title": "API ServiceCatalog",
+    "title": "ServiceCatalog API",
+    "contact": {
+      "name": "ONAP",
+      "url": "https://onap.readthedocs.io",
+      "email": "onap-discuss@lists.onap.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "x-planned-retirement-date": "205001",
+    "x-component": "NBI",
     "x-logo": {
     "url": "/redoc/logo.png",
     "backgroundColor": "#FFFFFF"
     }
     },
     
-      "host": "serverRoot",
+      "host": "serverRoot:30274",
       "basePath":	"/nbi/api/v4",
       "schemes": [
-      "https"
+      "http"
       ],
     "produces": [
     "application/json;charset=utf-8"
@@ -34,7 +45,7 @@
         "produces": [
            "application/json;charset=utf-8"
       ],
-    "operationId": "serviceSpecificationFind",
+    "operationId": "serviceSpecification_Find",
     "summary": "List service specifications",
     "description": "This operation returns service specifications from a catalog.\nOnly a predefined set of attribute is proposed : Based on SDC limitations, only attributes category and distributionStatus are available for serviceSpecification filtering\nFields attribute could be used to filter attributes retrieved",
     "deprecated": false,
@@ -144,7 +155,7 @@
         "produces": [
            "application/json;charset=utf-8"
       ],
-    "operationId": "serviceSpecificationGet",
+    "operationId": "serviceSpecification_Get",
     "summary": "Retrieve a service specification",
     "description": "This operation returns a service specification by its id from a catalog. Attribute selection is enabled using the fields attribute.",
     "deprecated": false,
