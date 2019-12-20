@@ -247,7 +247,7 @@
       "/serviceSpecification/{id}/specificationInputSchema": {
     "get": {
     "tags": [
-    "ServiceSpecification", "specificationInputSchema"
+    "ServiceSpecification"
     ],
         "produces": [
            "application/json;charset=utf-8"
