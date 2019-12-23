@@ -1,0 +1,8 @@
+Code-Review+1: Andy Mayer <am803u@att.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Adrian OSullivan <adrian.osullivan@huawei.com>
+Submitted-by: Adrian OSullivan <adrian.osullivan@huawei.com>
+Submitted-at: Mon, 23 Dec 2019 11:33:56 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/externalapi/nbi/+/99866
+Project: externalapi/nbi
+Branch: refs/heads/master
