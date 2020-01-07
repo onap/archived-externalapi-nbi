@@ -4,15 +4,26 @@
     "info": {
     "description": "Provides a healthcheck to verify that the NBI component is running fine as a standalone application or can also communicate with other onap modules.\n\n",
     "version": "4.0.1",
-    "title": "API Status",
+    "title": "Status API",
+    "contact": {
+      "name": "ONAP",
+      "url": "https://onap.readthedocs.io",
+      "email": "onap-discuss@lists.onap.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "x-planned-retirement-date": "205001",
+    "x-component": "NBI",
     "x-logo": {
     "url": "/redoc/logo.png",
     "backgroundColor": "#FFFFFF"
     }
     },
     
-      "host": "localhost:8080",
-      "basePath":	"/nbi/api/v4",
+      "host": "serverRoot:30274",
+      "basePath":"/nbi/api/v4",
       "schemes": [
       "http"
       ],
@@ -35,7 +46,7 @@
         "produces": [
            "application/json;charset=utf-8"
       ],
-    "operationId": "statusFind",
+    "operationId": "status_Find",
     "summary": "retrieve application status",
     "description": "* Default\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"ok\",\n    \"version\": \"v3\"\n}\n```\n\n* Optional\n\n```\n?fullStatus=true\n```\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"ok\",\n    \"version\": \"v3\",\n    \"components\": [\n        {\n            \"name\": \"sdc connectivity\",\n            \"status\": \"ko\"\n        },\n        {\n            \"name\": \"so connectivity\",\n            \"status\": \"ok\"\n        },\n        {\n            \"name\": \"aai connectivity\",\n            \"status\": \"ok\"\n        },\n        {\n            \"name\": \"dmaap connectivity\",\n            \"status\": \"ok\"\n        }\n    ]\n}\n```",
     "deprecated": false,

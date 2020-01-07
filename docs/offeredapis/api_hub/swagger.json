@@ -4,15 +4,26 @@
     "info": {
     "description": "Provides the ability to subscribe to and unsubscribe from External API notifications.\n\n**Main operation**\n\n```\nPOST /hub\n```\n\nrequest sample 1\n\n```\n{\n  \"callback\": \"http://mydomain/notification\",\n  \"query\": \"eventType = ServiceOrderCreationNotification\"\n}\n```\n\nrequest sample 2\n\n```\n{\n  \"callback\": \"http://mydomain/notification\",\n  \"query\": \"eventType=ServiceOrderCreationNotification,ServiceOrderStateChangeNotification\"\n}\n```\n\n**EventType for serviceOrdering**\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n- ServiceOrderItemStateChangeNotification\n\n**EventType for serviceInventory**\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n- ServiceRemoveNotification\n\n",
     "version": "4.0.1",
-    "title": "API Hub",
+    "title": "Hub API",
+    "contact": {
+      "name": "ONAP",
+      "url": "https://onap.readthedocs.io",
+      "email": "onap-discuss@lists.onap.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "x-planned-retirement-date": "205001",
+    "x-component": "NBI",
     "x-logo": {
     "url": "/redoc/logo.png",
     "backgroundColor": "#FFFFFF"
     }
     },
     
-      "host": "api.orange.com",
-      "basePath":	"/",
+      "host": "serverRoot:30274",
+      "basePath": "/nbi/api/v4",
       "schemes": [
       "http"
       ],
@@ -38,7 +49,7 @@
         "produces": [
            "application/json;charset=utf-8"
       ],
-    "operationId": "hubCreate",
+    "operationId": "hub_Create",
     "summary": "create hub",
     "description": "",
     "deprecated": false,
@@ -72,7 +83,7 @@
         "produces": [
            "application/json;charset=utf-8"
       ],
-    "operationId": "hubFind",
+    "operationId": "hub_Find",
     "summary": "find hub",
     "description": "",
     "deprecated": false,
@@ -99,7 +110,7 @@
         "produces": [
            "application/json;charset=utf-8"
       ],
-    "operationId": "hubGet",
+    "operationId": "hub_Get",
     "summary": "get hub",
     "description": "",
     "deprecated": false,
@@ -127,7 +138,7 @@
     "tags": [
     "Hub"
     ],
-    "operationId": "hubDelete",
+    "operationId": "hub_Delete",
     "summary": "delete hub",
     "description": "",
     "deprecated": false,

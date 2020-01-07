@@ -18,11 +18,20 @@ info:
     \ information:\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n\
     - ServiceRemoveNotification\n\n"
   version: "4.0.1"
-  title: "API ServiceInventory"
+  title: "ServiceInventory API"
+  contact:
+    name: "ONAP"
+    url: "https://onap.readthedocs.io"
+    email: "onap-discuss@lists.onap.org"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0"
+  x-planned-retirement-date: "205001"
+  x-component: "NBI"
   x-logo:
     url: "/redoc/logo.png"
     backgroundColor: "#FFFFFF"
-host: "localhost:8080"
+host: "serverRoot:30274"
 basePath: "/nbi/api/v4"
 schemes:
 - "http"
@@ -41,7 +50,7 @@ paths:
       - "Service"
       produces:
       - "application/json;charset=utf-8"
-      operationId: "serviceFind"
+      operationId: "service_Find"
       summary: "List services"
       description: "This operation list service entities. \nAttribute selection is\
         \ restricted. \nfields attribute may be used to filter retrieved attribute(s)\
@@ -86,7 +95,7 @@ paths:
       - "Service"
       produces:
       - "application/json;charset=utf-8"
-      operationId: "serviceGet"
+      operationId: "service_Get"
       summary: "Retrieve a service"
       description: "This operation retrieves a service entity. \nAttribute selection\
         \ is enabled for all first level attributes."
@@ -109,7 +118,7 @@ paths:
       - "application/json;charset=utf-8"
       produces:
       - "application/json;charset=utf-8"
-      operationId: "notificationCreate"
+      operationId: "notification_Create"
       summary: "NBI will send notification to this operation provided by subscribers"
       description: ""
       deprecated: false
