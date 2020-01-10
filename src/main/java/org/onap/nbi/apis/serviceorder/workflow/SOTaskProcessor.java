@@ -31,6 +31,7 @@ import org.onap.nbi.apis.serviceorder.repositories.ExecutionTaskRepository;
 import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.onap.nbi.apis.serviceorder.utils.E2EServiceUtils;
 import org.onap.nbi.apis.serviceorder.utils.JsonEntityConverter;
+import org.onap.nbi.apis.serviceorder.utils.MacroServiceUtils;
 import org.onap.nbi.exceptions.TechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,12 +82,18 @@ public class SOTaskProcessor {
         ServiceOrderItem serviceOrderItem = getServiceOrderItem(executionTask, serviceOrder);
         boolean e2eService =
                 E2EServiceUtils.isE2EService(serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()));
-
+        boolean macroService = MacroServiceUtils
+                .isMacroService(serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId()));
+        
         if (shouldPostSo(serviceOrderItem)) {
             if (e2eService) {
                 ResponseEntity<CreateE2EServiceInstanceResponse> response =
                         postSoProcessor.postE2EServiceOrderItem(serviceOrderInfo, serviceOrderItem, serviceOrder);
                 updateE2EServiceOrderItem(response, serviceOrderItem, serviceOrder);
+            } else if (macroService) {
+				LOGGER.info("Mode type macro");
+				//TODO: Add logic to construct SO macro request body and call SO macro flow.(EXTAPI-368)
+				
             } else {
 
                 ResponseEntity<CreateServiceInstanceResponse> response =
