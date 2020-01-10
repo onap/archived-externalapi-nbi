@@ -24,6 +24,7 @@ import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
+import org.onap.sdc.toscaparser.api.elements.Metadata;
 import org.onap.sdc.toscaparser.api.parameters.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,6 +145,10 @@ public class ToscaInfosProcessor {
 
         String svcCharacteristicsJson = Json.pretty(definitions);
         serviceSpecificationDBManager.saveSpecificationInputSchema(svcCharacteristicsJson, serviceCatalogResponse);
+
+        Metadata serviceMetadata = sdcCsarHelper.getServiceMetadata();
+        String instantationType = serviceMetadata.getValue("instantiationType");
+        serviceCatalogResponse.put("instantiationType", instantationType);
 
         LinkedHashMap inputSchemaRef = new LinkedHashMap();
         // use object to match examples in Specifications
