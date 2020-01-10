@@ -35,18 +35,18 @@ function(s) {
 
 Scenario: testcreateEventSubscription
 Given path 'hub'
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 And request data[0]
 When method post
 Then status 201
 And def hubId = $.id
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 Given path 'hub',hubId
 When method get
 Then status 200
 And match hubId == $.id
 Given path 'hub',hubId
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 When method delete
 Then status 204
 
@@ -56,14 +56,14 @@ Given path 'test/listener'
 When method delete
 Then status 204
 Given path 'hub'
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 And request { callback : '#(listenerUrl)' , query : 'eventType = ServiceOrderCreationNotification' }
 When method post
 Then status 201
 And def hubId = $.id
 Given path 'serviceOrder'
 And request serviceOrderData[17]
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 When method post
 Then status 201
 And def serviceOrderId = $.id
@@ -80,7 +80,7 @@ Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 Given path 'hub',hubId
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 When method delete
 Then status 204
 Given path 'test/listener',eventId

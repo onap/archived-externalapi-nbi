@@ -36,8 +36,10 @@ RUN for cert in $(ls -d /certs/*); do \
 
 USER appuser:appgroup
 
-ENV SERVER_PORT=${SERVER_PORT:-8080}
-ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
+ENV SERVER_PORT=${SERVER_PORT:-8443}
+ENV HTTP_PORT=${HTTP_PORT:-8080}
+ENV JAVA_OPTS="-Dspring.profiles.active=ssl -Djava.security.egd=file:/dev/./urandom"
 
 EXPOSE $SERVER_PORT
+EXPOSE $HTTP_PORT
 ENTRYPOINT java -XX:+UseContainerSupport $JAVA_OPTS -jar /app.jar
