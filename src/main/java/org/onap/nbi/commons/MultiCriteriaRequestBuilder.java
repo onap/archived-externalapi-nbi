@@ -110,12 +110,12 @@ public class MultiCriteriaRequestBuilder {
             String limitString = limits.get(0);
             int offset = Integer.parseInt(offsetString);
             int limit = Integer.parseInt(limitString);
-            final Pageable pageableRequest = new PageRequest(offset, limit);
+            final Pageable pageableRequest = PageRequest.of(offset, limit);
             query.with(pageableRequest);
         } else if (!CollectionUtils.isEmpty(limits)) {
             String limitString = limits.get(0);
             int limit = Integer.parseInt(limitString);
-            final Pageable pageableRequest = new PageRequest(0, limit);
+            final Pageable pageableRequest = PageRequest.of(0, limit);
             query.with(pageableRequest);
         }
     }
