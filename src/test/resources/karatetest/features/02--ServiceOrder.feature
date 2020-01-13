@@ -376,7 +376,7 @@ Then status 204
 
 Scenario: testCheckServiceOrderWithTargetHeader
 Given path 'serviceOrder'
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 And request data[0]
 When method post
 Then status 201
@@ -384,7 +384,7 @@ And match $.id contains '#notnull'
 And match $.state == 'acknowledged'
 And def serviceOrderId = $.id
 Given path 'serviceOrder',serviceOrderId
-And header Target = 'http://localhost:8080/nbi/api/v4'
+And header Target = targetHeader
 When method get
 Then status 200
 

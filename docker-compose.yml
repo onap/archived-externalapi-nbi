@@ -35,9 +35,11 @@ services:
       MYSQL_USER: rene
   # APP  ***************************************************************************************
   nbi:
-    image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:${DOCKER_IMAGE_VERSION:-latest}
+  #  image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:${DOCKER_IMAGE_VERSION:-latest}
+    build: .
     ports:
       - 8080:8080
+      - 8443:8443
     env_file:
       - .env
     environment:

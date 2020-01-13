@@ -53,6 +53,7 @@ Requirements
 
 * Docker
 * Docker-compose
+* Free ports 8080 and 8443
 
 Edit *docker-compose.yml* to select previous generated local build, replace::
 
@@ -79,6 +80,10 @@ Test
 **Healthcheck**
 
 http://localhost:8080/nbi/api/v4/status
+
+and
+
+https://localhost:8443/nbi/api/v4/status
 
 You should get::
 
