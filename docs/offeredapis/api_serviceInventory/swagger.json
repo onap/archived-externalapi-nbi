@@ -3,7 +3,7 @@
     "swagger": "2.0",
     "info": {
     "description": "Query information about instantiated services\n\nList of available subscription for serviceInventory notifications, see /hub resources for more information:\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n- ServiceRemoveNotification\n\n",
-    "version": "4.0.1",
+    "version": "4.1.0",
     "title": "ServiceInventory API",
     "contact": {
       "name": "ONAP",
@@ -42,6 +42,10 @@
       }
     ],
     "paths": {
+    "x-interface": {
+    "api-version": "4.1.0",
+    "last-mod-release": "Frankfurt"
+    },
       "/service": {
     "get": {
     "tags": [
@@ -188,7 +192,7 @@
     "definitions": {
     
     "eventType": {
-    "description": "",
+    "description": "The Event Type",
     
       "type": "string",
       "enum": [

@@ -17,7 +17,7 @@ info:
     \ build from TMF open API17.5. \nOnly operation GET (by id & byList) for resource\
     \ serviceSpecification is available\n \
     \ To view this swagger file import it into https://editor.swagger.io/ \n"
-  version: "4.0.1"
+  version: "4.1.0"
   title: "ServiceCatalog API"
   contact:
     name: "ONAP"
@@ -41,6 +41,9 @@ tags:
 - name: "ServiceSpecification"
   description: ""
 paths:
+  x-interface:
+    api-version: "4.1.0"
+    last-mod-release: "Frankfurt"
   /serviceSpecification:
     get:
       tags:
@@ -71,13 +74,13 @@ paths:
         description: "Service distribution status (filter)"
         type: "string"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             type: "array"
             items:
               $ref: "#/definitions/ServiceSpecification"
-        400:
+        "400":
           description: "Bad Request\n\nList of supported error codes:\n- 20: Invalid\
             \ URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing\
             \ body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid\
@@ -85,32 +88,32 @@ paths:
             \ parameter value"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        401:
+        "401":
           description: "Unauthorized\n\nList of supported error codes:\n- 40: Missing\
             \ credentials\n- 41: Invalid credentials\n- 42: Expired credentials"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        403:
+        "403":
           description: "Forbidden\n\nList of supported error codes:\n- 50: Access\
             \ denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many\
             \ requests"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        404:
+        "404":
           description: "Not Found\n\nList of supported error codes:\n- 60: Resource\
             \ not found"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        422:
+        "422":
           description: "Unprocessable entity\n\nFunctional error"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        500:
+        "500":
           description: "Internal Server Error\n\nList of supported error codes:\n\
             - 1: Internal error"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        503:
+        "503":
           description: "Service Unavailable\n\nList of supported error codes:\n- 5:\
             \ The service is temporarily unavailable\n- 6: Orange API is over capacity,\
             \ retry later !"
@@ -138,11 +141,11 @@ paths:
         description: "Attribute selection"
         type: "string"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/ServiceSpecification"
-        400:
+        "400":
           description: "Bad Request\n\nList of supported error codes:\n- 20: Invalid\
             \ URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing\
             \ body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid\
@@ -150,32 +153,32 @@ paths:
             \ parameter value"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        401:
+        "401":
           description: "Unauthorized\n\nList of supported error codes:\n- 40: Missing\
             \ credentials\n- 41: Invalid credentials\n- 42: Expired credentials"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        403:
+        "403":
           description: "Forbidden\n\nList of supported error codes:\n- 50: Access\
             \ denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many\
             \ requests"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        404:
+        "404":
           description: "Not Found\n\nList of supported error codes:\n- 60: Resource\
             \ not found"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        422:
+        "422":
           description: "Unprocessable entity\n\nFunctional error"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        500:
+        "500":
           description: "Internal Server Error\n\nList of supported error codes:\n\
             - 1: Internal error"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        503:
+        "503":
           description: "Service Unavailable\n\nList of supported error codes:\n- 5:\
             \ The service is temporarily unavailable\n- 6: Orange API is over capacity,\
             \ retry later !"
@@ -203,11 +206,11 @@ paths:
         description: "Attribute selection"
         type: "string"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/SpecificationInputSchema"
-        400:
+        "400":
           description: "Bad Request\n\nList of supported error codes:\n- 20: Invalid\
             \ URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing\
             \ body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid\
@@ -215,32 +218,32 @@ paths:
             \ parameter value"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        401:
+        "401":
           description: "Unauthorized\n\nList of supported error codes:\n- 40: Missing\
             \ credentials\n- 41: Invalid credentials\n- 42: Expired credentials"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        403:
+        "403":
           description: "Forbidden\n\nList of supported error codes:\n- 50: Access\
             \ denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many\
             \ requests"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        404:
+        "404":
           description: "Not Found\n\nList of supported error codes:\n- 60: Resource\
             \ not found"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        422:
+        "422":
           description: "Unprocessable entity\n\nFunctional error"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        500:
+        "500":
           description: "Internal Server Error\n\nList of supported error codes:\n\
             - 1: Internal error"
           schema:
             $ref: "#/definitions/ErrorRepresentation"
-        503:
+        "503":
           description: "Service Unavailable\n\nList of supported error codes:\n- 5:\
             \ The service is temporarily unavailable\n- 6: Orange API is over capacity,\
             \ retry later !"
@@ -583,7 +586,7 @@ definitions:
           \ for the resource"
         type: "string"
   TargetServiceSchemaRef:
-    description: ""
+    description: "Target Service Schema"
     required:
     - "@type"
     - "@schemaLocation"

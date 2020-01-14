@@ -16,7 +16,7 @@ info:
   description: "Provides a healthcheck to verify that the NBI component is running\
     \ fine as a standalone application or can also communicate with other onap modules.\n\
     \n"
-  version: "4.0.1"
+  version: "4.1.0"
   title: "Status API"
   contact:
     name: "ONAP"
@@ -40,6 +40,9 @@ tags:
 - name: "Status"
   description: ""
 paths:
+  x-interface:
+    api-version: "4.1.0"
+    last-mod-release: "Frankfurt"
   /status:
     get:
       tags:
@@ -66,19 +69,19 @@ paths:
         type: "boolean"
         default: false
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/Status"
 definitions:
   StatusValue:
-    description: ""
+    description: "Status Value"
     type: "string"
     enum:
     - "ok"
     - "ko"
   ComponentsName:
-    description: ""
+    description: "Components Name"
     type: "string"
     enum:
     - "sdc connectivity"
@@ -86,12 +89,12 @@ definitions:
     - "aai connectivity"
     - "dmaap connectivity"
   ApplicationName:
-    description: ""
+    description: "Application Name"
     type: "string"
     enum:
     - "nbi"
   ErrorDetail:
-    description: ""
+    description: "Error code, inforURL, description and message"
     required:
     - "code"
     - "message"
@@ -111,7 +114,7 @@ definitions:
         description: ""
         type: "string"
   Error:
-    description: ""
+    description: "Error code and message"
     required:
     - "code"
     - "message"
@@ -135,7 +138,7 @@ definitions:
         items:
           $ref: "#/definitions/ErrorDetail"
   Component:
-    description: ""
+    description: "Component"
     required:
     - "name"
     - "status"
@@ -146,7 +149,7 @@ definitions:
       status:
         $ref: "#/definitions/StatusValue"
   Status:
-    description: ""
+    description: "Status"
     required:
     - "name"
     - "status"

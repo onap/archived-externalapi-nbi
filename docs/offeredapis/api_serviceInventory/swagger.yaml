@@ -17,7 +17,7 @@ info:
     \ subscription for serviceInventory notifications, see /hub resources for more\
     \ information:\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n\
     - ServiceRemoveNotification\n\n"
-  version: "4.0.1"
+  version: "4.1.0"
   title: "ServiceInventory API"
   contact:
     name: "ONAP"
@@ -44,6 +44,9 @@ tags:
   description: "provided by subscriber, which MUST has been registered by creating\
     \ a Hub ressource on NBI"
 paths:
+  x-interface:
+    api-version: "4.1.0"
+    last-mod-release: "Frankfurt"
   /service:
     get:
       tags:
@@ -83,7 +86,7 @@ paths:
         description: ""
         type: "string"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             type: "array"
@@ -106,7 +109,7 @@ paths:
         in: "path"
         type: "string"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/Service"
@@ -130,13 +133,13 @@ paths:
         schema:
           $ref: "#/definitions/Notification"
       responses:
-        201:
+        "201":
           description: "Created"
           schema:
             $ref: "#/definitions/Notification"
 definitions:
   eventType:
-    description: ""
+    description: "The Event Type"
     type: "string"
     enum:
     - "ServiceCreationNotification"
