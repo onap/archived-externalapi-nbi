@@ -436,6 +436,9 @@ definitions:
         description: "Identifier of a service instance.\nIt must be valued if orderItem\
           \ action is 'delete' and corresponds to a AAI service.id"
         type: "string"
+      serviceType:
+        description:  "Business type of the service.\nFor example : 5G"
+        type: "string"
       href:
         description: "Reference to the Service (useful for delete or modify command).\n\
           Not managed in Beijing release."
