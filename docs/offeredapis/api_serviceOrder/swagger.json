@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "Request the instantiation, deletion or modification of a service\n\nA Service Order is a type of order which can be used to describe a group of operations on service – one service order item per service. An action at the level of the service order item describes the operation to be completed on a service (add, delete for example). The service order is triggered from external system such as the BSS system in charge of the product order management to ONAP that will manage the service fulfillment.\n\nList of available subscription for serviceOrdering notifications, see /hub resources for more information:\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n- ServiceOrderItemStateChangeNotification\n\n",
-    "version": "4.0.1",
+    "version": "4.1.0",
     "title": "ServiceOrder API",
     "contact": {
       "name": "ONAP",
@@ -39,6 +39,10 @@
     }
   ],
   "paths": {
+    "x-interface": {
+    "api-version": "4.1.0",
+    "last-mod-release": "Frankfurt"
+    },
     "/serviceOrder": {
       "post": {
         "tags": [
@@ -300,7 +304,7 @@
       ]
     },
     "EventType": {
-      "description": "",
+      "description": "The Event Type",
       "type": "string",
       "enum": [
         "ServiceOrderCreationNotification",
@@ -309,7 +313,7 @@
       ]
     },
     "SeverityMessage": {
-      "description": "",
+      "description": "Message Severity, either information or error",
       "type": "string",
       "enum": [
         "information",
@@ -317,7 +321,7 @@
       ]
     },
     "Error": {
-      "description": "",
+      "description": "Error code and reason",
       "required": [
         "code",
         "reason"

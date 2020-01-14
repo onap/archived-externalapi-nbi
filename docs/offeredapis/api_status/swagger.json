@@ -3,7 +3,7 @@
     "swagger": "2.0",
     "info": {
     "description": "Provides a healthcheck to verify that the NBI component is running fine as a standalone application or can also communicate with other onap modules.\n\n",
-    "version": "4.0.1",
+    "version": "4.1.0",
     "title": "Status API",
     "contact": {
       "name": "ONAP",
@@ -38,6 +38,10 @@
       }
     ],
     "paths": {
+    "x-interface": {
+    "api-version": "4.1.0",
+    "last-mod-release": "Frankfurt"
+    },
       "/status": {
     "get": {
     "tags": [
@@ -79,7 +83,7 @@
     "definitions": {
     
     "StatusValue": {
-    "description": "",
+    "description": "Status Value",
     
       "type": "string",
       "enum": [
@@ -88,7 +92,7 @@
     
     },
     "ComponentsName": {
-    "description": "",
+    "description": "Components Name",
     
       "type": "string",
       "enum": [
@@ -99,7 +103,7 @@
     
     },
     "ApplicationName": {
-    "description": "",
+    "description": "Application Name",
     
       "type": "string",
       "enum": [
@@ -108,7 +112,7 @@
     },    
 
     "ErrorDetail": {
-    "description": "",
+    "description": "Error code, infoURL, description and message",
 
     
     "required": [
@@ -140,7 +144,7 @@
     },    
 
     "Error": {
-    "description": "",
+    "description": "Error code and message",
 
     
     "required": [
@@ -179,7 +183,7 @@
     },    
 
     "Component": {
-    "description": "",
+    "description": "Component",
 
     
     "required": [
@@ -202,7 +206,7 @@
     },    
 
     "Status": {
-    "description": "",
+    "description": "Status",
 
     
     "required": [

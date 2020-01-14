@@ -22,7 +22,7 @@ info:
     - ServiceOrderStateChangeNotification\n- ServiceOrderItemStateChangeNotification\n\
     \n**EventType for serviceInventory**\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n\
     - ServiceRemoveNotification\n\n"
-  version: "4.0.1"
+  version: "4.1.0"
   title: "Hub API"
   contact:
     name: "ONAP"
@@ -46,6 +46,9 @@ tags:
 - name: "Hub"
   description: "provided by NBI"
 paths:
+  x-interface:
+    api-version: "4.1.0"
+    last-mod-release: "Frankfurt"
   /hub:
     post:
       tags:
@@ -66,7 +69,7 @@ paths:
         schema:
           $ref: "#/definitions/HubIn"
       responses:
-        201:
+        "201":
           description: "Created"
           schema:
             $ref: "#/definitions/Hub"
@@ -80,7 +83,7 @@ paths:
       description: ""
       deprecated: false
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             type: "array"
@@ -102,7 +105,7 @@ paths:
         in: "path"
         type: "string"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/Hub"
@@ -119,11 +122,11 @@ paths:
         in: "path"
         type: "string"
       responses:
-        204:
+        "204":
           description: "No Content"
 definitions:
   ErrorDetail:
-    description: ""
+    description: "Error code and message"
     required:
     - "code"
     - "message"
@@ -143,7 +146,7 @@ definitions:
         description: ""
         type: "string"
   Error:
-    description: ""
+    description: "Error code and description"
     required:
     - "code"
     - "message"
@@ -167,7 +170,7 @@ definitions:
         items:
           $ref: "#/definitions/ErrorDetail"
   HubIn:
-    description: ""
+    description: "Query and callback"
     required:
     - "query"
     - "callback"
@@ -182,7 +185,7 @@ definitions:
         description: "URL where notification must be send"
         type: "string"
   Hub:
-    description: ""
+    description: "Hub id, callback and query"
     required:
     - "id"
     - "query"

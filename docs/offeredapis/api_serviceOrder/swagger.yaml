@@ -22,7 +22,7 @@ info:
     \ available subscription for serviceOrdering notifications, see /hub resources\
     \ for more information:\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n\
     - ServiceOrderItemStateChangeNotification\n\n"
-  version: "4.0.1"
+  version: "4.1.0"
   title: "ServiceOrder API"
   contact:
     name: "ONAP"
@@ -48,6 +48,9 @@ tags:
 - name: "Notification"
   description: "provided by subscribers, which MUST registered by creating a hub resource"
 paths:
+  x-interface:
+    api-version: "4.1.0"
+    last-mod-release: "Frankfurt"
   /serviceOrder:
     post:
       tags:
@@ -87,7 +90,7 @@ paths:
         description: ""
         type: "string"
       responses:
-        201:
+        "201":
           description: "Created"
           schema:
             $ref: "#/definitions/ServiceOrder"
@@ -149,7 +152,7 @@ paths:
         type: "integer"
         format: "int32"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             type: "array"
@@ -192,7 +195,7 @@ paths:
         description: ""
         type: "string"
       responses:
-        200:
+        "200":
           description: "Ok"
           schema:
             $ref: "#/definitions/ServiceOrder"
@@ -248,7 +251,7 @@ paths:
         description: ""
         type: "string"
       responses:
-        201:
+        "201":
           description: "Created"
           schema:
             $ref: "#/definitions/Notification"
@@ -281,20 +284,20 @@ definitions:
     enum:
     - "reliesOn"
   EventType:
-    description: ""
+    description: "The Type of Event"
     type: "string"
     enum:
     - "ServiceOrderCreationNotification"
     - "ServiceOrderStateChangeNotification"
     - "ServiceOrderItemStateChangeNotification"
   SeverityMessage:
-    description: ""
+    description: "Enum for Message, information or error"
     type: "string"
     enum:
     - "information"
     - "error"
   Error:
-    description: ""
+    description: "Error code and reason"
     required:
     - "code"
     - "reason"
