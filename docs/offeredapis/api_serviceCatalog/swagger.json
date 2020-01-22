@@ -24,7 +24,7 @@
       "host": "serverRoot:30274",
       "basePath":	"/nbi/api/v4",
       "schemes": [
-      "http"
+      "http", "https"
       ],
     "produces": [
     "application/json;charset=utf-8"
@@ -170,6 +170,7 @@
     "name": "id",
     "required": true,
     "in": "path",
+    "description": "The Id of the ServiceSpecification",
     "type" : "string"
     },
     {
@@ -267,6 +268,7 @@
     "name": "id",
     "required": true,
     "in": "path",
+    "description": "The Id of the ServiceSpecification",
     "type" : "string"
     },
     {
