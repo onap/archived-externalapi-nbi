@@ -42,7 +42,6 @@ public class CreateAAIServiceTypeManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAAIServiceTypeManager.class);
 
     public void createAAIServiceType(ServiceOrder serviceOrder, ServiceOrderInfo serviceOrderInfo) {
-
         Map servicesInAaiForCustomer = serviceOrderConsumerService.getServicesInAaiForCustomer(
                 serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceOrder);
 
@@ -50,14 +49,15 @@ public class CreateAAIServiceTypeManager {
             if (ActionType.ADD == serviceOrderItem.getAction()) {
                 ServiceOrderItemInfo serviceOrderItemInfo =
                         serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId());
-                String sdcServiceName = (String) serviceOrderItemInfo.getCatalogResponse().get("name");
-                if (!serviceNameExistsInAAI(servicesInAaiForCustomer, sdcServiceName)) {
+                String serviceTypeFromJson = serviceOrderItem.getService().getServicetype();
+                String serviceType = serviceTypeFromJson != null ? serviceTypeFromJson : (String) serviceOrderItemInfo.getCatalogResponse().get("name");
+                if (!serviceNameExistsInAAI(servicesInAaiForCustomer, serviceType)) {
                     boolean serviceCreated = serviceOrderConsumerService.putServiceType(
-                            serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), sdcServiceName, serviceOrder);
+                            serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceType, serviceOrder);
                     if (!serviceCreated) {
                         serviceOrderService.updateOrderState(serviceOrder, StateType.REJECTED);
                         LOGGER.warn("serviceOrder {} rejected : cannot create service type {} for customer {}",
-                                serviceOrder.getId(), sdcServiceName,
+                                serviceOrder.getId(), serviceType,
                                 serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId());
                         serviceOrderService.addOrderMessage(serviceOrder, "501");
 
@@ -68,14 +68,14 @@ public class CreateAAIServiceTypeManager {
 
     }
 
-    private boolean serviceNameExistsInAAI(Map servicesInAaiForCustomer, String sdcServiceName) {
+    private boolean serviceNameExistsInAAI(Map servicesInAaiForCustomer, String serviceType) {
 
         if (servicesInAaiForCustomer != null && servicesInAaiForCustomer.get("service-subscription") != null) {
             List<LinkedHashMap> servicesInAAI =
                     (List<LinkedHashMap>) servicesInAaiForCustomer.get("service-subscription");
             for (LinkedHashMap service : servicesInAAI) {
-                String serviceType = (String) service.get("service-type");
-                if (sdcServiceName.equalsIgnoreCase(serviceType)) {
+                String serviceTypeInAAI = (String) service.get("service-type");
+                if (serviceType.equalsIgnoreCase(serviceTypeInAAI)) {
                     return true;
                 }
 

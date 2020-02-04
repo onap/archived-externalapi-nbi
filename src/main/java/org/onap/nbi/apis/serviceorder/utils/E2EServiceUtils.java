@@ -18,6 +18,7 @@ import java.util.Map;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderItemInfo;
 
 public class E2EServiceUtils {
+
     public static boolean isE2EService(ServiceOrderItemInfo serviceOrderItemInfo) {
         Map<String, Object> sdcInfos = serviceOrderItemInfo.getCatalogResponse();
         boolean e2eService = false;
@@ -27,7 +28,7 @@ public class E2EServiceUtils {
             // and e2eServiceInstances )APIs for service CRUD
             // All E2E Services are required to be created in SDC under category "E2E Services" until SO fixes the
             // multiple API issue.
-            if (category.startsWith("e2e")) {
+            if (category.startsWith("e2e") || category.startsWith("CST")) {
                 e2eService = true;
             }
         }
