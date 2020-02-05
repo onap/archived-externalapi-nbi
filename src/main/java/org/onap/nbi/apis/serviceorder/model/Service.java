@@ -57,6 +57,9 @@ import java.util.Objects;
 public class Service {
     @JsonProperty("id")
     private String id = null;
+    
+    @JsonProperty("serviceType")
+    private String servicetype = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -104,6 +107,16 @@ public class Service {
     public void setId(String id) {
         this.id = id;
     }
+    
+    @JsonProperty("serviceType")
+    @ApiModelProperty(value = "Business type of the service") 
+    public String getServicetype() {
+		return servicetype;
+	}
+
+	public void setServicetype(String servicetype) {
+		this.servicetype = servicetype;
+	}
 
     public Service href(String href) {
         this.href = href;

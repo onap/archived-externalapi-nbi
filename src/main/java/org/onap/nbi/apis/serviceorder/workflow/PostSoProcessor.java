@@ -195,7 +195,9 @@ public class PostSoProcessor {
         requestDetails.setRequestInfo(requestInfo);
 
         RequestParameters requestParameters = new RequestParameters();
-        requestParameters.setSubscriptionServiceType((String) sdcInfos.get("name"));
+        
+        String serviceTypeFromJson = orderItem.getService().getServicetype();
+        requestParameters.setSubscriptionServiceType(serviceTypeFromJson != null ? serviceTypeFromJson:(String) sdcInfos.get("name"));
         requestParameters.setUserParams(
                 retrieveUserParamsFromServiceCharacteristics(orderItem.getService().getServiceCharacteristic()));
         requestParameters.setaLaCarte(true);
@@ -237,8 +239,8 @@ public class PostSoProcessor {
         service.setServiceUuid(serviceOrderItem.getService().getServiceSpecification().getId());
         service.setServiceInvariantUuid((String) sdcInfos.get("invariantUUID"));
         service.setGlobalSubscriberId(subscriberInfo.getGlobalSubscriberId());
-        service.setServiceType((String) sdcInfos.get("name"));
-
+        String serviceTypeFromJson = serviceOrderItem.getService().getServicetype();
+        service.setServiceType(serviceTypeFromJson != null ? serviceTypeFromJson : (String) sdcInfos.get("name"));
         ParametersModel parameters = new ParametersModel();
         ArrayList<ResourceModel> resources = new ArrayList();
 
