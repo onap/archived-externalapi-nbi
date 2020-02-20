@@ -16,12 +16,7 @@
 
 FROM openjdk:11-jre-slim
 
-ARG SERVER_PORT
-ARG PKG_FILENAME=nbi-rest-services-5.0.1-SNAPSHOT.jar
-ADD target/$PKG_FILENAME app.jar
-
-RUN addgroup appgroup && useradd -ms /bin/bash appuser && adduser appuser appgroup && mkdir temptoscafile && chown appuser:appgroup temptoscafile/
-
+USER root
 COPY src/main/resources/certificate /certs
 ARG CERT_PASS=changeit
 RUN for cert in $(ls -d /certs/*); do \
@@ -34,7 +29,14 @@ RUN for cert in $(ls -d /certs/*); do \
                 --noprompt; \
     done
 
-USER appuser:appgroup
+USER onap
+
+ARG SERVER_PORT
+ARG PKG_FILENAME=nbi-rest-services-5.0.1-SNAPSHOT.jar
+ADD target/$PKG_FILENAME /opt/onap/app.jar
+
+RUN mkdir temptoscafile && chown onap:onap temptoscafile/
+
 
 ENV SERVER_PORT=${SERVER_PORT:-8443}
 ENV HTTP_PORT=${HTTP_PORT:-8080}
@@ -42,4 +44,4 @@ ENV JAVA_OPTS="-Dspring.profiles.active=ssl -Djava.security.egd=file:/dev/./uran
 
 EXPOSE $SERVER_PORT
 EXPOSE $HTTP_PORT
-ENTRYPOINT java -XX:+UseContainerSupport $JAVA_OPTS -jar /app.jar
+ENTRYPOINT java -XX:+UseContainerSupport $JAVA_OPTS -jar /opt/onap/app.jar
