@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-FROM openjdk:11-jre-slim
+FROM registry.gitlab.com/onap-integration/docker/onap-java
 
 USER root
 COPY src/main/resources/certificate /certs
