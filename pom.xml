@@ -38,7 +38,7 @@
   <parent>
     <groupId>org.onap.oparent</groupId>
     <artifactId>oparent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.0</version>
   </parent>
 
   <properties>
@@ -60,13 +60,9 @@
     <docker.latest.tag>${project.version}-latest</docker.latest.tag>
     <!--sonar -->
     <sonar.language>java</sonar.language>
-    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports
     </sonar.surefire.reportsPath>
-    <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec
-    </sonar.jacoco.reportPath>
-    <sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec
-    </sonar.jacoco.itReportPath>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
     <sonar.projectVersion>${project.version}</sonar.projectVersion>
     <sonar.coverage.exclusions>**/model/**/*</sonar.coverage.exclusions>
@@ -503,6 +499,22 @@
           </excludes>
         </configuration>
         <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+             <id>report</id>
+             <goals>
+               <goal>report</goal>
+             </goals>
+             <configuration>
+                <dataFile>${project.build.directory}/code-coverage/jacoco.exec</dataFile>
+                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+             </configuration>
+          </execution>
           <execution>
             <id>pre-unit-test</id>
             <goals>
