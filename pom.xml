@@ -60,12 +60,8 @@
     <docker.latest.tag>${project.version}-latest</docker.latest.tag>
     <!--sonar -->
     <sonar.language>java</sonar.language>
-    <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports
-    </sonar.surefire.reportsPath>
     <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-    <sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
     <sonar.projectVersion>${project.version}</sonar.projectVersion>
-    <sonar.coverage.exclusions>**/model/**/*</sonar.coverage.exclusions>
   </properties>
 
   <!--<repositories>-->
@@ -489,70 +485,41 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.5</version>
-        <configuration>
-          <dumpOnExit>true</dumpOnExit>
-          <includes>
-            <include>org.onap.nbi.*</include>
-          </includes>
-          <excludes>
-            <exclude>**/model/**/*</exclude>
-          </excludes>
-        </configuration>
         <executions>
-          <execution>
-            <id>prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-             <id>report</id>
-             <goals>
-               <goal>report</goal>
-             </goals>
-             <configuration>
-                <dataFile>${project.build.directory}/code-coverage/jacoco.exec</dataFile>
-                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-             </configuration>
-          </execution>
-          <execution>
-            <id>pre-unit-test</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-            <configuration>
-              <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
-            </configuration>
-          </execution>
-          <execution>
-            <id>pre-integration-test</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-            <configuration>
-              <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-            </configuration>
-          </execution>
-          <execution>
-            <goals>
-              <goal>merge</goal>
-            </goals>
-            <phase>post-integration-test</phase>
-            <configuration>
-              <fileSets>
-                <fileSet
-                  implementation="org.apache.maven.shared.model.fileset.FileSet">
-                  <directory>${project.build.directory}/coverage-reports</directory>
-                  <includes>
-                    <include>*.exec</include>
-                  </includes>
-                </fileSet>
-              </fileSets>
-              <destFile>${project.build.directory}/jacoco-dev.exec</destFile>
-            </configuration>
-          </execution>
-        </executions>
+        <execution>
+         <id>default-prepare-agent</id>
+         <goals>
+          <goal>prepare-agent</goal>
+         </goals>
+        </execution>
+        <execution>
+         <id>default-report</id>
+          <phase>prepare-package</phase>
+          <goals>
+          <goal>report</goal>
+          </goals>
+        </execution>
+        <execution>
+          <id>default-check</id>
+          <goals>
+          <goal>check</goal>
+          </goals>
+          <configuration>
+             <rules>
+              <rule>
+              <element>PACKAGE</element>
+              <limits>
+              <limit>
+              <counter>COMPLEXITY</counter>
+              <value>COVEREDRATIO</value>
+              <minimum>0.0</minimum>
+              </limit>
+              </limits>
+              </rule>
+             </rules>
+         </configuration>
+       </execution>
+      </executions>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
