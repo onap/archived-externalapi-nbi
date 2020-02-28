@@ -2,7 +2,7 @@
     {
     "swagger": "2.0",
     "info": {
-    "description": "Provides a healthcheck to verify that the NBI component is running fine as a standalone application or can also communicate with other onap modules.\n\n",
+    "description": "Provides a healthcheck to verify that the NBI component is running as expected as a standalone application or that the NBI can communicate with other onap modules that it needs.\n\n",
     "version": "4.1.0",
     "title": "Status API",
     "contact": {
@@ -51,7 +51,7 @@
            "application/json;charset=utf-8"
       ],
     "operationId": "status_Find",
-    "summary": "retrieve application status",
+    "summary": "This API retieves the status of the NBI application as a healthcheck",
     "description": "* Default\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"ok\",\n    \"version\": \"v3\"\n}\n```\n\n* Optional\n\n```\n?fullStatus=true\n```\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"ok\",\n    \"version\": \"v3\",\n    \"components\": [\n        {\n            \"name\": \"sdc connectivity\",\n            \"status\": \"ko\"\n        },\n        {\n            \"name\": \"so connectivity\",\n            \"status\": \"ok\"\n        },\n        {\n            \"name\": \"aai connectivity\",\n            \"status\": \"ok\"\n        },\n        {\n            \"name\": \"dmaap connectivity\",\n            \"status\": \"ok\"\n        }\n    ]\n}\n```",
     "deprecated": false,
     
