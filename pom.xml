@@ -454,6 +454,8 @@
               karate -->
             <exclude>src/test/java/karate-config.js</exclude>
             <exclude>releases/**/*.yaml</exclude>
+            <exclude>docs/conf.yaml</exclude>
+            <exclude>.readthedocs.yaml</exclude>
           </excludes>
           <skipExistingHeaders>true</skipExistingHeaders>
           <skip>false</skip>
