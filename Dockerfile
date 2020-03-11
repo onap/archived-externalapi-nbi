@@ -32,7 +32,7 @@ RUN for cert in $(ls -d /certs/*); do \
 USER onap
 
 ARG SERVER_PORT
-ARG PKG_FILENAME=nbi-rest-services-5.0.1-SNAPSHOT.jar
+ARG PKG_FILENAME=nbi-rest-services-6.0.0-SNAPSHOT.jar
 ADD target/$PKG_FILENAME /opt/onap/app.jar
 
 RUN mkdir temptoscafile && chown onap:onap temptoscafile/
