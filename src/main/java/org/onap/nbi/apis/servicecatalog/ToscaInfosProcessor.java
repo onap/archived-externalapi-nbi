@@ -16,12 +16,22 @@ package org.onap.nbi.apis.servicecatalog;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.onap.nbi.apis.serviceorder.model.consumer.VFModelInfo;
+import org.onap.sdc.tosca.parser.api.IEntityDetails;
 import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.onap.sdc.tosca.parser.elements.queries.EntityQuery;
+import org.onap.sdc.tosca.parser.elements.queries.TopologyTemplateQuery;
+import org.onap.sdc.tosca.parser.enums.SdcTypes;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
+import org.onap.sdc.tosca.parser.impl.SdcPropertyNames;
 import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
 import org.onap.sdc.toscaparser.api.elements.Metadata;
@@ -46,7 +56,11 @@ public class ToscaInfosProcessor {
 
     @Autowired
     private ServiceSpecificationDBManager serviceSpecificationDBManager;
-
+    
+	private Set<String> vnfInstanceParams = new HashSet<String>(Arrays.asList("onap_private_net_id",
+			"onap_private_subnet_id", "pub_key", "sec_group", "install_script_version", "demo_artifacts_version",
+			"cloud_env", "public_net_id", "aic-cloud-region", "image_name", "flavor_name"));
+    
     final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ToscaInfosProcessor.class);
@@ -120,6 +134,45 @@ public class ToscaInfosProcessor {
         ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(), false);
         List<Input> inputs = sdcCsarHelper.getServiceInputs();
 
+        List<IEntityDetails> vfEntityList = sdcCsarHelper.getEntity(
+                EntityQuery.newBuilder(SdcTypes.VF).build(), TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE).build(), false);
+        IEntityDetails iEntityDetails = vfEntityList.get(0);
+        Map<String, org.onap.sdc.toscaparser.api.Property> groupProperties = iEntityDetails.getProperties();
+        Map<String, String> listOfInstanceParameters = new HashMap<>();
+		for (String key : groupProperties.keySet()) {
+			org.onap.sdc.toscaparser.api.Property property = groupProperties.get(key);
+			String paramName = property.getName();
+			if (paramName != null) {
+				if (vnfInstanceParams.stream().filter(vnfInstanceParam -> vnfInstanceParam.equalsIgnoreCase(paramName))
+						.findFirst().isPresent()) {
+					listOfInstanceParameters.put(paramName, property.getValue().toString());
+				}
+			}
+		}
+        
+		// It will build Entity as VfModules
+		List<IEntityDetails> vfModuleEntityList = sdcCsarHelper.getEntity(
+				EntityQuery.newBuilder("org.openecomp.groups.VfModule").build(),
+				TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE)
+						.customizationUUID(SdcPropertyNames.PROPERTY_NAME_CUSTOMIZATIONUUID).build(),
+				false);
+		List<VFModelInfo> listOfVfModelInfo = new ArrayList<>();
+		// Fetching vfModule metadata in a loop
+		for (IEntityDetails vfModuleEntity : vfModuleEntityList) {
+			VFModelInfo vfModel = new VFModelInfo();
+			Metadata vfMetadata = vfModuleEntity.getMetadata();
+			// Preparing VFModel
+			vfModel.setModelInvariantUuid(
+					testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID)));
+			vfModel.setModelName(testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELNAME)));
+			vfModel.setModelUuid(testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELUUID)));
+			vfModel.setModelVersion(testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELVERSION)));
+			vfModel.setModelCustomizationUuid(testNull(vfMetadata.getValue("vfModuleModelCustomizationUUID")));
+
+			// Adding it to the list
+			listOfVfModelInfo.add(vfModel);
+		}
+        
         Map<String, Model> definitions = new HashMap<String, Model>();
         Model model = new ModelImpl();
 
@@ -187,8 +240,23 @@ public class ToscaInfosProcessor {
                     continue;
                 resourceSpecification.put("modelCustomizationId",
                         sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
+                resourceSpecification.put("childResourceSpecification", listOfVfModelInfo);
+                resourceSpecification.put("InstanceSpecification", listOfInstanceParameters);
+
             }
         }
     }
+
+	private static String testNull(Object object) {
+		if (object == null) {
+			return "NULL";
+		} else if (object instanceof Integer) {
+			return object.toString();
+		} else if (object instanceof String) {
+			return (String) object;
+		} else {
+			return "Type not recognized";
+		}
+	}
 
 }

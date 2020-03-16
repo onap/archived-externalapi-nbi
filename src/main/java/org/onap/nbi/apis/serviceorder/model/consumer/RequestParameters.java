@@ -25,6 +25,8 @@ public class RequestParameters {
 
     private List<UserParams> userParams;
 
+    private List<Object> userParamList;
+    
     private boolean aLaCarte;
 
     private String testApi;
@@ -53,7 +55,15 @@ public class RequestParameters {
         this.userParams = userParams;
     }
 
-    public boolean isaLaCarte() {
+    public List<Object> getUserParamList() {
+		return userParamList;
+	}
+
+	public void setUserParamList(List<Object> userParamList) {
+		this.userParamList = userParamList;
+	}
+
+	public boolean isaLaCarte() {
         return aLaCarte;
     }
 
@@ -80,6 +90,7 @@ public class RequestParameters {
     @Override
     public String toString() {
         return "RequestParameters{" + "subscriptionServiceType='" + subscriptionServiceType + '\'' + ", userParams="
-                + userParams + ", aLaCarte=" + aLaCarte + ", testApi='" + testApi + '\'' + '}';
+                + userParams + '\'' + ", userParamList="
+                        + userParamList + ", aLaCarte=" + aLaCarte + ", testApi='" + testApi + '\'' + '}';
     }
 }
