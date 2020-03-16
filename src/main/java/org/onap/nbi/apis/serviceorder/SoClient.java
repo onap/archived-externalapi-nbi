@@ -17,6 +17,7 @@ package org.onap.nbi.apis.serviceorder;
 import javax.annotation.PostConstruct;
 import org.onap.nbi.OnapComponentsUrlPaths;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateE2EServiceInstanceResponse;
+import org.onap.nbi.apis.serviceorder.model.consumer.CreateMacroServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.DeleteE2EServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.GetE2ERequestStatusResponse;
@@ -119,6 +120,27 @@ public class SoClient {
         }
     }
 
+    public ResponseEntity<CreateMacroServiceInstanceResponse> callMacroCreateServiceInstance(MSOPayload msoPayload) {
+
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER.debug("Calling SO CreateServiceInstance with msoPayload : " + msoPayload.toString());
+        }
+
+        try {
+          ResponseEntity<CreateMacroServiceInstanceResponse> response = restTemplate.exchange(createSoUrl,
+                   HttpMethod.POST, new HttpEntity<>(msoPayload, buildRequestHeader()),CreateMacroServiceInstanceResponse.class);
+          
+          logMacroResponsePost(createSoUrl, response);
+          return response;
+        } catch (BackendFunctionalException e) {
+          LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getHttpStatus() + " , " + e.getBodyResponse());
+          return new ResponseEntity(e.getBodyResponse(), e.getHttpStatus());
+        } catch (ResourceAccessException e) {
+          LOGGER.error(ERROR_ON_CALLING + createSoUrl + " ," + e.getMessage());
+          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     public ResponseEntity<CreateE2EServiceInstanceResponse> callE2ECreateServiceInstance(MSOE2EPayload msoPayloadE2E) {
 
         if (LOGGER.isDebugEnabled()) {
@@ -221,6 +243,18 @@ public class SoClient {
         }
     }
 
+    private void logMacroResponsePost(String url, ResponseEntity<CreateMacroServiceInstanceResponse> response) {
+      LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("response body : {}", response.getBody().toString());
+      }
+      
+      if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.CREATED)) {
+        LOGGER.warn("HTTP call SO on {} returns {} , {}", url, response.getStatusCodeValue(),
+                    response.getBody().toString());
+      }
+    }
+    
     private void logE2EResponsePost(String url, ResponseEntity<CreateE2EServiceInstanceResponse> response) {
         LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
         if (LOGGER.isDebugEnabled()) {
