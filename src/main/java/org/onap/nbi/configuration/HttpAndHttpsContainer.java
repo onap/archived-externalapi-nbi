@@ -17,6 +17,9 @@
 package org.onap.nbi.configuration;
 
 import org.apache.catalina.connector.Connector;
+import org.onap.nbi.ServiceRegisterRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
@@ -27,6 +30,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("ssl")
 public class HttpAndHttpsContainer {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpAndHttpsContainer.class);
 
     @Value("${http.port}")
     private int httpPort;
