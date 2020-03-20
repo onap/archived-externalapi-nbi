@@ -87,6 +87,7 @@ public class MultiClient {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String X_FROM_APP_ID = "X-FromAppId";
     private static final String X_TRANSACTION_ID = "X-TransactionId";
+    private static final String EXCEPTION_STRING = "error on calling";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiClient.class);
 
@@ -244,17 +245,17 @@ public class MultiClient {
         try {
             ResponseEntity<Object> response =
                     restTemplate.exchange(callUrl, HttpMethod.PUT, new HttpEntity<>(param, httpHeaders), Object.class);
-            LOGGER.info("response status : " + response.getStatusCodeValue());
+            LOGGER.info("response status :{} " , response.getStatusCodeValue());
             if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.CREATED)) {
                 LOGGER.warn("HTTP call on {} returns {} , {}", callUrl, response.getStatusCodeValue(),
-                        response.getBody().toString());
+                        response.getBody());
             }
             return response;
         } catch (BackendFunctionalException e) {
-            LOGGER.error("error on calling " + callUrl + " ," + e);
+            LOGGER.error(EXCEPTION_STRING , callUrl , e);
             return new ResponseEntity<>("problem calling onap services", e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error("error on calling " + callUrl + " ," + e);
+            LOGGER.error(EXCEPTION_STRING , callUrl , e);
             return new ResponseEntity<>("unable to reach onap services", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -272,21 +273,21 @@ public class MultiClient {
             ResponseEntity<Object> response =
                     restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(httpHeaders), Object.class);
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("response body : {}", response.getBody().toString());
+                LOGGER.debug("response body : {}", response.getBody());
             }
             LOGGER.info("response status : {}", response.getStatusCodeValue());
             if (LOGGER.isWarnEnabled() && !response.getStatusCode().equals(HttpStatus.OK)) {
                 LOGGER.warn("HTTP call on {} returns {} , {}", callURL, response.getStatusCodeValue(),
-                        response.getBody().toString());
+                        response.getBody());
 
             }
             return response;
 
         } catch (BackendFunctionalException e) {
-            LOGGER.error("error on calling " + callURL + " ," + e);
+            LOGGER.error(EXCEPTION_STRING,callURL , e);
             return new ResponseEntity<>("problem calling onap services", e.getHttpStatus());
         } catch (ResourceAccessException e) {
-            LOGGER.error("error on calling " + callURL + " ," + e);
+            LOGGER.error(EXCEPTION_STRING , callURL, e);
             return new ResponseEntity<>("unable to reach onap services", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
