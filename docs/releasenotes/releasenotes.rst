@@ -4,6 +4,60 @@
 Release Notes
 =============
 
+Version: 6.0.0
+--------------
+
+:Release Date: 2020-03-26
+
+Frankfurt Release tag - 6.0.0
+
+**Fix**
+
+- `OJSI-136 <https://jira.onap.org/browse/OJSI-136>`_ - In default deployment EXTAPI (nbi) exposes HTTP port 30274 outside of cluster.
+- `EXTAPI-347 <https://jira.onap.org/browse/EXTAPI-347>`_ - Move to mariadb galera instead of mariadb 
+- `EXTAPI-222 <https://jira.onap.org/browse/EXTAPI-222>`_ - Add support for HTTPS with AAF artefacts 
+- `EXTAPI-294 <https://jira.onap.org/browse/EXTAPI-294>`_ - Add support for Service Orders using new "Object" type 
+- `EXTAPI-304 <https://jira.onap.org/browse/EXTAPI-304>`_ - Update SO request to use GR_API instead of VNF_API 
+- `EXTAPI-342 <https://jira.onap.org/browse/EXTAPI-342>`_ - NBI to SO: new URL and new Header params 
+- `EXTAPI-343 <https://jira.onap.org/browse/EXTAPI-343>`_ - NBI to SO: cloudowner value to be taken from application.properties 
+- `EXTAPI-258 <https://jira.onap.org/browse/EXTAPI-258>`_ - Identify whether the Service is of A-la-carte or macro type 
+- `EXTAPI-370 <https://jira.onap.org/browse/EXTAPI-370>`_ - Java 11 & oparent 3.0.0-SNAPSHOT 
+- `EXTAPI-378 <https://jira.onap.org/browse/EXTAPI-378>`_ - Update swagger based on spectral 
+- `EXTAPI-384 <https://jira.onap.org/browse/EXTAPI-384>`_ - SECCOM Java 11 migration from v8 [REQ-219] in NBI 
+- `EXTAPI-397 <https://jira.onap.org/browse/EXTAPI-397>`_ - Update Service Order Swagger to align to ONAP Style Guidelines
+- `EXTAPI-399 <https://jira.onap.org/browse/EXTAPI-399>`_ - Fix Docker File Image to point to correct base and use 3.0.0 in pom
+- `EXTAPI-400 <https://jira.onap.org/browse/EXTAPI-400>`_ - Migrate and Fix sonarcloud code coverage issue
+- `EXTAPI-401 <https://jira.onap.org/browse/EXTAPI-401>`_ - remove sonar.jacoco.reportMissing.force.zero 
+- `EXTAPI-415 <https://jira.onap.org/browse/EXTAPI-415>`_ - Configure NBI with http xor https support, using basic spring capabilities 
+
+Detail of NBI features are described in the readTheDoc documentation.
+
+https://onap.readthedocs.io/en/latest/submodules/externalapi/nbi.git/docs/index.html
+
+
+**Known Issues**
+
+No new issues
+
+**Security Notes**
+
+In the Frankfurt release, External API has been updated to expose a https interface via OOM installations, in response to OJSI-136. 
+NBI has also upgraded to Java 11, using the base registry.gitlab.com/onap-integration/docker/onap-java image. 
+
+Quick Links:
+
+- `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
+
+**Upgrade Notes**
+
+No major API changes. The API Major version is still 4.
+
+/nbi/api/v4
+
+Frankfurt API version is 4.1.0 i.e. Minor API changes only,  as most changes are related to security updates. No new APIs.
+Swagger changes are mainly in the use of additional markdown for API understanding and conformance to ONAP API Swagger Style Guidelines 
+https://wiki.onap.org/pages/viewpage.action?pageId=71834147
+
 Version: 5.0.1
 --------------
 
