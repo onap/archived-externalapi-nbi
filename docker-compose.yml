@@ -37,8 +37,7 @@ services:
   nbi:
     image: ${NEXUS_DOCKER_REPO}/onap/externalapi/nbi:${DOCKER_IMAGE_VERSION:-latest}
     ports:
-      - 8080:8080
-      - 8443:8443
+      - ${SERVER_PORT}:${SERVER_PORT}
     env_file:
       - .env
     environment:
