@@ -28,7 +28,7 @@ public class E2EServiceUtils {
             // and e2eServiceInstances )APIs for service CRUD
             // All E2E Services are required to be created in SDC under category "E2E Services" until SO fixes the
             // multiple API issue.
-            if (category.startsWith("e2e") || category.startsWith("CST")) {
+            if (category.startsWith("e2e") || category.startsWith("cst")) {
                 e2eService = true;
             }
         }
