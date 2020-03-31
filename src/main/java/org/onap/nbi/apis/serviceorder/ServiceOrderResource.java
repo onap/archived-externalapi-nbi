@@ -31,6 +31,8 @@ import org.onap.nbi.commons.JsonRepresentation;
 import org.onap.nbi.commons.MultiCriteriaRequestBuilder;
 import org.onap.nbi.commons.ResourceManagement;
 import org.onap.nbi.exceptions.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -53,6 +55,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(OnapComponentsUrlPaths.SERVICE_ORDER_PATH)
 public class ServiceOrderResource extends ResourceManagement {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceOrderResource.class);
 
     @Autowired
     ServiceOrderService serviceOrderService;
@@ -155,6 +159,7 @@ public class ServiceOrderResource extends ResourceManagement {
     }
 
     public ServiceOrder checkServiceOrder(ServiceOrder serviceOrder) {
+		LOGGER.debug("Checking Service order : {} ", serviceOrder.getId());
         ServiceOrderInfo serviceOrderInfo = checkOrderConsistenceManager.checkServiceOrder(serviceOrder);
         if (serviceOrderInfo.isServiceOrderRejected()) {
             serviceOrderService.updateOrderState(serviceOrder, StateType.REJECTED);

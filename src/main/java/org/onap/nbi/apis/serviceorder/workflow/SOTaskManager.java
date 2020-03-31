@@ -50,6 +50,7 @@ public class SOTaskManager {
         Map<String, Long> internalIdOrderItemsMap = new HashMap<>();
         if (orderItems != null) {
             // first we save create all the execution tasks with order item id in relied tasks
+			LOGGER.debug("Creating {} relied tasks with order item id", orderItems.size());
             for (ServiceOrderItem orderItem : orderItems) {
                 ExecutionTask task = new ExecutionTask();
                 task.setOrderItemId(orderItem.getId());

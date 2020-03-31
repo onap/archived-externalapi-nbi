@@ -52,6 +52,7 @@ public class CreateAAIServiceTypeManager {
                 String serviceTypeFromJson = serviceOrderItem.getService().getServicetype();
                 String serviceType = serviceTypeFromJson != null ? serviceTypeFromJson : (String) serviceOrderItemInfo.getCatalogResponse().get("name");
                 if (!serviceNameExistsInAAI(servicesInAaiForCustomer, serviceType)) {
+					LOGGER.debug("Creating AAI Service Type : {} ", serviceType);
                     boolean serviceCreated = serviceOrderConsumerService.putServiceType(
                             serviceOrderInfo.getSubscriberInfo().getGlobalSubscriberId(), serviceType, serviceOrder);
                     if (!serviceCreated) {
