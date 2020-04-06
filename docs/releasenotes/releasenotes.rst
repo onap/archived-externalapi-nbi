@@ -4,12 +4,12 @@
 Release Notes
 =============
 
-Version: 6.0.0
+Version: 6.0.1
 --------------
 
-:Release Date: 2020-03-26
+:Release Date: 2020-04-06
 
-Frankfurt Release tag - 6.0.0
+Frankfurt Release tag - 6.0.1
 
 **Fix**
 
@@ -29,6 +29,9 @@ Frankfurt Release tag - 6.0.0
 - `EXTAPI-400 <https://jira.onap.org/browse/EXTAPI-400>`_ - Migrate and Fix sonarcloud code coverage issue
 - `EXTAPI-401 <https://jira.onap.org/browse/EXTAPI-401>`_ - remove sonar.jacoco.reportMissing.force.zero 
 - `EXTAPI-415 <https://jira.onap.org/browse/EXTAPI-415>`_ - Configure NBI with http xor https support, using basic spring capabilities 
+- `EXTAPI-417 <https://jira.onap.org/browse/EXTAPI-417>`_ - Support http local docker and https OOM via Env Variable 
+- `EXTAPI-423 <https://jira.onap.org/browse/EXTAPI-423>`_ - Check for CST template is case sensitive 
+- `EXTAPI-424 <https://jira.onap.org/browse/EXTAPI-424>`_ - Public HTTP port open 
 
 Detail of NBI features are described in the readTheDoc documentation.
 
