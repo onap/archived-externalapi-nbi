@@ -2,6 +2,7 @@
    International License.
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright 2018 ORANGE
+.. _offeredapis:
 
 
 ============
@@ -29,7 +30,7 @@ integration with other ONAP components and API resource/operation provided.
 API Version
 ***********
 
-APIs are described with a  state version with “v” following the API Name,
+APIs are described with a  state version with "v" following the API Name,
 e.g.:  ``nbi/api/v4/productOrder``.
 The schema associated with a REST API must have its version number aligned
 with that of the REST API.
@@ -46,7 +47,7 @@ provided the following  backward compatibility rules are respected:
 - Changes in the cardinality of an attribute in a data type must be from
   mandatory to optional or from lower to greater
 - New attributes defined in an element must be optional (absence of
-  ``use=”required”``).
+  ``use="required"``).
 - If new enumerated values are included, the former ones and its meaning must
   be kept.
 - If new operations are added, the existing operations must be kept
@@ -173,14 +174,14 @@ GET (by list) allows to request with following criteria (all optional) :
 
 if no service matches, an empty list is send back.
 
-1. If a request is send without any parameter, we’ll retrieve the list of
+1. If a request is send without any parameter, we'll retrieve the list of
    service-instance for the *generic* customer
 2. If only customer parameter is filled (``relatedParty.id`` +
-   role= relatedParty’ONAPcustomer’) we’ll retrieve the list of
+   role= relatedParty'ONAPcustomer') we'll retrieve the list of
    service-instance for this customer
-3. If serviceSpecification.id or name is filled we’ll retrieve the list of
-   Service instance (from this service specification) – We’ll use the customer
-   id if provided (with Role=’ONAPcustomer) or generic if no customer id
+3. If serviceSpecification.id or name is filled we'll retrieve the list of
+   Service instance (from this service specification) - We'll use the customer
+   id if provided (with Role='ONAPcustomer) or generic if no customer id
    provided
 
 **GET Service Inventory (id)**
@@ -205,53 +206,53 @@ and triggers service provisioning. GET operation is also available to retrieve
 one service order by providing id or a list of service order. For this release,
 only a subset of criteria is available:
 
-• ``externalId``
-• ``state``
-• ``description``
-• ``orderDate.gt`` (orderDate must be greater – after -than)
-• ``orderDate.lt`` (orderDate must be lower-before - than)
-• ``fields`` – attribute used to filter retrieved attributes (if needed) and
+* ``externalId``
+* ``state``
+* ``description``
+* ``orderDate.gt`` (orderDate must be greater - after -than)
+* ``orderDate.lt`` (orderDate must be lower-before - than)
+* ``fields`` - attribute used to filter retrieved attributes (if needed) and
   also for sorted SO
-• ``offset`` and ``limit`` are used for pagination purpose
+* ``offset`` and ``limit`` are used for pagination purpose
 
 ServiceOrder will manage following ``actionItem`` action:
 
-• ``add`` - a new service will be created
-• ``delete`` - an existing service will be deleted
-• ``change`` - an existing service will be deleted and then created with new
+* ``add`` - a new service will be created
+* ``delete`` - an existing service will be deleted
+* ``change`` - an existing service will be deleted and then created with new
   attribute value
 
 **Prerequisites & assumptions**
 
-• Cloud & tenant information MUST BE defined in the external API property file
-• Management of ONAP customer for add service action
+* Cloud & tenant information MUST BE defined in the external API property file
+* Management of ONAP customer for add service action
 
 With the current version of APIs used from **SO** and **A&AI** we need to
 manage a *customer*. This customer concept is confusing with Customer BSS
 concept. We took the following rules to manage the *customer* information:
 
-• It could be provided through a ``serviceOrder`` in the service Order a
+* It could be provided through a ``serviceOrder`` in the service Order a
   ``relatedParty`` with role ``ONAPcustomer`` should be provided in the
   ``serviceOrder`` header (we will not consider in this release the party
   at item level). External API component will check if this customer exists
   and create it in **A&AI** if not.
-• If no ``relatedParty`` is provided, the service will be affected to
-  ``generic customer`` (dummy customer) – we assume this ``generic customer``
+* If no ``relatedParty`` is provided, the service will be affected to
+  ``generic customer`` (dummy customer) - we assume this ``generic customer``
   always exists.
-• Additionally **NBI** will create in **A&AI** the service-type if it did not
+* Additionally **NBI** will create in **A&AI** the service-type if it did not
   exists for the customer
 
 **ServiceOrder management in NBI will support 2 modes:**
 
-• E2E integration - **NBI** calls **SO** API to perform an End-To-end
+* E2E integration - **NBI** calls **SO** API to perform an End-To-end
   integration
-• Service-level only integration - **NBI** will trigger only **SO** request at
+* Service-level only integration - **NBI** will trigger only **SO** request at
   serviceInstance level. **SO** prerequisite: **SO** must be able to find a
   BPMN to process service fulfillment (integrate VNF, VNF activation in
   **SDNC**, VF module
 
 The choice of the mode is done in NBI depending on information retrieved in
-**SDC**. If the serviceSpecification is within a Category “E2E Service” ,
+**SDC**. If the serviceSpecification is within a Category "E2E Service" ,
 **NBI** will use E2E **SO** API, if not only API at service instance level
 will be used.
 
@@ -274,29 +275,29 @@ addtionnal information about ``serviceOrder`` management.
 It is possible for an external system to subscribe to service order
 notifications. 3 events are managed:
 
-• A new service order is created in **NBI**
-• A service order state changes
-• A service order item state changes
+* A new service order is created in **NBI**
+* A service order state changes
+* A service order item state changes
 
 It is also possible to subscribe to **AAI** and **SDC** notifications via
 **NBI**.
 4 events are managed:
 
-• A new service is created in  **AAI***
-• A service attribute value is changed in **AAI**
-• A service is removed in **AAI**
-• A service specification is distributed in **SDC**
+* A new service is created in  **AAI***
+* A service attribute value is changed in **AAI**
+* A service is removed in **AAI**
+* A service specification is distributed in **SDC**
 
 These 7 events have distinct notification allowing any system to subscribe to
 one, two or all notification types.
 
 The implementation will be split in 2 components:
 
-• A HUB resource must be managed within the NBI/serviceOrder API. This HUB
+* A HUB resource must be managed within the NBI/serviceOrder API. This HUB
   resource allows system to subscribe to **NBI** notification
-• An Event API must be available at listener side in order to be able to
+* An Event API must be available at listener side in order to be able to
   receive Listener (when event occurs). **NBI** will be upgraded to use this
-  API as client – **NBI** will shoot ``POST listener/``
+  API as client - **NBI** will shoot ``POST listener/``
 
 The following diagram illustrates such notification flow:
 
@@ -305,7 +306,7 @@ The following diagram illustrates such notification flow:
 
 **East-west interaction of ONAP instances through External API**
 
-Operator’s SO component will talk to service provider’s external API component
+Operator's SO component will talk to service provider's external API component
 through its own external API component.
 
 External API support two methods of posting a Service Order or registering for
@@ -317,29 +318,29 @@ Hub.
 API will identify that the request has to be relayed to another ONAP instance
 and route the request accordingly.
 
-Target parameter: The public endpoint url for target ONAP instance’s External
+Target parameter: The public endpoint url for target ONAP instance's External
 API, for instance
 http://externalDomain/nbi/api/vX
 
-• For posting service order and getting service order status, the request will
-  be relayed to target (service provider’s External API) as-is. These are
-  synchronous requests and operator’s External API will wait for response from
-  the target and relay it back to original calling system (operator’s SO).
-• For Hub API, there is an additional step required. The listener from calling
-  system (operator’s SO) will be replaced with External APIs own listener.
+* For posting service order and getting service order status, the request will
+  be relayed to target (service provider's External API) as-is. These are
+  synchronous requests and operator's External API will wait for response from
+  the target and relay it back to original calling system (operator's SO).
+* For Hub API, there is an additional step required. The listener from calling
+  system (operator's SO) will be replaced with External APIs own listener.
   A mapping of registered subscriber and its original listener will be
-  maintained in External API’s DB. Operator’s External API will relay the Hub
-  API call to service provider’s External API. The service provider’s External
-  API will register operator’s External API as a listener.
-• After SO processing in service provider’s ONAP is completed (irrespective of
-  status – reject, success, fail etc), service provider’s External API will
-  notify the operator’s External API about request completion. Operator’s
+  maintained in External API's DB. Operator's External API will relay the Hub
+  API call to service provider's External API. The service provider's External
+  API will register operator's External API as a listener.
+* After SO processing in service provider's ONAP is completed (irrespective of
+  status - reject, success, fail etc), service provider's External API will
+  notify the operator's External API about request completion. Operator's
   External API will look-up for registered subscriber and its original listener
-  (operator’s SO) and relay the message.
+  (operator's SO) and relay the message.
 
-Operator’s Service Orchestrator will invoke its own External API component and
+Operator's Service Orchestrator will invoke its own External API component and
 add SP Partner URL in the header. After receiving an acknowledgement for
-Service Order request, the SO component will register with External API’s hub
+Service Order request, the SO component will register with External API's hub
 and provide its listener for processing callback events.
 
 Technical information about **East-west interaction exercise** design
