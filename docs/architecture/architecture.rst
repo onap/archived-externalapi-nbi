@@ -1,5 +1,6 @@
 .. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright 2018 ORANGE
+.. _architecture:
 
 
 Architecture
