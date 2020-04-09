@@ -1,5 +1,6 @@
 .. SPDX-License-Identifier: CC-BY-4.0
 .. Copyright 2019 ORANGE
+.. _release_notes:
 
 Release Notes
 =============
@@ -307,7 +308,7 @@ For service inventory:
 
 For service order:
 
-- ServiceOrder will manage only ‘add’ and ‘delete’ operation (no change).
+- ServiceOrder will manage only 'add' and 'delete' operation (no change).
 - Only service level request is performed.
 - No request for VNF/VF and no call to SDNC.
 - `EXTAPI-70 <https://jira.onap.org/browse/EXTAPI-70>`_ : links between customer/service instance and cloud/tenant not done (trigger VID issue).
