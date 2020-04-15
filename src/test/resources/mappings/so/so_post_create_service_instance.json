@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "url": "/onap/so/infra/serviceInstantiation/v7/serviceInstances/"
+        "url": "/onap/so/infra/serviceInstantiation/v7/serviceInstances"
     },
     "response": {
         "status": 201,

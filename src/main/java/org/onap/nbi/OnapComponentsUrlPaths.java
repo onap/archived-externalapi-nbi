@@ -58,7 +58,7 @@ public final class OnapComponentsUrlPaths {
 
     // MSO
     public static final String MSO_CREATE_SERVICE_INSTANCE_PATH =
-            "/onap/so/infra/serviceInstantiation/v7/serviceInstances/";
+            "/onap/so/infra/serviceInstantiation/v7/serviceInstances";
     public static final String MSO_GET_REQUEST_STATUS_PATH = "/onap/so/infra/orchestrationRequests/v7/";
     public static final String MSO_DELETE_REQUEST_STATUS_PATH =
             "/onap/so/infra/serviceInstantiation/v7/serviceInstances/";

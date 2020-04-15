@@ -414,7 +414,7 @@ public class ExecutionTaskTest {
         ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
                 .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
 
-        Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
+        Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances");
 
         SoTaskProcessor.processOrderItem(executionTaskA);
         ServiceOrder serviceOrderChecked = getServiceOrder("test");
@@ -433,7 +433,7 @@ public class ExecutionTaskTest {
         ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
                 .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
 
-        Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances/");
+        Context.removeWireMockMapping("/onap/so/infra/serviceInstantiation/v7/serviceInstances");
         Context.removeWireMockMapping("/onap/so/infra/orchestrationRequests/v7/requestId");
 
         SoTaskProcessor.processOrderItem(executionTaskA);
@@ -473,7 +473,7 @@ public class ExecutionTaskTest {
         ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
                 .setUpBddForExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
 
-        changeWireMockResponse("/onap/so/infra/serviceInstantiation/v7/serviceInstances/", 400,
+        changeWireMockResponse("/onap/so/infra/serviceInstantiation/v7/serviceInstances", 400,
                 "\"serviceException\": {\n" + "        \"messageId\": \"SVC0002\",\n"
                         + "        \"text\": \"Error parsing request.  org.openecomp.mso.apihandler.common.ValidationException: serviceInstance already existsd\"\n"
                         + "    }");
