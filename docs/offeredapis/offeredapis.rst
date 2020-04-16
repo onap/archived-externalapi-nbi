@@ -94,6 +94,17 @@ API Table
    "serviceOrder", ":download:`link <api_serviceOrder/swagger.json>`", ":download:`link <api_serviceOrder/swagger.yaml>`", ":download:`link <api_serviceOrder/api.plantuml>`", ":download:`link <api_serviceOrder/model.xsd>`"
    "status", ":download:`link <api_status/swagger.json>`", ":download:`link <api_status/swagger.yaml>`", ":download:`link <api_status/api.plantuml>`", ":download:`link <api_status/model.xsd>`"
 
+***********************
+API ReDoc Documentation
+***********************
+
+* :doc:`API hub <redoc/api_hub>`
+* :doc:`Service Catalog <redoc/api_serviceCatalog>`
+* :doc:`Service Inventory <redoc/api_serviceInventory>`
+* :doc:`Service Order <redoc/api_serviceOrder>`
+* :doc:`Status <redoc/api_status>`
+
+
 ***************
 API Description
 ***************

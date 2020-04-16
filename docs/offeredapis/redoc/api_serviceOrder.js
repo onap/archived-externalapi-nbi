@@ -1,0 +1,1 @@
+<redoc spec-url='https://docs.onap.org/en/latest/_downloads/df16d15107ad648ac513dedf3da4f0e5/swagger.json'></redoc>
