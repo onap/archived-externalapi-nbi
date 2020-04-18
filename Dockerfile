@@ -20,6 +20,8 @@ USER onap
 
 ARG SERVER_PORT
 ARG PKG_FILENAME=nbi-rest-services-6.0.3-SNAPSHOT.jar
+ARG DOCKER_TMP_DIR=/var/tmp  
+
 ADD target/$PKG_FILENAME /opt/onap/app.jar
 
 RUN mkdir temptoscafile && chown onap:onap temptoscafile/
@@ -27,6 +29,7 @@ RUN mkdir temptoscafile && chown onap:onap temptoscafile/
 
 ENV SERVER_PORT=${SERVER_PORT:-8080}
 ENV JAVA_OPTS=${JAVA_OPTS:--Djava.security.egd=file:/dev/./urandom}
+ENV DOCKER_TMP_DIR=${ ARG DOCKER_TMP_DIR}
 
 EXPOSE $SERVER_PORT
 ENTRYPOINT exec java -XX:+UseContainerSupport $JAVA_OPTS -jar /opt/onap/app.jar
