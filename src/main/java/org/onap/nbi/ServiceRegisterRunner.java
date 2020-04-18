@@ -34,8 +34,8 @@ import org.springframework.stereotype.Component;
  * Register this NBI instance with MSB discovery when the app is fully started
  */
 @Component
-public class ServiceRegisterRunner implements CommandLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceRegisterRunner.class);
+public abstract class ServiceRegisterRunner implements CommandLineRunner {
+    /*private static final Logger logger = LoggerFactory.getLogger(ServiceRegisterRunner.class);
 
     @Value("${msb.enabled}")
     private boolean IS_ENABLED;
@@ -133,5 +133,5 @@ public class ServiceRegisterRunner implements CommandLineRunner {
                 }
             }
         }
-    }
+    }*/
 }
