@@ -26,6 +26,18 @@ integration with other ONAP components and API resource/operation provided.
 .. image:: ../images/onap_nbi_dublin.jpg
    :width: 800px
 
+************
+API Endpoint
+************
+
+Since Frankfurt, in an OOM ONAP deployment context:
+
+https://nbi.api.simpledemo.onap.org:30274/nbi/api/v4
+
+Locally, for dev and testing purpose:
+
+http://localhost:8080/nbi/api/v4
+
 ***********
 API Version
 ***********

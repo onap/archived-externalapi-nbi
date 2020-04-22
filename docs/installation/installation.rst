@@ -5,7 +5,8 @@
 Installation
 ============
 
-This document describes local build and installation for development purpose
+This document describes local installation for development purpose
+It also describes some keypoints for understanding NBI in OOM context
 
 Build
 -----
@@ -14,17 +15,14 @@ Requirements
 
 * Java 11
 * Maven
-* port 8080 should be free, used by tests
+* free port 8080, used by tests
 
-Build
-::
+Build::
 
     mvn clean package
 
-Run
----
-
-**Maven**
+Alternative 1 run SpringBoot application
+----------------------------------------
 
 Requirements
 
@@ -42,18 +40,18 @@ Defaults
     Mariadb, url=jdbc:mariadb://localhost:3306/nbi, username=root,
     password=secret
 
-Run
-::
+Run::
 
     mvn spring-boot:run
 
-**Docker**
+Alternative 2 run docker
+------------------------
 
 Requirements
 
 * Docker
 * Docker-compose
-* Free ports 8080 and 8443
+* Free ports 8080
 
 Edit *docker-compose.yml* to select previous generated local build, replace::
 
@@ -74,16 +72,14 @@ Logs::
     docker-compose logs -f nbi
 
 
-Test
-----
+Local tests
+-----------
 
-**Healthcheck**
+Status is available at http://localhost:8080/nbi/api/v4/status
 
-http://localhost:8080/nbi/api/v4/status
+Running a standalone test::
 
-and
-
-https://localhost:8443/nbi/api/v4/status
+    curl "http://localhost:8080/nbi/api/v4/status"
 
 You should get::
 
@@ -93,13 +89,68 @@ You should get::
         "version": "v4"
     }
 
-**Play with RESTclient**
+Play with Postman
+-----------------
 
-You can also test NBI with `VisualStudio RestClient plugin <https://github.com/Huachao/vscode-restclient>`_
+A full collection of requests is available in *docs/offeredapis/postman* for inspiration
 
-See the *restclient* package at root level to find *.vscode/settings.json*
-configuration file and */json/* package with samples requests that can be run.
+OOM Context
+-----------
 
-**Play with Postman**
+**Healthcheck**
 
-A collection is available here *docs/offeredapis/postman*
+Running a standalone test::
+
+    curl "https://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/status"
+
+    {
+        "name": "nbi",
+        "status": "ok",
+        "version": "v4"
+    }
+
+Running an integration test with SO, SDC, DMAAP, AAI::
+
+    curl "https://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/status?fullStatus=true"
+
+    {
+        "name": "nbi",
+        "status": "ok",
+        "version": "v4",
+        "components": [
+            {
+                "name": "so connectivity",
+                "status": "ok"
+            },
+            {
+                "name": "sdc connectivity",
+                "status": "ok"
+            },
+            {
+                "name": "dmaap connectivity",
+                "status": "ok"
+            },
+            {
+                "name": "aai connectivity",
+                "status": "ok"
+            }
+        ]
+    }
+
+**Understanding OOM deployment**
+
+NBI uses AAF init container to generate valid server certificate, signed by ONAP Root CA.
+This server certificate is used for TLS over HTTP.
+
+Passing specific JAVA_OPTS to NBI SpringBoot java app will enable HTTPS.
+
+Here are some OOM related files which could help to understand how HTTPS is set up.
+
+Search for JAVA_OPTS in
+https://github.com/onap/oom/blob/master/kubernetes/nbi/templates/deployment.yaml
+
+AAF values
+https://github.com/onap/oom/blob/master/kubernetes/nbi/values.yaml
+
+AAF init container
+https://github.com/onap/oom/blob/master/kubernetes/nbi/templates/configmap-aaf-add-config.yaml
