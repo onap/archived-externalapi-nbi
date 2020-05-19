@@ -24,6 +24,7 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateE2EServiceInstanceResponse;
+import org.onap.nbi.apis.serviceorder.model.consumer.CreateMacroServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
@@ -92,8 +93,10 @@ public class SOTaskProcessor {
                 updateE2EServiceOrderItem(response, serviceOrderItem, serviceOrder);
             } else if (macroService) {
               LOGGER.info("Mode type macro");
-              //TODO: Add logic to construct SO macro request body and call SO macro flow.(EXTAPI-368)
-
+              // call SO macro flow.(EXTAPI-368)
+              ResponseEntity<CreateMacroServiceInstanceResponse> response = postSoProcessor
+                  .postMacroServiceOrderItem(serviceOrderInfo, serviceOrderItem);
+              updateMacroServiceOrderItem(response, serviceOrderItem, serviceOrder);
             } else {
 
                 ResponseEntity<CreateServiceInstanceResponse> response =
@@ -212,6 +215,35 @@ public class SOTaskProcessor {
                         response.getStatusCode(), response.getBody());
             } else {
                 updateOrderItemToInProgress(serviceOrder, orderItem);
+            }
+        }
+    }
+
+    /**
+     * Update ServiceOrderItem with SO response by using serviceOrderRepository with the serviceOrderId
+     */
+    private void updateMacroServiceOrderItem(ResponseEntity<CreateMacroServiceInstanceResponse> response,
+        ServiceOrderItem orderItem, ServiceOrder serviceOrder) {
+
+        if (response == null || !response.getStatusCode().is2xxSuccessful()) {
+            LOGGER.warn("response ko for serviceOrderItem.id=" + orderItem.getId());
+            serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
+            buildOrderMessageIfNeeded(orderItem, serviceOrder, response);
+        } else {
+            CreateMacroServiceInstanceResponse createMacroServiceInstanceResponse = response.getBody();
+            if (createMacroServiceInstanceResponse != null && !orderItem.getState().equals(StateType.FAILED)) {
+                orderItem.getService().setId(createMacroServiceInstanceResponse.getRequestReferences().getInstanceId());
+                orderItem.setRequestId(createMacroServiceInstanceResponse.getRequestReferences().getRequestId());
+            }
+
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null
+                        || response.getBody().getRequestReferences() == null) {
+                serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.FAILED);
+                LOGGER
+                    .warn("order item {} failed , status {} , response {}", orderItem.getId(), response.getStatusCode(),
+                        response.getBody());
+            } else {
+                serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.INPROGRESS);
             }
         }
     }
