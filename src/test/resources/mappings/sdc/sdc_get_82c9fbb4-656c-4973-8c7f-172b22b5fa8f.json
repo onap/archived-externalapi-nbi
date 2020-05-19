@@ -1,0 +1,117 @@
+{
+	"request": {
+		"method": "GET",
+		"url": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/metadata"
+	},
+	"response": {
+		"status": 200,
+		"jsonBody": {
+			"uuid": "82c9fbb4-656c-4973-8c7f-172b22b5fa8f",
+			"invariantUUID": "3d3aa59d-d0b4-4663-b4bb-dc16f518acea",
+			"name": "VLB_Service",
+			"version": "1.0",
+			"toscaModelURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/toscaModel",
+			"category": "Network Service",
+			"lifecycleState": "CERTIFIED",
+			"lastUpdaterUserId": "jm0007",
+			"distributionStatus": "DISTRIBUTED",
+			"lastUpdaterFullName": "Joni Mitchell",
+			"resources": [
+				{
+					"resourceInstanceName": "vLB_VSP 0",
+					"resourceName": "vLB_VSP",
+					"resourceInvariantUUID": "368371e6-1d2f-4f4a-b992-a9053c7c2f1e",
+					"resourceVersion": "1.0",
+					"resoucreType": "VF",
+					"resourceUUID": "35d7887d-3c35-4fb4-aed1-d15b4d9f4ccc",
+					"artifacts": [
+						{
+							"artifactName": "vf-license-model.xml",
+							"artifactType": "VF_LICENSE",
+							"artifactURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/resourceInstances/vlb_vsp0/artifacts/ecb35123-2160-4a1f-8e10-0f9ae0233024",
+							"artifactDescription": "VF license file",
+							"artifactChecksum": "ZTdhOGFmMTUzNGFiNjlhYTUzOTgxMmM4NzQ3OGJlOGI=",
+							"artifactUUID": "ecb35123-2160-4a1f-8e10-0f9ae0233024",
+							"artifactVersion": "1",
+							"artifactLabel": "vflicense",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vlb_vsp0_modules.json",
+							"artifactType": "VF_MODULES_METADATA",
+							"artifactURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/resourceInstances/vlb_vsp0/artifacts/21e0c3e3-ab55-4fc0-9e73-78a1815510d8",
+							"artifactDescription": "Auto-generated VF Modules information artifact",
+							"artifactChecksum": "NWU2NDNjNWVmMjM2YWRjNjc5NTNlNjZhMTQ3Mjk4MmY=",
+							"artifactUUID": "21e0c3e3-ab55-4fc0-9e73-78a1815510d8",
+							"artifactVersion": "1",
+							"artifactLabel": "vfModulesMetadata",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "dnsscaling.yaml",
+							"artifactType": "HEAT",
+							"artifactURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/resourceInstances/vlb_vsp0/artifacts/f82b2ecb-d1ff-49a9-84c9-123968e1cd94",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 60,
+							"artifactChecksum": "NWU2MWY2NzFjOWM3NDRhMDU2ZjlhMDFiNWRiOWI4Mzc=",
+							"artifactUUID": "f82b2ecb-d1ff-49a9-84c9-123968e1cd94",
+							"artifactVersion": "2",
+							"artifactLabel": "heat1",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "base_vlb.yaml",
+							"artifactType": "HEAT",
+							"artifactURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/resourceInstances/vlb_vsp0/artifacts/d06da981-1f0c-4868-bd35-caefa60dd062",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 60,
+							"artifactChecksum": "MzY5NWZkZDJiNWJmMzY0ODdiOWY1ZDZjNWQ3MDVjM2E=",
+							"artifactUUID": "d06da981-1f0c-4868-bd35-caefa60dd062",
+							"artifactVersion": "2",
+							"artifactLabel": "heat2",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "base_vlb.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/resourceInstances/vlb_vsp0/artifacts/970c7177-cf5d-41ba-a2f8-594ec760f825",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "MDE1NGNlMGM2ZmI3YTZkMmQ0MGM4YmVmNzg5YWQ1MGQ=",
+							"artifactUUID": "970c7177-cf5d-41ba-a2f8-594ec760f825",
+							"artifactVersion": "2",
+							"generatedFromUUID": "5bcc6eb1-5d95-403b-a796-31777480b1c5.heat2",
+							"artifactLabel": "heat2env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vendor-license-model.xml",
+							"artifactType": "VENDOR_LICENSE",
+							"artifactURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/resourceInstances/vlb_vsp0/artifacts/9f0320dd-16ab-4ff3-972e-f9faabaa7d54",
+							"artifactDescription": " Vendor license file",
+							"artifactChecksum": "MjY3N2M0YmRmZmRiMzNiMWU1NGRlNjU5YTYwZWFmOWI=",
+							"artifactUUID": "9f0320dd-16ab-4ff3-972e-f9faabaa7d54",
+							"artifactVersion": "1",
+							"artifactLabel": "vendorlicense",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "dnsscaling.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/82c9fbb4-656c-4973-8c7f-172b22b5fa8f/resourceInstances/vlb_vsp0/artifacts/778c22db-5ac8-4bd3-a294-24e1d1c1fd43",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "MzEwMjI4YTNiNDU0MTFmZDkwODFhZGNjYzE0MTI1ZTc=",
+							"artifactUUID": "778c22db-5ac8-4bd3-a294-24e1d1c1fd43",
+							"artifactVersion": "2",
+							"generatedFromUUID": "5bcc6eb1-5d95-403b-a796-31777480b1c5.heat1",
+							"artifactLabel": "heat1env",
+							"artifactGroupType": "DEPLOYMENT"
+						}
+					]
+				}
+			]
+		},
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}
