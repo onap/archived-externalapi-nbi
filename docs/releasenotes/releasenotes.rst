@@ -5,12 +5,12 @@
 Release Notes
 =============
 
-Version: 6.0.1
+Version: 6.0.3
 --------------
 
-:Release Date: 2020-04-06
+:Release Date: 2020-06-04
 
-Frankfurt Release tag - 6.0.1
+Frankfurt Release tag - 6.0.3
 
 **Fix**
 
@@ -33,6 +33,7 @@ Frankfurt Release tag - 6.0.1
 - `EXTAPI-417 <https://jira.onap.org/browse/EXTAPI-417>`_ - Support http local docker and https OOM via Env Variable 
 - `EXTAPI-423 <https://jira.onap.org/browse/EXTAPI-423>`_ - Check for CST template is case sensitive 
 - `EXTAPI-424 <https://jira.onap.org/browse/EXTAPI-424>`_ - Public HTTP port open 
+- `EXTAPI-427 <https://jira.onap.org/browse/EXTAPI-427>`_ - DMaap https port enable 
 
 Detail of NBI features are described in the readTheDoc documentation.
 
