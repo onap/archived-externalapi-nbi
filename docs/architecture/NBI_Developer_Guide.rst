@@ -11,8 +11,8 @@ NBI - Developer Guide
 Introduction
 ************
 
-NBI is a Java 8 web application built over Spring Framework.
-Using Spring Boot 1.5.10 dependencies, it runs as a standalone
+NBI is a Java 11 web application built over Spring Framework.
+Using Spring Boot 2.2.2 dependencies, it runs as a standalone
 application with an embedded Tomcat server.
 
 ************
