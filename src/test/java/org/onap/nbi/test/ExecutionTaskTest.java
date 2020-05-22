@@ -330,6 +330,115 @@ public class ExecutionTaskTest {
         assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
+    
+    // Macro Flow Execution Task
+    @Test
+    public void testMacroExecutionTaskSuccess() throws Exception {
+
+        ExecutionTask executionTaskA =
+            ServiceOrderExecutionTaskAssertions.setUpBddForMacroExecutionTaskSucess(
+                serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+    }
+    
+    // Macro Flow Execution Task with Object
+    @Test
+    public void testMacroExecutionTaskSuccessWithObject() throws Exception {
+
+        ExecutionTask executionTaskA =
+            ServiceOrderExecutionTaskAssertions.setUpBddForMacroExecutionTaskSucessWithObject(
+                serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+    
+    // Macro flow with complex object including arrays
+    @Test
+    public void testMacroExecutionTaskSuccessWithComplexObject() throws Exception {
+        // A Service Order with complex object including arrays
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+            .setUpBddForMacroExecutionTaskSucessWithComplexObject(serviceOrderRepository,
+                executionTaskRepository, ActionType.ADD);
+        ExecutionTask executionTaskB;
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
 
     @Test
     public void testExecutionTaskFailed() throws Exception {
