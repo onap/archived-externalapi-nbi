@@ -53,6 +53,7 @@ public class RequestParameters {
         this.userParams = userParams;
     }
 
+
     public boolean isaLaCarte() {
         return aLaCarte;
     }
@@ -80,6 +81,6 @@ public class RequestParameters {
     @Override
     public String toString() {
         return "RequestParameters{" + "subscriptionServiceType='" + subscriptionServiceType + '\'' + ", userParams="
-                + userParams + ", aLaCarte=" + aLaCarte + ", testApi='" + testApi + '\'' + '}';
+                + userParams + '\'' + ", aLaCarte=" + aLaCarte + ", testApi='" + testApi + '\'' + '}';
     }
 }

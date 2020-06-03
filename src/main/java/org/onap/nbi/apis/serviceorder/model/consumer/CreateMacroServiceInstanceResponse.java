@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2018 Orange
+ *     Copyright (c) 2020 TechMahindra
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,34 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
-public class UserParams {
+public class CreateMacroServiceInstanceResponse {
 
-    private String name;
+	private RequestReferences requestReferences;
 
-    private Object value;
+	public RequestReferences getRequestReferences() {
+		return requestReferences;
+	}
 
-    public UserParams(String name, Object value) {
-        this.name = name;
-        this.value = value;
-    }
+	public void setRequestReferences(RequestReferences requestReferences) {
+		this.requestReferences = requestReferences;
+	}
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
-    
+	@Override
+	public String toString() {
+		return "CreateMacroServiceInstanceResponse{" + "requestReferences=" + requestReferences + '}';
+	}
 }
