@@ -89,11 +89,6 @@ You should get::
         "version": "v4"
     }
 
-Play with Postman
------------------
-
-A full collection of requests is available in *docs/offeredapis/postman* for inspiration
-
 OOM Context
 -----------
 
@@ -139,12 +134,13 @@ Running an integration test with SO, SDC, DMAAP, AAI::
 
 **Understanding OOM deployment**
 
-NBI uses AAF init container to generate valid server certificate, signed by ONAP Root CA.
-This server certificate is used for TLS over HTTP.
+NBI uses AAF init container to generate valid server certificate, signed by
+ONAP Root CA. This server certificate is used for TLS over HTTP.
 
 Passing specific JAVA_OPTS to NBI SpringBoot java app will enable HTTPS.
 
-Here are some OOM related files which could help to understand how HTTPS is set up.
+Here are some OOM related files which could help to understand how HTTPS is
+set up.
 
 Search for JAVA_OPTS in
 https://github.com/onap/oom/blob/master/kubernetes/nbi/templates/deployment.yaml
