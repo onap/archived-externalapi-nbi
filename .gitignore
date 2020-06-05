@@ -21,7 +21,6 @@
 ### Restructured Text ###
 conf.py
 __*
-_static
 
 # KDE directory preferences
 .directory
