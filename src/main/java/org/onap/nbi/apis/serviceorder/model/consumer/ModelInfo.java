@@ -16,6 +16,10 @@
 
 package org.onap.nbi.apis.serviceorder.model.consumer;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class ModelInfo {
 
     private String modelType;

@@ -18,10 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.onap.nbi.apis.serviceorder.model.consumer.VFModelInfo;
 import org.onap.nbi.exceptions.TechnicalException;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -236,5 +239,144 @@ public class ToscaInfosProcessorTest {
             throw new TechnicalException("unable to build response " + ex.getMessage());
         }
         assertThat(response.get("serviceSpecCharacteristic")).isEqualTo(serviceSpecCharacteristic);
+    }
+
+    
+    @Test
+    public void testBuildAndSaveResponseWithSdcToscaParserWithVFModule() {
+
+	ClassLoader classLoader = getClass().getClassLoader();
+
+	// Adding Path to TOSCA File to provide as parameter
+	Path path = new File(classLoader.getResource("toscafile/service-VlbService-csar.csar").getFile()).toPath()
+			.toAbsolutePath();
+
+	// Preparing Response Data
+	LinkedHashMap<String, Object> response = new LinkedHashMap<>();
+	response.put("version", "1.0");
+	response.put("name", "VLB_Service");
+	response.put("description", "VLB_Service");
+	response.put("id", "82c9fbb4-656c-4973-8c7f-172b22b5fa8f");
+
+	// Resources
+	List<LinkedHashMap<String, Object>> resources = new ArrayList<>();
+	LinkedHashMap<String, Object> resource1 = new LinkedHashMap<>();
+	resource1.put("id", "35d7887d-3c35-4fb4-aed1-d15b4d9f4ccc");
+	resources.add(resource1);
+
+	// Resources to put in response as resourceSpecification
+	response.put("resourceSpecification", resources);
+
+	// Test Data for VFModule 1:: An object of vFModelInfo1
+	VFModelInfo vFModelInfo1 = new VFModelInfo();
+	vFModelInfo1.setModelName("VlbVsp..dnsscaling..module-1");
+	vFModelInfo1.setModelUuid("9bfd197c-7e18-41bd-927d-57102a6fda7e");
+	vFModelInfo1.setModelInvariantUuid("888b6342-8aea-4416-b485-e24726c1f964");
+	vFModelInfo1.setModelVersion("1");
+	vFModelInfo1.setModelCustomizationUuid("4c387136-2fa2-420f-94e9-3312f863a352");
+
+	// Test Data for VFModule 2:: An object of vFModelInfo2
+	VFModelInfo vFModelInfo2 = new VFModelInfo();
+	vFModelInfo2.setModelName("VlbVsp..base_vlb..module-0");
+	vFModelInfo2.setModelUuid("d0325d26-43f2-4c6f-aff5-2832ac2d8ab0");
+	vFModelInfo2.setModelInvariantUuid("bcbdfc80-4fb1-4c3e-b4e3-77721bac61db");
+	vFModelInfo2.setModelVersion("1");
+	vFModelInfo2.setModelCustomizationUuid("0895caa9-b7d3-4e02-9a3c-8337c4076948");
+
+	// Test data for list of vFModelInfo
+	List<VFModelInfo> vfModelInfoListTestData = new ArrayList<>();
+	vfModelInfoListTestData.add(vFModelInfo1);
+	vfModelInfoListTestData.add(vFModelInfo2);
+
+	// Calling buildAndSaveResponseWithSdcToscaParser with tosca file and prepared
+	// response as parameter
+	try {
+		toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
+	} catch (SdcToscaParserException e) {
+		throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
+				+ path.toString() + " " + e.getMessage());
+	}
+
+	// Getting resourceSpecifications from response
+	List<LinkedHashMap> resourceSpecifications = (List<LinkedHashMap>) response.get("resourceSpecification");
+
+	// Getting childResourceSpecifications from resourceSpecifications that we got
+	// from response
+	List childResourceSpecifications = (ArrayList<VFModelInfo>) (resourceSpecifications.get(0))
+			.get("childResourceSpecification");
+
+	// Asserting childResourceSpecifications with our vfModelInfoListTestData ::
+	// CSAR has two vfModules
+
+	for (int i = 0; i < vfModelInfoListTestData.size(); i++) {
+		assertThat(childResourceSpecifications.get(i)).hasFieldOrPropertyWithValue("modelName",
+				vfModelInfoListTestData.get(i).getModelName());
+		assertThat(childResourceSpecifications.get(i)).hasFieldOrPropertyWithValue("modelUuid",
+				vfModelInfoListTestData.get(i).getModelUuid());
+		assertThat(childResourceSpecifications.get(i)).hasFieldOrPropertyWithValue("modelInvariantUuid",
+				vfModelInfoListTestData.get(i).getModelInvariantUuid());
+		assertThat(childResourceSpecifications.get(i)).hasFieldOrPropertyWithValue("modelVersion",
+				vfModelInfoListTestData.get(i).getModelVersion());
+		assertThat(childResourceSpecifications.get(i)).hasFieldOrPropertyWithValue("modelCustomizationUuid",
+				vfModelInfoListTestData.get(i).getModelCustomizationUuid());
+	}
+
+    }
+
+    @Test
+    public void testBuildAndSaveResponseWithSdcToscaParserWithInstanceSpecification() {
+
+	ClassLoader classLoader = getClass().getClassLoader();
+
+	// Adding Path to TOSCA File to provide as parameter
+	Path path = new File(classLoader.getResource("toscafile/service-VlbService-csar.csar").getFile()).toPath()
+			.toAbsolutePath();
+
+	// Creating response to provide as parameter
+	LinkedHashMap response = new LinkedHashMap();
+	response.put("version", "1.0");
+	response.put("name", "VLB_Service");
+	response.put("description", "VLB_Service");
+	response.put("id", "82c9fbb4-656c-4973-8c7f-172b22b5fa8f");
+
+	// Resources
+	List<LinkedHashMap> resources = new ArrayList<>();
+	LinkedHashMap resource1 = new LinkedHashMap();
+	resource1.put("id", "35d7887d-3c35-4fb4-aed1-d15b4d9f4ccc");
+	resources.add(resource1);
+
+	// instanceSpecification Test Data
+	Map instanceSpecificationTestData = new LinkedHashMap<>();
+	instanceSpecificationTestData.put("cloud_env", "openstack");
+	instanceSpecificationTestData.put("demo_artifacts_version", "1.2.1");
+	instanceSpecificationTestData.put("install_script_version", "1.2.1");
+	instanceSpecificationTestData.put("onap_private_net_id", "09407156-5e6e-45a7-b4aa-6eeb7ad4aba9");
+	instanceSpecificationTestData.put("onap_private_subnet_id", "8c6df8fa-2735-49ad-ba04-24701d85ba79");
+	instanceSpecificationTestData.put("pub_key",
+			"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/EnxIi7fcHMEi9VPtCGCOpQYblj9r0M/CaD5U15Cb5qHzcHiPtJpVsDMlPGzN9VHxWZG6FqQv1s6oE+PmG1xeahhb+ofrY6s8zvlUCcWGIo/bPexzb2ErvkGyd+1tQo9oLrxNdUG0xeWUX3oFkiw3RBRyxf9n4E5ajZr4cEFQ0sqJkslj87XViw/h555ydIYTY5cPNmIlsIXTObC/2z3muVWYUzaaZE8omfYJE442+UhYLHgb7Cl1JMk/SNu/r+bLrsXeBSPB+/bxVKqjpd659AQ7GRNXvBrgfq6EKNiVjrI76AbpeTM2D/LXbENuUUkvJBWptSd0gPAGkEyc9w2n");
+	instanceSpecificationTestData.put("public_net_id",
+			"60dc8a1c-86b8-4cc4-b5c8-9b0272113c1f0f1c389d-e9db-4c14-b3a2-11dca2d104ed");
+
+	// Resources to put in response as resourceSpecification
+	response.put("resourceSpecification", resources);
+
+	// List<LinkedHashMap> vfModelInfoListTestData = new ArrayList();
+
+	try {
+		toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
+	} catch (SdcToscaParserException e) {
+		throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
+				+ path.toString() + " " + e.getMessage());
+	}
+
+	// Getting
+	List<LinkedHashMap> resourceSpecifications = (List<LinkedHashMap>) response.get("resourceSpecification");
+
+	Map instanceSpecification = (HashMap) (resourceSpecifications.get(0)).get("InstanceSpecification");
+
+	// Test against test data and returned response's data for instanceSpecification
+	// instanceSpecificationTestData = new HashMap();
+	assertThat(instanceSpecificationTestData).isEqualTo(instanceSpecification);
+
     }
 }

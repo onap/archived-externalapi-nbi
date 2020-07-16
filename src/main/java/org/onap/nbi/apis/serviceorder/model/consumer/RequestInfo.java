@@ -26,6 +26,8 @@ public class RequestInfo {
 
     private String requestorId;
 
+    private String productFamilyId;
+
     public String getInstanceName() {
         return instanceName;
     }
@@ -58,9 +60,18 @@ public class RequestInfo {
         this.requestorId = requestorId;
     }
 
+    public String getProductFamilyId() {
+        return productFamilyId;
+    }
+
+    public void setProductFamilyId(String productFamilyId) {
+        this.productFamilyId = productFamilyId;
+    }
+
     @Override
     public String toString() {
         return "RequestInfo{" + "instanceName='" + instanceName + '\'' + ", source='" + source + '\''
-                + ", suppressRollback=" + suppressRollback + ", requestorId='" + requestorId + '\'' + '}';
+                + ", suppressRollback=" + suppressRollback + ", requestorId='" + requestorId + '\'' 
+                + ", productFamilyId='" + productFamilyId + '\'' +'}';
     }
 }

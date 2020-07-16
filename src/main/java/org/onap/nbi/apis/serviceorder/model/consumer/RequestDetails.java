@@ -24,7 +24,7 @@ public class RequestDetails {
 
     private RequestInfo requestInfo;
 
-    private RequestParameters requestParameters;
+    private Object requestParameters;
 
     private CloudConfiguration cloudConfiguration;
 
@@ -80,11 +80,11 @@ public class RequestDetails {
         this.requestInfo = requestInfo;
     }
 
-    public RequestParameters getRequestParameters() {
+    public Object getRequestParameters() {
         return requestParameters;
     }
 
-    public void setRequestParameters(RequestParameters requestParameters) {
+    public void setRequestParameters(Object requestParameters) {
         this.requestParameters = requestParameters;
     }
 

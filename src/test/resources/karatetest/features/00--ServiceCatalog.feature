@@ -81,6 +81,25 @@ And match $ contains
 }
 """
 
+Scenario: testServiceCatalogGetServiceWithoutInstanceParamsAndVFModules
+Given path 'serviceSpecification','82c9fbb4-656c-4973-8c7f-172b22b5fa8f'
+When method get
+Then status 200
+And match $.resourceSpecification contains
+"""
+[{
+	"id": "35d7887d-3c35-4fb4-aed1-d15b4d9f4ccc",
+	"version": "1.0",
+	"name": "vLB_VSP",
+	"resourceInstanceName": "vLB_VSP 0",
+	"modelCustomizationName": "vLB_VSP 0",
+	"resourceInvariantUUID": "368371e6-1d2f-4f4a-b992-a9053c7c2f1e",
+	"resourceType": "VF",
+	"@type": "ONAPresource",
+	"modelCustomizationId": "86dcf0b6-5f76-4444-8392-23ca325fd1d9"
+}]
+"""
+
 
 Scenario: findServiceCatalog
 Given path 'serviceSpecification'

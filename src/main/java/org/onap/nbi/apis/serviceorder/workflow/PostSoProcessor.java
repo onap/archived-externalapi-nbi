@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.onap.nbi.apis.servicecatalog.ServiceSpecificationService;
 import org.onap.nbi.apis.serviceorder.SoClient;
 import org.onap.nbi.apis.serviceorder.model.ServiceCharacteristic;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
@@ -27,6 +29,7 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.consumer.CloudConfiguration;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateE2EServiceInstanceResponse;
+import org.onap.nbi.apis.serviceorder.model.consumer.CreateMacroServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.MSOE2EPayload;
 import org.onap.nbi.apis.serviceorder.model.consumer.MSOPayload;
@@ -41,6 +44,7 @@ import org.onap.nbi.apis.serviceorder.model.consumer.ResourceModel;
 import org.onap.nbi.apis.serviceorder.model.consumer.ServiceModel;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.apis.serviceorder.model.consumer.UserParams;
+import org.onap.nbi.apis.serviceorder.model.consumer.VFModelInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ServiceOrderInfo;
 import org.onap.nbi.apis.serviceorder.service.ServiceOrderService;
 import org.slf4j.Logger;
@@ -77,12 +81,24 @@ public class PostSoProcessor {
 
     @Value("${onap.cloudOwner}")
     private String cloudOwner;
+    
+    @Value("${onap.k8sCloudOwner}")
+	private String k8sCloudOwner;
+
+	@Value("${onap.k8sCloudRegionId}")
+	private String k8sCloudRegionId;
+
+	@Value("${k8s-rb-profile-name}")
+	private String k8sRbProfileName;
 
     @Autowired
     private ServiceOrderService serviceOrderService;
 
     @Autowired
     private SoClient soClient;
+    
+    @Autowired
+    ServiceSpecificationService serviceSpecificationService;
 
     public ResponseEntity<CreateServiceInstanceResponse> postServiceOrderItem(ServiceOrderInfo serviceOrderInfo,
             ServiceOrderItem serviceOrderItem) {
@@ -108,6 +124,19 @@ public class PostSoProcessor {
         return response;
     }
 
+    public ResponseEntity<CreateMacroServiceInstanceResponse> postMacroServiceOrderItem(ServiceOrderInfo serviceOrderInfo,
+            ServiceOrderItem serviceOrderItem) {
+        ResponseEntity<CreateMacroServiceInstanceResponse> response = null;
+        try {
+            // For Macro Flow
+            response = postSOMacroRequest(serviceOrderItem, serviceOrderInfo);
+        } catch (NullPointerException e) {
+            LOGGER.error("Unable to create service instance for serviceOrderItem.id=" + serviceOrderItem.getId(), e);
+            response = null;
+        }
+        return response;
+    }
+    
     private ResponseEntity<CreateServiceInstanceResponse> postSORequest(ServiceOrderItem serviceOrderItem,
             ServiceOrderInfo serviceOrderInfo) {
         RequestDetails requestDetails = buildSoRequest(serviceOrderItem, serviceOrderInfo);
@@ -164,6 +193,221 @@ public class PostSoProcessor {
         }
         return response;
     }
+    
+    private ResponseEntity<CreateMacroServiceInstanceResponse> postSOMacroRequest(ServiceOrderItem serviceOrderItem,
+                            ServiceOrderInfo serviceOrderInfo) {
+      
+      String serviceModuleName = (String) serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId())
+            .getCatalogResponse().get("name");
+
+      RequestDetails requestDetails = buildSoMacroRequest(serviceOrderItem, serviceOrderInfo);
+      MSOPayload msoMacroPayload = new MSOPayload(requestDetails);
+      ResponseEntity<CreateMacroServiceInstanceResponse> response = null;
+
+      switch (serviceOrderItem.getAction()) {
+        case ADD:
+          response = soClient.callMacroCreateServiceInstance(msoMacroPayload);
+          break;
+        case DELETE:
+          // response = soClient.callDeleteServiceInstance(msoPayload,
+          // serviceOrderItem.getService().getId());
+          break;
+        case MODIFY:
+          if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
+            // response = soClient.callCreateServiceInstance(msoPayload);
+          }
+          if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+            // response = soClient.callDeleteServiceInstance(msoPayload,
+            // serviceOrderItem.getService().getId());
+          }
+          break;
+        default:
+          break;
+      }
+      return response;
+    }
+    
+    /**
+     * Build SO MACRO CREATE request from the ServiceOrder and catalog informations from SDC
+     *
+     * @param orderItem
+     * @param serviceOrderInfo
+     * @param subscriberInfo
+     * @return
+     */
+    private RequestDetails buildSoMacroRequest(ServiceOrderItem orderItem, ServiceOrderInfo serviceOrderInfo) {
+      
+    	RequestDetails requestDetails = new RequestDetails();
+		Map<String, Object> sdcInfos = serviceOrderInfo.getServiceOrderItemInfos().get(orderItem.getId())
+				.getCatalogResponse();
+
+		String id = orderItem.getService().getServiceSpecification().getId();
+		Map responseChildRes = serviceSpecificationService.get(id);
+		ArrayList<Map<String, Object>> resourseSpecificationArray = (ArrayList<Map<String, Object>>) responseChildRes
+				.get("resourceSpecification");
+
+		Map<String, Object> resourseSpecificationMap = resourseSpecificationArray.get(0);
+
+		Map instanceSpecification = (Map) resourseSpecificationMap.get("InstanceSpecification");
+		ArrayList<VFModelInfo> childResourceSpecification = (ArrayList<VFModelInfo>) resourseSpecificationMap
+				.get("childResourceSpecification");
+
+		List<Object> serviceObject = new ArrayList<>();
+
+		ArrayList<Object> vnfInstanceParam = new ArrayList<>();
+
+		//Differentiating vnf with cnf(Can be discussed and improved)
+		if (instanceSpecification.get("public_net_id") != null) {
+			vnfInstanceParam.add(instanceSpecification);
+		} else {
+			Map<String, Object> instanceParam = new HashMap<>();
+			instanceParam.put("k8s-rb-profile-name", k8sRbProfileName);
+			vnfInstanceParam.add(instanceParam);
+		}
+
+		List resSpec = (ArrayList) sdcInfos.get("resourceSpecification");
+		Map resSpecMap = (Map) resSpec.get(0);
+
+		Map<String, String> vnfInfoObject = new HashMap<>();
+		vnfInfoObject.put("modelName", (String) resSpecMap.get("name"));
+		vnfInfoObject.put("modelVersionId", (String) resSpecMap.get("id"));
+		vnfInfoObject.put("modelInvariantUuid", (String) resSpecMap.get("resourceInvariantUUID"));
+		vnfInfoObject.put("modelVersion", (String) resSpecMap.get("version"));
+		vnfInfoObject.put("modelCustomizationId", (String) resSpecMap.get("modelCustomizationId"));
+		vnfInfoObject.put("modelInstanceName", (String) resSpecMap.get("resourceInstanceName"));
+
+		//initialization
+		CloudConfiguration cloudConfiguration = null;
+
+		//Differentiating vnf with cnf(Can be discussed and improved)
+		if (instanceSpecification.get("public_net_id") != null) {
+			cloudConfiguration = new CloudConfiguration(lcpCloudRegionId, tenantId, cloudOwner);
+		} else {
+			cloudConfiguration = new CloudConfiguration(k8sCloudRegionId, tenantId, k8sCloudOwner);
+		}
+
+		Map<String, String> platformName = new HashMap<>();
+		platformName.put("platformName", "test");
+
+		Map<String, String> lob = new HashMap<>();
+		lob.put("lineOfBusinessName", "LOB-Demonstration");
+
+		Map<String, Object> vnfModel = new HashMap<>();
+		vnfModel.put("modelInfo", vnfInfoObject);
+		vnfModel.put("cloudConfiguration", cloudConfiguration);
+		vnfModel.put("platform", platformName);
+		vnfModel.put("lineOfBusiness", lob);
+		vnfModel.put("productFamilyId", "a9a77d5a-123e-4ca2-9eb9-0b015d2ee0fb");
+		vnfModel.put("instanceName", (String) resSpecMap.get("resourceInstanceName"));
+		vnfModel.put("instanceParams", vnfInstanceParam);
+
+		List<Object> vfModulesObjects = new ArrayList<>();
+		ArrayList<Map<String, Object>> vfInstanceParam = new ArrayList<>();
+
+		//Differentiate CNF from VNF
+		if (instanceSpecification.get("public_net_id") != null) {
+			vfInstanceParam.add(instanceSpecification);
+			
+		} else {
+			Map<String, Object> instanceParam = new HashMap<>();
+			instanceParam.put("k8s-rb-profile-name", k8sRbProfileName);
+			vfInstanceParam.add(instanceParam);
+		}
+		
+		for (VFModelInfo crsObject : childResourceSpecification) {
+			Map<String, Object> vfModuleObject = new HashMap<>();
+			Map<String, String> vfModuleInfo = new HashMap<>();
+
+			vfModuleInfo.put("modelName", crsObject.getModelName());
+			vfModuleInfo.put("modelVersionId", crsObject.getModelUuid());
+			vfModuleInfo.put("modelInvariantUuid", crsObject.getModelInvariantUuid());
+			vfModuleInfo.put("modelVersion", crsObject.getModelVersion());
+			vfModuleInfo.put("modelCustomizationId", crsObject.getModelCustomizationUuid());
+			vfModuleObject.put("modelInfo", vfModuleInfo);
+			vfModuleObject.put("instanceName", crsObject.getModelName());
+			vfModuleObject.put("instanceParams", vfInstanceParam);
+
+			vfModulesObjects.add(vfModuleObject);
+		}
+		vnfModel.put("vfModules", vfModulesObjects);
+
+		List<Object> vnfObjects = new ArrayList<>();
+		vnfObjects.add(vnfModel);
+
+		Map<String, Object> vnfData = new HashMap<>();
+		vnfData.put("vnfs", vnfObjects);
+
+		ModelInfo serviceModelInfo = new ModelInfo();
+		serviceModelInfo.setModelType("service");
+		serviceModelInfo.setModelInvariantId((String) sdcInfos.get("invariantUUID"));
+		serviceModelInfo.setModelVersionId(orderItem.getService().getServiceSpecification().getId());
+		serviceModelInfo.setModelName((String) sdcInfos.get("name"));
+		serviceModelInfo.setModelVersion((String) sdcInfos.get("version"));
+
+		// Adding List of instanceParams for service
+		// We can add instanceParams Key Value in Map Object and add it to the List, for
+		// For now it is empty to comply with so request
+
+		List<Map<String, String>> listOfServiceLevelInstanceParams = new ArrayList<>();
+		Map<String, String> serviceInstanceParams= new HashMap<>();
+		listOfServiceLevelInstanceParams.add(serviceInstanceParams);
+		
+		Map<String, Object> serviceData = new HashMap<>();
+		serviceData.put("instanceParams", listOfServiceLevelInstanceParams);
+		serviceData.put("instanceName", orderItem.getService().getName());
+		serviceData.put("resources", vnfData);
+		serviceData.put("modelInfo", serviceModelInfo);
+
+		Map<String, String> homingObject = new HashMap<>();
+		homingObject.put("Homing_Solution", "none");
+		serviceObject.add(homingObject);
+
+		Map<String, Object> serviceObject1 = new HashMap<>();
+		serviceObject1.put("service", serviceData);
+		serviceObject.add(serviceObject1);
+		requestDetails.setSubscriberInfo(serviceOrderInfo.getSubscriberInfo());
+
+		ModelInfo modelInfo = new ModelInfo();
+		modelInfo.setModelType("service");
+		modelInfo.setModelInvariantId((String) sdcInfos.get("invariantUUID"));
+		modelInfo.setModelVersionId(orderItem.getService().getServiceSpecification().getId());
+		modelInfo.setModelName((String) sdcInfos.get("name"));
+		modelInfo.setModelVersion((String) sdcInfos.get("version"));
+		requestDetails.setModelInfo(modelInfo);
+
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setInstanceName(orderItem.getService().getName());
+		requestInfo.setSource("VID");
+		requestInfo.setSuppressRollback(false);
+		requestInfo.setRequestorId("NBI");
+		requestInfo.setProductFamilyId("a9a77d5a-123e-4ca2-9eb9-0b015d2ee0fb");
+		requestDetails.setRequestInfo(requestInfo);
+
+		// We are taking RequestParameters as map because it has UserParams which gives value as
+		// "name" : "service"
+		// "value" : "", which SO is not accepting
+		Map<String, Object> requestParameters = new HashMap<>();
+
+		// Get value from serviceOrder request or generate one
+		String serviceTypeFromJson = orderItem.getService().getServicetype();
+		requestParameters.put("subscriptionServiceType",
+				serviceTypeFromJson != null ? serviceTypeFromJson : (String) sdcInfos.get("name"));
+		requestParameters.put("userParams", serviceObject);
+		requestParameters.put("aLaCarte", false);
+		requestDetails.setRequestParameters(requestParameters);
+		requestDetails.setCloudConfiguration(cloudConfiguration);
+
+		OwningEntity owningEntity = new OwningEntity();
+		owningEntity.setOwningEntityId(soOwningEntityId);
+		owningEntity.setOwningEntityName(soOwningEntityName);
+		requestDetails.setOwningEntity(owningEntity);
+
+		Project project = new Project();
+		project.setProjectName(soProjectName);
+
+		requestDetails.setProject(project);
+        return requestDetails;
+	}
 
     /**
      * Build SO CREATE request from the ServiceOrder and catalog informations from SDC
@@ -262,7 +506,7 @@ public class PostSoProcessor {
         if (!userParams.isEmpty()) {
             Map<String, String> requestInputs = new HashMap<String, String>();
             for (int i = 0; i < userParams.size(); i++) {
-                requestInputs.put(userParams.get(i).getName(), userParams.get(i).getValue());
+                requestInputs.put(userParams.get(i).getName(), (String) userParams.get(i).getValue());
             }
 
             parameters.setRequestInputs(requestInputs);

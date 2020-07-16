@@ -16,12 +16,22 @@ package org.onap.nbi.apis.servicecatalog;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.onap.nbi.apis.serviceorder.model.consumer.VFModelInfo;
+import org.onap.sdc.tosca.parser.api.IEntityDetails;
 import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.onap.sdc.tosca.parser.elements.queries.EntityQuery;
+import org.onap.sdc.tosca.parser.elements.queries.TopologyTemplateQuery;
+import org.onap.sdc.tosca.parser.enums.SdcTypes;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
+import org.onap.sdc.tosca.parser.impl.SdcPropertyNames;
 import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
 import org.onap.sdc.toscaparser.api.elements.Metadata;
@@ -46,6 +56,10 @@ public class ToscaInfosProcessor {
 
     @Autowired
     private ServiceSpecificationDBManager serviceSpecificationDBManager;
+
+    private Set<String> vnfInstanceParams = new HashSet<String>(Arrays.asList("onap_private_net_id",
+        "onap_private_subnet_id", "pub_key", "sec_group", "install_script_version", "demo_artifacts_version",
+        "cloud_env", "public_net_id", "aic-cloud-region", "image_name", "flavor_name"));
 
     final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
 
@@ -114,80 +128,147 @@ public class ToscaInfosProcessor {
     }
 
     public void buildAndSaveResponseWithSdcToscaParser(Path path, Map serviceCatalogResponse)
-            throws SdcToscaParserException {
+			throws SdcToscaParserException {
 
-        SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
-        ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(), false);
-        List<Input> inputs = sdcCsarHelper.getServiceInputs();
+		SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
+		ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(path.toFile().getAbsolutePath(), false);
+		List<Input> inputs = sdcCsarHelper.getServiceInputs();
 
-        Map<String, Model> definitions = new HashMap<String, Model>();
-        Model model = new ModelImpl();
+		List<IEntityDetails> vfEntityList = sdcCsarHelper.getEntity(EntityQuery.newBuilder(SdcTypes.VF).build(),
+				TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE).build(), false);
 
-        if (inputs != null && inputs.size() > 0) {
-            for (Input input : inputs) {
-                Property property = null;
-                if (input.getType().equals("list") || input.getType().equals("map"))
-                    property = PropertyBuilder.build("array", null, null);
-                else
-                    property = PropertyBuilder.build(input.getType(), null, null);
+		Map<String, String> listOfInstanceParameters = new HashMap<>();
+		if (!vfEntityList.isEmpty()) {
 
-                property.setDescription(input.getDescription());
-                property.setRequired(input.isRequired());
+			IEntityDetails iEntityDetails = vfEntityList.get(0);
+			Map<String, org.onap.sdc.toscaparser.api.Property> groupProperties = iEntityDetails.getProperties();
 
-                if (input.getDefault() != null) {
-                    property.setDefault(input.getDefault().toString());
-                }
-                ((ModelImpl) model).addProperty(input.getName(), property);
-            }
-            definitions.put("ServiceCharacteristics", model);
+			for (String key : groupProperties.keySet()) {
+				org.onap.sdc.toscaparser.api.Property property = groupProperties.get(key);
+				String paramName = property.getName();
+				if (paramName != null) {
+					if (vnfInstanceParams.stream()
+							.filter(vnfInstanceParam -> vnfInstanceParam.equalsIgnoreCase(paramName)).findFirst()
+							.isPresent()) {
+						listOfInstanceParameters.put(paramName, property.getValue().toString());
+					}
+				}
+			}
 
-        }
+		}
 
-        String svcCharacteristicsJson = Json.pretty(definitions);
-        serviceSpecificationDBManager.saveSpecificationInputSchema(svcCharacteristicsJson, serviceCatalogResponse);
+		// it will build Entity as VfModules
+		List<IEntityDetails> vfModuleEntityList = sdcCsarHelper.getEntity(
+				EntityQuery.newBuilder("org.openecomp.groups.VfModule").build(),
+				TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE)
+						.customizationUUID(SdcPropertyNames.PROPERTY_NAME_CUSTOMIZATIONUUID).build(),
+				false);
+		List<VFModelInfo> listOfVfModelInfo = new ArrayList<>();
 
-        Metadata serviceMetadata = sdcCsarHelper.getServiceMetadata();
-        String instantationType = serviceMetadata.getValue("instantiationType");
-        serviceCatalogResponse.put("instantiationType", instantationType);
+		if (!vfModuleEntityList.isEmpty()) {
+			// Fetching vfModule metadata in a loop
+			for (IEntityDetails vfModuleEntity : vfModuleEntityList) {
+				VFModelInfo vfModel = new VFModelInfo();
+				Metadata vfMetadata = vfModuleEntity.getMetadata();
+				// Preparing VFModel
+				vfModel.setModelInvariantUuid(
+						testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID)));
+				vfModel.setModelName(testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELNAME)));
+				vfModel.setModelUuid(testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELUUID)));
+				vfModel.setModelVersion(
+						testNull(vfMetadata.getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELVERSION)));
+				vfModel.setModelCustomizationUuid(testNull(vfMetadata.getValue("vfModuleModelCustomizationUUID")));
 
-        LinkedHashMap inputSchemaRef = new LinkedHashMap();
-        // use object to match examples in Specifications
-        inputSchemaRef.put("valueType", "object");
-        inputSchemaRef.put("@schemaLocation",
-                "/serviceSpecification/" + serviceCatalogResponse.get("id") + "/specificationInputSchema");
-        inputSchemaRef.put("@type", serviceCatalogResponse.get("name") + "_ServiceCharacteristic");
+				// Adding it to the list
+				listOfVfModelInfo.add(vfModel);
+			}
+		}
 
-        LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
-        serviceSpecCharacteristic.put("name", serviceCatalogResponse.get("name") + "_ServiceCharacteristics");
-        serviceSpecCharacteristic.put("description",
-                "This object describes all the inputs needed from the client to interact with the "
-                        + serviceCatalogResponse.get("name") + " Service Topology");
-        serviceSpecCharacteristic.put("valueType", "object");
-        serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
-        serviceSpecCharacteristic.put("@schemaLocation", "null");
-        serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", inputSchemaRef);
+		Map<String, Model> definitions = new HashMap<String, Model>();
+		Model model = new ModelImpl();
 
-        serviceCatalogResponse.put("serviceSpecCharacteristic", serviceSpecCharacteristic);
+		if (!inputs.isEmpty() && inputs.size() > 0) {
+			for (Input input : inputs) {
+				Property property = null;
+				if (input.getType().equals("list") || input.getType().equals("map"))
+					property = PropertyBuilder.build("array", null, null);
+				else
+					property = PropertyBuilder.build(input.getType(), null, null);
 
-        List<NodeTemplate> nodeTemplates = sdcCsarHelper.getServiceNodeTemplates();
-        List<LinkedHashMap> resourceSpecifications =
-                (List<LinkedHashMap>) serviceCatalogResponse.get("resourceSpecification");
-        for (LinkedHashMap resourceSpecification : resourceSpecifications) {
-            if (resourceSpecification.get("id") != null) {
-                String id = (String) resourceSpecification.get("id");
-                LOGGER.debug("get tosca infos for service id: {}", id);
-                NodeTemplate nodeTemplate = null;
-                for (NodeTemplate node : nodeTemplates) {
-                    if (node.getMetaData().getValue("UUID").equals(id)) {
-                        nodeTemplate = node;
-                        break;
-                    }
-                }
-                if (nodeTemplate == null)
-                    continue;
-                resourceSpecification.put("modelCustomizationId",
-                        sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
-            }
+				property.setDescription(input.getDescription());
+				property.setRequired(input.isRequired());
+
+				if (input.getDefault() != null) {
+					property.setDefault(input.getDefault().toString());
+				}
+				((ModelImpl) model).addProperty(input.getName(), property);
+			}
+			definitions.put("ServiceCharacteristics", model);
+
+		}
+
+		String svcCharacteristicsJson = Json.pretty(definitions);
+		serviceSpecificationDBManager.saveSpecificationInputSchema(svcCharacteristicsJson, serviceCatalogResponse);
+
+		Metadata serviceMetadata = sdcCsarHelper.getServiceMetadata();
+		String instantationType = serviceMetadata.getValue("instantiationType");
+		serviceCatalogResponse.put("instantiationType", instantationType);
+
+		LinkedHashMap inputSchemaRef = new LinkedHashMap();
+		// use object to match examples in Specifications
+		inputSchemaRef.put("valueType", "object");
+		inputSchemaRef.put("@schemaLocation",
+				"/serviceSpecification/" + serviceCatalogResponse.get("id") + "/specificationInputSchema");
+		inputSchemaRef.put("@type", serviceCatalogResponse.get("name") + "_ServiceCharacteristic");
+
+		LinkedHashMap serviceSpecCharacteristic = new LinkedHashMap();
+		serviceSpecCharacteristic.put("name", serviceCatalogResponse.get("name") + "_ServiceCharacteristics");
+		serviceSpecCharacteristic.put("description",
+				"This object describes all the inputs needed from the client to interact with the "
+						+ serviceCatalogResponse.get("name") + " Service Topology");
+		serviceSpecCharacteristic.put("valueType", "object");
+		serviceSpecCharacteristic.put("@type", "ONAPServiceCharacteristic");
+		serviceSpecCharacteristic.put("@schemaLocation", "null");
+		serviceSpecCharacteristic.put("serviceSpecCharacteristicValue", inputSchemaRef);
+
+		serviceCatalogResponse.put("serviceSpecCharacteristic", serviceSpecCharacteristic);
+
+		List<NodeTemplate> nodeTemplates = sdcCsarHelper.getServiceNodeTemplates();
+		List<LinkedHashMap> resourceSpecifications = (List<LinkedHashMap>) serviceCatalogResponse
+				.get("resourceSpecification");
+		for (LinkedHashMap resourceSpecification : resourceSpecifications) {
+			if (resourceSpecification.get("id") != null) {
+				String id = (String) resourceSpecification.get("id");
+				LOGGER.debug("get tosca infos for service id: {}", id);
+				NodeTemplate nodeTemplate = null;
+				for (NodeTemplate node : nodeTemplates) {
+					if (node.getMetaData().getValue("UUID").equals(id)) {
+						nodeTemplate = node;
+						break;
+					}
+				}
+				if (nodeTemplate == null)
+					continue;
+				resourceSpecification.put("modelCustomizationId",
+						sdcCsarHelper.getNodeTemplateCustomizationUuid(nodeTemplate));
+				if (!vfModuleEntityList.isEmpty()) {
+					resourceSpecification.put("childResourceSpecification", listOfVfModelInfo);
+				}
+				resourceSpecification.put("InstanceSpecification", listOfInstanceParameters);
+
+			}
+		}
+	}
+
+    private static String testNull(Object object) {
+        if (object == null) {
+          return "NULL";
+        } else if (object instanceof Integer) {
+          return object.toString();
+        } else if (object instanceof String) {
+          return (String) object;
+        } else {
+          return "Type not recognized";
         }
     }
 

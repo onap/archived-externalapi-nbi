@@ -16,6 +16,7 @@
 
 package org.onap.nbi.apis.servicecatalog;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,16 @@ public class ServiceSpecificationResource extends ResourceManagement {
     public ResponseEntity<Object> getServiceSpecification(@PathVariable String serviceSpecId,
             @RequestParam MultiValueMap<String, String> params) {
         Map response = serviceSpecificationService.get(serviceSpecId);
+
+        if (response != null) {
+           ArrayList<Map<String, Object>> resourseSpecificationMap= (ArrayList<Map<String, Object>>) response.get("resourceSpecification");
+           for (Map<String, Object> map : resourseSpecificationMap) {
+               map.remove("childResourceSpecification");
+               map.remove("InstanceSpecification");
+           }
+           response.put("resourceSpecification", resourseSpecificationMap);
+        }
+
         JsonRepresentation filter = new JsonRepresentation(params);
         if (response.get("serviceSpecCharacteristic") != null) {
             return this.getResponse(response, filter);
