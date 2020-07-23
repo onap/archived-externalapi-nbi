@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0784531a_ca8abab3",
+        "filename": "src/main/java/org/onap/nbi/apis/serviceorder/workflow/PostSoProcessor.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1823
+      },
+      "writtenOn": "2020-07-23T08:03:04Z",
+      "side": 1,
+      "message": "Does this productFamily relate to some pre-provisioned ID?",
+      "range": {
+        "startLine": 272,
+        "startChar": 5,
+        "endLine": 272,
+        "endChar": 78
+      },
+      "revId": "dbcc0cb932904e5766475ad8c2c7bec326d2080b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9d96942_2804845c",
+        "filename": "src/main/java/org/onap/nbi/apis/serviceorder/workflow/PostSoProcessor.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1823
+      },
+      "writtenOn": "2020-07-23T08:03:04Z",
+      "side": 1,
+      "message": "Should this be NBI?",
+      "range": {
+        "startLine": 339,
+        "startChar": 6,
+        "endLine": 339,
+        "endChar": 35
+      },
+      "revId": "dbcc0cb932904e5766475ad8c2c7bec326d2080b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd19495e_e19488b0",
+        "filename": "src/main/java/org/onap/nbi/apis/serviceorder/workflow/PostSoProcessor.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1823
+      },
+      "writtenOn": "2020-07-23T08:03:04Z",
+      "side": 1,
+      "message": "what is the source of this ID",
+      "range": {
+        "startLine": 342,
+        "startChar": 6,
+        "endLine": 342,
+        "endChar": 77
+      },
+      "revId": "dbcc0cb932904e5766475ad8c2c7bec326d2080b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "322698cd_6336226c",
+        "filename": "src/main/resources/application-test.properties",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1823
+      },
+      "writtenOn": "2020-07-23T08:03:04Z",
+      "side": 1,
+      "message": "Did you need to change the default for macro services, why?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 41
+      },
+      "revId": "dbcc0cb932904e5766475ad8c2c7bec326d2080b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
