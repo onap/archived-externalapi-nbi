@@ -1,0 +1,5 @@
+---
+distribution_type: 'maven'
+version: '7.0.0'
+project: 'externalapi-nbi'
+log_dir: 'externalapi-nbi-maven-stage-master/430/'
