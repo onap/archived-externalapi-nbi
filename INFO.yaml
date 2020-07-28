@@ -44,7 +44,7 @@ meetings:
       repeats: 'weekly'
       time: '14:00 UTC'
 repositories:
-    - 'externalapi-nbi'
+    - 'externalapi/nbi'
 committers:
     - <<: *onap_releng_ptl
     - name: 'Andy Mayer'
@@ -52,16 +52,6 @@ committers:
       id: 'ajmayer'
       company: 'ATT'
       timezone: 'America/New_York'
-    - name: 'Raluca Sirbu'
-      email: 'rs2184@att.com'
-      id: ''
-      company: 'ATT'
-      timezone: 'America/New_York'
-    - name: 'Mark Gibson'
-      email: 'markgi@amdocs.com'
-      id: ''
-      company: 'Amdocs'
-      timezone: 'Europe/London'
     - name: 'Eric Debeau'
       email: 'eric.debeau@orange.com'
       id: 'eric.debeau'
