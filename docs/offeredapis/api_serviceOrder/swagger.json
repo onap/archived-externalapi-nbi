@@ -312,6 +312,14 @@
         "ServiceOrderItemStateChangeNotification"
       ]
     },
+	"ServiceState": {
+	  "description": "The lifecycle state of the service requested - Required for E2E service activation and deactivation with ServiceOrderItem.action as 'modify'.For any other service modification request,service state value should not be passed.Lifecycle is not fully managed in Guilin release",
+	  "type": "string",
+	  "enum": [
+		"active",
+		"inactive"
+	  ]
+	},
     "SeverityMessage": {
       "description": "Message Severity, either information or error",
       "type": "string",
@@ -498,8 +506,7 @@
           "type": "string"
         },
         "serviceState": {
-          "description": "The lifecycle state of the service requested;\nNot managed in Beijing release.",
-          "type": "string"
+          "$ref": "#/definitions/ServiceState"
         },
         "@type": {
           "description": "To define the service type\nNot managed in Beijing Release",
