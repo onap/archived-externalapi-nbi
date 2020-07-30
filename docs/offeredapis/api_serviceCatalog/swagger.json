@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "# About the ONAP Service Catalog API\n The Service Catalog API is based on a subset of the TM Forum 633 Service Catalog Management API.\n## API Overview\n### General Description \nThis Service Catalog API is used to retrieve the Service Specifications that ONAP supports. As Services are designed and distributed in ONAP SDC, the Service Catalog API allows external systems such as the Business Support Systems (BSS) to discover these Services\n\nThe Service Design Center (SDC) of ONAP allows for the creation of Services that can be orchestrated by ONAP. ONAP SDC provides the tools to design the Services composition and topology, which is then represented in TOSCA. This Service Catalog API allows a REST API JSON representation of the Service, including the required attributes needed for Service Instantiation of this Service Topology.\n### Relationship and Dependencies\n This Service Catalog API is related to the TM Forum 633 Service Catalog Management API and also to MEF LSO LEGATO Service Catalog API.\n\nThis API takes a subset of the Service Catalog Management API, namely the ServiceSpecification resource, and maps this standard resource to the ONAP SDC Service Templates/Topology. By doing this we allow a well known, standardized JSON REST representation of the Service Templates available in ONAP to be potentially ordered via Service Orders. \n\n### API Structure and Approach\nThe Service Catalog API can be used to get the details of a specific ONAP Service Template, or can be used to search/list the Service Templates that are available. \n## Getting Started with the API (Hello World)\nThe Service Catalog API is available via two schemes, http and https. For interacting with the API the simplest method is via http. To interact with the this API via https, your Client would be required to load the neccessary https certificate. \n\nThe default installation of ONAP via OOM, will configure the use of two Node ports for External APIs. NodePorts are used to allow client applications, that run outside of Kubernetes, access to ONAP components deployed by OOM. For this Service Catalog API, the External API Framework has a http Node port of 30274. For https, the Node port is 30292.\n\n From outside ONAP, a client can interact with External API by first getting the IP that the NBI docker container is running on, and then using the appropriate nodeport according to the access scheme. For example to access this Service Catalog API to retrieve a list of all Service Specifications available in ONAP you can use http method GET to http://{nbi_ip}:30274/nbi/api/v4/serviceSpecification/ \n### SDK quick intro\nThere are many tools that can be used to view and edit this swagger file like swagger editor, Atom and senya. For example this swagger file can be loaded into https://editor.swagger.io/. This UI acts both as an online editor and viewer. \n### How to start the client side implementation\n* Code generation, is available via the Generate Client option in the swagger editor. Client stubs can be generated in multiple languages, for example java, go, python etc. These Client stub code can be incorporated in the Application you wish to access the Service Catalog API from.\n\n### How to start the server side implementation\n* Not applicable, the service side for this API will be the NBI container running the External API Framework Springboot application.\n\n## API Description\nIncludes summary of information drawn from API definitions in OpenAPI / Swagger files\n### Resource Endpoint / Resource Quick Reference\nGET /serviceSpecification/ : This operation returns a list service specifications from a catalog\n\nGET /serviceSpecification/{id} : This operation returns the service specifications from a catalog associated with this id. Note the id maps to the uuid of the SDC Service Template in the SDC catalog\n\nGET /serviceSpecification/{id}/specificationInputSchema : This operation returns a service specification Input schema by its id from a catalog. Note again the id corresponds to the uuid of the Service Template in SDC.\n\n### Data Schema\n#### Main API Entities\nDescribe the major entities used in the API\n\nThe main entity of the API is the ServiceSpecification resource. This entity is the top level entity of the API, and is returned as either a single instance when queried with id, or as JSON arroy of ServiceSpecification entities when queried as a list.\n\nThe major child enties are relatedParty which points to the designer of the Template in SDC. The resourceSpecification which point to child resources for the Service Template. The serviceSpecCharacteristics entities are used to describe the attributes that can be supplied to instantiate a Service Instance of this Service Template.\n#### Payload data structures\nIf any, describe the appropriate data structures that are included within payload of the API.\n\nNot applicable\n### Security on the API\nAuthentication; Authorization; Credentials/access token; etc.\n\n https certificate required if using https. No authentication on http requests.In production this API should be behind an API Gateway with the necessary authentication\n### Response Codes\nThe meaning of Status Codes & Errors\n\nSee response codes for each API resource in the API section below\n### Rate Limits and Thresholds\nRequests per unit time allowed; Pagination\n\n No rate limits or thresholds, in production this API should be behind an API Gateway with the necessary limits.\n### Validation constraints\nDescribe any behavioral and structural validation constraints\n\nNot applicable\n### Assumptions\nFor example, any Pre/Post conditions\n\n For this API to function and return Service Specifications, SDC is required to be running and Service models designed in the SDC catalog\n## API Interactions and Flows\n### Interaction Examples\nIllustrate sequence of client calls to this API, possibly based on Use Cases, presented with diagrams, tables, etc\n\nThe Service Catalog API flow of use can generally follow the sequence below\n\n\n#### Call ONAP to discover what available services it can offer\n\n```\ncurl -X GET \"http://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/serviceSpecification/\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n[\n  {\r\n        \"id\": \"0ec83a1f-51e7-44e7-b773-3f37ddb937cd\",\r\n        \"name\": \"EPLServiceTemplate\",\r\n        \"invariantUUID\": \"ddf31f35-8e71-4f5a-a383-4241b87ca7a7\",\r\n        \"category\": \"Network L4+\",\r\n        \"distributionStatus\": \"DISTRIBUTED\",\r\n        \"version\": \"1.0\",\r\n        \"lifecycleStatus\": \"CERTIFIED\",\r\n        \"relatedParty\": {\r\n            \"id\": \"jm0007\",\r\n            \"role\": \"lastUpdater\"\r\n        }\r\n    }\n]\n```\n#### Using the id returned from the list of Service Specifications, drill into any specific Service Specificaton you want to orchestrate/order using\n\n```\ncurl -X GET \"http://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n{\r\n    \"id\": \"0ec83a1f-51e7-44e7-b773-3f37ddb937cd\",\r\n    \"name\": \"EPLServiceTemplate\",\r\n    \"invariantUUID\": \"ddf31f35-8e71-4f5a-a383-4241b87ca7a7\",\r\n    \"toscaModelURL\": \"/sdc/v1/catalog/services/0ec83a1f-51e7-44e7-b773-3f37ddb937cd/toscaModel\",\r\n    \"category\": \"Network L4+\",\r\n    \"distributionStatus\": \"DISTRIBUTED\",\r\n    \"version\": \"1.0\",\r\n    \"lifecycleStatus\": \"CERTIFIED\",\r\n    \"relatedParty\": {\r\n        \"id\": \"jm0007\",\r\n        \"name\": \"Joni Mitchell\",\r\n        \"role\": \"lastUpdater\"\r\n    },\r\n    \"resourceSpecification\": [\r\n        {\r\n            \"id\": \"ec910118-ba94-4517-98b5-5bc10f277f4a\",\r\n            \"version\": \"1.0\",\r\n            \"name\": \"TestVF_1579291137027\",\r\n            \"resourceInstanceName\": \"TestVF_1579291137027 0\",\r\n            \"modelCustomizationName\": \"TestVF_1579291137027 0\",\r\n            \"resourceInvariantUUID\": \"df329320-fe21-49c2-96a8-7217ac7143de\",\r\n            \"resourceType\": \"VF\",\r\n            \"@type\": \"ONAPresource\",\r\n            \"modelCustomizationId\": \"ad5fb501-e472-4d79-a303-1a4a56c0fa75\"\r\n        }\r\n    ],\r\n    \"href\": \"serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd\",\r\n    \"attachment\": [],\r\n    \"@type\": \"ONAPservice\",\r\n    \"instantiationType\": \"A-la-carte\",\r\n    \"serviceSpecCharacteristic\": {\r\n        \"name\": \"TestService_1579291137027_ServiceCharacteristics\",\r\n        \"description\": \"This object describes all the inputs needed from the client to interact with the TestService_1579291137027 Service Topology\",\r\n        \"valueType\": \"object\",\r\n        \"@type\": \"ONAPServiceCharacteristic\",\r\n        \"@schemaLocation\": \"null\",\r\n        \"serviceSpecCharacteristicValue\": {\r\n            \"valueType\": \"object\",\r\n            \"@schemaLocation\": \"/serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd/specificationInputSchema\",\r\n            \"@type\": \"TestService_1579291137027_ServiceCharacteristic\"\r\n        }\r\n    }\r\n}\n```\n\n#### To access Json Schema of the Parameters required to instantiate the Service from this Service Specification\n\n```\ncurl -X GET \"http://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd/specificationInputSchema\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n{\r\n  \"ServiceCharacteristics\" : {\r\n    \"required\" : [ \"mscmevcendpointa_evcendpoint_endPointId\", \"mscmevcendpointz_evcendpoint_endPointId\", \"mscmsubscriberunia_subscriberuni_uniIdentifier\", \"mscmsubscriberuniz_subscriberuni_uniIdentifier\" ],\r\n    \"properties\" : {\r\n      \"mscmevcendpointa_evcendpoint_map\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmsubscriberunia_subscriberuni_uniIdentifier\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"String that is used to allow the Sub-scriber and Service Provider to uniquely identify the UNI for oper-ations purposes.\"\r\n      },\r\n      \"mscmevc0_evc_evcType\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"Point-to-Point, Multipoint-to-Mul-tipoint, or Rooted-Multipoint.\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_map\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_endPointUni\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"Specify the UNI where the EvcEndPoint is located. The EvcEndPoint is said to be at this Uni.\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_ingressBwp\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmsubscriberuniz_subscriberuni_uniIdentifier\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"String that is used to allow the Sub-scriber and Service Provider to uniquely identify the UNI for oper-ations purposes.\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_endPointId\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"A string that is used to allow the Subscriber and Service Provider to uniquely identify the EvcEndPoint for operations purposes.\"\r\n      },\r\n      \"mscmevcendpointa_evcendpoint_endPointId\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"A string that is used to allow the Subscriber and Service Provider to uniquely identify the EvcEndPoint for operations purposes.\"\r\n      },\r\n      \"mscmevcendpointa_evcendpoint_ingressBwp\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n\"mscmevc0_evc_listOfEvcEps\" : {\r\n        \"type\" : \"array\",\r\n        \"description\" : \"A list of EVC EP ID Service Attribute values.\"\r\n      },\r\n      \"mscmevc0_evc_evcId\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmevcendpointa_evcendpoint_endPointUni\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"Specify the UNI where the EvcEndPoint is located. The EvcEndPoint is said to be at this Uni.\"\r\n      }\r\n    }\r\n  }\r\n\n```\n\n## Tutorials\nReference any tutorials or use cases. May use links.\n\nTo learn how the  BBS use case used these APIs, please find the Low Level Designs at:\nhttps://wiki.onap.org/pages/viewpage.action?pageId=48532377\n\n## API Mapping Details\nIncludes:\n* Mapping between use cases/requirements and API calls. The BBS Use case used the Service Catalog API to learn the details of the Broad Service. This ServiceSpecification was then included in a Product Ordering as a Service Candidate from the BSS system.\n\n## Glossary\n### API Version\n\nThe version number has major, minor and revision numbers. E.g. v4.1.0 Only the major version number (without the minor number and revision number) is held in the URL. APIs are described with a major version with “v” following the API Name, e.g.: nbi/api/v4/serviceSpecification. The schema associated with a REST API must have its version number aligned with that of the REST API.\n\nThe major version number is incremented for an incompatible change. The minor version number is incremented for a compatible change. For minor modifications of the API, version numbering must not be updated, provided the following backward compatibility rules are respected:\n* New elements in a data type must be optional (minOccurs=0)\n* Changes in the cardinality of an attribute in a data type must be from mandatory to optional or from lower to greater\n* New attributes defined in an element must be optional (absence of use=”required”)\n* If new enumerated values are included, the former ones and its meaning must be kept\n* If new operations are added, the existing operations must be kept\n* New parameters added to existing operations must be optional and existing parameters must be kept\n\nFor major modifications of the API, not backward compatible and forcing client implementations to be changed, the major version number must be updated.",
+    "description": "# About the ONAP Service Catalog API\n The Service Catalog API is based on a subset of the TM Forum 633 Service Catalog Management API.\n## API Overview\n### General Description \nThis Service Catalog API is used to retrieve as well as create the Service Specifications that ONAP supports. As Services are designed and distributed in ONAP SDC, the Service Catalog API allows external systems such as the Business Support Systems (BSS) to discover and create these Services\n\nThe Service Design Center (SDC) of ONAP allows for the design of Services that can be orchestrated by ONAP. ONAP SDC provides the tools to design the Services composition and topology, which is then represented in TOSCA. This Service Catalog API allows a REST API JSON representation of the Service, including the required attributes needed for Service Instantiation of this Service Topology.\n### Relationship and Dependencies\n This Service Catalog API is related to the TM Forum 633 Service Catalog Management API and also to MEF LSO LEGATO Service Catalog API.\n\nThis API takes a subset of the Service Catalog Management API, namely the ServiceSpecification resource, and maps this standard resource to the ONAP SDC Service Templates/Topology. By doing this we allow a well known, standardized JSON REST representation of the Service Templates available in ONAP to be potentially ordered via Service Orders. \n\n### API Structure and Approach\nThe Service Catalog API can be used to get the details of a specific ONAP Service Template, or can be used to search/list the Service Templates that are available. \n## Getting Started with the API (Hello World)\nThe Service Catalog API is available via two schemes, http and https. For interacting with the API the simplest method is via http. To interact with the this API via https, your Client would be required to load the neccessary https certificate. \n\nThe default installation of ONAP via OOM, will configure the use of two Node ports for External APIs. NodePorts are used to allow client applications, that run outside of Kubernetes, access to ONAP components deployed by OOM. For this Service Catalog API, the External API Framework has a http Node port of 30274. For https, the Node port is 30292.\n\n From outside ONAP, a client can interact with External API by first getting the IP that the NBI docker container is running on, and then using the appropriate nodeport according to the access scheme. For example to access this Service Catalog API to retrieve a list of all Service Specifications available in ONAP you can use http method GET to http://{nbi_ip}:30274/nbi/api/v4/serviceSpecification/ \n### SDK quick intro\nThere are many tools that can be used to view and edit this swagger file like swagger editor, Atom and senya. For example this swagger file can be loaded into https://editor.swagger.io/. This UI acts both as an online editor and viewer. \n### How to start the client side implementation\n* Code generation, is available via the Generate Client option in the swagger editor. Client stubs can be generated in multiple languages, for example java, go, python etc. These Client stub code can be incorporated in the Application you wish to access the Service Catalog API from.\n\n### How to start the server side implementation\n* Not applicable, the service side for this API will be the NBI container running the External API Framework Springboot application.\n\n## API Description\nIncludes summary of information drawn from API definitions in OpenAPI / Swagger files\n### Resource Endpoint / Resource Quick Reference\nGET /serviceSpecification/ : This operation returns a list service specifications from a catalog\n\nPOST /serviceSpecification/ : This operation creates a service specification in catalog\n\nGET /serviceSpecification/{id} : This operation returns the service specifications from a catalog associated with this id. Note the id maps to the uuid of the SDC Service Template in the SDC catalog\n\nGET /serviceSpecification/{id}/specificationInputSchema : This operation returns a service specification Input schema by its id from a catalog. Note again the id corresponds to the uuid of the Service Template in SDC.\n\n### Data Schema\n#### Main API Entities\nDescribe the major entities used in the API\n\nThe main entity of the API is the ServiceSpecification resource. This entity is the top level entity of the API, and is returned as either a single instance when queried with id, or as JSON arroy of ServiceSpecification entities when queried as a list.\n\nThe major child enties are relatedParty which points to the designer of the Template in SDC. The resourceSpecification which point to child resources for the Service Template. The serviceSpecCharacteristics entities are used to describe the attributes that can be supplied to instantiate a Service Instance of this Service Template.\n#### Payload data structures\nIf any, describe the appropriate data structures that are included within payload of the API.\n\nNot applicable\n### Security on the API\nAuthentication; Authorization; Credentials/access token; etc.\n\n https certificate required if using https. No authentication on http requests.In production this API should be behind an API Gateway with the necessary authentication\n### Response Codes\nThe meaning of Status Codes & Errors\n\nSee response codes for each API resource in the API section below\n### Rate Limits and Thresholds\nRequests per unit time allowed; Pagination\n\n No rate limits or thresholds, in production this API should be behind an API Gateway with the necessary limits.\n### Validation constraints\nDescribe any behavioral and structural validation constraints\n\nNot applicable\n### Assumptions\nFor example, any Pre/Post conditions\n\n For this API to function and return Service Specifications, SDC is required to be running and Service models designed in the SDC catalog\n## API Interactions and Flows\n### Interaction Examples\nIllustrate sequence of client calls to this API, possibly based on Use Cases, presented with diagrams, tables, etc\n\nThe Service Catalog API flow of use can generally follow the sequence below\n\n\n#### Call ONAP to discover what available services it can offer\n\n```\ncurl -X GET \"http://serverRoot:30274/nbi/api/v4/serviceSpecification/\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n[\n  {\r\n        \"id\": \"0ec83a1f-51e7-44e7-b773-3f37ddb937cd\",\r\n        \"name\": \"EPLServiceTemplate\",\r\n        \"invariantUUID\": \"ddf31f35-8e71-4f5a-a383-4241b87ca7a7\",\r\n        \"category\": \"Network L4+\",\r\n        \"distributionStatus\": \"DISTRIBUTED\",\r\n        \"version\": \"1.0\",\r\n        \"lifecycleStatus\": \"CERTIFIED\",\r\n        \"relatedParty\": {\r\n            \"id\": \"jm0007\",\r\n            \"role\": \"lastUpdater\"\r\n        }\r\n    }\n]\n```\n#### Using the id returned from the list of Service Specifications, drill into any specific Service Specificaton you want to orchestrate/order using\n\n```\ncurl -X GET \"http://serverRoot:30274/nbi/api/v4/serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n{\r\n    \"id\": \"0ec83a1f-51e7-44e7-b773-3f37ddb937cd\",\r\n    \"name\": \"EPLServiceTemplate\",\r\n    \"invariantUUID\": \"ddf31f35-8e71-4f5a-a383-4241b87ca7a7\",\r\n    \"toscaModelURL\": \"/sdc/v1/catalog/services/0ec83a1f-51e7-44e7-b773-3f37ddb937cd/toscaModel\",\r\n    \"category\": \"Network L4+\",\r\n    \"distributionStatus\": \"DISTRIBUTED\",\r\n    \"version\": \"1.0\",\r\n    \"lifecycleStatus\": \"CERTIFIED\",\r\n    \"relatedParty\": {\r\n        \"id\": \"jm0007\",\r\n        \"name\": \"Joni Mitchell\",\r\n        \"role\": \"lastUpdater\"\r\n    },\r\n    \"resourceSpecification\": [\r\n        {\r\n            \"id\": \"ec910118-ba94-4517-98b5-5bc10f277f4a\",\r\n            \"version\": \"1.0\",\r\n            \"name\": \"TestVF_1579291137027\",\r\n            \"resourceInstanceName\": \"TestVF_1579291137027 0\",\r\n            \"modelCustomizationName\": \"TestVF_1579291137027 0\",\r\n            \"resourceInvariantUUID\": \"df329320-fe21-49c2-96a8-7217ac7143de\",\r\n            \"resourceType\": \"VF\",\r\n            \"@type\": \"ONAPresource\",\r\n            \"modelCustomizationId\": \"ad5fb501-e472-4d79-a303-1a4a56c0fa75\"\r\n        }\r\n    ],\r\n    \"href\": \"serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd\",\r\n    \"attachment\": [],\r\n    \"@type\": \"ONAPservice\",\r\n    \"instantiationType\": \"A-la-carte\",\r\n    \"serviceSpecCharacteristic\": {\r\n        \"name\": \"TestService_1579291137027_ServiceCharacteristics\",\r\n        \"description\": \"This object describes all the inputs needed from the client to interact with the TestService_1579291137027 Service Topology\",\r\n        \"valueType\": \"object\",\r\n        \"@type\": \"ONAPServiceCharacteristic\",\r\n        \"@schemaLocation\": \"null\",\r\n        \"serviceSpecCharacteristicValue\": {\r\n            \"valueType\": \"object\",\r\n            \"@schemaLocation\": \"/serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd/specificationInputSchema\",\r\n            \"@type\": \"TestService_1579291137027_ServiceCharacteristic\"\r\n        }\r\n    }\r\n}\n```\n\n#### To access Json Schema of the Parameters required to instantiate the Service from this Service Specification\n\n```\ncurl -X GET \"http://serverRoot:30274/nbi/api/v4/serviceSpecification/0ec83a1f-51e7-44e7-b773-3f37ddb937cd/specificationInputSchema\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n{\r\n  \"ServiceCharacteristics\" : {\r\n    \"required\" : [ \"mscmevcendpointa_evcendpoint_endPointId\", \"mscmevcendpointz_evcendpoint_endPointId\", \"mscmsubscriberunia_subscriberuni_uniIdentifier\", \"mscmsubscriberuniz_subscriberuni_uniIdentifier\" ],\r\n    \"properties\" : {\r\n      \"mscmevcendpointa_evcendpoint_map\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmsubscriberunia_subscriberuni_uniIdentifier\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"String that is used to allow the Sub-scriber and Service Provider to uniquely identify the UNI for oper-ations purposes.\"\r\n      },\r\n      \"mscmevc0_evc_evcType\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"Point-to-Point, Multipoint-to-Mul-tipoint, or Rooted-Multipoint.\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_map\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_endPointUni\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"Specify the UNI where the EvcEndPoint is located. The EvcEndPoint is said to be at this Uni.\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_ingressBwp\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmsubscriberuniz_subscriberuni_uniIdentifier\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"String that is used to allow the Sub-scriber and Service Provider to uniquely identify the UNI for oper-ations purposes.\"\r\n      },\r\n      \"mscmevcendpointz_evcendpoint_endPointId\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"A string that is used to allow the Subscriber and Service Provider to uniquely identify the EvcEndPoint for operations purposes.\"\r\n      },\r\n      \"mscmevcendpointa_evcendpoint_endPointId\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"A string that is used to allow the Subscriber and Service Provider to uniquely identify the EvcEndPoint for operations purposes.\"\r\n      },\r\n      \"mscmevcendpointa_evcendpoint_ingressBwp\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n\"mscmevc0_evc_listOfEvcEps\" : {\r\n        \"type\" : \"array\",\r\n        \"description\" : \"A list of EVC EP ID Service Attribute values.\"\r\n      },\r\n      \"mscmevc0_evc_evcId\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"\"\r\n      },\r\n      \"mscmevcendpointa_evcendpoint_endPointUni\" : {\r\n        \"type\" : \"string\",\r\n        \"description\" : \"Specify the UNI where the EvcEndPoint is located. The EvcEndPoint is said to be at this Uni.\"\r\n      }\r\n    }\r\n  }\r\n\n```\n\n## Tutorials\nReference any tutorials or use cases. May use links.\n\nTo learn how the  BBS use case used these APIs, please find the Low Level Designs at:\nhttps://wiki.onap.org/pages/viewpage.action?pageId=48532377\n\n## API Mapping Details\nIncludes:\n* Mapping between use cases/requirements and API calls. The BBS Use case used the Service Catalog API to learn the details of the Broad Service. This ServiceSpecification was then included in a Product Ordering as a Service Candidate from the BSS system.\n\n## Glossary\n### API Version\n\nThe version number has major, minor and revision numbers. E.g. v4.1.0 Only the major version number (without the minor number and revision number) is held in the URL. APIs are described with a major version with “v” following the API Name, e.g.: nbi/api/v4/serviceSpecification. The schema associated with a REST API must have its version number aligned with that of the REST API.\n\nThe major version number is incremented for an incompatible change. The minor version number is incremented for a compatible change. For minor modifications of the API, version numbering must not be updated, provided the following backward compatibility rules are respected:\n* New elements in a data type must be optional (minOccurs=0)\n* Changes in the cardinality of an attribute in a data type must be from mandatory to optional or from lower to greater\n* New attributes defined in an element must be optional (absence of use=”required”)\n* If new enumerated values are included, the former ones and its meaning must be kept\n* If new operations are added, the existing operations must be kept\n* New parameters added to existing operations must be optional and existing parameters must be kept\n\nFor major modifications of the API, not backward compatible and forcing client implementations to be changed, the major version number must be updated.",
     "version": "4.1.0",
     "title": "ServiceCatalog API",
     "contact": {
@@ -123,6 +123,89 @@
           },
           "503": {
             "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ServiceSpecification"
+        ],
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "serviceSpecification_Create",
+        "summary": "Create service specification",
+        "description": "This operation creates a service specification in catalog.\nOnly a predefined set of attributes are proposed : Attributes not supported  due to SDC limitations are excluded",
+        "deprecated": false,
+        "parameters": [
+          {
+            "in": "header",
+            "name": "USER_ID",
+            "description": "The catalog user id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "ServiceSpecificationRequest",
+            "description": "Request payload in json format",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ServiceSpecificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ServiceSpecificationRequest"
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value",
+            "schema": {
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials",
+            "schema": {
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity\n\nFunctional error",
+            "schema": {
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ErrorRepresentation"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n",
             "schema": {
               "$ref": "#/definitions/ErrorRepresentation"
             }
@@ -481,6 +564,83 @@
         }
       }
     },
+    "ServiceSpecificationRequest": {
+      "description": "ServiceSpecification is a class that offers characteristics to describe a type of service. Functionally, it acts as a template by which Services may be instantiated. By sharing the same specification, these services would therefore share the same set of characteristics.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the service specification",
+          "type": "string"
+        },
+        "description": {
+          "description": "A narrative that explains in detail what the service specification",
+          "type": "string"
+        },
+        "@type": {
+          "description": "This attribute allows to dynamically extends TMF class. Valued with 'ONAPservice'. We use this feature to add following attributes:\ntoscaModelURL\ntoscaResourceName\ncategory (1)\nsubcategory (1)\ndistributionStatus",
+          "type": "string",
+          "default": "ONAPservice"
+        },
+        "@schemaLocation": {
+          "description": "Not used",
+          "type": "string"
+        },
+        "@baseType": {
+          "description": "Not used",
+          "type": "string"
+        },
+        "toscaModelURL": {
+          "description": "Additional attribute (not in the TMF API) - extended through @type - toscaModelURL",
+          "type": "string"
+        },
+        "toscaResourceName": {
+          "description": "Additional attribute (not in the TMF API) - extended through @type - toscaResourceName",
+          "type": "string"
+        },
+        "category": {
+          "description": "Additional attribute - extended through @type - category\nPlease note that this attribute is managed in TMF - in future release we'll introduce category resource",
+          "type": "string"
+        },
+        "subcategory": {
+          "description": "Additional attribute - extended through @type - category\nPlease note that this attribute is managed in TMF - in future release we'll introduce category resource",
+          "type": "string"
+        },
+        "version": {
+          "description": "Service specification version",
+          "type": "string"
+        },
+        "lifecycleStatus": {
+          "$ref": "#/definitions/LifecycleStatusValues"
+        },
+        "targetServiceSchema": {
+          "$ref": "#/definitions/TargetServiceSchemaRef"
+        },
+        "attachment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Attachment"
+          }
+        },
+        "relatedParty": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelatedPartyRef"
+          }
+        },
+        "resourceSpecification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceSpecificationRef"
+          }
+        },
+        "serviceSpecCharacteristic": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceSpecCharacteristicRequest"
+          }
+        }
+      }
+    },
     "ServiceSpecCharacteristic": {
       "description": "A characteristic quality or distinctive feature of a ServiceSpecification. \nServiceSpecCharacteristic are retrieved in the serviceTosca file in the topology_template section in the inputs section.",
       "type": "object",
@@ -518,6 +678,61 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ServiceSpecCharacteristicValue"
+          }
+        }
+      }
+    },
+    "ServiceSpecCharacteristicValueRequest": {
+      "description": "A json schema of the service specification input  characteristic values",
+      "type": "object",
+      "properties": {
+        "valueType": {
+          "description": "This attribute describes the type of value",
+          "type": "string"
+        },
+        "isDefault": {
+          "description": "To describe whether the attribute is to be included by default or not",
+          "type": "boolean"
+        },
+        "value": {
+          "description": "Value of the attribute",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceSpecCharacteristicRequest": {
+      "description": "A characteristic quality or distinctive feature of a ServiceSpecification.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the characteristic",
+          "type": "string"
+        },
+        "description": {
+          "description": "A narrative that explains in detail what the characteristic is",
+          "type": "string"
+        },
+        "valueType": {
+          "description": "A kind of value that the characteristic can take on, from Dublin from Dublin we use the object type to describe service characteristic values",
+          "type": "string"
+        },
+        "@type": {
+          "description": "This attribute allows to dynamically extends TMF class. Valued with: 'ONAPserviceCharacteristic'. We do not used this feature in nbi",
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "description": "An url pointing to type description - we do not use it",
+          "type": "string"
+        },
+        "required": {
+          "description": "A parameter to define if the characteristic is mandatory",
+          "type": "boolean",
+          "default": true
+        },
+        "serviceSpecCharacteristicValue": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceSpecCharacteristicValueRequest"
           }
         }
       }
