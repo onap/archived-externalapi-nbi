@@ -1,4 +1,5 @@
 # UUID                                                                          	Group Name
 #
 daebbf523be390041a1a9c0e340a6d833aae5043                                        	GitHub Replication
+fd0f760b245fc651d93078ef102fc385191ac98f                                        	saml/onap-gerrit-externalapi-nbi-committers
 ldap:cn=onap-gerrit-externalapi-nbi-committers,ou=Groups,dc=freestandards,dc=org	ldap/onap-gerrit-externalapi-nbi-committers
