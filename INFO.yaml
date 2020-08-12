@@ -67,5 +67,10 @@ committers:
       id: 'aosull01'
       company: 'Huawei'
       timezone: 'Europe/Dublin'
+    - name: 'Priyadharshini B'
+      email: 'priyadharshini.b96@wipro.com'
+      id: 'Priyadharshini'
+      company: 'Wipro'
+      timezone: 'India/Bangalore'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
