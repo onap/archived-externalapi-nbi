@@ -234,6 +234,12 @@ Given path 'serviceOrder',serviceOrderId
 When method delete
 Then status 204
 
+Scenario: testCheckServiceOrderDeleteActionForMacro
+Given path 'serviceOrder'
+And request data[18]
+When method post
+Then status 201
+
 Scenario: testCheckServiceOrderDeleteRejected
 Given path 'serviceOrder'
 And request data[10]

@@ -54,6 +54,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -197,34 +198,45 @@ public class PostSoProcessor {
     private ResponseEntity<CreateMacroServiceInstanceResponse> postSOMacroRequest(ServiceOrderItem serviceOrderItem,
                             ServiceOrderInfo serviceOrderInfo) {
       
-      String serviceModuleName = (String) serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId())
-            .getCatalogResponse().get("name");
+    	String serviceModuleName = (String) serviceOrderInfo.getServiceOrderItemInfos().get(serviceOrderItem.getId())
+				.getCatalogResponse().get("name");
 
-      RequestDetails requestDetails = buildSoMacroRequest(serviceOrderItem, serviceOrderInfo);
-      MSOPayload msoMacroPayload = new MSOPayload(requestDetails);
-      ResponseEntity<CreateMacroServiceInstanceResponse> response = null;
+		RequestDetails requestDetails = buildSoMacroRequest(serviceOrderItem, serviceOrderInfo);
+		MSOPayload msoMacroPayload = new MSOPayload(requestDetails);
+		ResponseEntity<CreateMacroServiceInstanceResponse> response = null;
+		
+		//Log the Generated RequestDetails
+		ObjectMapper mapper = new ObjectMapper();
+	      String json = null;
+		try {
+			json = mapper.writeValueAsString(msoMacroPayload);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    LOGGER.info("===== requestDetailsJson:  "+ json);
 
-      switch (serviceOrderItem.getAction()) {
-        case ADD:
-          response = soClient.callMacroCreateServiceInstance(msoMacroPayload);
-          break;
-        case DELETE:
-          // response = soClient.callDeleteServiceInstance(msoPayload,
-          // serviceOrderItem.getService().getId());
-          break;
-        case MODIFY:
-          if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
-            // response = soClient.callCreateServiceInstance(msoPayload);
-          }
-          if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
-            // response = soClient.callDeleteServiceInstance(msoPayload,
-            // serviceOrderItem.getService().getId());
-          }
-          break;
-        default:
-          break;
-      }
-      return response;
+		switch (serviceOrderItem.getAction()) {
+		case ADD:
+			response = soClient.callMacroCreateServiceInstance(msoMacroPayload);
+			break;
+		case DELETE:
+			response = soClient.callMacroDeleteServiceInstance(msoMacroPayload,
+			serviceOrderItem.getService().getId());
+			break;
+		case MODIFY:
+			if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
+				// response = soClient.callCreateServiceInstance(msoPayload);
+			}
+			if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+				// response = soClient.callDeleteServiceInstance(msoPayload,
+				// serviceOrderItem.getService().getId());
+			}
+			break;
+		default:
+			break;
+		}
+		return response;
     }
     
     /**

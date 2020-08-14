@@ -189,6 +189,36 @@ public class SoClient {
         }
 
     }
+    
+    
+    //Delete Macro
+    
+    public ResponseEntity<CreateMacroServiceInstanceResponse> callMacroDeleteServiceInstance(MSOPayload msoPayload,
+            String serviceId) {
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Calling SO Macro DeleteServiceInstance with msoPayload : " + msoPayload.toString());
+        }
+
+        String url = deleteSoUrl + serviceId;
+
+        try {
+            ResponseEntity<CreateMacroServiceInstanceResponse> response = restTemplate.exchange(url, HttpMethod.DELETE,
+                    new HttpEntity<>(msoPayload, buildRequestHeader()), CreateMacroServiceInstanceResponse.class);
+
+            logMacroResponsePost(url, response);
+            return response;
+
+        } catch (BackendFunctionalException e) {
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            return new ResponseEntity<>(e.getHttpStatus());
+        } catch (ResourceAccessException e) {
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
     public ResponseEntity<CreateE2EServiceInstanceResponse> callE2EDeleteServiceInstance(String globalSubscriberId,
             String serviceType, String serviceInstanceId) {
