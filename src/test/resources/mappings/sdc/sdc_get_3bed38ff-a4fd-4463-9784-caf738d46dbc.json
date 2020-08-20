@@ -1,0 +1,85 @@
+{
+	"request": {
+		"method": "GET",
+		"url": "/sdc/v1/catalog/services/3bed38ff-a4fd-4463-9784-caf738d46dbc/metadata"
+	},
+	"response": {
+		"status": 200,
+		"jsonBody": {
+  "uuid": "3bed38ff-a4fd-4463-9784-caf738d46dbc",
+  "invariantUUID": "b96687b0-5353-4e4d-bbd5-a49796fc3f11",
+  "name": "dummy_service",
+  "version": "2.0",
+  "toscaModelURL": "/sdc/v1/catalog/services/3bed38ff-a4fd-4463-9784-caf738d46dbc/toscaModel",
+  "category": "Network Service",
+  "lifecycleState": "CERTIFIED",
+  "lastUpdaterUserId": "cs0008",
+  "distributionStatus": "DISTRIBUTED",
+  "lastUpdaterFullName": "Carlos Santana",
+  "resources": [{
+    "resourceInstanceName": "dummy_vsp 0",
+    "resourceName": "dummy_vsp",
+    "resourceInvariantUUID": "0fa0d33d-b268-42ce-b393-7d3c6fde6ca9",
+    "resourceVersion": "1.0",
+    "resoucreType": "VF",
+    "resourceUUID": "725860b4-1a98-4da6-9451-6c04a581eb44",
+    "artifacts": [{
+      "artifactName": "vf-license-model.xml",
+      "artifactType": "VF_LICENSE",
+      "artifactURL": "/sdc/v1/catalog/services/3bed38ff-a4fd-4463-9784-caf738d46dbc/resourceInstances/dummy_vsp0/artifacts/ac6dae44-91d7-4eb9-aa1d-da056f6a2c6c",
+      "artifactDescription": "VF license file",
+      "artifactChecksum": "YWZjYWY4MDIzMzRjMDFlMDg3NDcyOWNiZjU2ODk1MDU=",
+      "artifactUUID": "ac6dae44-91d7-4eb9-aa1d-da056f6a2c6c",
+      "artifactVersion": "1",
+      "artifactLabel": "vflicense",
+      "artifactGroupType": "DEPLOYMENT"
+    }, {
+      "artifactName": "dummy_vsp0_modules.json",
+      "artifactType": "VF_MODULES_METADATA",
+      "artifactURL": "/sdc/v1/catalog/services/3bed38ff-a4fd-4463-9784-caf738d46dbc/resourceInstances/dummy_vsp0/artifacts/362dd42f-3eff-45dd-8163-0821d191ebd3",
+      "artifactDescription": "Auto-generated VF Modules information artifact",
+      "artifactChecksum": "YzdlZTU5MmI1YmIwOTYzZGE2MmYyMWNmYTI3Yjc1ZWE=",
+      "artifactUUID": "362dd42f-3eff-45dd-8163-0821d191ebd3",
+      "artifactVersion": "2",
+      "artifactLabel": "vfModulesMetadata",
+      "artifactGroupType": "DEPLOYMENT"
+    }, {
+      "artifactName": "base_bono.yaml",
+      "artifactType": "HEAT",
+      "artifactURL": "/sdc/v1/catalog/services/3bed38ff-a4fd-4463-9784-caf738d46dbc/resourceInstances/dummy_vsp0/artifacts/b9d286f7-cd3c-4a54-a028-c673b7028c19",
+      "artifactDescription": "created from csar",
+      "artifactTimeout": 30,
+      "artifactChecksum": "NTYzNmFlM2ZkMWQ4Y2U3YTc5YzM3Nzc2OTRmMjBlMWU=",
+      "artifactUUID": "b9d286f7-cd3c-4a54-a028-c673b7028c19",
+      "artifactVersion": "1",
+      "artifactLabel": "heat1",
+      "artifactGroupType": "DEPLOYMENT"
+    }, {
+      "artifactName": "vendor-license-model.xml",
+      "artifactType": "VENDOR_LICENSE",
+      "artifactURL": "/sdc/v1/catalog/services/3bed38ff-a4fd-4463-9784-caf738d46dbc/resourceInstances/dummy_vsp0/artifacts/207fc34f-dc47-47ec-8dc4-669960c9e338",
+      "artifactDescription": " Vendor license file",
+      "artifactChecksum": "YmY4NDI2MTk2OTU1NWJmZDMzZmI0OWZkNzU1ZDliODQ=",
+      "artifactUUID": "207fc34f-dc47-47ec-8dc4-669960c9e338",
+      "artifactVersion": "1",
+      "artifactLabel": "vendorlicense",
+      "artifactGroupType": "DEPLOYMENT"
+    }, {
+      "artifactName": "base_bono.env",
+      "artifactType": "HEAT_ENV",
+      "artifactURL": "/sdc/v1/catalog/services/3bed38ff-a4fd-4463-9784-caf738d46dbc/resourceInstances/dummy_vsp0/artifacts/2f18acf8-89d9-4b4f-8b98-b8143e21d485",
+      "artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+      "artifactChecksum": "ZDliY2ZhZWRkNjJlZTEzMTg4MzYwOTA3ZTMwNjM2MzI=",
+      "artifactUUID": "2f18acf8-89d9-4b4f-8b98-b8143e21d485",
+      "artifactVersion": "3",
+      "generatedFromUUID": "3fad956a-8ee5-4870-99a4-a13cfadb222b.heat1",
+      "artifactLabel": "heat1env",
+      "artifactGroupType": "DEPLOYMENT"
+    }]
+  }]
+},
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}

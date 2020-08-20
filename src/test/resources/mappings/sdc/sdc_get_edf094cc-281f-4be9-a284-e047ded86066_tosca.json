@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/toscaModel"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "toscafile/service-VfwCnf1308Service-csar.csar"
+    }
+}

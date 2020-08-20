@@ -161,6 +161,74 @@ public class ServiceOrderExecutionTaskAssertions {
         return serviceOrder;
 
     }
+    
+    public static ServiceOrder createTestServiceOrderForMacroVnf(ActionType actionType) {
+		ServiceOrder serviceOrder = new ServiceOrder();
+		serviceOrder.setExternalId("LudONAP001");
+		serviceOrder.setPriority("1");
+		serviceOrder.setDescription("Ludo first ONAP Order");
+		serviceOrder.setCategory("Consumer");
+		serviceOrder.setRequestedStartDate(new Date());
+		serviceOrder.setRequestedCompletionDate(new Date());
+		serviceOrder.setBaseType("toto");
+		serviceOrder.setCompletionDateTime(new Date());
+		serviceOrder.setExpectedCompletionDate(new Date());
+		serviceOrder.setSchemaLocation("/tutu");
+
+		OrderRelationship orderRelationship = new OrderRelationship();
+		orderRelationship.setId("test");
+		orderRelationship.setHref("test");
+		orderRelationship.setReferredType("test");
+		orderRelationship.setType("type");
+		List<OrderRelationship> relationships = new ArrayList<>();
+		serviceOrder.setOrderRelationship(relationships);
+
+		RelatedParty party = new RelatedParty();
+		party.setId("6490");
+		party.setRole("ONAPcustomer");
+		party.setReferredType("individual");
+		party.setName("Jean Pontus");
+		List<RelatedParty> relatedPartyList = new ArrayList<>();
+		relatedPartyList.add(party);
+		serviceOrder.setRelatedParty(relatedPartyList);
+
+		List<ServiceOrderItem> items = new ArrayList<>();
+
+		ServiceOrderItem itemA = new ServiceOrderItem();
+		itemA.id("A");
+		itemA.action(actionType);
+		Service serviceA = new Service();
+	
+		serviceA.setServiceState("active");
+		ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
+		serviceSpecificationRefA.setId("3bed38ff-a4fd-4463-9784-caf738d46dbc");
+		serviceA.setServiceSpecification(serviceSpecificationRefA);
+		itemA.setService(serviceA);
+		items.add(itemA);
+
+		ServiceOrderItem itemB = new ServiceOrderItem();
+		itemB.id("B");
+		itemB.action(actionType);
+		Service serviceB = new Service();
+		if (actionType != ActionType.ADD) {
+			serviceB.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
+		}
+		serviceB.setServiceState("active");
+		ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
+		serviceSpecificationRefB.setId("3bed38ff-a4fd-4463-9784-caf738d46dbc");
+		serviceB.setServiceSpecification(serviceSpecificationRefB);
+		itemB.setService(serviceB);
+		List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
+		OrderItemRelationship orderItemRelationship = new OrderItemRelationship();
+		orderItemRelationship.setId("A");
+		orderItemRelationship.setType(RelationshipType.RELIESON);
+		orderItemRelationships.add(orderItemRelationship);
+		itemB.setOrderItemRelationship(orderItemRelationships);
+		items.add(itemB);
+		serviceOrder.setOrderItem(items);
+		return serviceOrder;
+	}
+
 
     public static ServiceOrder createTestServiceOrderForMacro(ActionType actionType) {
 	ServiceOrder serviceOrder = new ServiceOrder();
@@ -506,6 +574,250 @@ public class ServiceOrderExecutionTaskAssertions {
         executionTaskB.setServiceOrderInfoJson(json);
         executionTaskRepository.save(executionTaskB);
         return executionTaskA;
+    }
+    
+    public static ExecutionTask setUpBddForMacroExecutionTaskSucessVnf(ServiceOrderRepository serviceOrderRepository,
+			ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
+
+		ServiceOrder testServiceOrder = createTestServiceOrderForMacroVnf(actionType);
+
+		for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+			serviceOrderItem.setState(StateType.ACKNOWLEDGED);
+			List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
+			ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
+			serviceCharacteristic1.setName("serviceProperty1");
+			Value value1 = new Value();
+			value1.setServiceCharacteristicValue("1234765");
+			serviceCharacteristic1.setValue(value1);
+			serviceCharacteristics.add(serviceCharacteristic1);
+			ServiceCharacteristic serviceCharacteristic2 = new ServiceCharacteristic();
+			serviceCharacteristic2.setName("dummy_vsp0_vfLevelProperty2");
+			Value value2 = new Value();
+			value2.setServiceCharacteristicValue("654321");
+			serviceCharacteristic2.setValue(value2);
+			serviceCharacteristics.add(serviceCharacteristic2);
+			serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+		}
+
+		testServiceOrder.setState(StateType.ACKNOWLEDGED);
+		testServiceOrder.setId("test");
+		serviceOrderRepository.save(testServiceOrder);
+
+		LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
+		sdcResponse.put("invariantUUID", "b96687b0-5353-4e4d-bbd5-a49796fc3f11");
+		sdcResponse.put("name", "dummy_service");
+		sdcResponse.put("version", "2.0");
+		sdcResponse.put("category", "Network Service");
+		sdcResponse.put("instantiationType", "Macro");
+
+		List<ResourceSpecification> resourceSpecs = new ArrayList<>();
+		ResourceSpecification resourceSpecificationA = new ResourceSpecification();
+		resourceSpecificationA.setId("725860b4-1a98-4da6-9451-6c04a581eb44");
+		resourceSpecificationA.setInstanceName("dummy_vsp");
+		resourceSpecificationA.setName("dummy_vsp");
+		resourceSpecificationA.setType("VF");
+		resourceSpecificationA.setVersion("1.0");
+		resourceSpecificationA.setResourceInvariantUUID("0fa0d33d-b268-42ce-b393-7d3c6fde6ca9");
+		resourceSpecs.add(resourceSpecificationA);
+
+		sdcResponse.put("resourceSpecification", resourceSpecs);
+
+		ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+		serviceOrderInfo.setServiceOrderId("test");
+		SubscriberInfo subscriberInfo = new SubscriberInfo();
+		subscriberInfo.setGlobalSubscriberId("6490");
+		subscriberInfo.setSubscriberName("edgar");
+		serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+
+		ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
+		serviceOrderItemInfoA.setId("A");
+		serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+
+		ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
+		serviceOrderItemInfoB.setId("B");
+		serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
+		serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
+		serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+
+		
+
+		String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+
+		ExecutionTask executionTaskA = new ExecutionTask();
+		executionTaskA.setCreateDate(new Date());
+		executionTaskA.setOrderItemId("A");
+		executionTaskA.setServiceOrderInfoJson(json);
+		executionTaskA = executionTaskRepository.save(executionTaskA);
+		ExecutionTask executionTaskB = new ExecutionTask();
+		executionTaskB.setCreateDate(new Date());
+		executionTaskB.setOrderItemId("B");
+		executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
+		executionTaskB.setServiceOrderInfoJson(json);
+		executionTaskRepository.save(executionTaskB);
+		return executionTaskA;
+	    }
+    
+    public static ServiceOrder createTestServiceOrderForMacroCNF(ActionType actionType) {
+		ServiceOrder serviceOrder = new ServiceOrder();
+		serviceOrder.setExternalId("LudONAP001");
+		serviceOrder.setPriority("1");
+		serviceOrder.setDescription("Ludo first ONAP Order");
+		serviceOrder.setCategory("Consumer");
+		serviceOrder.setRequestedStartDate(new Date());
+		serviceOrder.setRequestedCompletionDate(new Date());
+		serviceOrder.setBaseType("toto");
+		serviceOrder.setCompletionDateTime(new Date());
+		serviceOrder.setExpectedCompletionDate(new Date());
+		serviceOrder.setSchemaLocation("/tutu");
+
+		OrderRelationship orderRelationship = new OrderRelationship();
+		orderRelationship.setId("test");
+		orderRelationship.setHref("test");
+		orderRelationship.setReferredType("test");
+		orderRelationship.setType("type");
+		List<OrderRelationship> relationships = new ArrayList<>();
+		serviceOrder.setOrderRelationship(relationships);
+
+		RelatedParty party = new RelatedParty();
+		party.setId("6490");
+		party.setRole("ONAPcustomer");
+		party.setReferredType("individual");
+		party.setName("Jean Pontus");
+		List<RelatedParty> relatedPartyList = new ArrayList<>();
+		relatedPartyList.add(party);
+		serviceOrder.setRelatedParty(relatedPartyList);
+
+		List<ServiceOrderItem> items = new ArrayList<>();
+
+		ServiceOrderItem itemA = new ServiceOrderItem();
+		itemA.id("A");
+		itemA.action(actionType);
+		Service serviceA = new Service();
+
+		serviceA.setId("edf094cc-281f-4be9-a284-e047ded86066");
+		serviceA.setServicetype("vfwk8s");
+
+		serviceA.setServiceState("active");
+		ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
+		serviceSpecificationRefA.setId("edf094cc-281f-4be9-a284-e047ded86066");
+		serviceA.setServiceSpecification(serviceSpecificationRefA);
+		itemA.setService(serviceA);
+		items.add(itemA);
+
+		ServiceOrderItem itemB = new ServiceOrderItem();
+		itemB.id("B");
+		itemB.action(actionType);
+		Service serviceB = new Service();
+		//serviceB.setId("edf094cc-281f-4be9-a284-e047ded86066");
+
+		serviceB.setServiceState("active");
+		ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
+		serviceSpecificationRefB.setId("edf094cc-281f-4be9-a284-e047ded86066");
+		serviceB.setServiceSpecification(serviceSpecificationRefB);
+		itemB.setService(serviceB);
+		List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
+		OrderItemRelationship orderItemRelationship = new OrderItemRelationship();
+		orderItemRelationship.setId("A");
+		orderItemRelationship.setType(RelationshipType.RELIESON);
+		orderItemRelationships.add(orderItemRelationship);
+		itemB.setOrderItemRelationship(orderItemRelationships);
+		items.add(itemB);
+		serviceOrder.setOrderItem(items);
+		System.out.println(serviceOrder);
+		return serviceOrder;
+    }
+    
+  //setup for CNF MacroFLow
+    public static ExecutionTask setUpBddForMacroExecutionTaskSucessForCNF(ServiceOrderRepository serviceOrderRepository,
+			ExecutionTaskRepository executionTaskRepository, ActionType actionType) {
+
+		ServiceOrder testServiceOrder = createTestServiceOrderForMacroCNF(actionType);
+
+		for (ServiceOrderItem serviceOrderItem : testServiceOrder.getOrderItem()) {
+			serviceOrderItem.setState(StateType.ACKNOWLEDGED);
+			List<ServiceCharacteristic> serviceCharacteristics = new ArrayList();
+			ServiceCharacteristic serviceCharacteristic1 = new ServiceCharacteristic();
+			serviceCharacteristic1.setName("vfw_cnf_13080_dummy_vf_2");
+			Value value1 = new Value();
+			value1.setServiceCharacteristicValue("ggg");
+			serviceCharacteristic1.setValue(value1);
+			serviceCharacteristics.add(serviceCharacteristic1);
+			ServiceCharacteristic serviceCharacteristic2 = new ServiceCharacteristic();
+			serviceCharacteristic2.setName("vfw_cnf_13080_dummy_vf_1");
+			Value value2 = new Value();
+			value2.setServiceCharacteristicValue("hhhh");
+			serviceCharacteristic2.setValue(value2);
+			serviceCharacteristics.add(serviceCharacteristic2);
+			ServiceCharacteristic serviceCharacteristic3 = new ServiceCharacteristic();
+			serviceCharacteristic3.setName("dummy_ser_2");
+			Value value3 = new Value();
+			value3.setServiceCharacteristicValue("serv2");
+			serviceCharacteristic3.setValue(value3);
+			serviceCharacteristics.add(serviceCharacteristic3);
+			ServiceCharacteristic serviceCharacteristic4 = new ServiceCharacteristic();
+			serviceCharacteristic4.setName("dummy_ser_1");
+			Value value4 = new Value();
+			value4.setServiceCharacteristicValue("serv1");
+			serviceCharacteristic4.setValue(value4);
+			serviceCharacteristics.add(serviceCharacteristic4);
+			
+			serviceOrderItem.getService().setServiceCharacteristic(serviceCharacteristics);
+		}
+
+		testServiceOrder.setState(StateType.ACKNOWLEDGED);
+		testServiceOrder.setId("test");
+		serviceOrderRepository.save(testServiceOrder);
+
+		LinkedHashMap<String, Object> sdcResponse = new LinkedHashMap<>();
+		sdcResponse.put("invariantUUID", "uuid");
+		sdcResponse.put("name", "vfw_cnf_1308");
+		sdcResponse.put("version", "1.0");
+		sdcResponse.put("category", "Network Service");
+		sdcResponse.put("instantiationType", "Macro");
+
+		List<ResourceSpecification> resourceSpecs = new ArrayList<>();
+		ResourceSpecification resourceSpecificationA = new ResourceSpecification();
+		resourceSpecificationA.setId("679effb6-35e7-425e-9272-4b4e6b2b8382");
+		resourceSpecificationA.setInstanceName("vfw_cnf_1308 0");
+		resourceSpecificationA.setName("vfw_cnf_1308 0");
+		resourceSpecificationA.setType("VF");
+		resourceSpecificationA.setVersion("1.0");
+		resourceSpecificationA.setResourceInvariantUUID("2c9870d3-21cd-4140-afa0-3ba770bef206");
+		resourceSpecs.add(resourceSpecificationA);
+
+		sdcResponse.put("resourceSpecification", resourceSpecs);
+
+		ServiceOrderInfo serviceOrderInfo = new ServiceOrderInfo();
+		serviceOrderInfo.setServiceOrderId("test");
+		SubscriberInfo subscriberInfo = new SubscriberInfo();
+		subscriberInfo.setGlobalSubscriberId("6490");
+		subscriberInfo.setSubscriberName("edgar");
+		serviceOrderInfo.setSubscriberInfo(subscriberInfo);
+
+		ServiceOrderItemInfo serviceOrderItemInfoA = new ServiceOrderItemInfo();
+		serviceOrderItemInfoA.setId("A");
+		serviceOrderItemInfoA.setCatalogResponse(sdcResponse);
+
+		ServiceOrderItemInfo serviceOrderItemInfoB = new ServiceOrderItemInfo();
+		serviceOrderItemInfoB.setId("B");
+		serviceOrderItemInfoB.setCatalogResponse(sdcResponse);
+		serviceOrderInfo.addServiceOrderItemInfos("A", serviceOrderItemInfoA);
+		serviceOrderInfo.addServiceOrderItemInfos("B", serviceOrderItemInfoB);
+
+		String json = JsonEntityConverter.convertServiceOrderInfoToJson(serviceOrderInfo);
+
+		ExecutionTask executionTaskA = new ExecutionTask();
+		executionTaskA.setCreateDate(new Date());
+		executionTaskA.setOrderItemId("A");
+		executionTaskA.setServiceOrderInfoJson(json);
+		executionTaskA = executionTaskRepository.save(executionTaskA);
+		ExecutionTask executionTaskB = new ExecutionTask();
+		executionTaskB.setCreateDate(new Date());
+		executionTaskB.setOrderItemId("B");
+		executionTaskB.setReliedTasks(String.valueOf(executionTaskA.getInternalId()));
+		executionTaskB.setServiceOrderInfoJson(json);
+		executionTaskRepository.save(executionTaskB);
+		return executionTaskA;
     }
     
     public static ExecutionTask setUpBddForMacroExecutionTaskSucess(ServiceOrderRepository serviceOrderRepository,

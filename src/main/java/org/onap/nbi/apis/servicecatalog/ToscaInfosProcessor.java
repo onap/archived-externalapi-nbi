@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.onap.nbi.apis.serviceorder.model.consumer.VFModelInfo;
@@ -35,6 +36,7 @@ import org.onap.sdc.tosca.parser.impl.SdcPropertyNames;
 import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
 import org.onap.sdc.toscaparser.api.elements.Metadata;
+import org.onap.sdc.toscaparser.api.functions.GetInput;
 import org.onap.sdc.toscaparser.api.parameters.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,11 +139,12 @@ public class ToscaInfosProcessor {
 		List<IEntityDetails> vfEntityList = sdcCsarHelper.getEntity(EntityQuery.newBuilder(SdcTypes.VF).build(),
 				TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE).build(), false);
 
+		Map<String, org.onap.sdc.toscaparser.api.Property> groupProperties = null;
 		Map<String, String> listOfInstanceParameters = new HashMap<>();
 		if (!vfEntityList.isEmpty()) {
 
 			IEntityDetails iEntityDetails = vfEntityList.get(0);
-			Map<String, org.onap.sdc.toscaparser.api.Property> groupProperties = iEntityDetails.getProperties();
+			groupProperties = iEntityDetails.getProperties();
 
 			for (String key : groupProperties.keySet()) {
 				org.onap.sdc.toscaparser.api.Property property = groupProperties.get(key);
@@ -254,11 +257,45 @@ public class ToscaInfosProcessor {
 				if (!vfModuleEntityList.isEmpty()) {
 					resourceSpecification.put("childResourceSpecification", listOfVfModelInfo);
 				}
-				resourceSpecification.put("InstanceSpecification", listOfInstanceParameters);
-
+				HashMap<String, Object> serviceInstanceParams = getServiceLevelInstanceParams(inputs);
+				resourceSpecification.put("serviceInstanceParams", serviceInstanceParams);
+				HashMap<String, Object> vnfInstanceParams = getUserDefinedVFLevelInstanceParams(groupProperties, listOfInstanceParameters);
+				resourceSpecification.put("InstanceSpecification", vnfInstanceParams);
 			}
 		}
 	}
+    
+ // Get List of Service Level InputParams as Key Value
+ 	private HashMap<String, Object> getServiceLevelInstanceParams(List<Input> listOfServiceLevelInputs) {
+
+ 		HashMap<String, Object> serviceLevelInstanceParams = new HashMap<>();
+
+ 		for (Input input : listOfServiceLevelInputs) {
+ 			serviceLevelInstanceParams.put(input.getName(), input.getDefault());
+ 		}
+
+ 		return serviceLevelInstanceParams;
+ 	}
+ 	
+ 	private HashMap<String, Object> getUserDefinedVFLevelInstanceParams(
+ 			Map<String, org.onap.sdc.toscaparser.api.Property> groupProperties, Map listOfVFLevelInputs) {
+
+ 		HashMap<String, Object> vnfLevelInstanceParams = new HashMap<>();
+ 		
+ 		for (Entry<String, org.onap.sdc.toscaparser.api.Property> entry : groupProperties.entrySet()) {
+
+ 			org.onap.sdc.toscaparser.api.Property property = entry.getValue();
+ 			
+ 			if ((property.getValue().getClass() == GetInput.class)) {
+ 				GetInput getInput = (GetInput) property.getValue();
+ 				listOfVFLevelInputs.put(getInput.getInputName(), getInput.result());
+ 				listOfVFLevelInputs.remove(property.getName());
+ 			}
+ 		}
+
+ 		return (HashMap<String, Object>) listOfVFLevelInputs;		
+ 	}
+
 
     private static String testNull(Object object) {
         if (object == null) {

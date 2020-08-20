@@ -49,6 +49,7 @@ public class ServiceSpecificationResource extends ResourceManagement {
            ArrayList<Map<String, Object>> resourseSpecificationMap= (ArrayList<Map<String, Object>>) response.get("resourceSpecification");
            for (Map<String, Object> map : resourseSpecificationMap) {
                map.remove("childResourceSpecification");
+               map.remove("serviceInstanceParams");
                map.remove("InstanceSpecification");
            }
            response.put("resourceSpecification", resourseSpecificationMap);

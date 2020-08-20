@@ -379,4 +379,63 @@ public class ToscaInfosProcessorTest {
 	assertThat(instanceSpecificationTestData).isEqualTo(instanceSpecification);
 
     }
+    
+    @Test
+	public void testBuildAndSaveResponseWithSdcToscaParserWithServiceAndVFNFLevelParams() {
+
+		ClassLoader classLoader = getClass().getClassLoader();
+
+		// Adding Path to TOSCA File to provide as parameter
+		Path path = new File(classLoader.getResource("toscafile/service-VfwCnf1308Service-csar.csar").getFile())
+				.toPath().toAbsolutePath();
+
+		// Creating response to provide as parameter
+		LinkedHashMap response = new LinkedHashMap();
+		response.put("version", "1.0");
+		response.put("name", "vfw_cnf_1308");
+		response.put("description", "vfw_cnf_1308");
+		response.put("id", "edf094cc-281f-4be9-a284-e047ded86066");
+
+		// Resources
+		List<LinkedHashMap> resources = new ArrayList<>();
+		LinkedHashMap resource1 = new LinkedHashMap();
+		resource1.put("id", "679effb6-35e7-425e-9272-4b4e6b2b8382");
+		resources.add(resource1);
+
+		// instanceSpecification Test Data
+		Map instanceSpecificationTestData = new LinkedHashMap<>();
+		instanceSpecificationTestData.put("vfw_cnf_13080_dummy_vf_2", "xyz");
+		instanceSpecificationTestData.put("vfw_cnf_13080_dummy_vf_1", "abc");
+
+		// serviceParams Test Data
+		Map serviceParamsTestData = new LinkedHashMap<>();
+		serviceParamsTestData.put("dummy_ser_2", "jklm");
+		serviceParamsTestData.put("skip_post_instantiation_configuration", true);
+		serviceParamsTestData.put("controller_actor", "SO-REF-DATA");
+		serviceParamsTestData.put("dummy_ser_1", "pqrs");
+		serviceParamsTestData.put("cds_model_version", null);
+		serviceParamsTestData.put("cds_model_name", null);
+		serviceParamsTestData.put("vfw_cnf_13080_dummy_vf_2", "xyz");
+		serviceParamsTestData.put("vfw_cnf_13080_dummy_vf_1", "abc");
+
+		// Resources to put in response as resourceSpecification
+		response.put("resourceSpecification", resources);
+
+		try {
+			toscaInfosProcessor.buildAndSaveResponseWithSdcToscaParser(path, response);
+		} catch (SdcToscaParserException e) {
+			throw new TechnicalException("unable to build response from tosca csar using sdc-parser : "
+					+ path.toString() + " " + e.getMessage());
+		}
+
+		// Getting
+		List<LinkedHashMap> resourceSpecifications = (List<LinkedHashMap>) response.get("resourceSpecification");
+
+		Map instanceSpecification = (HashMap) (resourceSpecifications.get(0)).get("InstanceSpecification");
+
+		Map serviceParams = (HashMap) (resourceSpecifications.get(0)).get("serviceInstanceParams");
+		// Test against test data and returned response's data for instanceSpecification and serviceParams
+		assertThat(instanceSpecificationTestData).isEqualTo(instanceSpecification);
+		assertThat(serviceParamsTestData).isEqualTo(serviceParams);
+    }
 }

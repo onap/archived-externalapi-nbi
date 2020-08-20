@@ -331,40 +331,108 @@ public class ExecutionTaskTest {
 
     }
     
-    // Macro Flow Execution Task
-    @Test
-    public void testMacroExecutionTaskSuccess() throws Exception {
+ // Macro Flow Execution Task
+ 	@Test
+ 	public void testMacroExecutionTaskSuccess() throws Exception {
 
-        ExecutionTask executionTaskA =
-            ServiceOrderExecutionTaskAssertions.setUpBddForMacroExecutionTaskSucess(
-                serviceOrderRepository, executionTaskRepository, ActionType.ADD);
-        ExecutionTask executionTaskB;
+ 		ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+ 				.setUpBddForMacroExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+ 		ExecutionTask executionTaskB;
 
-        SoTaskProcessor.processOrderItem(executionTaskA);
-        ServiceOrder serviceOrderChecked = getServiceOrder("test");
-        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
-        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-            if (serviceOrderItem.getId().equals("A")) {
-                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
-            } else {
-                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
-            }
-        }
+ 		SoTaskProcessor.processOrderItem(executionTaskA);
+ 		ServiceOrder serviceOrderChecked = getServiceOrder("test");
+ 		assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+ 		for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+ 			if (serviceOrderItem.getId().equals("A")) {
+ 				assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+ 			} else {
+ 				assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+ 			}
+ 		}
 
-        executionTaskB = getExecutionTask("B");
-        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
-        executionTaskA = getExecutionTask("A");
-        assertThat(executionTaskA).isNull();
+ 		executionTaskB = getExecutionTask("B");
+ 		assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+ 		executionTaskA = getExecutionTask("A");
+ 		assertThat(executionTaskA).isNull();
 
-        SoTaskProcessor.processOrderItem(executionTaskB);
-        serviceOrderChecked = getServiceOrder("test");
+ 		SoTaskProcessor.processOrderItem(executionTaskB);
+ 		serviceOrderChecked = getServiceOrder("test");
 
-        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
-        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
-            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+ 		assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+ 		for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+ 			assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
 
-        }
-    }
+ 		}
+ 	}
+ 	
+ 	// Macro Flow Execution Task for VNF with Service and VNF level Params
+ 	 @Test
+ 	    public void testMacroExecutionTaskSuccessForVNFWithServceAndVnfLevelParams() throws Exception {
+
+ 	        ExecutionTask executionTaskA =
+ 	            ServiceOrderExecutionTaskAssertions.setUpBddForMacroExecutionTaskSucessVnf(
+ 	                serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+ 	        ExecutionTask executionTaskB;
+
+ 	        SoTaskProcessor.processOrderItem(executionTaskA);
+ 	        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+ 	        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+ 	        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+ 	            if (serviceOrderItem.getId().equals("A")) {
+ 	                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+ 	            } else {
+ 	                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+ 	            }
+ 	        }
+
+ 	        executionTaskB = getExecutionTask("B");
+ 	        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+ 	        executionTaskA = getExecutionTask("A");
+ 	        assertThat(executionTaskA).isNull();
+
+ 	        SoTaskProcessor.processOrderItem(executionTaskB);
+ 	        serviceOrderChecked = getServiceOrder("test");
+
+ 	        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+ 	        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+ 	            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+ 	        }
+ 	    }
+ 	
+ 	// Macro Flow Execution Task with CNF with InstanceParams
+ 		@Test
+ 		public void testMacroExecutionTaskSuccessforCNFWithServiceAndVNFLevelParams() throws Exception {
+
+ 			ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+ 					.setUpBddForMacroExecutionTaskSucessForCNF(serviceOrderRepository, executionTaskRepository, ActionType.ADD);
+ 			ExecutionTask executionTaskB;
+
+ 			SoTaskProcessor.processOrderItem(executionTaskA);
+ 			ServiceOrder serviceOrderChecked = getServiceOrder("test");
+ 			assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+ 			for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+ 				if (serviceOrderItem.getId().equals("A")) {
+ 					assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+ 				} else {
+ 					assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+ 				}
+ 			}
+
+ 			executionTaskB = getExecutionTask("B");
+ 			assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+ 			executionTaskA = getExecutionTask("A");
+ 			assertThat(executionTaskA).isNull();
+
+ 			SoTaskProcessor.processOrderItem(executionTaskB);
+ 			serviceOrderChecked = getServiceOrder("test");
+
+ 			assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+ 			for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+ 				assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+ 			}
+ 		}
     
     @Test
     public void testExecutionTaskFailed() throws Exception {

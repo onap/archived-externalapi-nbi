@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.onap.nbi.apis.servicecatalog.ServiceSpecificationService;
 import org.onap.nbi.apis.serviceorder.SoClient;
@@ -248,21 +250,31 @@ public class PostSoProcessor {
 
 		Map<String, Object> resourseSpecificationMap = resourseSpecificationArray.get(0);
 
+		Map serviceInstanceParam = (Map) resourseSpecificationMap.get("serviceInstanceParams");
 		Map instanceSpecification = (Map) resourseSpecificationMap.get("InstanceSpecification");
 		ArrayList<VFModelInfo> childResourceSpecification = (ArrayList<VFModelInfo>) resourseSpecificationMap
 				.get("childResourceSpecification");
+		
+		HashMap<String, Object> instanceParamsFromServiceCharacteristics = retrieveInstanceParamsFromServiceCharacteristics(
+				orderItem.getService().getServiceCharacteristic());
+		
+		HashMap<String, Object> instanceParams = (HashMap<String, Object>) buildAndDistinguishServiceAndVnfLevelParams(
+				instanceParamsFromServiceCharacteristics, instanceSpecification, serviceInstanceParam);
 
+		HashMap<String, Object> vnfInstanceParams = (HashMap<String, Object>) instanceParams.get("vnf");
 		List<Object> serviceObject = new ArrayList<>();
 
 		ArrayList<Object> vnfInstanceParam = new ArrayList<>();
 
 		//Differentiating vnf with cnf(Can be discussed and improved)
 		if (instanceSpecification.get("public_net_id") != null) {
+			Map<String, Object> instanceParam = new HashMap<>();
+			//Merge instanceSpecification with vnfInstanceParams
+			instanceSpecification.putAll(vnfInstanceParams);
 			vnfInstanceParam.add(instanceSpecification);
 		} else {
-			Map<String, Object> instanceParam = new HashMap<>();
-			instanceParam.put("k8s-rb-profile-name", k8sRbProfileName);
-			vnfInstanceParam.add(instanceParam);
+			vnfInstanceParams.put("k8s-rb-profile-name", k8sRbProfileName);
+			vnfInstanceParam.add(vnfInstanceParams);
 		}
 
 		List resSpec = (ArrayList) sdcInfos.get("resourceSpecification");
@@ -349,7 +361,7 @@ public class PostSoProcessor {
 		// For now it is empty to comply with so request
 
 		List<Map<String, String>> listOfServiceLevelInstanceParams = new ArrayList<>();
-		Map<String, String> serviceInstanceParams= new HashMap<>();
+		Map<String, String> serviceInstanceParams = (HashMap<String, String>) instanceParams.get("service");
 		listOfServiceLevelInstanceParams.add(serviceInstanceParams);
 		
 		Map<String, Object> serviceData = new HashMap<>();
@@ -563,5 +575,89 @@ public class PostSoProcessor {
 
         return userParams;
     }
+    
+    /**
+	 * Build a list of InstanceParams for the SO Macro request by browsing a list of
+	 * ServiceCharacteristics
+	 */
+	private HashMap<String, Object> retrieveInstanceParamsFromServiceCharacteristics(
+			List<ServiceCharacteristic> characteristics) {
+
+		HashMap<String, Object> instanceParams = new HashMap<>();
+
+		if (!CollectionUtils.isEmpty(characteristics)) {
+			for (ServiceCharacteristic characteristic : characteristics) {
+				// Check is the characteristic is of type object, if proceed as before to allow
+				// for
+				// backwards compatibility.
+				if (characteristic.getValueType() != null && !characteristic.getValueType().isEmpty()
+						&& characteristic.getValueType().equals("object")) {
+					ObjectMapper mapper = new ObjectMapper();
+					JsonNode jsonNode = null;
+					try {
+						jsonNode = mapper.readTree(characteristic.getValue().getServiceCharacteristicValue());
+					} catch (IOException e) {
+						LOGGER.error("Failed to read object json {} , exception is ",
+								characteristic.getValue().getServiceCharacteristicValue(), e.getMessage());
+					}
+					ObjectNode objectNode = (ObjectNode) jsonNode;
+					Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
+					while (iter.hasNext()) {
+						Map.Entry<String, JsonNode> entry = iter.next();
+						if (!entry.getValue().isArray()) {
+							instanceParams.put(entry.getKey(), entry.getValue().asText());
+						} else {
+							ArrayNode arrayNode = (ArrayNode) entry.getValue();
+							String arrayNodeValueString = arrayNode.toString();
+							instanceParams.put(entry.getKey(), arrayNodeValueString);
+						}
+					}
+				} else {
+					instanceParams.put(characteristic.getName(),
+							characteristic.getValue().getServiceCharacteristicValue());
+				}
+			}
+		}
+
+		return instanceParams;
+	}
+	
+	/**
+	 * Build and distinguish InstanceParams at VNF Level and Service level and overwrite values from ServiceOrder JSON Request.
+	 * Can be used as buildAndDistinguishServiceAndVnfLevelParams.get("vnf"); or buildAndDistinguishServiceAndVnfLevelParams.get("cnf");
+	 */
+	private Map<String, Object> buildAndDistinguishServiceAndVnfLevelParams(
+			Map<String, Object> instanceParamsFromServiceCharacteristic, Map<String, Object> existingVNFParams,
+			Map<String, Object> existingServiceParams) {
+
+		//To be used by passing key as "vnf" or "service" for respective instanceParams
+		Map<String, Object> serviceAndVNFLevelInstanceParams = new HashMap<>();
+
+		Map<String, Object> resultVNFParams = new HashMap<>();
+		Map<String, Object> resultServiceParams = new HashMap<>();
+
+		// First Filter VNF level Params From Service Characteristics and overwrite
+		// values
+		resultVNFParams = instanceParamsFromServiceCharacteristic.entrySet().stream()
+				.filter(entry -> existingVNFParams.containsKey(entry.getKey()))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+		//Add it as VNF level Params
+		serviceAndVNFLevelInstanceParams.put("vnf", resultVNFParams);
+
+		// Filter VNF level Params From Service Level
+		existingServiceParams.entrySet().removeIf(e -> existingVNFParams.containsKey(e.getKey()));
+
+		// Filter Service level Params From Service Characteristics and overwrite values
+		resultServiceParams = instanceParamsFromServiceCharacteristic.entrySet().stream()
+				.filter(entry -> existingServiceParams.containsKey(entry.getKey()))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+		//Add it as Service level params
+		serviceAndVNFLevelInstanceParams.put("service", resultServiceParams);
+
+		return serviceAndVNFLevelInstanceParams;
+
+	}
 
 }

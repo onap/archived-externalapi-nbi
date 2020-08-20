@@ -1,0 +1,272 @@
+{
+	"request": {
+		"method": "GET",
+		"url": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/metadata"
+	},
+	"response": {
+		"status": 200,
+		"jsonBody": {
+			"uuid": "edf094cc-281f-4be9-a284-e047ded86066",
+			"invariantUUID": "fa8cd207-ae25-4b4d-baa7-ba841907ab69",
+			"name": "vfw_cnf_1308_service",
+			"version": "2.0",
+			"toscaModelURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/toscaModel",
+			"category": "Network Service",
+			"lifecycleState": "CERTIFIED",
+			"lastUpdaterUserId": "cs0008",
+			"distributionStatus": "DISTRIBUTED",
+			"lastUpdaterFullName": "Carlos Santana",
+			"resources": [
+				{
+					"resourceInstanceName": "vfw_cnf_1308 0",
+					"resourceName": "vfw_cnf_1308",
+					"resourceInvariantUUID": "2c9870d3-21cd-4140-afa0-3ba770bef206",
+					"resourceVersion": "1.0",
+					"resoucreType": "VF",
+					"resourceUUID": "679effb6-35e7-425e-9272-4b4e6b2b8382",
+					"artifacts": [
+						{
+							"artifactName": "vf-license-model.xml",
+							"artifactType": "VF_LICENSE",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/64e27d2e-108c-41a5-81a5-5e7de8279f65",
+							"artifactDescription": "VF license file",
+							"artifactChecksum": "ZGM1YjI1ODQyYzM5NGU2NWYzNTU2ZWY4ZGUwYmIwZDU=",
+							"artifactUUID": "64e27d2e-108c-41a5-81a5-5e7de8279f65",
+							"artifactVersion": "1",
+							"artifactLabel": "vflicense",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "base_template_cloudtech_k8s_charts.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/aa0020b4-5476-4c49-b2f4-3a1e63812f45",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "MTA2MjAxNDAyMmY0NmMwYTlmMDMyN2FjZDUxODkzNWI=",
+							"artifactUUID": "aa0020b4-5476-4c49-b2f4-3a1e63812f45",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.cloudtechnologyspecificartifact12",
+							"artifactLabel": "cloudtechnologyspecificartifact12env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vfw_cnf_13080_modules.json",
+							"artifactType": "VF_MODULES_METADATA",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/49a4cca7-0af3-4671-a5b1-5ffb1cd51ed9",
+							"artifactDescription": "Auto-generated VF Modules information artifact",
+							"artifactChecksum": "NTY1NGI4YTViNGY5OGM1MDgyNDc5NmQxNTIwMzAwM2M=",
+							"artifactUUID": "49a4cca7-0af3-4671-a5b1-5ffb1cd51ed9",
+							"artifactVersion": "2",
+							"artifactLabel": "vfModulesMetadata",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vfw_cloudtech_k8s_charts.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/0433412e-cb99-4717-ae20-2461932a7862",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "MTA2MjAxNDAyMmY0NmMwYTlmMDMyN2FjZDUxODkzNWI=",
+							"artifactUUID": "0433412e-cb99-4717-ae20-2461932a7862",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.cloudtechnologyspecificartifact11",
+							"artifactLabel": "cloudtechnologyspecificartifact11env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vsn_cloudtech_k8s_charts.tgz",
+							"artifactType": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/dcfe1cc8-0ebf-46a3-a754-8896e97f6280",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "N2FlMmViOWU4ZTU4ZWVkYTY4ZDYwOTBmNTBkYmZmYWY=",
+							"artifactUUID": "dcfe1cc8-0ebf-46a3-a754-8896e97f6280",
+							"artifactVersion": "1",
+							"artifactLabel": "cloudtechnologyspecificartifact9",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vsn.yaml",
+							"artifactType": "HEAT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/2e87a975-4816-4bbe-951a-68ca36a011c8",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "NzE1Njc2ZmI5MTIzNGQwYWQ1ZWU0YjU5ZGNiZDYwM2M=",
+							"artifactUUID": "2e87a975-4816-4bbe-951a-68ca36a011c8",
+							"artifactVersion": "1",
+							"artifactLabel": "heat1",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vpkg.yaml",
+							"artifactType": "HEAT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/2d2b3a58-d942-424c-9b44-19ce996dead3",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "YjM5ZmU2NGUwMTQ4ZjJmYjNkYTk4ZmRmYjEwM2ZiMjI=",
+							"artifactUUID": "2d2b3a58-d942-424c-9b44-19ce996dead3",
+							"artifactVersion": "1",
+							"artifactLabel": "heat3",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vendor-license-model.xml",
+							"artifactType": "VENDOR_LICENSE",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/dd8567f8-fa6a-4f26-bf7c-9a2dcf605250",
+							"artifactDescription": " Vendor license file",
+							"artifactChecksum": "M2ZmZGI0M2JlYzljZTU4YWNmZjJmNGQ2NGNlZGNiY2I=",
+							"artifactUUID": "dd8567f8-fa6a-4f26-bf7c-9a2dcf605250",
+							"artifactVersion": "1",
+							"artifactLabel": "vendorlicense",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vfw.yaml",
+							"artifactType": "HEAT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/5c22f875-5425-4b0c-9823-afba9ac75d20",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "ODE4MTU4ZDc4YjZkOTAxNjBiN2Q4N2JkZDExYTRmZjM=",
+							"artifactUUID": "5c22f875-5425-4b0c-9823-afba9ac75d20",
+							"artifactVersion": "1",
+							"artifactLabel": "heat5",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "base_template.yaml",
+							"artifactType": "HEAT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/c51b7dcf-796b-4355-b35c-54b49633e89b",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "ZGYxYjZjOWY4NmFhY2Q5YTVhMThhMjNiYzEzMDk1ZGY=",
+							"artifactUUID": "c51b7dcf-796b-4355-b35c-54b49633e89b",
+							"artifactVersion": "1",
+							"artifactLabel": "heat7",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "base_template_cloudtech_k8s_charts.tgz",
+							"artifactType": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/cd7f5867-fb30-4282-bd89-ca0ff33e78a9",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "NmUwYjIzMmJhZjE0OTA4OTY4ODI0MzQ1ZTU1N2RiNzA=",
+							"artifactUUID": "cd7f5867-fb30-4282-bd89-ca0ff33e78a9",
+							"artifactVersion": "1",
+							"artifactLabel": "cloudtechnologyspecificartifact12",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vpkg_cloudtech_k8s_charts.tgz",
+							"artifactType": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/da443669-c1f6-4dfa-9cc8-d666b276906a",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "Nzk4NmQzZWVhYzQ5OGE0ZWQyZDYyYjBhZWM2MDcyMzk=",
+							"artifactUUID": "da443669-c1f6-4dfa-9cc8-d666b276906a",
+							"artifactVersion": "1",
+							"artifactLabel": "cloudtechnologyspecificartifact10",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vfw_cloudtech_k8s_charts.tgz",
+							"artifactType": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/8ba2f2d2-cc5e-4350-989a-707a1f84d761",
+							"artifactDescription": "created from csar",
+							"artifactTimeout": 30,
+							"artifactChecksum": "M2ZhOWFkOTk4MjFiZTM4Yjk1ZGQ0YThjN2ViMTM0ZjU=",
+							"artifactUUID": "8ba2f2d2-cc5e-4350-989a-707a1f84d761",
+							"artifactVersion": "1",
+							"artifactLabel": "cloudtechnologyspecificartifact11",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "base_template.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/83a9702c-27ff-4b06-a2a8-ca08c8188317",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "YWZkMzRjZWU2MDQ1MGVhYmQ2YWRiNWFiNWMzOTlkYjc=",
+							"artifactUUID": "83a9702c-27ff-4b06-a2a8-ca08c8188317",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.heat7",
+							"artifactLabel": "heat7env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vpkg_cloudtech_k8s_charts.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/e3fb742e-eb30-4821-8adf-af3d002fe8c0",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "MTA2MjAxNDAyMmY0NmMwYTlmMDMyN2FjZDUxODkzNWI=",
+							"artifactUUID": "e3fb742e-eb30-4821-8adf-af3d002fe8c0",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.cloudtechnologyspecificartifact10",
+							"artifactLabel": "cloudtechnologyspecificartifact10env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "CBA.zip",
+							"artifactType": "CONTROLLER_BLUEPRINT_ARCHIVE",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/a4cac5d7-8d96-441c-afd2-4ea75e7cfd91",
+							"artifactDescription": "created from csar",
+							"artifactChecksum": "NmFiM2VjOWMxNTljNjcwYzQ2ODRlMjJmY2E3YzU4NjA=",
+							"artifactUUID": "a4cac5d7-8d96-441c-afd2-4ea75e7cfd91",
+							"artifactVersion": "1",
+							"artifactLabel": "controllerblueprintarchive13",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vsn_cloudtech_k8s_charts.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/fe315410-d43c-4168-89a2-2bc5cac9f606",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "MTA2MjAxNDAyMmY0NmMwYTlmMDMyN2FjZDUxODkzNWI=",
+							"artifactUUID": "fe315410-d43c-4168-89a2-2bc5cac9f606",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.cloudtechnologyspecificartifact9",
+							"artifactLabel": "cloudtechnologyspecificartifact9env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vfw.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/32d57f44-aea3-458f-b30d-080d8cc3f359",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "NTk0OWFlMWU5NGYyNmZjZjhiNzhkOTdmYmM3ZmVkZjg=",
+							"artifactUUID": "32d57f44-aea3-458f-b30d-080d8cc3f359",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.heat5",
+							"artifactLabel": "heat5env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vpkg.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/9305bcc3-4ef2-4659-9707-9a61420ac500",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "MWRhYTA5ZDBhZWYxZjEwMDExZDliOWYyMDI2NzAyYzE=",
+							"artifactUUID": "9305bcc3-4ef2-4659-9707-9a61420ac500",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.heat3",
+							"artifactLabel": "heat3env",
+							"artifactGroupType": "DEPLOYMENT"
+						},
+						{
+							"artifactName": "vsn.env",
+							"artifactType": "HEAT_ENV",
+							"artifactURL": "/sdc/v1/catalog/services/edf094cc-281f-4be9-a284-e047ded86066/resourceInstances/vfw_cnf_13080/artifacts/70cdee61-ab45-4d89-a5a8-6f450304930a",
+							"artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+							"artifactChecksum": "YTQ1NTY0YzA2MTk4M2IwMGUxZThlMTBlOTRjZjgyNTA=",
+							"artifactUUID": "70cdee61-ab45-4d89-a5a8-6f450304930a",
+							"artifactVersion": "3",
+							"generatedFromUUID": "7176f506-6215-4ecb-9417-a90542cba39c.heat1",
+							"artifactLabel": "heat1env",
+							"artifactGroupType": "DEPLOYMENT"
+						}
+					]
+				}
+			]
+		},
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}

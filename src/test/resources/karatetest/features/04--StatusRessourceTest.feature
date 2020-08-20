@@ -22,6 +22,7 @@ Feature: Status Resource
 Background:
 * url nbiBaseUrl
 * def Context = Java.type('org.onap.nbi.test.Context');
+* configure readTimeout = 10000
 * call Context.startServers();
     
 Scenario: testHealthCheck
