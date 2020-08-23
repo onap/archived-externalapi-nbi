@@ -30,6 +30,7 @@ import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.ServiceSpecificationRef;
 import org.onap.nbi.apis.serviceorder.model.StateType;
+import org.onap.nbi.apis.serviceorder.model.ServiceStateType;
 import org.onap.nbi.apis.serviceorder.model.Value;
 import org.onap.nbi.apis.serviceorder.model.consumer.SubscriberInfo;
 import org.onap.nbi.apis.serviceorder.model.orchestrator.ExecutionTask;
@@ -65,8 +66,8 @@ public class ServiceOrderExecutionTaskAssertions {
         itemA.id("A");
         itemA.action(ActionType.ADD);
         Service serviceA = new Service();
-        serviceA.setServiceState("active");
-        ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
+	serviceA.setServiceState(ServiceStateType.ACTIVE);
+	ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
         serviceSpecificationRefA.setId("333");
         serviceA.setServiceSpecification(serviceSpecificationRefA);
         itemA.setService(serviceA);
@@ -76,8 +77,8 @@ public class ServiceOrderExecutionTaskAssertions {
         itemB.id("B");
         itemB.action(ActionType.ADD);
         Service serviceB = new Service();
-        serviceB.setServiceState("active");
-        ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
+	serviceB.setServiceState(ServiceStateType.ACTIVE);
+	ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
         serviceSpecificationRefB.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
         serviceB.setServiceSpecification(serviceSpecificationRefB);
         itemB.setService(serviceB);
@@ -131,8 +132,8 @@ public class ServiceOrderExecutionTaskAssertions {
         if (actionType != ActionType.ADD) {
             serviceA.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
         }
-        serviceA.setServiceState("active");
-        ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
+        serviceA.setServiceState(ServiceStateType.ACTIVE);
+	ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
         serviceSpecificationRefA.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
         serviceA.setServiceSpecification(serviceSpecificationRefA);
         itemA.setService(serviceA);
@@ -145,8 +146,8 @@ public class ServiceOrderExecutionTaskAssertions {
         if (actionType != ActionType.ADD) {
             serviceB.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
         }
-        serviceB.setServiceState("active");
-        ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
+        serviceB.setServiceState(ServiceStateType.ACTIVE);
+	ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
         serviceSpecificationRefB.setId("1e3feeb0-8e36-46c6-862c-236d9c626439");
         serviceB.setServiceSpecification(serviceSpecificationRefB);
         itemB.setService(serviceB);
@@ -201,7 +202,7 @@ public class ServiceOrderExecutionTaskAssertions {
 	if (actionType != ActionType.ADD) {
 		serviceA.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
 	}
-	serviceA.setServiceState("active");
+	serviceA.setServiceState(ServiceStateType.ACTIVE);
 	ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
 	serviceSpecificationRefA.setId("82c9fbb4-656c-4973-8c7f-172b22b5fa8f");
 	serviceA.setServiceSpecification(serviceSpecificationRefA);
@@ -215,7 +216,7 @@ public class ServiceOrderExecutionTaskAssertions {
 	if (actionType != ActionType.ADD) {
 		serviceB.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
 	}
-	serviceB.setServiceState("active");
+	serviceB.setServiceState(ServiceStateType.ACTIVE);
 	ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
 	serviceSpecificationRefB.setId("82c9fbb4-656c-4973-8c7f-172b22b5fa8f");
 	serviceB.setServiceSpecification(serviceSpecificationRefB);
