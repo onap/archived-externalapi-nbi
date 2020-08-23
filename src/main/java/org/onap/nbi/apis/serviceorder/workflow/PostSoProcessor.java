@@ -27,6 +27,7 @@ import org.onap.nbi.apis.serviceorder.model.ServiceCharacteristic;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
 import org.onap.nbi.apis.serviceorder.model.StateType;
+import org.onap.nbi.apis.serviceorder.model.ServiceStateType;
 import org.onap.nbi.apis.serviceorder.model.consumer.CloudConfiguration;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateE2EServiceInstanceResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.CreateMacroServiceInstanceResponse;
@@ -180,15 +181,29 @@ public class PostSoProcessor {
                         service.getServiceType(), serviceOrderItem.getService().getId());
                 break;
             case MODIFY:
-                if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
+            //EXT-API supports E2E service activation/deactivation with action=modify and seviceState=active/inactive
+            	boolean isActivateReq = ServiceStateType.ACTIVE == serviceOrderItem.getService().getServiceState() || 
+            			ServiceStateType.INACTIVE == serviceOrderItem.getService().getServiceState();
+                
+                if (ServiceStateType.ACTIVE == serviceOrderItem.getService().getServiceState()) {
+            		response = soClient.callServiceActivationE2EService(service.getGlobalSubscriberId(),
+                            service.getServiceType(), serviceOrderItem.getService().getId(),"activate");
+            	}
+            	if (ServiceStateType.INACTIVE == serviceOrderItem.getService().getServiceState()) {
+            		response = soClient.callServiceActivationE2EService(service.getGlobalSubscriberId(),
+                            service.getServiceType(), serviceOrderItem.getService().getId(),"deactivate");
+            	}
+            	//Other E2E service modification follows Deletion followed by activation.
+            	//For service modification, do not send serviceState=active/inactive            	
+            	if (!isActivateReq && StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {
                     response = soClient.callE2ECreateServiceInstance(msoE2EPayload);
                 }
-                if (StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
+                if (!isActivateReq && StateType.ACKNOWLEDGED == serviceOrderItem.getState()) {
                     response = soClient.callE2EDeleteServiceInstance(service.getGlobalSubscriberId(),
                             service.getServiceType(), serviceOrderItem.getService().getId());
                 }
                 break;
-            default:
+	    default:
                 break;
         }
         return response;
