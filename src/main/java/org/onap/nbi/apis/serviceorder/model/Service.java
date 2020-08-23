@@ -68,7 +68,7 @@ public class Service {
     private String name = null;
 
     @JsonProperty("serviceState")
-    private String serviceState = null;
+    private ServiceStateType serviceState = null;
 
     @JsonProperty("@type")
     private String type = null;
@@ -158,7 +158,7 @@ public class Service {
         this.name = name;
     }
 
-    public Service serviceState(String serviceState) {
+    public Service serviceState(ServiceStateType serviceState) {
         this.serviceState = serviceState;
         return this;
     }
@@ -170,11 +170,11 @@ public class Service {
      **/
     @JsonProperty("serviceState")
     @ApiModelProperty(value = "The lifecycle state of the service")
-    public String getServiceState() {
+    public ServiceStateType getServiceState() {
         return serviceState;
     }
 
-    public void setServiceState(String serviceState) {
+    public void setServiceState(ServiceStateType serviceState) {
         this.serviceState = serviceState;
     }
 

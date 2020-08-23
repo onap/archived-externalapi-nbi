@@ -1,0 +1,16 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/onap/so/infra/e2eServiceInstances/v3/e4688e5f-61a0-4f8b-ae02-a2fbde623bcb/activate"
+    },
+    "response": {
+        "status": 201,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "jsonBody": {
+                "operationId": "operationId"
+        }
+    }
+}
+

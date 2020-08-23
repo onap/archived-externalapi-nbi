@@ -295,6 +295,41 @@ public class ExecutionTaskTest {
         assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
+ @Test
+    public void testE2EExecutionTaskActivationSuccess() throws Exception {
+
+        ExecutionTask executionTaskA = ServiceOrderExecutionTaskAssertions
+                .setUpBddForE2EExecutionTaskSucess(serviceOrderRepository, executionTaskRepository, ActionType.MODIFY);
+        ExecutionTask executionTaskB;
+
+        SoTaskProcessor.processOrderItem(executionTaskA);
+        ServiceOrder serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            if (serviceOrderItem.getId().equals("A")) {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+            } else {
+                assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+            }
+        }
+
+        executionTaskB = getExecutionTask("B");
+        assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+        executionTaskA = getExecutionTask("A");
+        assertThat(executionTaskA).isNull();
+
+        SoTaskProcessor.processOrderItem(executionTaskB);
+        serviceOrderChecked = getServiceOrder("test");
+        assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+        for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+            assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+        }
+
+        assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+    }
+
 
     @Test
     public void testE2EExecutionTaskDeleteSuccess() throws Exception {

@@ -17,6 +17,7 @@ import org.onap.nbi.apis.serviceorder.SoClient;
 import org.onap.nbi.apis.serviceorder.model.ActionType;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrder;
 import org.onap.nbi.apis.serviceorder.model.ServiceOrderItem;
+import org.onap.nbi.apis.serviceorder.model.ServiceStateType;
 import org.onap.nbi.apis.serviceorder.model.StateType;
 import org.onap.nbi.apis.serviceorder.model.consumer.GetE2ERequestStatusResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.GetRequestStatusResponse;
@@ -64,7 +65,8 @@ public class SOGetStatusManager {
                 LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
                         response.getRequest().getRequestStatus().getRequestState());
             } else {
-                updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
+		boolean e2eService = false;
+                updateOrderItemIfStatusCompleted(serviceOrder, orderItem, e2eService);
                 LOGGER.debug("orderitem id {} completed");
             }
         } else {
@@ -73,10 +75,14 @@ public class SOGetStatusManager {
 
     }
 
-    private void updateOrderItemIfStatusCompleted(ServiceOrder serviceOrder, ServiceOrderItem orderItem) {
+	private void updateOrderItemIfStatusCompleted(ServiceOrder serviceOrder, ServiceOrderItem orderItem,boolean e2eService) {
+    	boolean serviceActivationReq = orderItem.getService().getServiceState() == ServiceStateType.ACTIVE || 
+        		orderItem.getService().getServiceState() == ServiceStateType.INACTIVE;
         if (orderItem.getAction() != ActionType.MODIFY) {
             serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.COMPLETED);
-        } else {
+        }else if(orderItem.getAction() == ActionType.MODIFY && serviceActivationReq && e2eService) {
+        	serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.COMPLETED);
+        }else {
             if (StateType.INPROGRESS_MODIFY_REQUEST_CREATE_SEND == orderItem.getState()) {
                 serviceOrderService.updateOrderItemState(serviceOrder, orderItem, StateType.COMPLETED);
             } else {
@@ -105,7 +111,8 @@ public class SOGetStatusManager {
                 LOGGER.debug("orderitem id {} failed, response from request status {}", orderItem.getId(),
                         response.getOperation().getResult());
             } else if (FINISHED.equals(result)) {
-                updateOrderItemIfStatusCompleted(serviceOrder, orderItem);
+                boolean e2eService = true;
+		updateOrderItemIfStatusCompleted(serviceOrder, orderItem,e2eService);
                 LOGGER.debug("orderitem id {} completed");
             }
         } else {

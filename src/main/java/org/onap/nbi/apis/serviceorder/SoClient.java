@@ -24,6 +24,8 @@ import org.onap.nbi.apis.serviceorder.model.consumer.GetE2ERequestStatusResponse
 import org.onap.nbi.apis.serviceorder.model.consumer.GetRequestStatusResponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.MSODeleteE2EPayload;
 import org.onap.nbi.apis.serviceorder.model.consumer.MSOE2EPayload;
+import org.onap.nbi.apis.serviceorder.model.consumer.MSOE2EServiceActivationPayload;
+import org.onap.nbi.apis.serviceorder.model.consumer.MSOE2EServiceActivationReponse;
 import org.onap.nbi.apis.serviceorder.model.consumer.MSOPayload;
 import org.onap.nbi.apis.serviceorder.model.consumer.ServiceResponse;
 import org.onap.nbi.exceptions.BackendFunctionalException;
@@ -68,6 +70,7 @@ public class SoClient {
     private String getSoStatus;
     private String getE2ESoStatus;
     private String deleteE2ESoUrl;
+    private String activationE2ESoUrl;
     private String deleteSoUrl;
     private String SoHealthCheck;
 
@@ -81,7 +84,9 @@ public class SoClient {
                 .append(OnapComponentsUrlPaths.MSO_DELETE_REQUEST_STATUS_PATH).toString();
         deleteE2ESoUrl = new StringBuilder().append(soHostname)
                 .append(OnapComponentsUrlPaths.MSO_DELETE_E2ESERVICE_INSTANCE_PATH).toString();
-        getSoStatus = new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_REQUEST_STATUS_PATH)
+        activationE2ESoUrl = new StringBuilder().append(soHostname)	
+                .append(OnapComponentsUrlPaths.MSO_DELETE_E2ESERVICE_INSTANCE_PATH).toString();
+	getSoStatus = new StringBuilder().append(soHostname).append(OnapComponentsUrlPaths.MSO_GET_REQUEST_STATUS_PATH)
                 .toString();
         getE2ESoStatus = new StringBuilder().append(soHostname)
                 .append(OnapComponentsUrlPaths.MSO_GET_E2EREQUEST_STATUS_PATH).toString();
@@ -92,7 +97,8 @@ public class SoClient {
         LOGGER.info("SO create e2e service url :  " + createE2ESoUrl);
         LOGGER.info("SO delete service url :  " + deleteSoUrl);
         LOGGER.info("SO delete e2e service url :  " + deleteE2ESoUrl);
-        LOGGER.info("SO get so status url :  " + getSoStatus);
+        LOGGER.info("SO e2e service actiavtion url :  " + activationE2ESoUrl);
+	LOGGER.info("SO get so status url :  " + getSoStatus);
         LOGGER.info("SO get e2e so status url :  " + getE2ESoStatus);
         LOGGER.info("SO healthCheck :  " + SoHealthCheck);
 
@@ -208,15 +214,8 @@ public class SoClient {
                     HttpMethod.DELETE, new HttpEntity<>(msoDeleteE2EPayload, buildRequestHeader()),
                     DeleteE2EServiceInstanceResponse.class);
 
-            // For E2E Services , Create and Delete Service responses are different, to maintain
-            // consistentcy with ServiceInstances
-            // Copy contents of DeleteE2EServiceInstanceResponse to CreateE2EServiceInstanceResponse
-            CreateE2EServiceInstanceResponse dummyresponse = new CreateE2EServiceInstanceResponse();
-            ServiceResponse serviceResponse = new ServiceResponse();
-            dummyresponse.setService(serviceResponse);
-            dummyresponse.getService().setOperationId(deleteresponse.getBody().getOperationId());
-            dummyresponse.getService().setServiceId(serviceInstanceId);
-
+	    CreateE2EServiceInstanceResponse dummyresponse = buildDummyResponse(serviceInstanceId,
+            		deleteresponse.getBody().getOperationId());
             ResponseEntity<CreateE2EServiceInstanceResponse> response =
                     new ResponseEntity(dummyresponse, deleteresponse.getStatusCode());
             logE2EResponsePost(url, response);
@@ -230,7 +229,57 @@ public class SoClient {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+ 	public ResponseEntity<CreateE2EServiceInstanceResponse> callServiceActivationE2EService(String globalSubscriberId,
+			String serviceType, String serviceInstanceId, String operation) {
+    	String url = new StringBuilder(activationE2ESoUrl).append(serviceInstanceId).append("/").append(operation).toString();
+		MSOE2EServiceActivationPayload msoE2EServiceActivationPayload = new MSOE2EServiceActivationPayload();
+		msoE2EServiceActivationPayload.setGlobalSubscriberId(globalSubscriberId);
+		msoE2EServiceActivationPayload.setServiceType(serviceType);
 
+		if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Calling SO E2E Service Activation/Deactivation  with url : " + url + " MSOE2EServiceActivationPayload : "
+                    + msoE2EServiceActivationPayload.toString());
+        }
+
+        try {
+            ResponseEntity<MSOE2EServiceActivationReponse> activationResponse = restTemplate.exchange(url,
+                    HttpMethod.POST, new HttpEntity<>(msoE2EServiceActivationPayload, buildRequestHeader()),
+                    MSOE2EServiceActivationReponse.class);
+            CreateE2EServiceInstanceResponse dummyresponse = buildDummyResponse(serviceInstanceId,
+            		activationResponse.getBody().getOperationId());
+
+            ResponseEntity<CreateE2EServiceInstanceResponse> response =
+                    new ResponseEntity(dummyresponse, activationResponse.getStatusCode());
+            logE2EResponsePost(url, response);
+            return response;
+
+        } catch (BackendFunctionalException e) {
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            return new ResponseEntity<>(e.getHttpStatus());
+        } catch (ResourceAccessException e) {
+            LOGGER.error(ERROR_ON_CALLING + url + " ," + e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+	}
+
+	/**
+	 * @param serviceInstanceId
+	 * @param operationId
+	 * @return
+	 * For E2E Services , Create and Delete/Activate/Deactivate Service responses are different,
+	 * to maintain consistentcy with ServiceInstances Copy contents of ServiceActivationE2EReponse
+	 * to CreateE2EServiceInstanceResponse
+	 */
+	private CreateE2EServiceInstanceResponse buildDummyResponse(String serviceInstanceId,
+			String operationId) {
+		CreateE2EServiceInstanceResponse dummyresponse = new CreateE2EServiceInstanceResponse();
+		ServiceResponse serviceResponse = new ServiceResponse();
+		dummyresponse.setService(serviceResponse);
+		dummyresponse.getService().setOperationId(operationId);
+		dummyresponse.getService().setServiceId(serviceInstanceId);
+		return dummyresponse;
+	}
     private void logResponsePost(String url, ResponseEntity<CreateServiceInstanceResponse> response) {
         LOGGER.info(RESPONSE_STATUS + response.getStatusCodeValue());
         if (LOGGER.isDebugEnabled()) {
