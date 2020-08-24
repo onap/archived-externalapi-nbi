@@ -64,6 +64,7 @@ public final class OnapComponentsUrlPaths {
             "/onap/so/infra/serviceInstantiation/v7/serviceInstances/";
     public static final String MSO_CREATE_E2ESERVICE_INSTANCE_PATH = "/onap/so/infra/e2eServiceInstances/v3";
     public static final String MSO_DELETE_E2ESERVICE_INSTANCE_PATH = "/onap/so/infra/e2eServiceInstances/v3/";
+    public static final String MSO_ACTIVATION_E2ESERVICE_INSTANCE_PATH = "/onap/so/infra/e2eServiceInstances/v3/";
     public static final String MSO_GET_E2EREQUEST_STATUS_PATH =
             "/onap/so/infra/e2eServiceInstances/v3/$serviceId/operations/$operationId";
     public static final String MSO_HEALTH_CHECK = "/globalhealthcheck";
