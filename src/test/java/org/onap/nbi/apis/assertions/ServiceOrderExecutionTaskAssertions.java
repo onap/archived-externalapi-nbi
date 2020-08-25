@@ -200,7 +200,7 @@ public class ServiceOrderExecutionTaskAssertions {
 		itemA.action(actionType);
 		Service serviceA = new Service();
 	
-		serviceA.setServiceState("active");
+		serviceA.setServiceState(ServiceStateType.ACTIVE);
 		ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
 		serviceSpecificationRefA.setId("3bed38ff-a4fd-4463-9784-caf738d46dbc");
 		serviceA.setServiceSpecification(serviceSpecificationRefA);
@@ -214,7 +214,7 @@ public class ServiceOrderExecutionTaskAssertions {
 		if (actionType != ActionType.ADD) {
 			serviceB.setId("e4688e5f-61a0-4f8b-ae02-a2fbde623bcb");
 		}
-		serviceB.setServiceState("active");
+		serviceB.setServiceState(ServiceStateType.ACTIVE);
 		ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
 		serviceSpecificationRefB.setId("3bed38ff-a4fd-4463-9784-caf738d46dbc");
 		serviceB.setServiceSpecification(serviceSpecificationRefB);
@@ -698,7 +698,7 @@ public class ServiceOrderExecutionTaskAssertions {
 		serviceA.setId("edf094cc-281f-4be9-a284-e047ded86066");
 		serviceA.setServicetype("vfwk8s");
 
-		serviceA.setServiceState("active");
+		serviceA.setServiceState(ServiceStateType.ACTIVE);
 		ServiceSpecificationRef serviceSpecificationRefA = new ServiceSpecificationRef();
 		serviceSpecificationRefA.setId("edf094cc-281f-4be9-a284-e047ded86066");
 		serviceA.setServiceSpecification(serviceSpecificationRefA);
@@ -711,7 +711,7 @@ public class ServiceOrderExecutionTaskAssertions {
 		Service serviceB = new Service();
 		//serviceB.setId("edf094cc-281f-4be9-a284-e047ded86066");
 
-		serviceB.setServiceState("active");
+		serviceB.setServiceState(ServiceStateType.ACTIVE);
 		ServiceSpecificationRef serviceSpecificationRefB = new ServiceSpecificationRef();
 		serviceSpecificationRefB.setId("edf094cc-281f-4be9-a284-e047ded86066");
 		serviceB.setServiceSpecification(serviceSpecificationRefB);
