@@ -20,9 +20,10 @@ Feature: Service Catalog
 Background:
 * url nbiBaseUrl
 * def Context = Java.type('org.onap.nbi.test.Context');
+* def data = read('../data/serviceSpecification.json')
 * configure readTimeout = 30000
 * call Context.startServers();
-    
+
 Scenario: testServiceCatalogGetResourceWithoutTosca
 Given path 'serviceSpecification','1e3feeb0-8e36-46c6-862c-236d9c626439_withoutTosca'
 When method get
@@ -127,4 +128,74 @@ When method get
 Then status 500
 * call Context.startServers();
 
+Scenario: testCreateServiceSpec
+Given path 'serviceSpecification'
+And header USER_ID = 'cs0008'
+And request data[0]
+When method post
+Then status 201
+And match $.id contains '#notnull'
+And match $.lifecycleStatus == 'NOT_CERTIFIED_CHECKOUT'
+And match $.serviceSpecCharacteristic ==
+"""
+[ {
+    "name" : "isBundle",
+    "description" : "is bundled or not",
+    "valueType" : "boolean",
+    "required" : true,
+    "serviceSpecCharacteristicValue" : [ {
+      "value" : "true",
+      "isDefault" : true
+    } ]
+  }, {
+    "name" : "ipaddress",
+    "description" : "ipaddress",
+    "valueType" : "string",
+    "required" : true,
+    "serviceSpecCharacteristicValue" : [ {
+      "value" : "10.244.34.1",
+      "isDefault" : true
+    } ]
+  }, {
+    "name" : "firewall",
+    "description" : "Firewall characteristic",
+    "valueType" : "string",
+    "required" : true,
+    "serviceSpecCharacteristicValue" : [ {
+      "value" : "NA",
+      "isDefault" : true
+    } ]
+  }, {
+    "name" : "NumberofPorts",
+    "description" : "Number of Ports",
+    "valueType" : "integer",
+    "required" : true,
+    "serviceSpecCharacteristicValue" : [ {
+      "value" : "10",
+      "isDefault" : true
+    } ]
+  } ]
+"""
+
+Scenario: testCreateServiceSpecWithoutUser
+Given path 'serviceSpecification'
+And request data[0]
+When method post
+Then status 400
+And match $.message contains "Missing request header 'USER_ID'"
+
+Scenario: testCreateServiceSpecWithoutPayload
+Given path 'serviceSpecification'
+And header USER_ID = 'cs0008'
+And request {}
+When method post
+Then status 400
+
+Scenario: testCreateServiceSpecWithoutMandatoryDetails
+Given path 'serviceSpecification'
+And header USER_ID = 'cs0008'
+And request data[1]
+When method post
+Then status 400
+And match $.message contains 'Bad Request'
 

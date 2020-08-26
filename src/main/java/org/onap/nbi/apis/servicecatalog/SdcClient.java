@@ -22,9 +22,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +40,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -66,6 +65,8 @@ public class SdcClient {
 
     private static final String HEADER_ECOMP_INSTANCE_ID = "x-ecomp-instanceid";
     private static final String HEADER_AUTHORIZATION = "Authorization";
+    // changes for Post Implementation
+    private static final String USER_ID = "USER_ID";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SdcClient.class);
 
@@ -156,6 +157,19 @@ public class SdcClient {
 
         return createTmpFile(inputStream);
     }
+    /**
+     *
+     * @param serviceCatalogObject
+     * @param userId
+     */
+    public Map callPost(HashMap<Object, Object> serviceCatalogObject, String userId) {
+        // post url is the same as find url
+        UriComponentsBuilder callURI = UriComponentsBuilder.fromHttpUrl(sdcFindUrl);
+        ResponseEntity<Object> response = callSdcForPost(callURI.build().encode().toUri(), serviceCatalogObject,
+                userId);
+        // return (List<LinkedHashMap>) response.getBody();
+        return (LinkedHashMap) response.getBody();
+    }
 
     private Path createTmpFile(InputStream csarInputStream) throws IOException {
         Path csarFile = Files.createTempFile("csar", ".zip");
@@ -208,4 +222,46 @@ public class SdcClient {
                     response.getBody().toString());
         }
     }
+
+    //changes for Post implementation start
+    /**
+     *
+     * @param callURI
+     * @param obj
+     * @param userId
+     * @return
+     */
+    private ResponseEntity<Object> callSdcForPost(URI callURI, Object obj, String userId) {
+        ResponseEntity<Object> response = restTemplate.exchange(callURI, HttpMethod.POST,
+                new HttpEntity<>(obj, buildRequestHeaderForPost(userId)), Object.class);
+
+        if (null == response) {
+            return null;
+        } else {
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("response body : {} ", response.getBody().toString());
+            }
+            LOGGER.info("response status : {}", response.getStatusCodeValue());
+            return response;
+        }
+
+    }
+    /**
+     *
+     * @param userId
+     * @return
+     */
+    private HttpHeaders buildRequestHeaderForPost(String userId) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.add(HEADER_ECOMP_INSTANCE_ID, ecompInstanceId);
+        httpHeaders.add(HEADER_AUTHORIZATION, sdcHeaderAuthorization);
+        httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        httpHeaders.add(USER_ID, userId);
+
+        return httpHeaders;
+    }
+
 }

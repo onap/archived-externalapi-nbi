@@ -16,6 +16,7 @@
 
 package org.onap.nbi.exceptions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -54,6 +55,13 @@ public class ApiExceptionHandler {
     @ResponseBody
     public ResponseEntity<ApiError> validationExceptionHandler(final ValidationException exception) {
         ApiError apiError = new ApiError("400", HttpStatus.BAD_REQUEST.getReasonPhrase(), exception.getMessages(), "");
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    @ResponseBody
+    public ResponseEntity<ApiError> validationExceptionHandler(final JsonProcessingException exception) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Request data is invalid!", "");
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 }

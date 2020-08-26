@@ -1,0 +1,106 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/sdc/v1/catalog/services",
+    "headers": {
+      "USER_ID": {
+        "contains": "cs0008"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "contains": "\"name\":\"partner-service\""
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "jsonBody": {
+      "uuid": "1e3feeb0-8e36-46c6-862c-236d9c626439",
+      "href": "/serviceSpecification/1e3feeb0-8e36-46c6-862c-236d9c626439",
+      "name": "partner-service",
+      "description": "service",
+      "@type": "ServiceSpecification",
+      "@schemaLocation": null,
+      "@baseType": "Service",
+      "toscaModelURL": "/",
+      "toscaResourceName": "string",
+      "category": "Partner Domain Service",
+      "subcategory": "string",
+      "version": "1.0",
+      "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+      "targetServiceSchema": {
+        "@type": "string",
+        "@schemaLocation": "/"
+      },
+      "artifacts": [
+        {
+          "artifactUUID": "1eadef",
+          "artifactName": "info-artifact",
+          "artifactDescription": "informational",
+          "artifactLabel": "notes",
+          "artifactGroupType": "info",
+          "artifactTimeout": "500",
+          "artifactChecksum": "adef23",
+          "artifactVersion": "1.0",
+          "generatedFromUUID": "a12e",
+          "artifactURL": "/artifact/info/1eadef",
+          "artifactType": "text"
+        }
+      ],
+      "lastUpdaterUserId": "cs0008",
+      "lastUpdaterFullName": "Carlos Santana",
+      "resources": [
+        {
+          "resourceUUID": "281abc4d",
+          "resourceVersion": "1.0",
+          "resourceName": "vfirewall",
+          "resourceInstanceName": "vfirewallinst",
+          "resourceInvariantUUID": "123ebdf",
+          "resoucreType": "VNF"
+        }
+      ],
+      "properties": [
+        {
+          "type": "boolean",
+          "required": true,
+          "definition": false,
+          "description": "is bundled or not",
+          "name": "isBundle",
+          "value": "true",
+          "defaultValue": true
+        },
+        {
+          "type": "string",
+          "required": true,
+          "definition": false,
+          "description": "ipaddress",
+          "name": "ipaddress",
+          "value": "10.244.34.1",
+          "defaultValue": true
+        },
+        {
+          "type": "string",
+          "required": true,
+          "definition": false,
+          "description": "Firewall characteristic",
+          "name": "firewall",
+          "value": "NA",
+          "defaultValue": true
+        },
+        {
+          "type": "integer",
+          "required": true,
+          "definition": false,
+          "description": "Number of Ports",
+          "name": "NumberofPorts",
+          "value": "10",
+          "defaultValue": true
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

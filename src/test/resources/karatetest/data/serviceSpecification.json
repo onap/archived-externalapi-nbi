@@ -1,0 +1,195 @@
+[
+  {
+    "name": "partner-service",
+    "description": "A test service through TMF API 633",
+    "@type": "ServiceSpecification",
+    "@schemaLocation": null,
+    "@baseType": "Service",
+    "toscaModelURL": "/",
+    "toscaResourceName": "",
+    "category": "Partner Domain Service",
+    "subcategory": "subservice",
+    "version": "1.0",
+    "lifecycleStatus": "NOT_CERTIFIED_CHECKOUT",
+    "DistributionStatus": "DISTRIBUTION_NOT_APPROVED",
+    "targetServiceSchema": {
+      "@type": "string",
+      "@schemaLocation": "/"
+    },
+    "attachment": [{
+      "id" : "1eadef",
+      "name" : "info-artifact",
+      "description" : "informational",
+      "artifactLabel" : "notes",
+      "artifactGroupType" : "info",
+      "artifactTimeout" : "500",
+      "artifactChecksum" : "adef23",
+      "artifactVersion" : "1.0",
+      "generatedFromUUID" : "a12e",
+      "url" : "/artifact/info/1eadef",
+      "mimeType" : "text",
+      "@type" : "ONAPartifact"
+    }
+
+    ],
+    "relatedParty": [
+      {
+        "id": "cs0008",
+        "role": "designer",
+        "name": "Carlos Santana"
+      }
+    ],
+    "resourceSpecification": [
+      {
+        "id" : "281abc4d",
+        "version" : "1.0",
+        "name" : "vfirewall",
+        "resourceInstanceName" : "vfirewallinst",
+        "modelCustomizationName" : "vfirewallinst",
+        "resourceInvariantUUID" : "123ebdf",
+        "resourceType" : "VNF",
+        "@type" : "ONAPresource"
+      }
+    ],
+    "serviceSpecCharacteristic": [
+      {
+        "name": "firewall",
+        "description": "Firewall characteristic",
+        "valueType": "string",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "string",
+            "isDefault": true,
+            "value": "NA"
+          }
+        ]
+      },
+      {
+        "name": "isBundled",
+        "description": "is bundled or not",
+        "valueType": "boolean",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "boolean",
+            "isDefault": true,
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "NumberofPort",
+        "description": "NumberofPorts",
+        "valueType": "integer",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "string",
+            "isDefault": false,
+            "value": "10"
+          }
+        ]
+      },
+      {
+        "name": "ipaddress",
+        "description": "ipaddress",
+        "valueType": "float",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "string",
+            "isDefault": false,
+            "value": "15.123.9.101"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "@type": "ServiceSpecification",
+    "@schemaLocation": null,
+    "@baseType": "Service",
+    "toscaModelURL": "/",
+    "toscaResourceName": "",
+    "subcategory": "subservice",
+    "version": "1.0",
+    "lifecycleStatus": "NOT_CERTIFIED_CHECKOUT",
+    "targetServiceSchema": {
+      "@type": "string",
+      "@schemaLocation": "/"
+    },
+    "attachment": [],
+    "resourceSpecification": [],
+    "serviceSpecCharacteristic": [
+      {
+        "name": "firewall",
+        "description": "Firewall characteristic",
+        "valueType": "string",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "string",
+            "isDefault": true,
+            "value": "NA"
+          }
+        ]
+      },
+      {
+        "name": "isBundled",
+        "description": "is bundled or not",
+        "valueType": "boolean",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "boolean",
+            "isDefault": true,
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "NumberofPorts",
+        "description": "Number of Ports",
+        "valueType": "integer",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "string",
+            "isDefault": false,
+            "value": "10"
+          }
+        ]
+      },
+      {
+        "name": "ipaddress",
+        "description": "ipaddress",
+        "valueType": "string",
+        "@type": "string",
+        "@schemaLocation": "string",
+        "required": true,
+        "serviceSpecCharacteristicValue": [
+          {
+            "valueType": "string",
+            "isDefault": true,
+            "value": "10.244.34.1"
+          }
+        ]
+      }
+    ]
+  }
+]
