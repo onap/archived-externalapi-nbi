@@ -1,0 +1,105 @@
+[{
+    "operation": "default",
+    "spec": {
+      "ref": {
+        "True": true,
+        "False": false
+      }
+    }
+        },
+  {
+    "operation": "shift",
+    "spec": {
+      "uuid": "id",
+      "name": "name",
+      "description": "description",
+      "invariantUUID": "invariantUUID",
+      "toscaModelURL": "toscaModelURL",
+      "toscaResourceName": "toscaResourceName",
+      "categories": {
+        "*": {
+          "name": "category"
+        }
+      },
+      "properties": {
+        "*": {
+          "name": "serviceSpecCharacteristic[&1].name",
+          "description": "serviceSpecCharacteristic[&1].description",
+          "type": "serviceSpecCharacteristic[&1].valueType",
+          "required": "serviceSpecCharacteristic[&1].required",
+          "value": "serviceSpecCharacteristic[&1].serviceSpecCharacteristicValue[0].value",
+          "defaultValue": {
+            "*": {
+              "@(4,ref.True)": "serviceSpecCharacteristic[&3].serviceSpecCharacteristicValue[0].isDefault"
+            }
+          }
+        }
+      },
+      "subcategory": "subcategory",
+      "distributionStatus": "distributionStatus",
+      "version": "version",
+      "lifecycleState": "lifecycleStatus",
+      "artifacts": {
+        "*": {
+          "artifactUUID": "attachment[&1].id",
+          "artifactName": "attachment[&1].name",
+          "artifactDescription": "attachment[&1].description",
+          "artifactLabel": "attachment[&1].artifactLabel",
+          "artifactGroupType": "attachment[&1].artifactGroupType",
+          "artifactTimeout": "attachment[&1].artifactTimeout",
+          "artifactChecksum": "attachment[&1].artifactChecksum",
+          "artifactVersion": "attachment[&1].artifactVersion",
+          "generatedFromUUID": "attachment[&1].generatedFromUUID",
+          "artifactURL": "attachment[&1].url",
+          "artifactType": "attachment[&1].mimeType"
+        }
+      },
+      "lastUpdaterUserId": "relatedParty.id",
+      "lastUpdaterFullName": "relatedParty.name",
+      "resources": {
+        "*": {
+          "resourceUUID": "resourceSpecification[&1].id",
+          "resourceVersion": "resourceSpecification[&1].version",
+          "resourceName": "resourceSpecification[&1].name",
+          "resourceInstanceName": ["resourceSpecification[&1].resourceInstanceName", "resourceSpecification[&1].modelCustomizationName"],
+          "resourceInvariantUUID": "resourceSpecification[&1].resourceInvariantUUID",
+          "resoucreType": "resourceSpecification[&1].resourceType"
+        }
+      }
+    }
+  },
+  {
+    "operation": "modify-overwrite-beta",
+    "spec": {
+      "href": "=concat('serviceSpecification/',@(1,id))"
+    }
+  },
+  {
+    "operation": "default",
+    "spec": {
+      "@type": "ONAPservice",
+      "attachment[]": {
+        "*": {
+          "@type": "ONAPartifact"
+        }
+      },
+      "serviceSpecCharacteristic[]": {
+        "*": {
+          "serviceSpecCharacteristicValue[]": {
+            "*": {
+              "isDefault": false
+            }
+          }
+        }
+      },
+      "relatedParty": {
+        "role": "lastUpdater"
+      },
+      "resourceSpecification[]": {
+        "*": {
+          "@type": "ONAPresource"
+        }
+      }
+    }
+  }
+]
