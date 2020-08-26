@@ -19,7 +19,7 @@ FROM registry.gitlab.com/onap-integration/docker/onap-java
 USER onap
 
 ARG SERVER_PORT
-ARG PKG_FILENAME=nbi-rest-services-7.0.0-SNAPSHOT.jar
+ARG PKG_FILENAME=nbi-rest-services-7.0.1-SNAPSHOT.jar
 ADD target/$PKG_FILENAME /opt/onap/app.jar
 
 RUN mkdir temptoscafile && chown onap:onap temptoscafile/
