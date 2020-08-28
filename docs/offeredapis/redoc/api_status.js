@@ -1,1 +1,1 @@
-<redoc spec-url='https://docs.onap.org/en/latest/_downloads/d82274385015de7be0ba6f3a8e54a673/swagger.json'></redoc>
+<redoc spec-url='https://docs.onap.org/projects/onap-externalapi-nbi/en/latest/_downloads/32f58fbdbdc8b7960948036f1aab7deb/swagger.json'></redoc>
