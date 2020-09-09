@@ -365,7 +365,41 @@ public class ExecutionTaskTest {
         assertThat(executionTaskRepository.count()).isEqualTo(0);
 
     }
-    
+    //Test Macro Execution Delete
+      @Test
+      public void testMacroExecutionTaskDeleteSuccess() throws Exception {
+
+      	ExecutionTask executionTaskA =ServiceOrderExecutionTaskAssertions.setUpBddForMacroExecutionTaskSucess(
+                  serviceOrderRepository, executionTaskRepository, ActionType.DELETE);
+          ExecutionTask executionTaskB;
+
+          SoTaskProcessor.processOrderItem(executionTaskA);
+          ServiceOrder serviceOrderChecked = getServiceOrder("test");
+          assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.INPROGRESS);
+          for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+              if (serviceOrderItem.getId().equals("A")) {
+                  assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+              } else {
+                  assertThat(serviceOrderItem.getState()).isEqualTo(StateType.ACKNOWLEDGED);
+              }
+          }
+
+          executionTaskB = getExecutionTask("B");
+          assertThat(executionTaskB.getReliedTasks()).isNullOrEmpty();
+          executionTaskA = getExecutionTask("A");
+          assertThat(executionTaskA).isNull();
+
+          SoTaskProcessor.processOrderItem(executionTaskB);
+          serviceOrderChecked = getServiceOrder("test");
+          assertThat(serviceOrderChecked.getState()).isEqualTo(StateType.COMPLETED);
+          for (ServiceOrderItem serviceOrderItem : serviceOrderChecked.getOrderItem()) {
+              assertThat(serviceOrderItem.getState()).isEqualTo(StateType.COMPLETED);
+
+          }
+
+          assertThat(executionTaskRepository.count()).isEqualTo(0);
+
+      }    
  // Macro Flow Execution Task
  	@Test
  	public void testMacroExecutionTaskSuccess() throws Exception {

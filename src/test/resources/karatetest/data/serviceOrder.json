@@ -1064,5 +1064,67 @@
         ]
       }
     ]
+  },
+  {
+    "state": "acknowledged",
+    "externalId": "LudONAP001",
+    "priority": "1",
+    "description": "Ludo first ONAP order",
+    "category": "Consumer",
+    "requestedStartDate": "2019-01-23T12:34:56.123456789Z",
+    "requestedCompletionDate": "2019-01-23T12:34:56.123456789Z",
+    "@baseType": "toto",
+    "completionDateTime": "2019-01-23T12:34:56.123456789Z",
+    "expectedCompletionDate": "2019-01-23T12:34:56.123456789Z",
+    "@schemaLocation": "/tutu",
+    "orderRelationship": [
+      {
+        "id": "test",
+        "href": "test",
+        "referredType": "test",
+        "type": "test"
+      }
+    ],
+    "relatedParty": [
+      {
+        "id": "6490",
+        "role": "ONAPcustomer",
+        "referredType": "individual",
+        "name": "Jean Pontus"
+      }
+    ],
+    "orderItem": [
+      {
+        "id": "A",
+        "action": "delete",
+        "state": "active",
+        "service": {
+          "id": "null",
+          "state": "active",
+          "serviceSpecification": {
+            "id": "82c9fbb4-656c-4973-8c7f-172b22b5fa8f"
+          }
+        }
+      },
+      {
+        "id": "B",
+        "action": "delete",
+        "state": "active",
+        "service": {
+          "id": "null",
+          "state": "active",
+          "serviceSpecification": {
+            "id": "82c9fbb4-656c-4973-8c7f-172b22b5fa8f"
+          }
+        },
+        "orderItemRelationship": [
+          {
+            "id": "A",
+            "type": "reliesOn"
+          }
+        ]
+      }
+    ]
   }
 ]
+

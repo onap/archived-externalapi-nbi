@@ -226,8 +226,8 @@ public class PostSoProcessor {
           response = soClient.callMacroCreateServiceInstance(msoMacroPayload);
           break;
         case DELETE:
-          // response = soClient.callDeleteServiceInstance(msoPayload,
-          // serviceOrderItem.getService().getId());
+           response = soClient.callMacroDeleteServiceInstance(msoMacroPayload,
+           serviceOrderItem.getService().getId());
           break;
         case MODIFY:
           if (StateType.INPROGRESS_MODIFY_ITEM_TO_CREATE == serviceOrderItem.getState()) {

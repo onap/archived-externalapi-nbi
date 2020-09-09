@@ -1,0 +1,19 @@
+{
+    "request": {
+        "method": "DELETE",
+        "url": "/onap/so/infra/serviceInstantiation/v7/serviceInstances/82c9fbb4-656c-4973-8c7f-172b22b5fa8f"
+    },
+    "response": {
+        "status": 202,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "jsonBody": {
+            "requestReferences": {
+                "instanceId": "instanceId",
+                "requestId": "requestId"
+            }
+        }
+    }
+}
+
