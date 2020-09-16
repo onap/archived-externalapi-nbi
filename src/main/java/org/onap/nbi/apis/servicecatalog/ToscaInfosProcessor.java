@@ -61,7 +61,7 @@ public class ToscaInfosProcessor {
 
     private Set<String> vnfInstanceParams = new HashSet<String>(Arrays.asList("onap_private_net_id",
         "onap_private_subnet_id", "pub_key", "sec_group", "install_script_version", "demo_artifacts_version",
-        "cloud_env", "public_net_id", "aic-cloud-region", "image_name", "flavor_name"));
+        "cloud_env", "public_net_id", "aic-cloud-region", "image_name", "flavor_name", "skip_post_instantiation_configuration"));
 
     final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
 
@@ -290,6 +290,9 @@ public class ToscaInfosProcessor {
  				GetInput getInput = (GetInput) property.getValue();
  				listOfVFLevelInputs.put(getInput.getInputName(), getInput.result());
  				listOfVFLevelInputs.remove(property.getName());
+ 			} else if(property.getName().equals("skip_post_instantiation_configuration")) {
+				//Add skip_post_instantiation_configuration as vf Level Inputs
+ 				listOfVFLevelInputs.put(property.getName(), property.getValue());
  			}
  		}
 

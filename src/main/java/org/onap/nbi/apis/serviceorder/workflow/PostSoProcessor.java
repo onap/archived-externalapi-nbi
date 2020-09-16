@@ -288,7 +288,9 @@ public class PostSoProcessor {
 			instanceSpecification.putAll(vnfInstanceParams);
 			vnfInstanceParam.add(instanceSpecification);
 		} else {
-			vnfInstanceParams.put("k8s-rb-profile-name", k8sRbProfileName);
+			//if skip_post_instantiation_configuration is true then add k8s-rb-profile-name
+			if(instanceSpecification.get("skip_post_instantiation_configuration").equals(true))
+				vnfInstanceParams.put("k8s-rb-profile-name", k8sRbProfileName);
 			vnfInstanceParam.add(vnfInstanceParams);
 		}
 
@@ -337,7 +339,8 @@ public class PostSoProcessor {
 			
 		} else {
 			Map<String, Object> instanceParam = new HashMap<>();
-			instanceParam.put("k8s-rb-profile-name", k8sRbProfileName);
+			if(instanceSpecification.get("skip_post_instantiation_configuration").equals(true))
+				instanceParam.put("k8s-rb-profile-name", k8sRbProfileName);
 			vfInstanceParam.add(instanceParam);
 		}
 		

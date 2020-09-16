@@ -356,6 +356,7 @@ public class ToscaInfosProcessorTest {
 			"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/EnxIi7fcHMEi9VPtCGCOpQYblj9r0M/CaD5U15Cb5qHzcHiPtJpVsDMlPGzN9VHxWZG6FqQv1s6oE+PmG1xeahhb+ofrY6s8zvlUCcWGIo/bPexzb2ErvkGyd+1tQo9oLrxNdUG0xeWUX3oFkiw3RBRyxf9n4E5ajZr4cEFQ0sqJkslj87XViw/h555ydIYTY5cPNmIlsIXTObC/2z3muVWYUzaaZE8omfYJE442+UhYLHgb7Cl1JMk/SNu/r+bLrsXeBSPB+/bxVKqjpd659AQ7GRNXvBrgfq6EKNiVjrI76AbpeTM2D/LXbENuUUkvJBWptSd0gPAGkEyc9w2n");
 	instanceSpecificationTestData.put("public_net_id",
 			"60dc8a1c-86b8-4cc4-b5c8-9b0272113c1f0f1c389d-e9db-4c14-b3a2-11dca2d104ed");
+	instanceSpecificationTestData.put("skip_post_instantiation_configuration", true);
 
 	// Resources to put in response as resourceSpecification
 	response.put("resourceSpecification", resources);
@@ -406,6 +407,7 @@ public class ToscaInfosProcessorTest {
 		Map instanceSpecificationTestData = new LinkedHashMap<>();
 		instanceSpecificationTestData.put("vfw_cnf_13080_dummy_vf_2", "xyz");
 		instanceSpecificationTestData.put("vfw_cnf_13080_dummy_vf_1", "abc");
+		instanceSpecificationTestData.put("skip_post_instantiation_configuration", true);
 
 		// serviceParams Test Data
 		Map serviceParamsTestData = new LinkedHashMap<>();
