@@ -130,7 +130,6 @@ is provided - Swagger is documented.
 
 Only ``serviceSpecification`` resource is provided.
 Information are retrieved in **SDC** (and in TOSCA file)
-- Only GET operation is provided - this API does not update **SDC**.
 
 Only characteristics at service level will be retrieved in ONAP TOSCA file.
 For example if an ONAP service is composed of VNF and the VF module, the
@@ -161,7 +160,7 @@ If no ``serviceSpecification`` matches, an empty list is send back.
 Example: ``GET /nbi/api/v4/serviceSpecification/{uuid}``
 
 It is use to retrieve one ``serviceSpecification`` - all available information
-are retieved (see Swagger for description)
+are retrieved (see Swagger for description)
 
 **GET service Specification Schema (id)**
 
@@ -169,7 +168,19 @@ Example:
 ``GET /nbi/api/v4/serviceSpecification/{uuid}/specificationInputSchema``
 
 It is use to retrieve one  input schema from the tosca file stored in **NBI**
-- all available information are retieved (see Swagger for description)
+- all available information are retrieved (see Swagger for description)
+
+**POST service Specification**
+
+Example:
+
+``POST /nbi/api/v4/serviceSpecification``
+
+This operation creates a ``serviceSpecification`` in catalog (see Swagger for description)
+It is used to provide a consistent way of on-boarding third party services to SDC via External API
+
+Only *primitive type* service characteristics are supported as part of this release. Further enhancements
+need to be made on other modules of ONAP for ensuring e2e automation of third party services. 
 
 ----------------
 serviceInventory
