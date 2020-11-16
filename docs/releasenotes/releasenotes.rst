@@ -5,6 +5,40 @@
 Release Notes
 =============
 
+Version: 7.0.2
+--------------
+
+:Release Date: 2020-11-16
+
+Guilin Release tag - 7.0.2
+
+**Fix**
+
+- `EXTAPI-510 <https://jira.onap.org/browse/EXTAPI-510>`_ - 1 NBI pod has no limit 
+- `EXTAPI-509 <https://jira.onap.org/browse/EXTAPI-509>`_ - NBI has root pods 
+- `EXTAPI-197 <https://jira.onap.org/browse/EXTAPI-197>`_ - MSB registration 
+
+Detail of NBI features for Guilin are described in the readTheDoc documentation.
+
+https://docs.onap.org/projects/onap-externalapi-nbi/en/latest/index.html#master-index
+
+**Known Issues**
+
+No new issues
+
+**Security Notes**
+
+Updates may to External API pods security are per TSC must have list
+
+Quick Links:
+
+- `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
+
+**Upgrade Notes**
+
+No major API changes. The API Major version is still 4.
+
+
 Version: 6.0.3
 --------------
 
