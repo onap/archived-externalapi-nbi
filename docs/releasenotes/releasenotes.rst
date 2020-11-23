@@ -18,7 +18,7 @@ Guilin Release tag - 7.0.2
 - `EXTAPI-509 <https://jira.onap.org/browse/EXTAPI-509>`_ - NBI has root pods 
 - `EXTAPI-197 <https://jira.onap.org/browse/EXTAPI-197>`_ - MSB registration 
 
-Detail of NBI features for Guilin are described in the readTheDoc documentation.
+Details of NBI features for Guilin are described in the readTheDoc documentation.
 
 https://docs.onap.org/projects/onap-externalapi-nbi/en/latest/index.html#master-index
 
