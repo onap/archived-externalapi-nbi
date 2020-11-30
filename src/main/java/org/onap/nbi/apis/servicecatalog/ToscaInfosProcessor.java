@@ -279,22 +279,24 @@ public class ToscaInfosProcessor {
  	
  	private HashMap<String, Object> getUserDefinedVFLevelInstanceParams(
  			Map<String, org.onap.sdc.toscaparser.api.Property> groupProperties, Map listOfVFLevelInputs) {
+        
+       if(groupProperties != null && !groupProperties.isEmpty()) {
 
- 		HashMap<String, Object> vnfLevelInstanceParams = new HashMap<>();
- 		
- 		for (Entry<String, org.onap.sdc.toscaparser.api.Property> entry : groupProperties.entrySet()) {
+		   for (Entry<String, org.onap.sdc.toscaparser.api.Property> entry : groupProperties.entrySet()) {
 
- 			org.onap.sdc.toscaparser.api.Property property = entry.getValue();
- 			
- 			if ((property.getValue().getClass() == GetInput.class)) {
- 				GetInput getInput = (GetInput) property.getValue();
- 				listOfVFLevelInputs.put(getInput.getInputName(), getInput.result());
- 				listOfVFLevelInputs.remove(property.getName());
- 			} else if(property.getName().equals("skip_post_instantiation_configuration")) {
-				//Add skip_post_instantiation_configuration as vf Level Inputs
- 				listOfVFLevelInputs.put(property.getName(), property.getValue());
- 			}
- 		}
+			   org.onap.sdc.toscaparser.api.Property property = entry.getValue();
+
+			   if ((property.getValue().getClass() == GetInput.class)) {
+			        GetInput getInput = (GetInput) property.getValue();
+				    listOfVFLevelInputs.put(getInput.getInputName(), getInput.result());
+			        listOfVFLevelInputs.remove(property.getName());
+			   } else if(property.getName().equals("skip_post_instantiation_configuration")) {
+				    //Add skip_post_instantiation_configuration as vf Level Inputs
+				    listOfVFLevelInputs.put(property.getName(), property.getValue());
+			   }
+		   }
+		
+	   }
 
  		return (HashMap<String, Object>) listOfVFLevelInputs;		
  	}
