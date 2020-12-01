@@ -17,7 +17,7 @@ be used by external systems as BSS for example. These API are based on
 **TMF API**.
 
 *******************************************
-Global NBI architecture for El Alto release
+Global NBI architecture for Guilin release
 *******************************************
 
 Following illustration provides a global view about **NBI** architecture,
