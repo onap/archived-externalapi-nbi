@@ -30,7 +30,7 @@
 
   <groupId>org.onap.externalapi-nbi</groupId>
   <artifactId>nbi-rest-services</artifactId>
-  <version>7.0.2-SNAPSHOT</version>
+  <version>8.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>externalapi-nbi</name>
