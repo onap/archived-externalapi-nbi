@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '8.0.0'
+project: 'externalapi-nbi'
+log_dir: 'externalapi-nbi-maven-docker-stage-master/648/'
+ref: bc2db6a198bc5a4ef7238720f6320b2bd3348c11
+containers:
+    - name: 'externalapi/nbi'
+      version: '8.0.0-20210215T014855Z'
