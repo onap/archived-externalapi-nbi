@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-FROM registry.gitlab.com/onap-integration/docker/onap-java
+FROM nexus3.onap.org:10001/onap/integration-java11
 
 USER onap
 
