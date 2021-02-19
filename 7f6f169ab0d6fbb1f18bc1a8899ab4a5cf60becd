@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cfaa38e6_ee3e4fcb",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2021-02-19T17:31:38Z",
+      "side": 1,
+      "message": "you do not specify the version..I hope latest is..latest...we got surprised in the past..",
+      "revId": "7f6f169ab0d6fbb1f18bc1a8899ab4a5cf60becd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
