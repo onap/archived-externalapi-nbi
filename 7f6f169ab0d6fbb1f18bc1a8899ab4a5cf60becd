@@ -16,6 +16,24 @@
       "revId": "7f6f169ab0d6fbb1f18bc1a8899ab4a5cf60becd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5819cf6c_2dbb1e03",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 7352
+      },
+      "writtenOn": "2021-02-22T07:45:37Z",
+      "side": 1,
+      "message": "https://docs.docker.com/engine/reference/builder/#from\n\"The tag or digest values are optional. If you omit either of them, the builder assumes a latest tag by default. The builder returns an error if it cannot find the tag value.\"",
+      "parentUuid": "cfaa38e6_ee3e4fcb",
+      "revId": "7f6f169ab0d6fbb1f18bc1a8899ab4a5cf60becd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
