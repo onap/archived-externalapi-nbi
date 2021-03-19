@@ -5,6 +5,38 @@
 Release Notes
 =============
 
+Version: 8.0.1
+--------------
+
+:Release Date: 2021-03-19
+
+Honolulu Release tag - 8.0.1
+
+**Fix**
+
+- `EXTAPI-535 <https://jira.onap.org/browse/EXTAPI-535>`_ - Error in NBI serviceSpecification API 
+
+Details of NBI features for Honolulu are described in the readTheDoc documentation.
+
+https://docs.onap.org/projects/onap-externalapi-nbi/en/latest/index.html#master-index
+
+**Known Issues**
+
+No new issues
+
+**Security Notes**
+
+External API pods security are as requested per TSC must have list
+
+Quick Links:
+
+- `External API project page <https://wiki.onap.org/display/DW/External+API+Framework+Project>`_
+
+**Upgrade Notes**
+
+No major API changes. The API Major version is still 4.
+
+
 Version: 7.0.2
 --------------
 

@@ -17,7 +17,7 @@ These API are based on **TMF API**.
 
 
 *******************************************
-Global NBI architecture for Guilin release
+Global NBI architecture for Honolulu release
 *******************************************
 
 Following illustration provides a global view about NBI architecture,
