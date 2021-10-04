@@ -1,0 +1,995 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "# About the ONAP Service Order API\n The Service Catalog API is based on the TM Forum 641 Service Ordering API.\n ## API Overview\n### General Description \n The Service Order API is used to request the instantiation, deletion or modification of a service\n\nA Service Order is a type of order which can be used to describe a group of operations on service – one service order item per service. An action at the level of the service order item describes the operation to be completed on a service (add, delete for example). The service order is triggered from external system such as the BSS system in charge of the product order management to ONAP that will manage the service fulfillment.\n\nList of available subscription for serviceOrdering notifications, see /hub resources swagger for more detailed information:\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n- ServiceOrderItemStateChangeNotification\n\n### Relationship and Dependencies\n This Service Ordering API is related to the TM Forum 641 Service Ordering API and also to MEF LSO LEGATO Service Ordering API.\n\nThis API takes a subset of the Service Ordering API formal specification and maps it to the internals of ONAP APIS. By doing this we allow a well known, standardized JSON REST representation of the Service Templates available in ONAP to be ordered via well known Service Order formet. The main interaction for a Service Order are with ONAP Service Orchestrator (SO) for Service Instanctiation, ONAP Service and Design Center (SDC) for validating the order is for a known ONAP Service and AAI to make sure that for a service deltion or modification order, that the service instance is a valid Service instance in the ONAP Inventory\n\n### API Structure and Approach\nThe Service Ordering API can be used to order a Service from ONAP for any specific ONAP Service Template offering in the ONAP Service Catalog, or it can be used to modify or delete a Service Instance that has been already created in ONAP inventory. \n## Getting Started with the API (Hello World)\nThe Service Ordering API is available via two schemes, http and https. For interacting with the API the simplest method is via http. To interact with this API via https, your Client would be required to load the neccessary https certificate. \n\nThe default installation of ONAP via OOM, will configure the use of two Node ports for External APIs. NodePorts are used to allow client applications, that run outside of Kubernetes, access to ONAP components deployed by OOM. For this Service Ordering API, the External API Framework has a http Node port of 30274. For https, the Node port is 30292.\n\n From outside ONAP, a client can interact with External API by first getting the IP that the NBI docker container is running on, and then using the appropriate nodeport according to the access scheme. For example to retrieve a list of all Service orders  in ONAP SOM you can use http method GET to http://{nbi_ip}:30274/nbi/api/v4/serviceOrder/ \n### SDK quick intro\nThere are many tools that can be used to view and edit this swagger file like swagger editor, Atom and senya. For example this swagger file can be loaded into https://editor.swagger.io/. This UI acts both as an online editor and viewer. \n### How to start the client side implementation\n* Code generation, is available via the Generate Client option in the swagger editor. Client stubs can be generated in multiple languages, for example java, go, python etc. These Client stub code can be incorporated in the Application you wish to access the Service Ordering API from.\n\n### How to start the server side implementation\n* Not applicable, the service side for this API will be the NBI container running the External API Framework Springboot application.\n\n## API Description\nIncludes summary of information drawn from API definitions in OpenAPI / Swagger files\n### Resource Endpoint / Resource Quick Reference\nGET /serviceOrder/ : This operation returns a list service orders from External API Framework DB\n\nGET /serviceOrder/{id} : This operation returns the service order associated with this id.\n\n POST /serviceOrder : This operation is used to create a service order, with one of the following three action types, add, delete or modify. Note add is used to Instantiate a new service Instance of the specified Service Template ( SDC uuid) when NBI makes calls to SO to execute the instantiation workflows. The delete action is used to delete a specified service instance id ( AAI instance id ), while action modify is to modify the service instance.\n\n### Data Schema\n#### Main API Entities\nDescribe the major entities used in the API\n\nThe main entity of the API is the ServiceOrder resource. This entity is the top level entity of the API, and is returned as either a single instance when queried with id, or as JSON arroy of ServiceOrder entities when queried as a list.\n\nThe major child enties are relatedParty which points to the customer who is ordering the Service. This customer is related to the customer in the AAI where this servie instance for the order is placed. The orderItem is an array, meaning more that one service can be orders within the one Serice Order. i.e. each orderItem corresponds to one service instance. The serviceSpecCharacteristics entities are used to describe the attributes that can be supplied to instantiate a Service Instance of this Service Template.\n#### Payload data structures\nIf any, describe the appropriate data structures that are included within payload of the API.\n\nNot applicable\n### Security on the API\nAuthentication; Authorization; Credentials/access token; etc.\n\n https certificate required if using https. No authentication on http requests.In production this API should be behind an API Gateway with the necessary authentication\n### Response Codes\nThe meaning of Status Codes & Errors\n\nSee response codes for each API resource in the API section below\n### Rate Limits and Thresholds\nRequests per unit time allowed; Pagination\n\n No rate limits or thresholds, in production this API should be behind an API Gateway with the necessary limits.\n### Validation constraints\nDescribe any behavioral and structural validation constraints\n\nNot applicable\n### Assumptions\nFor example, any Pre/Post conditions\n\n For this API to function, SDC is required to be running and Service models designed in the SDC catalog. SO, AAI and DMaaP also need to be running as a minimum. \n## API Interactions and Flows\n### Interaction Examples\nIllustrate sequence of client calls to this API, possibly based on Use Cases, presented with diagrams, tables, etc\n\nThe Service Order API flow of use can generally follow the sequence below\n\n\n#### Call ONAP to discover what available services it can offer\n```\ncurl -X GET \"http://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/serviceSpecification/\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n[\n  {\r\n        \"id\": \"0ec83a1f-51e7-44e7-b773-3f37ddb937cd\",\r\n        \"name\": \"EPLServiceTemplate\",\r\n        \"invariantUUID\": \"ddf31f35-8e71-4f5a-a383-4241b87ca7a7\",\r\n        \"category\": \"Network L4+\",\r\n        \"distributionStatus\": \"DISTRIBUTED\",\r\n        \"version\": \"1.0\",\r\n        \"lifecycleStatus\": \"CERTIFIED\",\r\n        \"relatedParty\": {\r\n            \"id\": \"jm0007\",\r\n            \"role\": \"lastUpdater\"\r\n        }\r\n    }\n]\n```\n\nUsing the id returned from the list of Service Specifications, pick one you would like to order an instance of.\n Using the instantation serviceCharacteristics from the Catalog construct the Service Order POST body associated with this template.\n Then POST the Service Order with an action of add to ask ONAP to instanctiate a Service Instance.\n\n#### Example POST Service Order Body\n\n```\n{\r\n        \"externalId\": \"BBS_BSS_TrackindId8888\",\r\n        \"priority\": \"1\",\r\n        \"description\": \"Service Order for a new HSIA CFS\",\r\n        \"category\": \"Network Service\",\r\n        \"relatedParty\": [\r\n            {\r\n                \"id\": \"BBSCustomer\",\r\n                \"href\": null,\r\n                \"role\": \"ONAPcustomer\",\r\n                \"name\": \"EnterpriseA\",\r\n                \"@referredType\": \"Consumer\"\r\n            }\r\n        ],\r\n        \"orderItem\": [\r\n            {\r\n                \"id\": \"1\",\r\n                \"action\": \"add\",\r\n                \"service\": {\r\n                    \"name\": \"BBS_E2E_Service\",\r\n                    \"serviceState\": \"active\",\r\n                    \"serviceCharacteristic\": [\r\n                        {\r\n                            \"name\": \"ont_ont_serial_num\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_serial_num\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_rg_mac_addr\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"rg_mac_addr\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_downstream_speed\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"10\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_mac_addr\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_mac_addr\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_access_id\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"profile_ip_access_id\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_swVersion\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_swVersion\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_manufacturer\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_manufacturer\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_service_type\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"service_type\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_pnf_name\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_pnf_name\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_upstream_speed\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"10\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_nf_type\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_nf_type\"\r\n                            }\r\n                        }\r\n                    ],\r\n                    \"serviceSpecification\": {\r\n                        \"id\": \"90b476bc-0988-4417-bae9-41b376f0e1b6\"\r\n                    }\r\n                }\r\n            }\r\n        ]\r\n}\n```\n\n\n#### You can then track the Service Order progress using the returned order id from the POST response. Use GET with the returned order id GET /nbi/api/v4/serviceOrder/5c988c98e3caf4000173cb4d\n\n#### Example GET Service Order by specific order id Response\n```\n\n{\r\n        \"id\": \"5c988c98e3caf4000173cb4d\",\r\n        \"href\": \"serviceOrder\/5c988c98e3caf4000173cb4d\",\r\n        \"externalId\": \"BBS_BSS_TrackindId6979\",\r\n        \"priority\": \"1\",\r\n        \"description\": \"Service Order for a new HSIA CFS\",\r\n        \"category\": \"Network Service\",\r\n        \"state\": \"inProgress\",\r\n        \"orderDate\": \"2019-03-25T08:08:56.297Z\",\r\n        \"completionDateTime\": null,\r\n        \"expectedCompletionDate\": null,\r\n        \"requestedStartDate\": null,\r\n        \"requestedCompletionDate\": null,\r\n        \"startDate\": null,\r\n        \"@baseType\": null,\r\n        \"@type\": null,\r\n        \"@schemaLocation\": null,\r\n        \"relatedParty\": [\r\n            {\r\n                \"id\": \"testcustomer5\",\r\n                \"href\": null,\r\n                \"role\": \"ONAPcustomer\",\r\n                \"name\": \"EnterpriseA\",\r\n                \"@referredType\": \"Consumer\"\r\n            }\r\n        ],\r\n        \"orderRelationship\": null,\r\n        \"orderItem\": [\r\n            {\r\n                \"orderMessage\": [],\r\n                \"id\": \"1\",\r\n                \"action\": \"add\",\r\n                \"state\": \"inProgress\",\r\n                \"percentProgress\": \"0\",\r\n                \"@type\": null,\r\n                \"@schemaLocation\": null,\r\n                \"@baseType\": null,\r\n                \"orderItemRelationship\": [],\r\n                \"service\": {\r\n                    \"id\": \"ee8ddf86-b653-4377-809a-05811fea8501\",\r\n                    \"href\": null,\r\n                    \"name\": \"BBS_E2E_Service\",\r\n                    \"serviceState\": \"active\",\r\n                    \"@type\": null,\r\n                    \"@schemaLocation\": null,\r\n                    \"serviceCharacteristic\": [\r\n                        {\r\n                            \"name\": \"ont_ont_serial_num\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_serial_num\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_rg_mac_addr\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"rg_mac_addr\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_downstream_speed\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"10\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_mac_addr\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_mac_addr\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_access_id\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"profile_ip_access_id\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_swVersion\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_swVersion\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_manufacturer\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_manufacturer\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_service_type\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"service_type\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_pnf_name\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_pnf_name\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"edgeinternetprofile_ip_upstream_speed\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"10\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"name\": \"ont_ont_nf_type\",\r\n                            \"valueType\": null,\r\n                            \"value\": {\r\n                                \"@type\": null,\r\n                                \"@schemaLocation\": null,\r\n                                \"serviceCharacteristicValue\": \"ont_ont_nf_type\"\r\n                            }\r\n                        }\r\n                    ],\r\n                    \"serviceRelationship\": null,\r\n                    \"relatedParty\": null,\r\n                    \"serviceSpecification\": {\r\n                        \"id\": \"90b476bc-0988-4417-bae9-41b376f0e1b6\",\r\n                        \"href\": null,\r\n                        \"name\": null,\r\n                        \"version\": null,\r\n                        \"targetServiceSchema\": null,\r\n                        \"@type\": null,\r\n                        \"@schemaLocation\": null,\r\n                        \"@baseType\": null\r\n                    }\r\n                },\r\n                \"orderItemMessage\": []\r\n            }\r\n        ],\r\n        \"orderMessage\": null\r\n}\n```\n\n",
+    "version": "4.1.0",
+    "title": "ServiceOrder API",
+    "contact": {
+      "name": "ONAP",
+      "url": "https://onap.readthedocs.io",
+      "email": "onap-discuss@lists.onap.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "x-planned-retirement-date": "205001",
+    "x-component": "NBI",
+    "x-logo": {
+      "url": "/redoc/logo.png",
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  "host": "nbi.api.simpledemo.onap.org:30274",
+  "basePath": "/nbi/api/v4",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json;charset=utf-8"
+  ],
+  "tags": [
+    {
+      "name": "ServiceOrder",
+      "description": "provided by NBI"
+    },
+    {
+      "name": "Notification",
+      "description": "provided by subscribers, which MUST registered by creating a hub resource"
+    }
+  ],
+  "paths": {
+    "x-interface": {
+    "api-version": "4.1.0",
+    "last-mod-release": "Frankfurt"
+    },
+    "/serviceOrder": {
+      "post": {
+        "tags": [
+          "ServiceOrder"
+        ],
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "serviceOrder_Create",
+        "summary": "Create a service order",
+        "description": "This operation creates a service order entity.\nThe TMF Open API specification document provides the list of mandatory and non mandatory attributes when creating a ServiceOrder, including any possible rule conditions and applicable default values.\nPOST should be used without specifying the id and the href, the Service Order Management system is in charge of generating the id + href for the ServiceOrder.\n\nIn Beijing Release, NBI will use only POST {{url}}/ecomp/mso/infra/serviceInstances/v4 SO API. This mean that only the 'service-instance' level will be created in AAI. Additional resource like VNF and/OR VF are not created.\n\nIn Casablanca release, NBI has been improved to also be able to use POST {{url}}/e2eServiceInstances/v3 SO API. This API is able to instantiate in ONAP E2E service; This is useful for CCVPN and VoLTE UC.\nDepending on the service category defined in SDC, NBI will use one or the other SO API. If category starts with e2e, NBI will use  {url}}/e2eServiceInstances/v3 SO API - else it will use {{url}}/ecomp/mso/infra/serviceInstances/v4 SO API.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "serviceOrder",
+            "required": true,
+            "in": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateServiceOrder"
+            }
+          },
+          {
+            "name": "Target",
+            "required": false,
+            "in": "header",
+            "description": "",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ServiceOrder"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ServiceOrder"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "serviceOrder_Find",
+        "summary": "List service orders",
+        "description": "Retrieve and list service order entities according to given criteria.\nOnly a predefined set of attribute is proposed.\nAttribute selection could be described in the fields attribute.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "externalId",
+            "required": false,
+            "in": "query",
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "description": "state of the order(s) to be retrieved",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "orderDate.gt",
+            "required": false,
+            "in": "query",
+            "description": "order date greather than",
+            "type": "string"
+          },
+          {
+            "name": "orderDate.lt",
+            "required": false,
+            "in": "query",
+            "description": "order date lower than",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "this attribute could be used to filter retrieved attribute(s) and/or sort SO.",
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first element of the collection.",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of elements to retrieve (it can be greater than the actual available number of items).",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ServiceOrder"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/serviceOrder/{id}": {
+      "get": {
+        "tags": [
+          "ServiceOrder"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "serviceOrder_Get",
+        "summary": "Retrieve a service order",
+        "description": "This operation retrieves a service order entity. \nAttribute selection is enabled for all first level attributes.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Attribute selection",
+            "type": "string"
+          },
+          {
+            "name": "Target",
+            "required": false,
+            "in": "header",
+            "description": "",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/ServiceOrder"
+            }
+          }
+        }
+      }
+    },
+    "/notification": {
+      "post": {
+        "tags": [
+          "Notification"
+        ],
+        "consumes": [
+          "application/json;charset=utf-8"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "notification_Create",
+        "summary": "NBI will send notification to this operation provided by subscribers",
+        "description": "Notification structure depends of the eventType:\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n\n```\n{\n  \"eventId\": \"string\",\n  \"eventDate\": \"2019-03-12T16:21:27.530Z\",\n  \"eventType\": \"string\",\n  \"event\": {\n    \"id\": \"string\",\n    \"href\": \"string\",\n    \"externalId\": \"string\",\n    \"state\": \"acknowledged\",\n    \"orderDate\": \"2019-03-12T16:21:27.530Z\",\n    \"completionDateTime\": \"2019-03-12T16:21:27.530Z\"\n  }\n}\n```\n\n- ServiceOrderItemStateChangeNotification\n\n```\n{\n  \"eventId\": \"string\",\n  \"eventDate\": \"2019-03-12T16:21:44.066Z\",\n  \"eventType\": \"string\",\n  \"event\": {\n    \"id\": \"string\",\n    \"href\": \"string\",\n    \"externalId\": \"string\",\n    \"state\": \"acknowledged\",\n    \"orderDate\": \"2019-03-12T16:21:44.066Z\",\n    \"completionDateTime\": \"2019-03-12T16:21:44.066Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"string\",\n        \"action\": \"add\",\n        \"state\": \"acknowledged\",\n        \"service\": {\n          \"id\": \"string\",\n          \"href\": \"string\",\n          \"name\": \"string\",\n          \"serviceState\": \"string\",\n          \"serviceCharacteristic\": [\n            {\n              \"name\": \"string\",\n              \"valueType\": \"string\",\n              \"value\": {\n                \"serviceCharacteristicValue\": \"string\"\n              }\n            }\n          ],\n          \"serviceRelationship\": [\n            {\n              \"type\": \"reliesOn\"\n            }\n          ],\n          \"relatedParty\": [\n            {\n              \"id\": \"string\",\n              \"href\": \"string\",\n              \"role\": \"string\",\n              \"name\": \"string\",\n              \"@referredType\": \"string\"\n            }\n          ],\n          \"serviceSpecification\": {\n            \"id\": \"string\",\n            \"href\": \"string\",\n            \"name\": \"string\",\n            \"version\": \"string\",\n          }\n        }\n      }\n    ]\n  }\n}\n```",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "Notification",
+            "required": true,
+            "in": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Notification"
+            }
+          },
+          {
+            "name": "Target",
+            "required": false,
+            "in": "header",
+            "description": "",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Notification"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ActionType": {
+      "description": "Action type to be describer on the order item.\nmodify is not managed in Beijing release",
+      "type": "string",
+      "enum": [
+        "add",
+        "modify",
+        "delete",
+        "noChange"
+      ]
+    },
+    "StateType": {
+      "description": "List of possible state for the order and the orderItem.",
+      "type": "string",
+      "enum": [
+        "acknowledged",
+        "rejected",
+        "pending",
+        "held",
+        "inProgress",
+        "cancelled",
+        "completed",
+        "failed",
+        "partial"
+      ]
+    },
+    "RelationshipType": {
+      "description": "Relationship type;\nOnly reliesOn is managed in Beijing release.",
+      "type": "string",
+      "enum": [
+        "reliesOn"
+      ]
+    },
+    "EventType": {
+      "description": "The Event Type",
+      "type": "string",
+      "enum": [
+        "ServiceOrderCreationNotification",
+        "ServiceOrderStateChangeNotification",
+        "ServiceOrderItemStateChangeNotification"
+      ]
+    },
+    "ServiceState": {
+      "description": "The lifecycle state of the service requested - Required for E2E service activation and deactivation with ServiceOrderItem.action as 'modify'.For any other service modification request,service state value should not be passed.Lifecycle is not fully managed in Guilin release",
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ]
+    },
+    "SeverityMessage": {
+      "description": "Message Severity, either information or error",
+      "type": "string",
+      "enum": [
+        "information",
+        "error"
+      ]
+    },
+    "Error": {
+      "description": "Error code and reason",
+      "required": [
+        "code",
+        "reason"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Application related code (as defined in the API or from a common list)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "reason": {
+          "description": "Text that explains the reason for error. This can be shown to a client user.",
+          "type": "string"
+        },
+        "message": {
+          "description": "Text that provide more details and corrective actions related to the error. This can be shown to a client user",
+          "type": "string"
+        },
+        "status": {
+          "description": "http error code extension like 400-2",
+          "type": "string"
+        },
+        "referenceError": {
+          "description": "url pointing to documentation describing the error",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceRelationship": {
+      "description": "Linked Services to the one instantiate\nnbi component used this relationship to sort request to ONAP.",
+      "required": [
+        "type",
+        "service"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/RelationshipType"
+        },
+        "service": {
+          "$ref": "#/definitions/Service"
+        }
+      }
+    },
+    "ServiceRef": {
+      "description": "Service references",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the service",
+          "type": "string"
+        },
+        "href": {
+          "description": "Reference of the service",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceCharacteristic": {
+      "description": "ServiceCharacteristic",
+      "required": [
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of characteristic",
+          "type": "string"
+        },
+        "valueType": {
+          "description": "",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/Value"
+        }
+      }
+    },
+    "RelatedParty": {
+      "description": "A related party defines party which are involved in this order and the role they are playing.\nfor Beijing release:\nWith the current version of APIs used from SO and AAI we need to manage a ‘customer’. This customer concept is confusing with Customer BSS concept. We took the following rules to manage the ‘customer’ information:\no\tIt could be provided through a serviceOrder in the service Order a relatedParty with role ‘ONAPcustomer’ should be provided in the serviceOrder header (we will not consider in this release the party at item level); External API component will check if this customer exists and create it in AAI if not.\no\tIf no relatedParty are provided the service will be affected to ‘generic’ customer (dummy customer) – we assume this ‘generic’ customer always exists.",
+      "required": [
+        "id",
+        "role"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of a related party",
+          "type": "string"
+        },
+        "href": {
+          "description": "An hyperlink to the party - not used in Beijnig release",
+          "type": "string"
+        },
+        "role": {
+          "description": "The role of the related party (e.g. Owner, requester, fullfiller etc).\nONLY 'ONAPcustomer' is considered",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the related party",
+          "type": "string"
+        },
+        "@referredType": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceSpecificationRef": {
+      "description": "The service specification (these attributes are fetched from the catalogue).",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the service specification\nThis information will be used to retrieve SDC information + mapped to SO ModelNameVersionIdin the request.",
+          "type": "string"
+        },
+        "href": {
+          "description": "Reference of the service specification\nNot used in Beijing release.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the service specification\nNot used in Beijing release",
+          "type": "string"
+        },
+        "version": {
+          "description": "Version of the service Specification\nNot used in Beijing release",
+          "type": "string"
+        },
+        "targetServiceSchema": {
+          "$ref": "#/definitions/TargetServiceSchema"
+        },
+        "@type": {
+          "description": "Not used in Beijing release",
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "description": "Not used in Beijing release",
+          "type": "string"
+        },
+        "@baseType": {
+          "description": "Not used in Beijing release",
+          "type": "string"
+        }
+      }
+    },
+    "Service": {
+      "description": "Service (to be added, modified, deleted) description",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifier of a service instance.\nIt must be valued if orderItem action is 'delete' and corresponds to a AAI service.id",
+          "type": "string"
+        },
+  "serviceType":{
+    "description": "Business type of the service.\nFor example : 5G",
+    "type": "string"
+  },
+        "href": {
+          "description": "Reference to the Service (useful for delete or modify command).\nNot managed in Beijing release.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the service - When orderItem action is 'add' this name will be used in ONAP/SO request as InstaceName.",
+          "type": "string"
+        },
+        "serviceState": {
+          "$ref": "#/definitions/ServiceState"
+        },
+        "@type": {
+          "description": "To define the service type\nNot managed in Beijing Release",
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "description": "The URL to get the resource schema.\nNot managed in Beijing Release",
+          "type": "string"
+        },
+        "serviceCharacteristic": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceCharacteristic"
+          }
+        },
+        "serviceRelationship": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRelationship"
+          }
+        },
+        "relatedParty": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelatedParty"
+          }
+        },
+        "serviceSpecification": {
+          "$ref": "#/definitions/ServiceSpecificationRef"
+        }
+      }
+    },
+    "OrderItemRelationship": {
+      "description": "Linked order item to the one containing this attribute.\nnbi component used this relationship to sort request to ONAP.",
+      "required": [
+        "type",
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/RelationshipType"
+        },
+        "id": {
+          "description": "Unique identifier of an order item",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceOrderItem": {
+      "description": "An identified part of the order. A service order is decomposed into one or more order items.",
+      "required": [
+        "id",
+        "service"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifier of the line item (generally it is a sequence number 01, 02, 03, …)",
+          "type": "string"
+        },
+        "action": {
+          "$ref": "#/definitions/ActionType"
+        },
+        "state": {
+          "$ref": "#/definitions/StateType"
+        },
+        "percentProgress": {
+          "description": "Progress of the delivery in percentage.",
+          "type": "string"
+        },
+        "@type": {
+          "description": "Used to extend the order item.\nnot used in Beijing relase",
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "description": "not used in Beijing relase",
+          "type": "string"
+        },
+        "@baseType": {
+          "description": "not used in Beijing relase",
+          "type": "string"
+        },
+        "orderItemRelationship": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItemRelationship"
+          }
+        },
+        "service": {
+          "$ref": "#/definitions/Service"
+        },
+        "orderItemMessage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderMessage"
+          }
+        }
+      }
+    },
+    "ServiceOrder": {
+      "description": "A Service Order is a type of order which can be used to place an order between a customer and a service provider or between a service provider and a partner and vice versa",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID created on repository side",
+          "type": "string"
+        },
+        "href": {
+          "description": "Hyperlink to access the order",
+          "type": "string"
+        },
+        "externalId": {
+          "description": "ID given by the consumer and only understandable by him (to facilitate his searches)",
+          "type": "string"
+        },
+        "priority": {
+          "description": "A way that can be used by consumers to prioritize orders in Service Order Management system (from 0 to 4 : 0 is the highest priority, and 4 the lowest)",
+          "type": "string"
+        },
+        "description": {
+          "description": "A free-text description of the service order",
+          "type": "string"
+        },
+        "category": {
+          "description": "Used to categorize the order that can be useful for the OM system (e.g. “broadband”, “TVOption”, ...)",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/StateType"
+        },
+        "orderDate": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "completionDateTime": {
+          "description": "Date when the order was completed",
+          "type": "string",
+          "format": "date-time"
+        },
+        "requestedStartDate": {
+          "description": "Order start date wished by the requestor",
+          "type": "string",
+          "format": "date-time"
+        },
+        "requestedCompletionDate": {
+          "description": "Requested delivery date from the requestor perspective",
+          "type": "string",
+          "format": "date-time"
+        },
+        "expectedCompletionDate": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "startDate": {
+          "description": "Date when the order was started for processing",
+          "type": "string",
+          "format": "date-time"
+        },
+        "@baseType": {
+          "description": "",
+          "type": "string"
+        },
+        "@type": {
+          "description": "",
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "description": "",
+          "type": "string"
+        },
+        "relatedParty": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelatedParty"
+          }
+        },
+        "orderRelationship": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderRelationship"
+          }
+        },
+        "orderItem": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceOrderItem"
+          }
+        },
+        "orderMessage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderMessage"
+          }
+        }
+      }
+    },
+    "OrderRelationship": {
+      "description": "Linked order to the one containing this attribute.\nThis relationship is not used to sort ONAP request.",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "The type of related order, can be : “dependency” if the order needs to be “not started” until another order item is complete (a service order in this case) or “cross-ref” to keep track of the source order (a productOrder)",
+          "type": "string"
+        },
+        "id": {
+          "description": "The id of the related order",
+          "type": "string"
+        },
+        "href": {
+          "description": "A hyperlink to the related order",
+          "type": "string"
+        },
+        "@referredType": {
+          "description": "Type of the referred order.",
+          "type": "string"
+        }
+      }
+    },
+    "TargetServiceSchema": {
+      "description": "Target to the schema describing the service spec resource",
+      "required": [
+        "@type",
+        "@schemaLocation"
+      ],
+      "type": "object",
+      "properties": {
+        "@type": {
+          "description": "Indicates the (class) type of resource.",
+          "type": "string"
+        },
+        "@schemaLocation": {
+          "description": "This field provided a link to the schema describing this REST resource.",
+          "type": "string"
+        }
+      }
+    },
+    "Value": {
+      "description": "Value is a descriptive structure for service characteristic",
+      "type": "object",
+      "properties": {
+        "serviceCharacteristicValue": {
+          "description": "Value of the characteristic.",
+          "type": "string"
+        }
+      }
+    },
+    "CreateServiceOrderItem": {
+      "description": "This structure is used in the operation POST for a serviceOrder request to describe an item.\nAttribute description is not accurate and should be find in the serviceOrderItem class.",
+      "required": [
+        "id",
+        "service"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifier of the line item (generally it is a sequence number 01, 02, 03, …)",
+          "type": "string"
+        },
+        "action": {
+          "$ref": "#/definitions/ActionType"
+        },
+        "orderItemRelationship": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItemRelationship"
+          }
+        },
+        "service": {
+          "$ref": "#/definitions/Service"
+        }
+      }
+    },
+    "CreateServiceOrder": {
+      "description": "This structure is used in the operation POST for a serviceOrder request.\nAttribute description is not accurate and should be find in the serviceOrder class.",
+      "type": "object",
+      "properties": {
+        "externalId": {
+          "description": "ID given by the consumer and only understandable by him (to facilitate his searches)",
+          "type": "string"
+        },
+        "priority": {
+          "description": "A way that can be used by consumers to prioritize orders in Service Order Management system (from 0 to 4 : 0 is the highest priority, and 4 the lowest)",
+          "type": "string"
+        },
+        "description": {
+          "description": "A free-text description of the service order",
+          "type": "string"
+        },
+        "category": {
+          "description": "Used to categorize the order that can be useful for the OM system (e.g. “broadband”, “TVOption”, ...)",
+          "type": "string"
+        },
+        "requestedStartDate": {
+          "description": "Order start date wished by the requestor",
+          "type": "string",
+          "format": "date-time"
+        },
+        "requestedCompletionDate": {
+          "description": "Requested delivery date from the requestor perspective",
+          "type": "string",
+          "format": "date-time"
+        },
+        "relatedParty": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelatedParty"
+          }
+        },
+        "orderRelationship": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderRelationship"
+          }
+        },
+        "orderItem": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CreateServiceOrderItem"
+          }
+        }
+      }
+    },
+    "ServiceOrderSummary": {
+      "description": "This structure is used to provide a subset of serviceOrder attributes to be provided in particular for notification messages",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID created on repository side",
+          "type": "string"
+        },
+        "href": {
+          "description": "Hyperlink to access the order",
+          "type": "string"
+        },
+        "externalId": {
+          "description": "ID given by the consumer and only understandable by him (to facilitate his searches)",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/StateType"
+        },
+        "orderDate": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "completionDateTime": {
+          "description": "Date when the order was completed",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Notification": {
+      "description": "Notification structure for a serviceOrdering notification",
+      "required": [
+        "eventId",
+        "eventDate",
+        "eventType",
+        "event"
+      ],
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "description": "",
+          "type": "string"
+        },
+        "eventDate": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "eventType": {
+          "$ref": "#/definitions/EventType"
+        },
+        "event": {
+          "$ref": "#/definitions/ServiceOrderSummaryWithItem"
+        }
+      }
+    },
+    "ServiceOrderItemSummary": {
+      "description": "Service Order item summary to be used for notification",
+      "required": [
+        "id",
+        "service"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifier of the line item (generally it is a sequence number 01, 02, 03, …)",
+          "type": "string"
+        },
+        "action": {
+          "$ref": "#/definitions/ActionType"
+        },
+        "state": {
+          "$ref": "#/definitions/StateType"
+        },
+        "service": {
+          "$ref": "#/definitions/Service"
+        }
+      }
+    },
+    "ServiceOrderSummaryWithItem": {
+      "description": "Service order item summary with item description",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID created on repository side",
+          "type": "string"
+        },
+        "href": {
+          "description": "Hyperlink to access the order",
+          "type": "string"
+        },
+        "externalId": {
+          "description": "ID given by the consumer and only understandable by him (to facilitate his searches)",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/StateType"
+        },
+        "orderDate": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "completionDateTime": {
+          "description": "Date when the order was completed",
+          "type": "string",
+          "format": "date-time"
+        },
+        "orderItem": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceOrderItemSummary"
+          }
+        }
+      }
+    },
+    "OrderMessage": {
+      "description": "An optional array of messages associated with the Order",
+      "required": [
+        "severity",
+        "correctionRequired"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "A code associated to this message",
+          "type": "string"
+        },
+        "field": {
+          "description": "Service Order attribute related to this error message",
+          "type": "string"
+        },
+        "messageInformation": {
+          "description": "Message related to this order",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/definitions/SeverityMessage"
+        },
+        "correctionRequired": {
+          "description": "Indicator that an action is required to allow service order fullfilment to follow up",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
