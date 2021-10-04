@@ -1,0 +1,294 @@
+
+    {
+    "swagger": "2.0",
+    "info": {
+    "description": "Provides the ability to subscribe to and unsubscribe from External API notifications.\n\n**Main operation**\n\n```\nPOST /hub\n```\n\nrequest sample 1\n\n```\n{\n  \"callback\": \"http://mydomain/notification\",\n  \"query\": \"eventType = ServiceOrderCreationNotification\"\n}\n```\n\nrequest sample 2\n\n```\n{\n  \"callback\": \"http://mydomain/notification\",\n  \"query\": \"eventType=ServiceOrderCreationNotification,ServiceOrderStateChangeNotification\"\n}\n```\n\n**EventType for serviceOrdering**\n\n- ServiceOrderCreationNotification\n- ServiceOrderStateChangeNotification\n- ServiceOrderItemStateChangeNotification\n\n**EventType for serviceInventory**\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n- ServiceRemoveNotification\n\n",
+    "version": "4.1.0",
+    "title": "Hub API",
+    "contact": {
+      "name": "ONAP",
+      "url": "https://onap.readthedocs.io",
+      "email": "onap-discuss@lists.onap.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "x-planned-retirement-date": "205001",
+    "x-component": "NBI",
+    "x-logo": {
+    "url": "/redoc/logo.png",
+    "backgroundColor": "#FFFFFF"
+    }
+    },
+    
+      "host": "nbi.api.simpledemo.onap.org:30274",
+      "basePath": "/nbi/api/v4",
+      "schemes": [
+      "https"
+      ],
+    "produces": [
+    "application/json;charset=utf-8"
+    ],
+    "tags": [
+    
+      {
+      "name": "Hub",
+      "description": "provided by NBI"
+      }
+    ],
+    "paths": {
+    "x-interface": {
+    "api-version": "4.1.0",
+    "last-mod-release": "Frankfurt"
+    },
+      "/hub": {
+    "post": {
+    "tags": [
+    "Hub"
+    ],
+        "consumes": [
+           "application/json;charset=utf-8"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "hub_Create",
+    "summary": "create hub",
+    "description": "",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "Hub",
+    "required": true,
+    "in": "body",
+    "description": "",
+    "schema": {
+    "$ref": "#/definitions/HubIn"
+      }
+    }
+      ],
+    "responses": {
+    "201": {
+    "description": "Created",
+    "schema": {
+    "$ref": "#/definitions/Hub"
+    }
+    
+    }
+    }
+    },
+    "get": {
+    "tags": [
+    "Hub"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "hub_Find",
+    "summary": "find hub",
+    "description": "",
+    "deprecated": false,
+    
+    "responses": {
+    "200": {
+    "description": "Ok",
+    "schema": {
+      "type": "array",
+      "items": {
+    "$ref": "#/definitions/Hub"
+      }
+    }
+    
+    }
+    }
+    }
+      },
+      "/hub/{hubId}": {
+    "get": {
+    "tags": [
+    "Hub"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "hub_Get",
+    "summary": "get hub",
+    "description": "",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "hubId",
+    "required": true,
+    "in": "path",
+    "type" : "string"
+    }
+      ],
+    "responses": {
+    "200": {
+    "description": "Ok",
+    "schema": {
+    "$ref": "#/definitions/Hub"
+    }
+    
+    }
+    }
+    },
+    "delete": {
+    "tags": [
+    "Hub"
+    ],
+    "operationId": "hub_Delete",
+    "summary": "delete hub",
+    "description": "",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "hubId",
+    "required": true,
+    "in": "path",
+    "type" : "string"
+    }
+      ],
+    "responses": {
+    "204": {
+    "description": "No Content"
+    
+    }
+    }
+    }
+      }
+    },
+    "definitions": {
+        
+
+    "ErrorDetail": {
+    "description": "Error code and message",
+
+    
+    "required": [
+    
+      "code",
+      "message"
+    ],
+    "type": "object",
+    "properties": {
+    "code": {
+    "description": "",
+    "type": "integer",
+    "format": "int32"
+    },
+    "message": {
+    "description": "",
+    "type": "string"
+    },
+    "description": {
+    "description": "",
+    "type": "string"
+    },
+    "infoURL": {
+    "description": "",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "Error": {
+    "description": "Error code and message",
+
+    
+    "required": [
+    
+      "code",
+      "message"
+    ],
+    "type": "object",
+    "properties": {
+    "code": {
+    "description": "",
+    "type": "integer",
+    "format": "int32"
+    },
+    "message": {
+    "description": "",
+    "type": "string"
+    },
+    "description": {
+    "description": "",
+    "type": "string"
+    },
+    "infoURL": {
+    "description": "",
+    "type": "string"
+    },
+    "details": {
+    
+    "type": "array",
+    "items": {
+    "$ref": "#/definitions/ErrorDetail"
+    }
+    }
+    }
+    
+    },    
+
+    "HubIn": {
+    "description": "Hub query and callback",
+
+    
+    "required": [
+    
+      "query",
+      "callback"
+    ],
+    "type": "object",
+    "properties": {
+    "query": {
+    "description": "The query must have an eventType= information.\\nOptionally a ? could be added to reduce hub.\\nquery”:”eventType = ServiceOrderStateChangeNotification”&serviceOrder.state=COMPLETED",
+    "type": "string"
+    },
+    "callback": {
+    "description": "URL where notification must be send",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "Hub": {
+    "description": "Hub id, query and callback",
+
+    
+    "required": [
+    
+      "id",
+      "query",
+      "callback"
+    ],
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "",
+    "type": "string"
+    },
+    "query": {
+    "description": "The query must have an eventType= information.\\nOptionally a ? could be added to reduce hub.\\nquery”:”eventType = ServiceOrderStateChangeNotification”&serviceOrder.state=COMPLETED",
+    "type": "string"
+    },
+    "callback": {
+    "description": "URL where notification must be send",
+    "type": "string"
+    }
+    }
+    
+    }
+    }
+    }
+  

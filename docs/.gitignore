@@ -1,3 +1,4 @@
 /.tox
+/.vscode
 /_build/*
 /__pycache__/*

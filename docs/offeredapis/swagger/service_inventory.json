@@ -1,0 +1,618 @@
+
+    {
+    "swagger": "2.0",
+    "info": {
+     "description": "# About the ONAP Service Inventory API\n The Service Inventory API is based on a subset of the TM Forum 638 Service Inventory API.\n## API Overview\n### General Description \nThis Service Inventory API is used to retrieve the Service Instances from the ONAP inventory. As Services are ordered from ONAP via the Service Order API, the Service Inventory API allows external systems such as the Business Support Systems (BSS) to discover the Services that have been created in the ONAP Inventory.\n\nThe Service Design Center (SDC) of ONAP allows for the creation of Services that can be orchestrated by ONAP. Once a Service from the Catalog is ordered, the ONAP Service Orchestrator will create a Service Instance within the AAI of ONAP. This API allows a representation of the Service Inventory in TMF 638 format. The Service Inventory API also supports inventory notifications to external listeners. A List of available subscription for serviceInventory notifications, see /hub resources for more information:\n\n- ServiceCreationNotification\n- ServiceAttributeValueChangeNotification\n- ServiceRemoveNotification\n\n \n### Relationship and Dependencies\n This Service Inventory API is related to the TM Forum 638 Service Inventory API and also to MEF LSO LEGATO Service Inventory API.\n\nThis API takes a subset of the Service Inventory API, namely the Service resource, and maps this standard resource to the ONAP AAI Service Instance. By doing this we allow a well known, standardized JSON REST representation of the Service Instances available in ONAP to be visible by external systems. \n\n### API Structure and Approach\nThe Service Inventory API can be used to get the details of a specific ONAP Service Instance, or can be used to search/list the Service Instances that are in the ONAP AAI. \n## Getting Started with the API (Hello World)\nThe Service Inventory API is available via two schemes, http and https. For interacting with the API the simplest method is via http. To interact with the this API via https, your Client would be required to load the neccessary https certificate. \n\nThe default installation of ONAP via OOM, will configure the use of two Node ports for External APIs. NodePorts are used to allow client applications, that run outside of Kubernetes, access to ONAP components deployed by OOM. For this Service Inventory API, the External API Framework has a http Node port of 30274. For https, the Node port is 30292.\n\n From outside ONAP, a client can interact with External API by first getting the IP that the NBI docker container is running on, and then using the appropriate nodeport according to the access scheme. For example to access this Service Inventory API to retrieve a list of all Service Instances available in ONAP you can use http method GET to http://{nbi_ip}:30274/nbi/api/v4/service/ \n### SDK quick intro\nThere are many tools that can be used to view and edit this swagger file like swagger editor, Atom and senya. For example this swagger file can be loaded into https://editor.swagger.io/. This UI acts both as an online editor and viewer. \n### How to start the client side implementation\n* Code generation, is available via the Generate Client option in the swagger editor. Client stubs can be generated in multiple languages, for example java, go, python etc. These Client stub code can be incorporated in the Application you wish to access the Service Inventory API from.\n\n### How to start the server side implementation\n* Not applicable, the service side for this API will be the NBI container running the External API Framework Springboot application.\n\n## API Description\nIncludes summary of information drawn from API definitions in OpenAPI / Swagger files\n### Resource Endpoint / Resource Quick Reference\nGET /service/ : This operation returns a list service instances from AAI\n\nGET /service/{id} : This operation returns the specific service instance associated with this id. Note the id maps to the service-instance-id of the service-instance object in AAI.\n\n### Data Schema\n#### Main API Entities\nDescribe the major entities used in the API\n\nThe main entity of the API is the Service resource. This entity is the top level entity of the API, and is returned as either a single instance when queried with id, or as JSON arroy of Service entities when queried as a list.\n\nThe major child enties are relatedParty which points to the Customer who ordered the Service. The serviceSpecification which points to the Service template in SDC Catalog that was used to create this service instance.\n#### Payload data structures\nIf any, describe the appropriate data structures that are included within payload of the API.\n\nNot applicable\n### Security on the API\nAuthentication; Authorization; Credentials/access token; etc.\n\n https certificate required if using https. No authentication on http requests.In production this API should be behind an API Gateway with the necessary authentication\n### Response Codes\nThe meaning of Status Codes & Errors\n\nSee response codes for each API resource in the API section below\n### Rate Limits and Thresholds\nRequests per unit time allowed; Pagination\n\n No rate limits or thresholds, in production this API should be behind an API Gateway with the necessary limits.\n### Validation constraints\nDescribe any behavioral and structural validation constraints\n\nNot applicable\n### Assumptions\nFor example, any Pre/Post conditions\n\n For this API to function and return Service Instances, SDC is required to be running and Service models designed in the SDC catalog that have been ordered and instantiated by SO in AAI.\n## API Interactions and Flows\n### Interaction Examples\nIllustrate sequence of client calls to this API, possibly based on Use Cases, presented with diagrams, tables, etc\n\nThe Service Inventory API flow of use can generally follow the sequence below\n\n\n#### Call ONAP to discover what available services it has in the service inventory by listing them\n\n```\ncurl -X GET \"http://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/service/\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Using the id returned from the list of Service instances, drill into any specific Service instance you want to view using\n\n\n\n```\ncurl -X GET \"http://nbi.api.simpledemo.onap.org:30274/nbi/api/v4/service/0ec83a1f-51e7-44e7-b773-3f37ddb937cd\" -H \"accept: application/json;charset=utf-8\"\n```\n#### Example Response Values\n```\n{\"id\":\"c96fb8ec-8552-4956-8a8d-65680aaa57cc\",\"name\":\"Service_1234\",\"@type\":\"serviceONAP\",\"supportingResource\":[],\"serviceSpecification\":{\"id\":\"462f84e5-f0e5-44c5-ab95-38fb4bf77064\",\"name\":\"CS Template Name\",\"invariantUUID\":\"88dcb2f0-085b-4548-8b93-0882e37d25d8\",\"@type\":\"ONAPservice\"},\"state\":\"active\",\"relatedParty\":{\"role\":\"ONAPcustomer\",\"id\":\"CustomerId1\"},\"type\":\"service-instance\"}\r\n\n```\n\n",
+    "version": "4.1.0",
+    "title": "ServiceInventory API",
+    "contact": {
+      "name": "ONAP",
+      "url": "https://onap.readthedocs.io",
+      "email": "onap-discuss@lists.onap.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "x-planned-retirement-date": "205001",
+    "x-component": "NBI",
+    "x-logo": {
+    "url": "/redoc/logo.png",
+    "backgroundColor": "#FFFFFF"
+    }
+    },
+    
+      "host": "nbi.api.simpledemo.onap.org:30274",
+      "basePath": "/nbi/api/v4",
+      "schemes": [
+      "https"
+      ],
+    "produces": [
+    "application/json;charset=utf-8"
+    ],
+    "tags": [
+    
+      {
+      "name": "Service",
+      "description": "Provided by NBI"
+      },
+      {
+      "name": "Notification",
+      "description": "provided by subscriber, which MUST has been registered by creating a Hub ressource on NBI"
+      }
+    ],
+    "paths": {
+    "x-interface": {
+    "api-version": "4.1.0",
+    "last-mod-release": "Frankfurt"
+    },
+      "/service": {
+    "get": {
+    "tags": [
+    "Service"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "service_Find",
+    "summary": "List services",
+    "description": "This operation list service entities. \nAttribute selection is restricted. \nfields attribute may be used to filter retrieved attribute(s) for each service",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "relatedParty.id",
+    "required": false,
+    "in": "query",
+    "description": "",
+    
+    "type": "string"
+    },
+    {
+    "name": "serviceSpecification.id",
+    "required": false,
+    "in": "query",
+    "description": "",
+    
+    "type": "string"
+    },
+    {
+    "name": "serviceSpecification.name",
+    "required": false,
+    "in": "query",
+    "description": "",
+    
+    "type": "string"
+    },
+    {
+    "name": "id",
+    "required": false,
+    "in": "query",
+    "description": "",
+    
+    "type": "string"
+    },
+    {
+    "name": "fields",
+    "required": false,
+    "in": "query",
+    "description": "",
+    
+    "type": "string"
+    }
+      ],
+    "responses": {
+    "200": {
+    "description": "Ok",
+    "schema": {
+      "type": "array",
+      "items": {
+    "$ref": "#/definitions/ListService"
+      }
+    }
+    
+    }
+    }
+    }
+      },
+      "/service/{id}": {
+    "get": {
+    "tags": [
+    "Service"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "service_Get",
+    "summary": "Retrieve a service",
+    "description": "This operation retrieves a service entity. \nAttribute selection is enabled for all first level attributes.",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "id",
+    "required": true,
+    "in": "path",
+    "type" : "string"
+    }
+      ],
+    "responses": {
+    "200": {
+    "description": "Ok",
+    "schema": {
+    "$ref": "#/definitions/Service"
+    }
+    
+    }
+    }
+    }
+      },
+      "/notification": {
+    "post": {
+    "tags": [
+    "Notification"
+    ],
+        "consumes": [
+           "application/json;charset=utf-8"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "notification_Create",
+    "summary": "NBI will send notification to this operation provided by subscribers",
+    "description": "",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "Notification",
+    "required": true,
+    "in": "body",
+    "description": "",
+    "schema": {
+    "$ref": "#/definitions/Notification"
+      }
+    }
+      ],
+    "responses": {
+    "201": {
+    "description": "Created",
+    "schema": {
+    "$ref": "#/definitions/Notification"
+    }
+    
+    }
+    }
+    }
+      }
+    },
+    "definitions": {
+    
+    "eventType": {
+    "description": "The Event Type",
+    
+      "type": "string",
+      "enum": [
+        "ServiceCreationNotification",
+        "ServiceAttributeValueChangeNotification",
+        "ServiceRemoveNotification"]
+    
+    },    
+
+    "ErrorRepresentation": {
+    "description": "This class is used to describe error.",
+
+    
+    "required": [
+    
+      "code",
+      "reason"
+    ],
+    "type": "object",
+    "properties": {
+    "code": {
+    "description": "Application related code (as defined in the API or from a common list)",
+    "type": "integer",
+    "format": "int32"
+    },
+    "reason": {
+    "description": "Text that explains the reason for error. This can be shown to a client user.",
+    "type": "string"
+    },
+    "message": {
+    "description": "Text that provide more details and corrective actions related to the error. This can be shown to a client user.",
+    "type": "string"
+    },
+    "status": {
+    "description": "http error code extension like 400-2",
+    "type": "string"
+    },
+    "referenceError": {
+    "description": "url pointing to documentation describing the error",
+    "type": "string"
+    },
+    "@type": {
+    "description": "The class type of a REST resource.",
+    "type": "string"
+    },
+    "@schemaLocation": {
+    "description": "it provides a link to the schema describing a REST resource.",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "Service": {
+    "description": "Instantiated service (service_instance) in AAI",
+
+    
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "Unique identifier of the service - Valued with service-instance-id",
+    "type": "string"
+    },
+    "href": {
+    "description": "Reference of the service\nNot managed in Beijing release",
+    "type": "string"
+    },
+    "name": {
+    "description": "Name of the service - Valued with service-instance-name",
+    "type": "string"
+    },
+    "type": {
+    "description": "Service type - valued with 'service-instance'",
+    "type": "string"
+    },
+    "state": {
+    "description": "State of the service.",
+    "type": "string"
+    },
+    "@type": {
+    "description": "This attribute allows to dynamically extends TMF class. Not used in Beijing release.",
+    "type": "string"
+    },
+    "@baseType": {
+    "description": "Not managed in Beijing release",
+    "type": "string"
+    },
+    "@schemaLocation": {
+    "description": "Not managed in Beijing release",
+    "type": "string"
+    },
+    "serviceSpecification": {
+    
+    "$ref": "#/definitions/ServiceSpecificationRef"
+    },
+    "characteristic": {
+    
+    "type": "array",
+    "items": {
+    "$ref": "#/definitions/ServiceCharacteristic"
+    }
+    },
+    "supportingResource": {
+    
+    "type": "array",
+    "items": {
+    "$ref": "#/definitions/SupportingResource"
+    }
+    },
+    "relatedParty": {
+    
+    "type": "array",
+    "items": {
+    "$ref": "#/definitions/RelatedPartyRef"
+    }
+    }
+    }
+    
+    },    
+
+    "ServiceSpecificationRef": {
+    "description": "Service specification reference: ServiceSpecification of this service (catalog information)",
+
+    
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "Unique identifier of the service specification. valued to model-version-id",
+    "type": "string"
+    },
+    "href": {
+    "description": "Reference of the service specification.\nnot managed in Beijing release.",
+    "type": "string"
+    },
+    "name": {
+    "description": "Name of the required service specification",
+    "type": "string"
+    },
+    "version": {
+    "description": "Service specification version.\nNot managed in Beijing release",
+    "type": "string"
+    },
+    "@referredType": {
+    "description": "This attribute allows to dynamically extends TMF class. Valued with 'ONAPservice'. We used this features to add following attribute: invariantUUID",
+    "type": "string"
+    },
+    "@schemaLocation": {
+    "description": "Not managed in Beijing release",
+    "type": "string"
+    },
+    "invariantUUID": {
+    "description": "Additional attribute (not in the TMF API) - extended through @referredType - model-invariant-id",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "ServiceCharacteristic": {
+    "description": "A list of name value pairs that define the service characteristics\nNot managed in Beijing release.",
+
+    
+    "required": [
+    
+      "name"
+    ],
+    "type": "object",
+    "properties": {
+    "name": {
+    "description": "Name of the characteristic\nNot managed in Beijing release.",
+    "type": "string"
+    },
+    "valueType": {
+    "description": "Type of value for this characteristic.\nNot managed in Beijing release.",
+    "type": "string"
+    },
+    "value": {
+    
+    "$ref": "#/definitions/Value"
+    }
+    }
+    
+    },    
+
+    "SupportingResource": {
+    "description": "Supporting resource - A supportingResource will be retrieved for each relationship of the relationship-list where related-link describe a vnf",
+
+    
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "Unique identifier of the supporting resource - Valued to vnf-id",
+    "type": "string"
+    },
+    "href": {
+    "description": "Reference of the supporting resource",
+    "type": "string"
+    },
+    "role": {
+    "description": "Not managed in Beijing release.",
+    "type": "string"
+    },
+    "name": {
+    "description": "Name of the supporting resource - Valued with vnf_-name",
+    "type": "string"
+    },
+    "@referredType": {
+    "description": "This attribute allows to dynamically extends TMF class. Valued with 'ONAP resource'. We used this features to add following attributes:\n    status\t\n    modelInvariantId\n   modelVersionId\n   modelCustomisationId",
+    "type": "string"
+    },
+    "@schemaLocation": {
+    "description": "Not managed in Beijing release.",
+    "type": "string"
+    },
+    "status": {
+    "description": "Additional attribute (not in the TMF API) - extended through @referredType - valued with prov-status",
+    "type": "string"
+    },
+    "modelInvariantId": {
+    "description": "Additional attribute (not in the TMF API) - extended through @referredType - valued with model-invariant-id",
+    "type": "string"
+    },
+    "modelVersionId": {
+    "description": "Additional attribute (not in the TMF API) - extended through @referredType - valued with model-verson-id",
+    "type": "string"
+    },
+    "modelCustomisationId": {
+    "description": "Additional attribute (not in the TMF API) - extended through @referredType - valued with model-customisation-id",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "RelatedPartyRef": {
+    "description": "RelatedParty reference. A related party defines party or party role linked to a specific entity.",
+
+    
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "Unique identifier of a related party",
+    "type": "string"
+    },
+    "href": {
+    "description": "Reference of a related party.\nNot filled in Beijing release.",
+    "type": "string"
+    },
+    "role": {
+    "description": "Role played by the related party.\nFilled with 'ONAPcustomer'",
+    "type": "string"
+    },
+    "@referredType": {
+    "description": "Not managed in the Beijing release.",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "Value": {
+    "description": "Structure used to describe characteristic value.\nNot managed in Beijing release.",
+
+    
+    "type": "object",
+    "properties": {
+    "@type": {
+    "description": "Not managed in Beijing release.",
+    "type": "string"
+    },
+    "@schemaLocation": {
+    "description": "Not managed in Beijing release.",
+    "type": "string"
+    },
+    "serviceCharacteristicValue": {
+    "description": "Not managed in Beijing release.",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "ListRelatedPartyRef": {
+    "description": "This class is used to structure list of service(s) retrieved",
+
+    
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "Unique identifier of a related party",
+    "type": "string"
+    },
+    "role": {
+    "description": "Role played by the related party - only role “ONAPcustomer” is managed in Beijing release.",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "ListServiceSpecificationRef": {
+    "description": "This class is used to structure list of service(s) retrieved",
+
+    
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "Unique identifier of the service specification",
+    "type": "string"
+    },
+    "name": {
+    "description": "Name of the required service specification",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "ListService": {
+    "description": "This class is used to structure list of service(s) retrieved",
+
+    
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "Unique identifier of the service",
+    "type": "string"
+    },
+    "name": {
+    "description": "Name of the service",
+    "type": "string"
+    },
+    "serviceSpecification": {
+    
+    "$ref": "#/definitions/ListServiceSpecificationRef"
+    },
+    "relatedParty": {
+    
+    "$ref": "#/definitions/ListRelatedPartyRef"
+    }
+    }
+    
+    },    
+
+    "ServiceInventoryEvent": {
+    "description": "Structure for a service inventory event notification",
+
+    
+    "required": [
+    
+      "id",
+      "href",
+      "name",
+      "type",
+      "state",
+      "relatedParty"
+    ],
+    "type": "object",
+    "properties": {
+    "id": {
+    "description": "The Service Instance Id",
+    "type": "string"
+    },
+    "href": {
+    "description": "A reference to the service inventory",
+    "type": "string"
+    },
+    "name": {
+    "description": "The name of the Service Instance",
+    "type": "string"
+    },
+    "type": {
+    "description": "The type of event, service-instance",
+    "type": "string"
+    },
+    "state": {
+    "description": "The state of the service instance",
+    "type": "string"
+    },
+    "relatedParty": {
+    
+    "$ref": "#/definitions/RelatedPartyRef"
+    }
+    }
+    
+    },    
+
+    "Notification": {
+    "description": "Notification structure for a service notification",
+
+    
+    "required": [
+    
+      "eventId",
+      "eventDate",
+      "eventType",
+      "event"
+    ],
+    "type": "object",
+    "properties": {
+    "eventId": {
+    "description": "",
+    "type": "string"
+    },
+    "eventDate": {
+    "description": "",
+    "type": "string",
+    "format": "date-time"
+    },
+    "eventType": {
+    
+    "$ref": "#/definitions/eventType"
+    },
+    "event": {
+    
+    "$ref": "#/definitions/ServiceInventoryEvent"
+    }
+    }
+    
+    }
+    }
+    }
+  

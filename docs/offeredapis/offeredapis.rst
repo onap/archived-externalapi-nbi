@@ -16,9 +16,9 @@ NBI stands for NorthBound Interface. It brings to ONAP a set of API that can
 be used by external systems as BSS for example. These API are based on
 **TMF API**.
 
-*******************************************
+********************************************
 Global NBI architecture for Honolulu release
-*******************************************
+********************************************
 
 Following illustration provides a global view about **NBI** architecture,
 integration with other ONAP components and API resource/operation provided.
@@ -110,11 +110,11 @@ API Table
 API ReDoc Documentation
 ***********************
 
-* :doc:`API hub <redoc/api_hub>`
-* :doc:`Service Catalog <redoc/api_serviceCatalog>`
-* :doc:`Service Inventory <redoc/api_serviceInventory>`
-* :doc:`Service Order <redoc/api_serviceOrder>`
-* :doc:`Status <redoc/api_status>`
+- `hub <./hub.html>`_
+- `serviceCatalog <./service_catalog.html>`_
+- `serviceInventory <./service_inventory.html>`_
+- `serviceOrder <./service_order.html>`_
+- `status <./status.html>`_
 
 
 ***************

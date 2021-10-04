@@ -1,0 +1,245 @@
+
+    {
+    "swagger": "2.0",
+    "info": {
+    "description": "Provides a healthcheck to verify that the NBI component is running as expected as a standalone application or that the NBI can communicate with other onap modules that it needs.\n\n",
+    "version": "4.1.0",
+    "title": "Status API",
+    "contact": {
+      "name": "ONAP",
+      "url": "https://onap.readthedocs.io",
+      "email": "onap-discuss@lists.onap.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "x-planned-retirement-date": "205001",
+    "x-component": "NBI",
+    "x-logo": {
+    "url": "/redoc/logo.png",
+    "backgroundColor": "#FFFFFF"
+    }
+    },
+    
+      "host": "nbi.api.simpledemo.onap.org:30274",
+      "basePath":"/nbi/api/v4",
+      "schemes": [
+      "https"
+      ],
+    "produces": [
+    "application/json;charset=utf-8"
+    ],
+    "tags": [
+    
+      {
+      "name": "Status",
+      "description": ""
+      }
+    ],
+    "paths": {
+    "x-interface": {
+    "api-version": "4.1.0",
+    "last-mod-release": "Frankfurt"
+    },
+      "/status": {
+    "get": {
+    "tags": [
+    "Status"
+    ],
+        "produces": [
+           "application/json;charset=utf-8"
+      ],
+    "operationId": "status_Find",
+    "summary": "This API retieves the status of the NBI application as a healthcheck",
+    "description": "* Default\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"ok\",\n    \"version\": \"v3\"\n}\n```\n\n* Optional\n\n```\n?fullStatus=true\n```\n\n```\n{\n    \"name\": \"nbi\",\n    \"status\": \"ok\",\n    \"version\": \"v3\",\n    \"components\": [\n        {\n            \"name\": \"sdc connectivity\",\n            \"status\": \"ko\"\n        },\n        {\n            \"name\": \"so connectivity\",\n            \"status\": \"ok\"\n        },\n        {\n            \"name\": \"aai connectivity\",\n            \"status\": \"ok\"\n        },\n        {\n            \"name\": \"dmaap connectivity\",\n            \"status\": \"ok\"\n        }\n    ]\n}\n```",
+    "deprecated": false,
+    
+      "parameters": [
+      
+    {
+    "name": "fullStatus",
+    "required": false,
+    "in": "query",
+    "description": "",
+    
+    "type": "boolean",
+    
+        "default": false
+    }
+      ],
+    "responses": {
+    "200": {
+    "description": "Ok",
+    "schema": {
+    "$ref": "#/definitions/Status"
+    }
+    
+    }
+    }
+    }
+      }
+    },
+    "definitions": {
+    
+    "StatusValue": {
+    "description": "Status Value",
+    
+      "type": "string",
+      "enum": [
+        "ok",
+        "ko"]
+    
+    },
+    "ComponentsName": {
+    "description": "Components Name",
+    
+      "type": "string",
+      "enum": [
+        "sdc connectivity",
+        "so connectivity",
+        "aai connectivity",
+        "dmaap connectivity"]
+    
+    },
+    "ApplicationName": {
+    "description": "Application Name",
+    
+      "type": "string",
+      "enum": [
+        "nbi"]
+    
+    },    
+
+    "ErrorDetail": {
+    "description": "Error code, infoURL, description and message",
+
+    
+    "required": [
+    
+      "code",
+      "message"
+    ],
+    "type": "object",
+    "properties": {
+    "code": {
+    "description": "",
+    "type": "integer",
+    "format": "int32"
+    },
+    "message": {
+    "description": "",
+    "type": "string"
+    },
+    "description": {
+    "description": "",
+    "type": "string"
+    },
+    "infoURL": {
+    "description": "",
+    "type": "string"
+    }
+    }
+    
+    },    
+
+    "Error": {
+    "description": "Error code and message",
+
+    
+    "required": [
+    
+      "code",
+      "message"
+    ],
+    "type": "object",
+    "properties": {
+    "code": {
+    "description": "",
+    "type": "integer",
+    "format": "int32"
+    },
+    "message": {
+    "description": "",
+    "type": "string"
+    },
+    "description": {
+    "description": "",
+    "type": "string"
+    },
+    "infoURL": {
+    "description": "",
+    "type": "string"
+    },
+    "details": {
+    
+    "type": "array",
+    "items": {
+    "$ref": "#/definitions/ErrorDetail"
+    }
+    }
+    }
+    
+    },    
+
+    "Component": {
+    "description": "Component",
+
+    
+    "required": [
+    
+      "name",
+      "status"
+    ],
+    "type": "object",
+    "properties": {
+    "name": {
+    
+    "$ref": "#/definitions/ComponentsName"
+    },
+    "status": {
+    
+    "$ref": "#/definitions/StatusValue"
+    }
+    }
+    
+    },    
+
+    "Status": {
+    "description": "Status",
+
+    
+    "required": [
+    
+      "name",
+      "status",
+      "version",
+      "components"
+    ],
+    "type": "object",
+    "properties": {
+    "name": {
+    
+    "$ref": "#/definitions/ApplicationName"
+    },
+    "status": {
+    
+    "$ref": "#/definitions/StatusValue"
+    },
+    "version": {
+    "description": "",
+    "type": "string"
+    },
+    "components": {
+    
+    "type": "array",
+    "items": {
+    "$ref": "#/definitions/Component"
+    }
+    }
+    }
+    
+    }
+    }
+    }
+  
