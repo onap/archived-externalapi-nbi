@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Verified+1: Andy Mayer <am803u@att.com>
+Code-Review+2: Eric Debeau <eric.debeau@orange.com>
+Code-Review+1: Thomas Kulik <thomas.kulik@telekom.de>
+Code-Review+2: Andy Mayer <am803u@att.com>
+Submitted-by: Andy Mayer <am803u@att.com>
+Submitted-at: Thu, 14 Oct 2021 14:58:52 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/externalapi/nbi/+/124673
+Project: externalapi/nbi
+Branch: refs/heads/master
